@@ -1,0 +1,274 @@
+.calendarWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.toggleBar {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  align-self: flex-start;
+}
+
+.toggleBtn {
+  padding: 10px 20px;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--color-white);
+  border: none;
+  border-right: 1px solid var(--color-border);
+  cursor: pointer;
+  color: var(--color-text-light);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.toggleBtn:last-child {
+  border-right: none;
+}
+
+.toggleBtnActive {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.legend {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-light);
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.calendar {
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.calHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--color-black);
+}
+
+.navBtn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-white);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.navBtn:hover {
+  border-color: var(--color-white);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.monthLabel {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-white);
+}
+
+.dayNames {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: var(--color-gray-light);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dayName {
+  padding: 8px 4px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-light);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.cell {
+  min-height: 96px;
+  padding: 6px 4px 4px;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: var(--color-white);
+  transition: background-color 0.1s ease;
+}
+
+.cell:nth-child(7n) {
+  border-right: none;
+}
+
+.cell:hover:not(.cellEmpty) {
+  background: #fafafa;
+}
+
+.cellEmpty {
+  background: var(--color-gray-light);
+}
+
+.cellToday .dayNum {
+  background: var(--color-accent);
+  color: var(--color-white);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dayNum {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-light);
+  line-height: 1;
+  align-self: flex-start;
+}
+
+.cellEvents {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.eventPill {
+  display: block;
+  padding: 2px 5px;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  overflow: hidden;
+  width: 100%;
+  transition: opacity 0.15s ease;
+}
+
+.eventPill:hover {
+  opacity: 0.8;
+}
+
+.eventPillText {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.moreEvents {
+  font-size: 9px;
+  color: var(--color-muted);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding-left: 4px;
+}
+
+/* ── Modal content ── */
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modalType {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-muted);
+}
+
+.modalMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modalMeta p {
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.modalDesc {
+  font-size: 14px;
+  color: var(--color-text-light);
+  line-height: 1.6;
+  padding-top: 4px;
+  border-top: 1px solid var(--color-border);
+}
+
+.modalBtn {
+  align-self: flex-start;
+  font-size: 11px;
+  padding: 10px 20px;
+}
+
+@media (max-width: 640px) {
+  .cell {
+    min-height: 64px;
+    padding: 4px 2px 2px;
+  }
+
+  .dayNum {
+    font-size: 10px;
+  }
+
+  .eventPillText {
+    font-size: 8px;
+  }
+
+  .toggleBtn {
+    padding: 8px 12px;
+    font-size: 9px;
+  }
+}

@@ -1,0 +1,242 @@
+.header {
+  position: static;
+  background-color: #ffffff;
+  padding-top: 90px;
+  padding-bottom: 140px;
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--nav-height);
+  width: calc(100% - 220px);
+  margin-left: 110px;
+  margin-right: 110px;
+}
+
+.headerLogo {
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+  margin-left: 8px;
+}
+
+.headerLogo:hover {
+  opacity: 0.8;
+}
+
+.headerNav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Override global a:link / a:visited with higher-specificity selectors */
+.navLink,
+.navLink:link,
+.navLink:visited {
+  font-family: "proxima-nova", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #333333;
+  transition: color 170ms ease-in-out;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.navLink:hover,
+.navLink:hover:link,
+.navLink:hover:visited {
+  color: #707070;
+}
+
+.cartLink {
+  padding-left: 80px;
+}
+
+.navLinkActive,
+.navLinkActive:link,
+.navLinkActive:visited {
+  color: #333333;
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  font-family: inherit;
+}
+
+.hamburgerBar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #000000;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Mobile drawer */
+.mobileNav {
+  background-color: #ffffff;
+  border-top: 1px solid #e8e8e8;
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobileNavLink,
+.mobileNavLink:link,
+.mobileNavLink:visited {
+  font-family: "proxima-nova", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #333333;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: color 170ms ease-in-out;
+  text-decoration: none;
+}
+
+.mobileNavLink:hover,
+.mobileNavLinkActive,
+.mobileNavLink:hover:link,
+.mobileNavLink:hover:visited,
+.mobileNavLinkActive:link,
+.mobileNavLinkActive:visited {
+  color: #ff0000;
+}
+
+/* ── Desktop Dropdown ── */
+.navDropdown {
+  position: relative;
+}
+
+.navDropdownTrigger {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: default;
+  user-select: none;
+}
+
+.dropdownChevron {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.navDropdown:hover .dropdownChevron {
+  transform: rotate(180deg);
+}
+
+.navDropdownMenu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  border: 1px solid #e8e8e8;
+  min-width: 220px;
+  list-style: none;
+  padding: 8px 0;
+  display: none;
+  z-index: 200;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Invisible bridge that fills the gap between the trigger and the menu,
+   so moving the mouse downward doesn't break the hover state. */
+.navDropdownMenu::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+}
+
+.navDropdown:hover .navDropdownMenu {
+  display: block;
+}
+
+.navDropdownLink,
+.navDropdownLink:link,
+.navDropdownLink:visited {
+  display: block;
+  padding: 10px 20px;
+  font-family: "proxima-nova", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #333333;
+  transition: color 170ms ease-in-out, background-color 170ms ease-in-out;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navDropdownLink:hover {
+  color: #ff0000;
+  background-color: #fafafa;
+}
+
+.navDropdownLinkActive,
+.navDropdownLinkActive:link,
+.navDropdownLinkActive:visited {
+  color: #ff0000;
+}
+
+/* ── Mobile Sub-menu ── */
+.mobileNavGroupBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mobileSubMenu {
+  background-color: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.mobileNavSubLink {
+  padding-left: 32px !important;
+  font-size: 11px !important;
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .headerNav {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}
+
+@media (max-width: 600px) {
+  .headerInner {
+    width: calc(100% - 32px);
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+}

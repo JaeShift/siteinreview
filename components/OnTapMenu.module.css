@@ -1,0 +1,329 @@
+/* Matches Taplist.io webmenu structure exactly */
+
+.menuCard {
+  width:     100%;
+  max-width: 1069px;
+  margin:    0 auto;
+  border:    none;
+  background: #fff;
+  font-family: var(--font-body);
+  display:   flex;
+  flex-direction: column;
+  color: rgba(255, 255, 255, 1);
+}
+
+/* ── Sticky header: icon + "Main Menu" + pill nav ── */
+.menuHeader {
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+  padding:       10px 16px;
+  background:    #fff;
+  border-bottom: 1px solid #dee2e6;
+  position:      sticky;
+  top:           0;
+  z-index:       10;
+  flex-shrink:   0;
+}
+
+.menuIcon {
+  flex-shrink: 0;
+  color:       #333;
+  display:     flex;
+  align-items: center;
+}
+
+.menuTitle {
+  font-family:    var(--font-body);
+  font-weight:    700;
+  font-size:      1.875rem;
+  white-space:    nowrap;
+  flex-shrink:    0;
+  color:          #212529;
+  margin-right:   4px;
+}
+
+/* ── Pill navigation bar — horizontally scrollable, no scrollbar ── */
+.pillBar {
+  display:    flex;
+  gap:        8px;
+  overflow-x: auto;
+  flex:       1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.pillBar::-webkit-scrollbar {
+  display: none;
+}
+
+.pill {
+  font-family:    var(--font-body);
+  padding:        4px 14px;
+  border-radius:  999px;
+  border:         1px solid #6c757d;
+  background:     transparent;
+  color:          #6c757d;
+  font-size:      0.8rem;
+  font-weight:    500;
+  white-space:    nowrap;
+  flex-shrink:    0;
+  cursor:         pointer;
+  transition:     background 0.15s, color 0.15s, border-color 0.15s;
+  line-height:    1.5;
+}
+
+.pill:hover {
+  border-color: #495057;
+  color:        #212529;
+}
+
+/* Active pill — blue filled, matching Taplist */
+.pillActive {
+  background:   #0d6efd;
+  border-color: #0d6efd;
+  color:        #fff;
+}
+
+.pillActive:hover {
+  background:   #0b5ed7;
+  border-color: #0b5ed7;
+  color:        #fff;
+}
+
+/* ── Inline search input ── */
+.searchInput {
+  font-family:  var(--font-body);
+  font-size:    0.8rem;
+  font-weight:  500;
+  padding:      4px 12px;
+  border-radius: 999px;
+  border:       1px solid #0d6efd;
+  background:   #fff;
+  color:        #212529;
+  outline:      none;
+  flex:         1;
+  min-width:    0;
+  line-height:  1.5;
+  transition:   border-color 0.15s, box-shadow 0.15s;
+}
+
+.searchInput::placeholder {
+  color: #adb5bd;
+}
+
+.searchInput:focus {
+  border-color: #0d6efd;
+  box-shadow:   0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* ── No results message ── */
+.noResults {
+  padding:    32px 16px;
+  text-align: center;
+  color:      #6c757d;
+  font-size:  0.9rem;
+}
+
+/* ── Scrollable list area ── */
+.menuScroll {
+  height:     620px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  border-left:   1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.menuScroll::-webkit-scrollbar {
+  width: 5px;
+}
+.menuScroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.menuScroll::-webkit-scrollbar-thumb {
+  background: #ced4da;
+  border-radius: 3px;
+}
+.menuScroll::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
+}
+
+/* ── Category section ── */
+.categorySection {
+  margin-bottom: 24px;
+}
+
+/* ── Category heading — matches Taplist <h2 class="fw-bold"> ── */
+.categoryHeading {
+  font-weight:    700;
+  font-size:      1.625rem;
+  line-height:    1.2;
+  color:          #212529;
+  padding:        16px 16px 8px;
+  margin:         0;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* Card wrapping each category's list — matches Taplist "mb-4 card" */
+.itemCard {
+  border:        1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.375rem;
+  margin:        0 12px 12px;
+  overflow:      hidden;
+}
+
+/* ── Item list ── */
+.itemList {
+  list-style: none;
+}
+
+/* ── Single item — 1041×160px total box, 16px padding all sides ── */
+.item {
+  display:         flex;
+  align-items:     flex-start;
+  justify-content: space-between;
+  min-height:      160px;
+  padding:         16px;
+  border-bottom:   1px solid rgba(0, 0, 0, 0.125);
+  gap:             12px;
+  box-sizing:      border-box;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.item:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* ── Item content ── */
+.itemContent {
+  flex:      1;
+  min-width: 0;
+}
+
+/* matches Taplist <h5 class="my-0"> */
+.itemTitle {
+  font-size:   1.2rem;
+  font-weight: normal;
+  margin:      0 0 4px 0;
+  line-height: 1.3;
+}
+
+.itemName {
+  font-weight: 700;
+  color:       #212529;
+}
+
+.itemBrewery {
+  color:       #6c757d;
+  font-weight: 400;
+  font-size:   1em;
+}
+
+/* matches Taplist <ul class="horizontal-bullets metadata"> */
+.metaList {
+  list-style:      none;
+  display:         flex;
+  flex-wrap:       wrap;
+  gap:             0;
+  font-weight:     300;
+  font-size:       0.95rem;
+  color:           #555;
+  margin:          2px 0 6px;
+  padding:         0;
+}
+
+/* Taplist uses CSS to add • between li items */
+.metaList li + li::before {
+  content:    " • ";
+  color:      #999;
+  margin:     0 3px;
+}
+
+/* ── Price row — matches Taplist dashed price line ── */
+.priceRow {
+  display:     flex;
+  align-items: center;
+  width:       100%;
+  line-height: 1;
+}
+
+.itemSize {
+  font-size:   1rem;
+  color:       #555;
+  white-space: nowrap;
+}
+
+.dottedLine {
+  flex:        1;
+  margin:      0 8px;
+  border-bottom: 1px dashed #999;
+  min-width:   16px;
+}
+
+.itemPrice {
+  font-size:   1rem;
+  font-weight: 500;
+  color:       #212529;
+  white-space: nowrap;
+}
+
+/* ── Glass image — matches Taplist "menu-item-image-container" ── */
+.glassWrap {
+  width:           144px;
+  height:          144px;
+  flex-shrink:     0;
+  background-color: #78909C;
+  border-radius:   12px;
+  padding:         8px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  overflow:        hidden;
+  box-sizing:      border-box;
+}
+
+.glassImg {
+  width:      100%;
+  height:     100%;
+  object-fit: contain;
+}
+
+/* ── Last updated footer ── */
+.lastUpdated {
+  padding:    12px 16px;
+  font-size:  0.8rem;
+  color:      #6c757d;
+  border-top: 1px solid #dee2e6;
+  text-align: center;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .menuHeader {
+    top:     0;
+    padding: 8px 12px;
+  }
+
+  .menuScroll {
+    height: 520px;
+  }
+
+  .item {
+    padding: 14px 12px;
+  }
+
+  .glassWrap {
+    width:  100px;
+    height: 100px;
+  }
+
+  .itemCard {
+    margin: 0 8px 12px;
+  }
+}

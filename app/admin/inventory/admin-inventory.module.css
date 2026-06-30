@@ -1,0 +1,197 @@
+.page {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-black);
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--color-text-light);
+  margin-top: 4px;
+}
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.statBox {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statLabel {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-muted);
+}
+
+.statValue {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-black);
+  line-height: 1.1;
+}
+
+.tableWrap {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  overflow-x: auto;
+}
+
+.tableHeader,
+.tableRow {
+  display: grid;
+  grid-template-columns: 2fr 0.6fr 0.7fr 0.5fr 0.5fr 0.7fr 0.5fr 0.7fr 0.6fr;
+  gap: 6px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 12px;
+}
+
+.tableHeader {
+  font-family: var(--font-heading);
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-muted);
+  background: #fafafa;
+  position: sticky;
+  top: 0;
+}
+
+.tableRow:last-child { border-bottom: none; }
+
+.cardName {
+  font-weight: 600;
+  color: var(--color-black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.setCode {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-text-light);
+  letter-spacing: 0.05em;
+}
+
+.condition {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-text-light);
+}
+
+.foil {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.foilYes {
+  color: #cc7700;
+  font-weight: 700;
+}
+
+.rarityBadge {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.rarity_Common   { background: #eee; color: #888; }
+.rarity_Uncommon { background: #e8e8e8; color: #999; }
+.rarity_Rare     { background: #fff8e0; color: #cc9900; }
+.rarity_Mythic   { background: #fff0e0; color: #cc5500; }
+
+.price {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-black);
+}
+
+.qty {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.qtyLow {
+  color: var(--color-accent);
+}
+
+.total {
+  font-size: 12px;
+  color: var(--color-text-light);
+}
+
+.actionsCell {
+  display: flex;
+  gap: 4px;
+}
+
+.actionBtn {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--color-border);
+  background: none;
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.actionBtn:hover:not(:disabled) { border-color: var(--color-black); color: var(--color-black); }
+.actionBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+@media (max-width: 900px) {
+  .statsRow { grid-template-columns: repeat(2, 1fr); }
+}

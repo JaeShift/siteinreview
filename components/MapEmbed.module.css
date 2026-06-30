@@ -1,0 +1,75 @@
+.mapWrapper {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  border: 1px solid #e8e8e8;
+  overflow: hidden;
+}
+
+.mapIframe {
+  width: 100%;
+  height: 450px;
+  border: none;
+  display: block;
+}
+
+.addressBar {
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background-color: #fafafa;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: 64px;
+  margin-bottom: -72px;
+}
+
+.addressText {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+.phoneLink {
+  padding-top: 10px;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  transition: color 0.2s;
+  text-decoration: underline;
+  text-decoration-color: var(--color-green);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.phoneLink:hover {
+  color: var(--color-green);
+}
+
+.socialLinks {
+  margin-top: 10px;
+}
+
+.socialLinks svg {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .mapIframe {
+    height: 350px;
+  }
+
+  .addressBar {
+    padding-bottom: 56px;
+    margin-bottom: -48px;
+  }
+}

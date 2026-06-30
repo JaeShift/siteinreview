@@ -1,0 +1,153 @@
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--color-black);
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.sidebarTitle {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-black);
+}
+
+.resultCount {
+  font-size: 12px;
+  color: var(--color-muted);
+  font-family: var(--font-body);
+  margin-left: auto;
+}
+
+.clearAll {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  padding: 0;
+  transition: opacity 0.15s ease;
+}
+
+.clearAll:hover {
+  opacity: 0.7;
+}
+
+.group {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.group:last-child {
+  border-bottom: none;
+}
+
+.groupTitle {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-text-light);
+  margin-bottom: 10px;
+}
+
+.groupItems {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--color-black);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkboxText {
+  font-size: 13px;
+  color: var(--color-text);
+  transition: color 0.15s ease;
+}
+
+.checkboxLabel:hover .checkboxText {
+  color: var(--color-black);
+}
+
+.select {
+  padding: 8px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.priceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priceInput {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 13px;
+  min-width: 0;
+}
+
+.priceSep {
+  color: var(--color-muted);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.colorBtn {
+  aspect-ratio: 1;
+  background: var(--color-gray-light);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  font-size: 16px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.colorBtn:hover {
+  border-color: var(--color-black);
+}
+
+.colorBtnActive {
+  border-color: var(--color-black);
+  background: var(--color-black);
+}

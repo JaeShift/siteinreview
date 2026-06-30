@@ -1,0 +1,143 @@
+.productSection {
+  padding: 56px 0 80px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-gray-mid);
+  margin-bottom: 40px;
+  font-family: var(--font-heading);
+  letter-spacing: 0.04em;
+}
+
+.breadcrumbLink {
+  color: var(--color-gray-mid);
+  transition: color 0.2s;
+}
+
+.breadcrumbLink:hover {
+  color: var(--color-orange);
+}
+
+.breadcrumbSep {
+  color: #ccc;
+}
+
+.breadcrumbCurrent {
+  color: var(--color-text);
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.productImageCol {
+  position: sticky;
+  top: calc(var(--nav-height) + 24px);
+}
+
+.productImageWrap {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  overflow: hidden;
+  background-color: var(--color-gray-light);
+  border: 1px solid #e8e8e8;
+}
+
+.productDetailsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.productTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.productPrice {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-orange);
+}
+
+.productDesc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+.productActions {
+  margin-top: 8px;
+}
+
+.addToCartRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.qtyInput {
+  width: 70px;
+}
+
+.addCartBtn {
+  flex: 1;
+  max-width: 200px;
+}
+
+.shareRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #e8e8e8;
+  font-size: 13px;
+}
+
+.shareLabel {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gray-mid);
+}
+
+.shareLink {
+  font-size: 13px;
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+
+.shareLink:hover {
+  color: var(--color-orange);
+}
+
+.soldOut {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .productGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .productImageCol {
+    position: static;
+  }
+}

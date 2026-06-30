@@ -1,0 +1,247 @@
+export type GlassType =
+  | "tulip-pint"
+  | "tulip"
+  | "pilsner"
+  | "shaker-pint"
+  | "snifter"
+  | "cabernet"
+  | "highball"
+  | "martini"
+  | "mason-mug";
+
+export type MenuItem = {
+  name: string;
+  brewery: string;
+  style: string;
+  abv?: string;
+  srm?: string;
+  size: string;
+  price: string;
+  glassType: GlassType;
+  glassColor: string;
+};
+
+export type MenuCategory = "On Tap" | "Wine" | "Mixed Drinks";
+
+export const menuData: Record<MenuCategory, MenuItem[]> = {
+  "On Tap": [
+    {
+      name: "What the Jorts",
+      brewery: "Kitsune Brewing Co.",
+      style: "Czech Lager",
+      abv: "5.2%",
+      srm: "2",
+      size: "16 oz draft",
+      price: "$7",
+      glassType: "tulip-pint",
+      glassColor: "ffd878",
+    },
+    {
+      name: "Blue Raspberry Lemonade",
+      brewery: "Kitsune Brewing Co.",
+      style: "Fruited Sour",
+      abv: "6%",
+      size: "13 oz draft",
+      price: "$7",
+      glassType: "shaker-pint",
+      glassColor: "1c82ff",
+    },
+    {
+      name: "Post Lemon",
+      brewery: "Kitsune Brewing and LPBC",
+      style: "Lemon Shandy",
+      srm: "2",
+      size: "16 oz draft",
+      price: "$7",
+      glassType: "tulip-pint",
+      glassColor: "ffd878",
+    },
+    {
+      name: "Belgium Pilsner",
+      brewery: "Bavek",
+      style: "Belgium Pilsner",
+      abv: "5.2%",
+      size: "16 oz glass",
+      price: "$7",
+      glassType: "pilsner",
+      glassColor: "edffa7",
+    },
+    {
+      name: "DDH Sax A Boom Sunrise",
+      brewery: "Kitsune Brewing Co.",
+      style: "West Coast IPA",
+      abv: "7.2%",
+      size: "16 oz draft",
+      price: "$7",
+      glassType: "pilsner",
+      glassColor: "f9e09f",
+    },
+    {
+      name: "Fresh Pressed",
+      brewery: "Cider Bro's",
+      style: "Cider",
+      abv: "5%",
+      size: "13 oz draft",
+      price: "$7",
+      glassType: "tulip",
+      glassColor: "ffe7e7",
+    },
+    {
+      name: "DDH Nine Tails as Old as Time",
+      brewery: "Kitsune Brewing Co.",
+      style: "Hazy IPA",
+      abv: "7.5%",
+      size: "16 oz draft",
+      price: "$7",
+      glassType: "pilsner",
+      glassColor: "fff920",
+    },
+    {
+      name: "DDH Ramen and OJ",
+      brewery: "Kitsune Brewing Co.",
+      style: "Hazy DIPA",
+      abv: "6.5%",
+      size: "16 oz draft",
+      price: "$7",
+      glassType: "pilsner",
+      glassColor: "e29617",
+    },
+    {
+      name: "B.A.B.A YAGA",
+      brewery: "Kitsune Brewing Co.",
+      style: "Russian Imperial Stout",
+      abv: "13.5%",
+      size: "10 oz draft",
+      price: "$8",
+      glassType: "tulip",
+      glassColor: "1c1919",
+    },
+    {
+      name: "Forager",
+      brewery: "Kitsune Brewing Co.",
+      style: "Hazy IPA",
+      abv: "7.2%",
+      size: "16 oz draft",
+      price: "$7",
+      glassType: "pilsner",
+      glassColor: "ffea93",
+    },
+    {
+      name: "Mango Habanero Seltzer",
+      brewery: "Kitsune Brewing Co.",
+      style: "Hard Seltzer",
+      abv: "5.5%",
+      size: "16 oz draft",
+      price: "$7",
+      glassType: "tulip-pint",
+      glassColor: "ffe7b4",
+    },
+    {
+      name: "Three Gears Deep",
+      brewery: "Kitsune Brewing Co.",
+      style: "Tripel",
+      abv: "9%",
+      size: "13 oz draft",
+      price: "$7",
+      glassType: "snifter",
+      glassColor: "f8bc59",
+    },
+    {
+      name: "Red Ronin",
+      brewery: "Kitsune Brewing Co.",
+      style: "Imperial Red Ale",
+      abv: "9%",
+      size: "13 oz draft",
+      price: "$7",
+      glassType: "snifter",
+      glassColor: "854f4f",
+    },
+    {
+      name: "What That Mace Windu",
+      brewery: "Kitsune Brewing Co.",
+      style: "Fruited Sour",
+      abv: "6%",
+      size: "13 oz draft",
+      price: "$7",
+      glassType: "snifter",
+      glassColor: "455489",
+    },
+  ],
+
+  Wine: [
+    {
+      name: "Juggernaut",
+      brewery: "Juggernaut Wines",
+      style: "Cabernet Sauvignon",
+      abv: "14.5%",
+      size: "5 oz glass",
+      price: "$9",
+      glassType: "cabernet",
+      glassColor: "4b122d",
+    },
+    {
+      name: "Lunetta Prosecco",
+      brewery: "Lunetta",
+      style: "Prosecco",
+      abv: "11.5%",
+      size: "5 oz glass",
+      price: "$9",
+      glassType: "cabernet",
+      glassColor: "ffffff",
+    },
+    {
+      name: "Angeline",
+      brewery: "Angeline Rose",
+      style: "",
+      abv: "12%",
+      size: "5 oz glass",
+      price: "$9",
+      glassType: "cabernet",
+      glassColor: "eac8dc",
+    },
+    {
+      name: "Wildsong",
+      brewery: "WildSong Sauv Blanc",
+      style: "Sauv Blanc",
+      abv: "13.5%",
+      size: "5 oz glass",
+      price: "$9",
+      glassType: "cabernet",
+      glassColor: "fff5cc",
+    },
+  ],
+
+  "Mixed Drinks": [
+    {
+      name: "Moscow Mule",
+      brewery: "Kitsune Brewing Co.",
+      style: "",
+      abv: "13%",
+      size: "13 oz glass",
+      price: "$11",
+      glassType: "mason-mug",
+      glassColor: "f2f4da",
+    },
+    {
+      name: "Strawberry Bliss",
+      brewery: "Kitsune Brewing Co.",
+      style: "",
+      size: "10 oz glass",
+      price: "$11",
+      glassType: "martini",
+      glassColor: "de7070",
+    },
+    {
+      name: "Cider and Sly",
+      brewery: "Kitsune Brewing Co.",
+      style: "",
+      abv: "12%",
+      size: "10 oz glass",
+      price: "$10",
+      glassType: "highball",
+      glassColor: "fff8d5",
+    },
+  ],
+};
+
+export const menuCategories = Object.keys(menuData) as MenuCategory[];

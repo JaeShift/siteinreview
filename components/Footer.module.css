@@ -1,0 +1,184 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Footer typography from live site CSS (site.css):
+   - Business info: proxima-nova, 10px, weight 600, letter-spacing 0.18em, uppercase, color #999
+   - Name labels: futura-pt, 10px, weight 700, letter-spacing 0.18em, uppercase, color #999
+   - Background: #fafafa (live site Footer background matches --color-bg)
+   We keep black background for contrast/aesthetics since live site is Squarespace-styled.
+───────────────────────────────────────────────────────────────────────────── */
+
+.footer {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  margin-top: auto;
+}
+
+.footerInner {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-top: 64px;
+  padding-bottom: 48px;
+}
+
+.footerLogoCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Tagline — matches .Footer-business-info: proxima-nova, 10px, 600, letter-spacing .18em, uppercase */
+.footerTagline {
+  font-family:    var(--font-body);
+  font-size:      10px;
+  font-weight:    600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height:    1.8em;
+  color:          rgba(255, 255, 255, 0.6);
+}
+
+.footerCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Section heading — matches Footer-business-info-item--name: futura-pt, 10px, 700, letter-spacing .18em */
+.footerHeading {
+  font-family:    var(--font-heading);
+  font-size:      10px;
+  font-weight:    700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height:    1.8em;
+  color:          rgba(255, 255, 255, 0.5);
+  margin-bottom:  4px;
+}
+
+/* Address — proxima-nova body text */
+.footerAddress {
+  font-family:    var(--font-body);
+  font-style:     normal;
+  font-size:      14px;
+  font-weight:    400;
+  letter-spacing: 0.01em;
+  line-height:    1.8em;
+  color:          rgba(255, 255, 255, 0.75);
+}
+
+/* Footer links — body font, 14px */
+.footerLink {
+  font-family:    var(--font-body);
+  font-size:      14px;
+  font-weight:    400;
+  letter-spacing: 0.01em;
+  line-height:    1.8em;
+  color:          rgba(255, 255, 255, 0.75);
+  transition:     color 170ms ease-in-out;
+  display:        block;
+}
+
+.footerLink:hover {
+  color: var(--color-white);
+}
+
+.footerSocial {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Hours list — proxima-nova, small */
+.footerHours {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footerHoursRow {
+  display:        flex;
+  justify-content: space-between;
+  gap:            12px;
+  font-family:    var(--font-body);
+  font-size:      13px;
+  font-weight:    400;
+  letter-spacing: 0.01em;
+}
+
+.footerHoursDay {
+  color:     rgba(255, 255, 255, 0.75);
+  min-width: 90px;
+}
+
+.footerHoursTime {
+  color:       var(--color-white);
+  font-weight: 500;
+}
+
+.footerHoursTimeClosed {
+  color:       rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+}
+
+/* Footer nav — futura-pt, uppercase, small: matches nav-font pattern */
+.footerNav {
+  display:        flex;
+  flex-direction: column;
+  gap:            10px;
+}
+
+.footerNavLink {
+  font-family:    var(--font-heading);
+  font-size:      10px;
+  font-weight:    700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height:    1.8em;
+  color:          rgba(255, 255, 255, 0.75);
+  transition:     color 170ms ease-in-out;
+}
+
+.footerNavLink:hover {
+  color: var(--color-white);
+}
+
+.footerBottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding:    20px 0;
+}
+
+/* Copyright line — futura-pt, 10px, uppercase */
+.footerBottomInner {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  font-family:     var(--font-heading);
+  font-size:       10px;
+  font-weight:     700;
+  letter-spacing:  0.18em;
+  text-transform:  uppercase;
+  color:           rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 900px) {
+  .footerInner {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footerInner {
+    grid-template-columns: 1fr;
+    gap:          32px;
+    padding-top:  48px;
+    padding-bottom: 32px;
+  }
+
+  .footerBottomInner {
+    flex-direction: column;
+    gap:        4px;
+    text-align: center;
+  }
+}

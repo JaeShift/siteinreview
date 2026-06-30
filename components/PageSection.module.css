@@ -1,0 +1,23 @@
+.pageSection {
+  padding-top: 35px;
+  padding-bottom: 72px;
+}
+
+.pageSection.noBottomPadding {
+  padding-bottom: 0;
+}
+
+.textCentered {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .pageSection {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .pageSection.noBottomPadding {
+    padding-bottom: 0;
+  }
+}

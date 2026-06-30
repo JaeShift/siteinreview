@@ -1,0 +1,170 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.eventSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  background: var(--color-gray-light);
+  border-left: 3px solid var(--color-accent);
+  margin-bottom: 4px;
+}
+
+.summaryLabel {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-muted);
+}
+
+.summaryTitle {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-black);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.summaryDate,
+.summaryFee {
+  font-size: 13px;
+  color: var(--color-text-light);
+}
+
+.summaryFee {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-orange);
+  font-size: 14px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputError {
+  border-color: var(--color-accent) !important;
+}
+
+.error {
+  font-size: 11px;
+  color: var(--color-accent);
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.submitBtn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.privacyNote {
+  font-size: 11px;
+  color: var(--color-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ── Success state ── */
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.successIcon {
+  color: var(--color-green);
+}
+
+.successTitle {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-black);
+}
+
+.successText {
+  font-size: 15px;
+  color: var(--color-text-light);
+}
+
+.confirmationBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 32px;
+  border: 2px solid var(--color-black);
+  background: var(--color-gray-light);
+}
+
+.confirmationLabel {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-muted);
+}
+
+.confirmationNumber {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-black);
+}
+
+.successDetails {
+  background: var(--color-gray-light);
+  padding: 16px;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.successDetails p {
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.successNote {
+  font-size: 12px;
+  color: var(--color-text-light);
+  max-width: 360px;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}

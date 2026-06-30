@@ -1,0 +1,21 @@
+/* Section heading — matches live site h2:
+   futura-pt, font-weight:600, font-size:35px, letter-spacing:-.01em, line-height:1em
+   Page uses large display size so we scale up for impact with clamp. */
+.sectionHeading {
+  font-family:    var(--font-heading);
+  font-size:      clamp(1.8rem, 4vw, 2.8rem);
+  font-weight:    600;
+  letter-spacing: -0.01em;
+  line-height:    1em;
+  font-style:     normal;
+  color:          var(--color-text);
+  text-align:     center;
+  display:        block;
+  margin-left:    auto;
+  margin-right:   auto;
+  margin-bottom:  40px;
+}
+
+section.eventsSection {
+  padding-bottom: 7px;
+}

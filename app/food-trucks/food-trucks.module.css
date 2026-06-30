@@ -1,0 +1,198 @@
+.sectionHeading {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-black);
+  margin-bottom: 24px;
+}
+
+.sectionSubtext {
+  font-size: 15px;
+  color: var(--color-text-light);
+  line-height: 1.7;
+  max-width: 600px;
+  margin-bottom: 28px;
+  margin-top: -12px;
+}
+
+.noTruck {
+  padding: 48px;
+  border: 1px dashed var(--color-border);
+  text-align: center;
+}
+
+.noTruck p {
+  font-size: 15px;
+  color: var(--color-text-light);
+  line-height: 1.6;
+}
+
+/* ── Weekly Schedule ── */
+.weekGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
+}
+
+.weekDay {
+  background: var(--color-white);
+  padding: 16px;
+  min-height: 120px;
+}
+
+.weekDayToday {
+  background: #fff8f8;
+}
+
+.weekDayHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.weekDayName {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-light);
+}
+
+.weekDayDate {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-black);
+}
+
+.todayBadge {
+  display: inline-block;
+  padding: 2px 6px;
+  background: var(--color-accent);
+  font-family: var(--font-heading);
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-white);
+  align-self: flex-start;
+}
+
+.weekDayTrucks {
+  display: flex;
+  flex-direction: column;
+}
+
+.noTruckDay {
+  font-size: 11px;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+/* ── Upcoming Grid ── */
+.upcomingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* ── Directory ── */
+.directoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.directoryCard {
+  border: 1px solid var(--color-border);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-white);
+}
+
+.directoryTop {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.directoryName {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-black);
+}
+
+.directoryCuisine {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-muted);
+}
+
+.directoryDesc {
+  font-size: 13px;
+  color: var(--color-text-light);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.directoryLinks {
+  display: flex;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border);
+}
+
+.directoryLink {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.directoryLink:link,
+.directoryLink:visited {
+  color: var(--color-text-light);
+}
+
+.directoryLink:hover {
+  color: var(--color-black);
+}
+
+@media (max-width: 900px) {
+  .weekGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .weekGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .upcomingGrid {
+    grid-template-columns: 1fr;
+  }
+}

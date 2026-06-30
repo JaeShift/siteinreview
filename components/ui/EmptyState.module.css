@@ -1,0 +1,35 @@
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  gap: 16px;
+}
+
+.icon,
+.defaultIcon {
+  color: var(--color-border);
+  margin-bottom: 8px;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text);
+}
+
+.message {
+  font-size: 15px;
+  color: var(--color-text-light);
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+.action {
+  margin-top: 8px;
+}

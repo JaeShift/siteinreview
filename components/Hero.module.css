@@ -1,0 +1,45 @@
+.hero {
+  position: relative;
+  width: calc(100% - 220px);
+  margin-left: 110px;
+  margin-right: 110px;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  background-color: var(--color-black);
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-white);
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.scrollText {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.scrollArrow {
+  font-size: 18px;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 180px;
+  }
+}
