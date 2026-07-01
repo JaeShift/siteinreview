@@ -1,0 +1,24 @@
+[
+  {
+    "id": "cs_test_mock001",
+    "stripeSessionId": "cs_test_mock001",
+    "customerName": "Alex Rivera",
+    "customerEmail": "alex.rivera@example.com",
+    "description": "Friday Night Magic: Standard · July 4, 2026 · Standard",
+    "amountTotal": 1000,
+    "currency": "usd",
+    "status": "paid",
+    "metadata": {
+      "eventSlug": "friday-night-magic-standard",
+      "eventTitle": "Friday Night Magic: Standard",
+      "eventDate": "July 4, 2026",
+      "eventFormat": "Standard",
+      "firstName": "Alex",
+      "lastName": "Rivera",
+      "email": "alex.rivera@example.com",
+      "phone": "(602) 555-0101",
+      "notes": "Esper Midrange"
+    },
+    "createdAt": "2026-06-30T20:00:00.000Z"
+  }
+]

@@ -3,6 +3,7 @@
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./login.module.css";
 
 function LoginForm() {
@@ -11,6 +12,7 @@ function LoginForm() {
   const from = searchParams.get("from") ?? "/admin";
 
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -46,17 +48,27 @@ function LoginForm() {
         <label className="form-label" htmlFor="admin-password">
           Password
         </label>
-        <input
-          id="admin-password"
-          type="password"
-          className="form-input"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter admin password"
-          autoComplete="current-password"
-          autoFocus
-          disabled={loading}
-        />
+        <div className={styles.passwordWrap}>
+          <input
+            id="admin-password"
+            type={showPassword ? "text" : "password"}
+            className="form-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter admin password"
+            autoComplete="current-password"
+            autoFocus
+            disabled={loading}
+          />
+          <button
+            type="button"
+            className={styles.showToggle}
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
+        </div>
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
@@ -87,10 +99,8 @@ export default function AdminLoginPage() {
           <LoginForm />
         </Suspense>
 
-        <p className={styles.hint}>
-          Default password is set via the <code>ADMIN_PASSWORD</code> environment variable.
-        </p>
       </div>
+      <Link href="/" className={styles.backLink}>← Back to Site</Link>
     </div>
   );
 }

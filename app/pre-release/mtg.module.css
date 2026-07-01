@@ -1,0 +1,12 @@
+.eventsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--color-gray-mid);
+  font-size: 16px;
+}

@@ -11,8 +11,8 @@
   justify-content: space-between;
   height: var(--nav-height);
   width: calc(100% - 220px);
-  margin-left: 110px;
-  margin-right: 110px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .headerLogo {
@@ -55,6 +55,17 @@
 
 .cartLink {
   padding-left: 80px;
+  margin-right: 0;
+  margin-left: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  font-size: 13px;
+  font-family: futura-pt;
+  font-style: normal;
 }
 
 .navLinkActive,

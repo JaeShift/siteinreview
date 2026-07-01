@@ -28,16 +28,32 @@
   margin-top: 4px;
 }
 
-.sectionTitle {
-  font-family: var(--font-heading);
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--color-black);
-  margin-bottom: 16px;
+/* ─── Empty state ─────────────────────────────────────────────────────────── */
+.empty {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  padding: 60px 32px;
+  text-align: center;
 }
 
+.emptyTitle {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-black);
+  margin-bottom: 8px;
+}
+
+.emptyDesc {
+  font-size: 14px;
+  color: var(--color-text-light);
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* ─── Table ───────────────────────────────────────────────────────────────── */
 .tableWrap {
   background: var(--color-white);
   border: 1px solid var(--color-border);
@@ -47,7 +63,7 @@
 .tableHeader,
 .tableRow {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1.5fr 1fr 1.5fr 0.6fr 1fr;
+  grid-template-columns: 1.1fr 1.1fr 1.5fr 1.5fr 0.8fr 0.7fr 1fr;
   gap: 8px;
   align-items: center;
   padding: 11px 20px;
@@ -66,104 +82,59 @@
 }
 
 .tableRow:last-child { border-bottom: none; }
+.tableRow:hover { background: #fafafa; }
 
-.confirmNum {
+.orderId {
   font-family: var(--font-heading);
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   color: var(--color-text-light);
 }
 
-.playerName {
+.customerName {
   font-weight: 600;
   color: var(--color-black);
 }
 
-.email, .phone { color: var(--color-text-light); }
-
-.eventName {
+.email {
+  color: var(--color-text-light);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--color-text);
 }
+
+.description {
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.amount {
+  font-weight: 700;
+  color: var(--color-black);
+  font-family: var(--font-heading);
+  font-size: 12px;
+}
+
+.status {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.status_paid     { background: #f0fdf4; color: #15803d; }
+.status_pending  { background: #fefce8; color: #a16207; }
+.status_refunded { background: #fef2f2; color: #991b1b; }
 
 .date {
   color: var(--color-muted);
   font-family: var(--font-heading);
   font-size: 10px;
-}
-
-.notes {
-  color: var(--color-text-light);
-  font-style: italic;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Event breakdown */
-.eventBreakdown {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.eventGroup {
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
-  overflow: hidden;
-}
-
-.eventGroupHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 20px;
-  background: #fafafa;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.eventGroupTitle {
-  font-family: var(--font-heading);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-black);
-}
-
-.eventGroupCount {
-  font-family: var(--font-heading);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-muted);
-}
-
-.eventGroupList {
-  display: flex;
-  flex-direction: column;
-}
-
-.regRow {
-  display: grid;
-  grid-template-columns: 1.2fr 1.5fr 1fr;
-  gap: 8px;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--color-border);
-  font-size: 12px;
-  color: var(--color-text);
-}
-
-.regRow:last-child { border-bottom: none; }
-
-.regEmail { color: var(--color-text-light); }
-
-.regConf {
-  font-family: var(--font-heading);
-  font-size: 10px;
-  color: var(--color-muted);
 }

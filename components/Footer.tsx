@@ -69,8 +69,11 @@ export default function Footer() {
           <nav className={styles.footerNav} aria-label="Footer navigation">
             <Link href="/" className={styles.footerNavLink}>Home</Link>
             <Link href="/casino-night" className={styles.footerNavLink}>Casino Night</Link>
-            <Link href="/mtg-and-more" className={styles.footerNavLink}>MTG and More</Link>
-            <Link href="/magic-mamas-pre-release" className={styles.footerNavLink}>Magic Mamas Pre-Release</Link>
+            <Link href="/card-shop" className={styles.footerNavLink}>Card Shop</Link>
+            <Link href="/pre-release" className={styles.footerNavLink}>Pre-Release</Link>
+            <Link href="/events" className={styles.footerNavLink}>Events</Link>
+            <Link href="/private-events" className={styles.footerNavLink}>Private Events</Link>
+            <Link href="/calendar" className={styles.footerNavLink}>Calendar</Link>
             <Link href="/contact" className={styles.footerNavLink}>Contact Us</Link>
           </nav>
         </div>
@@ -80,6 +83,7 @@ export default function Footer() {
         <div className={`container ${styles.footerBottomInner}`}>
           <p>© {new Date().getFullYear()} Kitsune Brewing Co. All rights reserved.</p>
           <p>Phoenix, AZ</p>
+          <Link href="/admin" className={styles.adminLink}>Admin</Link>
         </div>
       </div>
     </footer>

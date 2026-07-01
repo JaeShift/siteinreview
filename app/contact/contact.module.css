@@ -1,5 +1,7 @@
 .contactSection {
-  padding: 72px 0 80px;
+  padding: 40px 0 48px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .contactGrid {
@@ -9,14 +11,26 @@
   align-items: start;
 }
 
+.contactHeading {
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.25px;
+  font-size: 45px;
+  font-family: futura-pt, var(--font-heading);
+  line-height: 1em;
+  margin-bottom: 16px;
+  color: #707070;
+}
+
 .contactSubtitle {
   font-family: var(--font-heading);
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
   color: var(--color-gray-mid);
-  margin-bottom: 28px;
+  margin-top: 28px;
+  margin-bottom: 38px;
 }
 
 .contactInfoCol {

@@ -70,7 +70,24 @@ export default function RegistrationForm({ event, onSuccess }: Props) {
       return;
     }
     setStatus("loading");
+
     try {
+      // Paid events → redirect to Stripe Checkout
+      if (event.entryFee > 0) {
+        const res = await fetch("/api/checkout/events", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ eventSlug: event.slug, ...form }),
+        });
+        const data = await res.json();
+        if (res.ok && data.url) {
+          window.location.href = data.url;
+          return;
+        }
+        throw new Error(data.error ?? "Checkout failed");
+      }
+
+      // Free events → existing registration flow
       const result = await submitRegistration({ eventSlug: event.slug, ...form });
       if (result.success && result.confirmationNumber) {
         setConfirmationNumber(result.confirmationNumber);
@@ -195,7 +212,9 @@ export default function RegistrationForm({ event, onSuccess }: Props) {
         className={`btn btn-primary ${styles.submitBtn}`}
         disabled={status === "loading"}
       >
-        {status === "loading" ? "Registering…" : "Complete Registration"}
+        {status === "loading"
+          ? (event.entryFee > 0 ? "Redirecting to payment…" : "Registering…")
+          : (event.entryFee > 0 ? `Register & Pay $${event.entryFee}` : "Complete Registration")}
       </button>
 
       <p className={styles.privacyNote}>

@@ -21,12 +21,13 @@ const COLORS: { code: CardColor; label: string; symbol: string }[] = [
   { code: "Colorless", label: "Colorless", symbol: "◇" },
 ];
 const TYPES: CardType[] = ["Creature", "Instant", "Sorcery", "Enchantment", "Artifact", "Planeswalker", "Land", "Battle"];
-const RARITIES: Rarity[] = ["Common", "Uncommon", "Rare", "Mythic"];
+const RARITIES: Rarity[] = ["Mythic", "Rare", "Uncommon", "Common"];
 const SORTS: { value: SortOption; label: string }[] = [
   { value: "name-asc",   label: "Name: A → Z" },
   { value: "name-desc",  label: "Name: Z → A" },
   { value: "price-asc",  label: "Price: Low → High" },
   { value: "price-desc", label: "Price: High → Low" },
+  { value: "newest",     label: "Recently Added" },
 ];
 
 function toggle<T>(arr: T[], item: T): T[] {

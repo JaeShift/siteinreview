@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Hero from "@/components/Hero";
 import PageSection from "@/components/PageSection";
-import OnTapMenu from "@/components/OnTapMenu";
+import MenuEmbed from "@/components/MenuEmbed";
 import CalendarEmbed from "@/components/CalendarEmbed";
 import MapEmbed from "@/components/MapEmbed";
-import { getMenuStore } from "@/lib/store";
-import type { MenuCategory } from "@/lib/menu-data";
 import styles from "./home.module.css";
 
 export const metadata: Metadata = {
@@ -15,13 +13,7 @@ export const metadata: Metadata = {
     "Welcome to Kitsune Brewing Co. — a craft brewery and taproom in Phoenix, AZ. Check out our rotating taps, events calendar, and upcoming MTG nights.",
 };
 
-// Always read the latest menu from the store (updated via admin panel)
-export const dynamic = "force-dynamic";
-
 export default function HomePage() {
-  const menuData = getMenuStore();
-  const menuCategories = Object.keys(menuData) as MenuCategory[];
-
   return (
     <>
       {/* Hero Banner */}
@@ -33,7 +25,7 @@ export default function HomePage() {
       {/* What's On Tap — Menu */}
       <PageSection background="white" id="menu">
         <Image src="/images/whats-on.png" alt="What's On Tap?" width={500} height={58} className={styles.sectionHeading} />
-        <OnTapMenu menuData={menuData} menuCategories={menuCategories} />
+        <MenuEmbed />
       </PageSection>
 
       {/* What's Going On — Events Calendar */}

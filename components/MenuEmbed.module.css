@@ -1,15 +1,15 @@
 .menuEmbedWrapper {
   width: 100%;
-  max-width: 900px;
+  max-width: 1069px;
   margin: 0 auto;
-  border: 1px solid #e8e8e8;
+  border: none;
   overflow: hidden;
   background-color: var(--color-white);
 }
 
 .menuIframe {
   width: 100%;
-  height: 700px;
+  height: 900px;
   border: none;
   display: block;
 }
@@ -22,6 +22,6 @@
 
 @media (max-width: 480px) {
   .menuIframe {
-    height: 500px;
+    height: 520px;
   }
 }

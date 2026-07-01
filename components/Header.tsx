@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useCart } from "@/lib/cart-context";
 import styles from "./Header.module.css";
 
-type ChildLink = { label: string; href: string };
+type ChildLink = { label: React.ReactNode; href: string };
 type NavItem =
   | { label: string; href: string; children?: never }
   | { label: string; href?: never; children: ChildLink[] };
@@ -15,24 +16,23 @@ const navLinks: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "Casino Night", href: "/casino-night" },
   {
-    label: "MTG & Gaming",
+    label: "MTG AND MORE",
     children: [
-      { label: "MTG and More", href: "/mtg-and-more" },
-      { label: "Events", href: "/events" },
-      { label: "Singles", href: "/singles" },
-      { label: "Magic Mamas Pre-Release", href: "/magic-mamas-pre-release" },
+      { label: <>Pre<span style={{ fontWeight: 700, letterSpacing: "-0.03em" }}> - </span>Release</>, href: "/pre-release" },
+      { label: "Card Shop", href: "/card-shop" },
+      { label: "MTG Events", href: "/events" },
+      { label: "Private Events", href: "/private-events" },
     ],
   },
   { label: "Calendar", href: "/calendar" },
   { label: "Contact Us", href: "/contact" },
 ];
 
-const cartCount = 0;
-
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [gamingOpen, setGamingOpen] = useState(false);
   const pathname = usePathname();
+  const { totalCount, openCart } = useCart();
 
   useEffect(() => {
     setMenuOpen(false);
@@ -87,9 +87,13 @@ export default function Header() {
               </Link>
             );
           })}
-          <Link href="/cart" className={`${styles.navLink} ${styles.cartLink}`}>
-            CART [{cartCount}]
-          </Link>
+          <button
+            className={`${styles.navLink} ${styles.cartLink}`}
+            onClick={openCart}
+            aria-label={`Open cart — ${totalCount} item${totalCount !== 1 ? "s" : ""}`}
+          >
+            CART ({totalCount})
+          </button>
         </nav>
 
         <button

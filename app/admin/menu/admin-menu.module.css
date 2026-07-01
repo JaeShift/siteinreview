@@ -87,7 +87,7 @@
 .itemsTable { display: flex; flex-direction: column; }
 .tableHead {
   display: grid;
-  grid-template-columns: 2fr 1.5fr 1fr 0.8fr 0.6fr 1fr;
+  grid-template-columns: 2fr 1.5fr 1fr 0.8fr 0.6fr 1fr 28px;
   gap: 12px;
   padding: 10px 20px;
   font-family: var(--font-heading);
@@ -100,16 +100,48 @@
 }
 .tableRow {
   display: grid;
-  grid-template-columns: 2fr 1.5fr 1fr 0.8fr 0.6fr 1fr;
+  grid-template-columns: 2fr 1.5fr 1fr 0.8fr 0.6fr 1fr 28px;
   gap: 12px;
   align-items: center;
   padding: 12px 20px;
   font-size: 14px;
   border-bottom: 1px solid var(--color-border);
   transition: background 0.15s;
+  cursor: default;
 }
 .tableRow:last-child { border-bottom: none; }
 .tableRow:hover { background: #fafafa; }
+.tableRow.dragging { opacity: 0.4; background: #f0f0f0; }
+
+.dragHandle {
+  font-size: 18px;
+  color: #ccc;
+  cursor: grab;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+.dragHandle:hover { color: #888; }
+.tableRow:active .dragHandle { cursor: grabbing; }
+
+.handleHint {
+  font-size: 16px;
+  vertical-align: middle;
+  color: #aaa;
+}
+
+.srmBadge {
+  font-size: 11px;
+  background: #f0f0f0;
+  padding: 1px 6px;
+  border-radius: 2px;
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
 
 .itemName { display: flex; flex-direction: column; gap: 2px; }
 .itemName strong { font-weight: 600; color: var(--color-black); }

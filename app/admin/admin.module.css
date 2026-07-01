@@ -1,11 +1,16 @@
 .adminShell {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background: #f5f5f5;
 }
 
+/* Login page gets a dark background via the login.module.css .page rule */
+
 .adminContent {
   flex: 1;
   overflow-x: hidden;
-  min-height: 100vh;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
 }

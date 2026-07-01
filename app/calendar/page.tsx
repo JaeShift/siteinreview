@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageSection from "@/components/PageSection";
 import CalendarPageClient from "./CalendarPageClient";
+import AddressBar from "@/components/AddressBar";
 import { getCalendarProvider } from "@/lib/calendar";
 import styles from "./calendar.module.css";
 
@@ -54,6 +55,7 @@ export default async function CalendarPage() {
           </div>
         </div>
       </section>
+      <AddressBar />
     </>
   );
 }

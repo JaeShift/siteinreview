@@ -4,7 +4,7 @@ export default function MenuEmbed() {
   return (
     <div className={styles.menuEmbedWrapper}>
       <iframe
-        src="https://taplist.io/ew8u/"
+        src="https://taplist.io/taplist-975059"
         title="Kitsune Brewing Co. Menu"
         allowFullScreen
         loading="lazy"

@@ -107,6 +107,38 @@ export function deleteEvent(slug: string): MtgEvent[] {
   return events;
 }
 
+// ─── Orders ──────────────────────────────────────────────────────────────────
+
+export interface Order {
+  id: string;           // Stripe session ID (cs_...)
+  stripeSessionId: string;
+  customerName: string;
+  customerEmail: string;
+  description: string;  // e.g. event title or item name
+  amountTotal: number;  // in cents
+  currency: string;
+  status: "paid" | "pending" | "refunded";
+  metadata: Record<string, string>;
+  createdAt: string;    // ISO string
+}
+
+export function getOrdersStore(): Order[] {
+  return readJson<Order[]>("orders.json", []);
+}
+
+export function saveOrdersStore(orders: Order[]): void {
+  writeJson("orders.json", orders);
+}
+
+export function addOrder(order: Order): Order[] {
+  const existing = getOrdersStore();
+  // Avoid duplicates if webhook fires twice
+  if (existing.some((o) => o.stripeSessionId === order.stripeSessionId)) return existing;
+  const orders = [order, ...existing];
+  saveOrdersStore(orders);
+  return orders;
+}
+
 // ─── Food Trucks ─────────────────────────────────────────────────────────────
 
 export function getFoodTrucksStore(): FoodTruck[] {

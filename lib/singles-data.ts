@@ -809,12 +809,13 @@ export const availableSets = [
 // ─── Filter + sort helpers ────────────────────────────────────────────────────
 
 export function filterSingles(cards: SingleCard[], filters: Partial<SinglesFilters>): SingleCard[] {
-  let result = [...cards];
+  const indexed = cards.map((card, i) => ({ card, i }));
+  let result = indexed;
 
   if (filters.search) {
     const q = filters.search.toLowerCase();
     result = result.filter(
-      (c) =>
+      ({ card: c }) =>
         c.name.toLowerCase().includes(q) ||
         c.set.toLowerCase().includes(q) ||
         c.setCode.toLowerCase().includes(q)
@@ -822,49 +823,50 @@ export function filterSingles(cards: SingleCard[], filters: Partial<SinglesFilte
   }
 
   if (filters.sets?.length) {
-    result = result.filter((c) => filters.sets!.includes(c.setCode));
+    result = result.filter(({ card: c }) => filters.sets!.includes(c.setCode));
   }
 
   if (filters.conditions?.length) {
-    result = result.filter((c) => filters.conditions!.includes(c.condition));
+    result = result.filter(({ card: c }) => filters.conditions!.includes(c.condition));
   }
 
   if (filters.colors?.length) {
-    result = result.filter((c) => filters.colors!.includes(c.color));
+    result = result.filter(({ card: c }) => filters.colors!.includes(c.color));
   }
 
   if (filters.types?.length) {
-    result = result.filter((c) => filters.types!.includes(c.type));
+    result = result.filter(({ card: c }) => filters.types!.includes(c.type));
   }
 
   if (filters.rarities?.length) {
-    result = result.filter((c) => filters.rarities!.includes(c.rarity));
+    result = result.filter(({ card: c }) => filters.rarities!.includes(c.rarity));
   }
 
   if (filters.foilOnly) {
-    result = result.filter((c) => c.foil);
+    result = result.filter(({ card: c }) => c.foil);
   }
 
   if (filters.minPrice !== undefined) {
-    result = result.filter((c) => c.price >= filters.minPrice!);
+    result = result.filter(({ card: c }) => c.price >= filters.minPrice!);
   }
 
   if (filters.maxPrice !== undefined && filters.maxPrice > 0) {
-    result = result.filter((c) => c.price <= filters.maxPrice!);
+    result = result.filter(({ card: c }) => c.price <= filters.maxPrice!);
   }
 
   const sort = filters.sort ?? "name-asc";
   result.sort((a, b) => {
     switch (sort) {
-      case "price-asc":  return a.price - b.price;
-      case "price-desc": return b.price - a.price;
-      case "name-asc":   return a.name.localeCompare(b.name);
-      case "name-desc":  return b.name.localeCompare(a.name);
+      case "price-asc":  return a.card.price - b.card.price;
+      case "price-desc": return b.card.price - a.card.price;
+      case "name-asc":   return a.card.name.localeCompare(b.card.name);
+      case "name-desc":  return b.card.name.localeCompare(a.card.name);
+      case "newest":     return b.i - a.i;
       default:           return 0;
     }
   });
 
-  return result;
+  return result.map(({ card }) => card);
 }
 
 export function formatCondition(condition: Condition): string {

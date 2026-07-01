@@ -1,0 +1,456 @@
+[
+  {
+    "slug": "friday-night-magic-standard",
+    "title": "Friday Night Magic — Standard",
+    "format": "Standard",
+    "date": "2026-07-03",
+    "time": "6:00 PM",
+    "endTime": "10:00 PM",
+    "entryFee": 10,
+    "playerLimit": 32,
+    "registeredCount": 19,
+    "imageUrl": "https://placehold.co/1200x500/1a1a2e/ffffff?text=Friday+Night+Magic",
+    "shortDescription": "Weekly Standard showdown every Friday. Top 8 plays for prizes.",
+    "description": "Join us every Friday for our weekly Standard event! Whether you're a seasoned competitor or just learning the format, FNM is the perfect place to test your skills against the local meta. We run Swiss rounds based on attendance, with a cut to Top 8 for prize support. Doors open at 5:30 PM, first round starts at 6:00 PM sharp. Come early to grab a brew and chat with the community.",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "Booster packs based on attendance. Top 4 receive store credit. Promo cards for all participants.",
+    "tags": [
+      "Standard",
+      "Competitive",
+      "Weekly",
+      "All Levels"
+    ],
+    "recurring": "weekly",
+    "featured": true,
+    "faq": [
+      {
+        "question": "What Standard cards are legal?",
+        "answer": "We follow the official WotC Standard rotation. Currently legal sets include Bloomburrow, Duskmourn: House of Horror, Foundations, and Aetherdrift."
+      },
+      {
+        "question": "What is the refund policy?",
+        "answer": "Refunds are available up to 48 hours before the event. After that, your seat may be transferred to another player at the event organizer's discretion."
+      },
+      {
+        "question": "Is food available?",
+        "answer": "Kitsune Brewing Co. partners with rotating food trucks on event nights. Check the Food Trucks page for tonight's truck. Full craft beer menu is always available."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome for MTG events. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery. Additional street parking is available on E Bell Rd."
+      }
+    ]
+  },
+  {
+    "slug": "commander-night-july-2",
+    "title": "Commander Night",
+    "format": "Commander",
+    "date": "2026-07-02",
+    "time": "6:30 PM",
+    "endTime": "11:00 PM",
+    "entryFee": 5,
+    "playerLimit": 40,
+    "registeredCount": 28,
+    "imageUrl": "https://placehold.co/1200x500/0d2137/c9a84c?text=Commander+Night",
+    "shortDescription": "Multiplayer Commander pods every Wednesday. Casual and competitive pods available.",
+    "description": "Kitsune Commander Night is our most popular weekly event! We organize players into pods of 4 and let the chaos unfold. We have both casual and competitive (cEDH) pods available — just let us know your preferred power level when you register. New players are always welcome and we have loaner decks available for first-timers. $5 entry includes entry into our prize raffle — we draw winners every 30 minutes.",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "Prize raffle throughout the night. Booster packs and store credit. Top Commander voted by peers wins a foil card.",
+    "tags": [
+      "Commander",
+      "Multiplayer",
+      "Casual",
+      "Competitive",
+      "Weekly"
+    ],
+    "recurring": "weekly",
+    "featured": true,
+    "faq": [
+      {
+        "question": "What power level should my deck be?",
+        "answer": "We welcome all power levels! When registering, select 'Casual (1–6)', 'Focused (7–8)', or 'Competitive/cEDH (9–10)' so we can match you to the right pod."
+      },
+      {
+        "question": "Are there banned cards?",
+        "answer": "We follow the official Commander ban list with one house rule: Jeweled Lotus is banned in non-cEDH pods."
+      },
+      {
+        "question": "Is food available?",
+        "answer": "Kitsune Brewing Co. partners with rotating food trucks on event nights. Check the Food Trucks page for tonight's truck. Full craft beer menu is always available."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome for MTG events. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery. Additional street parking is available on E Bell Rd."
+      }
+    ]
+  },
+  {
+    "slug": "modern-showdown-july-11",
+    "title": "Modern Showdown",
+    "format": "Modern",
+    "date": "2026-07-11",
+    "time": "12:00 PM",
+    "endTime": "6:00 PM",
+    "entryFee": 15,
+    "playerLimit": 32,
+    "registeredCount": 24,
+    "imageUrl": "https://placehold.co/1200x500/2d1b69/ffffff?text=Modern+Showdown",
+    "shortDescription": "Bi-weekly Saturday Modern tournament. Competitive Swiss + Top 8.",
+    "description": "Our bi-weekly Modern Showdown is where Phoenix's best Modern players clash. This is a competitive event with Swiss rounds followed by a Top 8 single-elimination bracket. Decklists are required and must be submitted before the start of round 1. Proxy cards are not permitted. All prizes are awarded as store credit.",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "1st: $100 store credit | 2nd: $60 | 3rd–4th: $35 each | 5th–8th: $15 each",
+    "tags": [
+      "Modern",
+      "Competitive",
+      "Top 8",
+      "Swiss"
+    ],
+    "recurring": "biweekly",
+    "faq": [
+      {
+        "question": "Are proxies allowed?",
+        "answer": "No proxies are permitted. All cards must be authentic Magic cards in English or other official languages."
+      },
+      {
+        "question": "When do I need to submit my decklist?",
+        "answer": "Decklists must be submitted via our registration form no later than 30 minutes before the start of the event."
+      },
+      {
+        "question": "Is food available?",
+        "answer": "Kitsune Brewing Co. partners with rotating food trucks on event nights. Check the Food Trucks page for tonight's truck. Full craft beer menu is always available."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome for MTG events. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery. Additional street parking is available on E Bell Rd."
+      }
+    ]
+  },
+  {
+    "slug": "pioneer-league-july-7",
+    "title": "Pioneer Tuesday League",
+    "format": "Pioneer",
+    "date": "2026-07-07",
+    "time": "6:00 PM",
+    "endTime": "9:30 PM",
+    "entryFee": 10,
+    "playerLimit": 24,
+    "registeredCount": 11,
+    "imageUrl": "https://placehold.co/1200x500/1a3a1a/90ee90?text=Pioneer+League",
+    "shortDescription": "Monthly Pioneer league night. Best record takes the store credit prize pool.",
+    "description": "Pioneer is the perfect bridge between casual and competitive play. Our monthly Pioneer League runs the same players across 4 weeks of Swiss rounds. Your record accumulates each week and at the end of the month, the top 3 players by match wins split the prize pool. New players may join week 1 or week 2 only. Come experience one of MTG's fastest-growing formats!",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "Monthly prize pool split: 1st 50% | 2nd 30% | 3rd 20% of total entry fees",
+    "tags": [
+      "Pioneer",
+      "League",
+      "Monthly",
+      "Competitive"
+    ],
+    "recurring": "monthly",
+    "faq": [
+      {
+        "question": "What do I need to bring?",
+        "answer": "Bring a valid photo ID, your registered deck (if applicable), and your registration confirmation email. Sleeves and dice are recommended but not required."
+      },
+      {
+        "question": "What is the refund policy?",
+        "answer": "Refunds are available up to 48 hours before the event. After that, your seat may be transferred to another player at the event organizer's discretion."
+      },
+      {
+        "question": "Is food available?",
+        "answer": "Kitsune Brewing Co. partners with rotating food trucks on event nights. Check the Food Trucks page for tonight's truck. Full craft beer menu is always available."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome for MTG events. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery. Additional street parking is available on E Bell Rd."
+      }
+    ]
+  },
+  {
+    "slug": "bloomburrow-booster-draft",
+    "title": "Bloomburrow Booster Draft",
+    "format": "Draft",
+    "date": "2026-07-05",
+    "time": "1:00 PM",
+    "endTime": "5:00 PM",
+    "entryFee": 20,
+    "playerLimit": 24,
+    "registeredCount": 16,
+    "imageUrl": "https://placehold.co/1200x500/4a2c0a/ffd700?text=Bloomburrow+Draft",
+    "shortDescription": "Draft 3 packs of Bloomburrow and battle for booster prizes.",
+    "description": "Join us for a Bloomburrow booster draft! Entry includes 3 packs of Bloomburrow. We draft 8-player pods and play 3 rounds of Swiss. Keep all the cards you draft. Prize packs are awarded based on your final record: 3-0 gets 6 packs, 2-1 gets 2 packs. Great for players who want to build their Bloomburrow collection while competing.",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "3-0: 6 booster packs | 2-1: 2 booster packs | All participants keep drafted cards",
+    "tags": [
+      "Draft",
+      "Limited",
+      "Bloomburrow",
+      "All Levels"
+    ],
+    "faq": [
+      {
+        "question": "Do I need to bring my own packs?",
+        "answer": "No! Entry fee includes your 3 Bloomburrow packs. Just bring yourself and your enthusiasm."
+      },
+      {
+        "question": "Can beginners play draft?",
+        "answer": "Absolutely! Draft is one of the best ways to learn Magic. Our staff is happy to answer rules questions and help newer players."
+      },
+      {
+        "question": "Is food available?",
+        "answer": "Kitsune Brewing Co. partners with rotating food trucks on event nights. Check the Food Trucks page for tonight's truck. Full craft beer menu is always available."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome for MTG events. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery. Additional street parking is available on E Bell Rd."
+      }
+    ]
+  },
+  {
+    "slug": "legacy-night-july-19",
+    "title": "Legacy Night",
+    "format": "Legacy",
+    "date": "2026-07-19",
+    "time": "5:00 PM",
+    "endTime": "10:00 PM",
+    "entryFee": 10,
+    "playerLimit": 20,
+    "registeredCount": 8,
+    "imageUrl": "https://placehold.co/1200x500/3d0000/ff6b6b?text=Legacy+Night",
+    "shortDescription": "Monthly Legacy tournament. Power Nine welcome. Dual Lands welcome.",
+    "description": "Legacy Night is for the MTG veterans who want to play the greatest format ever conceived. All eternal cards are welcome — yes, that includes Power 9 and dual lands. We run a relaxed Swiss tournament with a focus on community over cutthroat competition. Come show off your Force of Wills and Brainstorms. This is a rare opportunity to play Legacy in a welcoming environment.",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "Top 4 split store credit prize pool",
+    "tags": [
+      "Legacy",
+      "Eternal",
+      "Monthly",
+      "Competitive"
+    ],
+    "recurring": "monthly",
+    "faq": [
+      {
+        "question": "What do I need to bring?",
+        "answer": "Bring a valid photo ID, your registered deck (if applicable), and your registration confirmation email. Sleeves and dice are recommended but not required."
+      },
+      {
+        "question": "What is the refund policy?",
+        "answer": "Refunds are available up to 48 hours before the event. After that, your seat may be transferred to another player at the event organizer's discretion."
+      },
+      {
+        "question": "Is food available?",
+        "answer": "Kitsune Brewing Co. partners with rotating food trucks on event nights. Check the Food Trucks page for tonight's truck. Full craft beer menu is always available."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome for MTG events. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery. Additional street parking is available on E Bell Rd."
+      }
+    ]
+  },
+  {
+    "slug": "rcq-modern-july-26",
+    "title": "Regional Championship Qualifier — Modern",
+    "format": "RCQ",
+    "date": "2026-07-26",
+    "time": "10:00 AM",
+    "endTime": "8:00 PM",
+    "entryFee": 30,
+    "playerLimit": 64,
+    "registeredCount": 47,
+    "imageUrl": "https://placehold.co/1200x500/000000/ff0000?text=RCQ+Modern",
+    "shortDescription": "Official RCQ. Top finisher earns a seat at the Regional Championship.",
+    "description": "This is it — the big one. Our Regional Championship Qualifier (RCQ) gives you a shot at qualifying for the Regional Championship. Format is Modern. Swiss rounds determined by attendance, cut to Top 8. The winner earns an invitation to the Regional Championship plus prizes. This event is sanctioned by Wizards of the Coast. Players must provide legal government-issued photo ID. Decklist submission is mandatory.",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "1st: Regional Championship invite + $200 store credit | 2nd: $100 | 3rd–4th: $50 | 5th–8th: $25",
+    "tags": [
+      "RCQ",
+      "Modern",
+      "Competitive",
+      "Sanctioned",
+      "Championship"
+    ],
+    "featured": true,
+    "faq": [
+      {
+        "question": "How do I qualify for this event?",
+        "answer": "This RCQ is open to all players. No qualification needed — simply register and pay the entry fee."
+      },
+      {
+        "question": "What ID is required?",
+        "answer": "A valid government-issued photo ID is required for WotC sanctioned events (driver's license, passport, or state ID)."
+      },
+      {
+        "question": "When must decklists be submitted?",
+        "answer": "Decklists must be submitted online before 9:00 AM on the day of the event. Players who do not submit a decklist will receive a game loss in round 1."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome for MTG events. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery. Additional street parking is available on E Bell Rd."
+      }
+    ]
+  },
+  {
+    "slug": "magic-mamas-commander-july",
+    "title": "Magic Mamas Commander Night",
+    "format": "Commander",
+    "date": "2026-07-14",
+    "time": "6:00 PM",
+    "endTime": "10:00 PM",
+    "entryFee": 0,
+    "playerLimit": 32,
+    "registeredCount": 14,
+    "imageUrl": "https://placehold.co/1200x500/8b1a8b/ffd7ff?text=Magic+Mamas",
+    "shortDescription": "A welcoming Commander event for women, non-binary, and trans players.",
+    "description": "Magic Mamas Commander Night is a dedicated safe space for women, non-binary, and trans Magic players in the Phoenix area. We believe Magic is for everyone and we're committed to fostering an inclusive community. This is a casual Commander event — no cutthroat combos, just fun games and great company. Drinks and snacks are provided. All skill levels welcome. Free entry!",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "Prizes for all participants. Door raffle with booster packs and store credit.",
+    "tags": [
+      "Commander",
+      "Casual",
+      "Community",
+      "Free",
+      "Inclusive"
+    ],
+    "recurring": "monthly",
+    "faq": [
+      {
+        "question": "Who can attend?",
+        "answer": "This event is open to all women, non-binary, and trans players. Allies are welcome to attend as a +1 with a current Magic Mamas member."
+      },
+      {
+        "question": "What is the refund policy?",
+        "answer": "Refunds are available up to 48 hours before the event. After that, your seat may be transferred to another player at the event organizer's discretion."
+      },
+      {
+        "question": "Is food available?",
+        "answer": "Kitsune Brewing Co. partners with rotating food trucks on event nights. Check the Food Trucks page for tonight's truck. Full craft beer menu is always available."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome for MTG events. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery. Additional street parking is available on E Bell Rd."
+      }
+    ]
+  },
+  {
+    "slug": "casual-sealed-july-20",
+    "title": "Casual Sealed Sunday",
+    "format": "Sealed",
+    "date": "2026-07-20",
+    "time": "12:00 PM",
+    "endTime": "5:00 PM",
+    "entryFee": 25,
+    "playerLimit": 20,
+    "registeredCount": 9,
+    "imageUrl": "https://placehold.co/1200x500/1c3a4a/87ceeb?text=Sealed+Sunday",
+    "shortDescription": "Build a deck from 6 sealed packs and play 4 rounds of casual Swiss.",
+    "description": "Sealed Deck Sunday is the perfect weekend event for players who enjoy the thrill of cracking packs and building on the fly. You receive 6 booster packs (Bloomburrow or Duskmourn, your choice), build a 40-card deck in 30 minutes, and play 4 rounds of casual Swiss. No cuts, no pressure — just good games. Keep everything you open!",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "Participation prizes for everyone. Bonus packs for best record.",
+    "tags": [
+      "Sealed",
+      "Limited",
+      "Casual",
+      "Sunday"
+    ],
+    "faq": [
+      {
+        "question": "Which set can I choose?",
+        "answer": "You may choose between Bloomburrow and Duskmourn: House of Horror packs. Let us know your preference when registering."
+      },
+      {
+        "question": "What is the refund policy?",
+        "answer": "Refunds are available up to 48 hours before the event. After that, your seat may be transferred to another player at the event organizer's discretion."
+      },
+      {
+        "question": "Is food available?",
+        "answer": "Kitsune Brewing Co. partners with rotating food trucks on event nights. Check the Food Trucks page for tonight's truck. Full craft beer menu is always available."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome for MTG events. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery. Additional street parking is available on E Bell Rd."
+      }
+    ]
+  },
+  {
+    "slug": "aetherdrift-prerelease",
+    "title": "Aetherdrift Prerelease Weekend",
+    "format": "Prerelease",
+    "date": "2026-08-01",
+    "time": "2:00 PM",
+    "endTime": "8:00 PM",
+    "entryFee": 30,
+    "playerLimit": 48,
+    "registeredCount": 31,
+    "imageUrl": "https://placehold.co/1200x500/0a192f/64ffda?text=Aetherdrift+Prerelease",
+    "shortDescription": "Be the first to play Aetherdrift before its official release!",
+    "description": "The Aetherdrift Prerelease is one of the most exciting weekends in the Magic calendar — the chance to crack fresh packs and play with new cards before they're officially released. Each player receives a Prerelease Kit containing 6 booster packs and a special stamped promo card. Build your 40-card deck and compete in 4 rounds of Swiss. Multiple flights available all weekend.",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "All participants receive a stamped promo card. Top finishers receive additional booster packs.",
+    "tags": [
+      "Prerelease",
+      "Sealed",
+      "Aetherdrift",
+      "New Set",
+      "All Levels"
+    ],
+    "featured": true,
+    "faq": [
+      {
+        "question": "What is included in the Prerelease Kit?",
+        "answer": "Each Prerelease Kit includes 6 Aetherdrift booster packs, 1 stamped foil promo rare, a deckbuilding guide, and a Prerelease-exclusive card box."
+      },
+      {
+        "question": "Are there multiple flights?",
+        "answer": "Yes! We run flights Saturday at 2:00 PM, Saturday at 8:00 PM, and Sunday at 12:00 PM. Register for the flight that works best for you."
+      },
+      {
+        "question": "Is food available?",
+        "answer": "Kitsune Brewing Co. partners with rotating food trucks on event nights. Check the Food Trucks page for tonight's truck. Full craft beer menu is always available."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome for MTG events. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery. Additional street parking is available on E Bell Rd."
+      }
+    ]
+  }
+]

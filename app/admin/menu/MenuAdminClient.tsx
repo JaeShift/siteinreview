@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import type { MenuItem, MenuCategory, GlassType } from "@/lib/menu-data";
 import type { StoredMenu } from "@/lib/store";
@@ -44,9 +44,53 @@ export default function MenuAdminClient({ initialMenu }: Props) {
   const [flash, setFlash] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [deletingKey, setDeletingKey] = useState<string | null>(null);
 
+  // Drag state
+  const dragItem = useRef<{ category: MenuCategory; index: number } | null>(null);
+  const dragOver = useRef<{ category: MenuCategory; index: number } | null>(null);
+
   function showFlash(msg: string, type: "success" | "error" = "success") {
     setFlash({ msg, type });
     setTimeout(() => setFlash(null), 3000);
+  }
+
+  // ── Drag-and-drop reorder ────────────────────────────────────────────────
+
+  function onDragStart(category: MenuCategory, index: number) {
+    dragItem.current = { category, index };
+  }
+
+  function onDragEnter(category: MenuCategory, index: number) {
+    dragOver.current = { category, index };
+  }
+
+  async function onDragEnd(category: MenuCategory) {
+    const from = dragItem.current;
+    const to = dragOver.current;
+    dragItem.current = null;
+    dragOver.current = null;
+
+    if (!from || !to || from.category !== to.category || from.index === to.index) return;
+
+    const items = [...(menu[category] ?? [])];
+    const [moved] = items.splice(from.index, 1);
+    items.splice(to.index, 0, moved);
+
+    // Optimistic update
+    setMenu((prev) => ({ ...prev, [category]: items }));
+
+    try {
+      const res = await fetch("/api/admin/menu/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ category, items }),
+      });
+      if (!res.ok) throw new Error();
+      setMenu(await res.json());
+    } catch {
+      // Rollback on failure
+      setMenu(initialMenu);
+      showFlash("Failed to save new order.", "error");
+    }
   }
 
   // ── Add ──────────────────────────────────────────────────────────────────
@@ -124,14 +168,10 @@ export default function MenuAdminClient({ initialMenu }: Props) {
     }
   }
 
-  // ── Form helper ──────────────────────────────────────────────────────────
+  // ── Form ─────────────────────────────────────────────────────────────────
 
   function ItemForm({
-    item,
-    onChange,
-    onSave,
-    onCancel,
-    title,
+    item, onChange, onSave, onCancel, title,
   }: {
     item: MenuItem & { category: MenuCategory };
     onChange: (field: string, value: string) => void;
@@ -144,144 +184,74 @@ export default function MenuAdminClient({ initialMenu }: Props) {
         <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
           <div className={styles.modalHeader}>
             <h2 className={styles.modalTitle}>{title}</h2>
-            <button className={styles.closeBtn} onClick={onCancel} aria-label="Close">✕</button>
+            <button className={styles.closeBtn} onClick={onCancel}>✕</button>
           </div>
 
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
               <label className="form-label">Category</label>
-              <select
-                className="form-input"
-                value={item.category}
-                onChange={(e) => onChange("category", e.target.value)}
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
+              <select className="form-input" value={item.category} onChange={(e) => onChange("category", e.target.value)}>
+                {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
 
             <div className={styles.formGroup}>
               <label className="form-label">Name *</label>
-              <input
-                className="form-input"
-                value={item.name}
-                onChange={(e) => onChange("name", e.target.value)}
-                placeholder="e.g. What the Jorts"
-              />
+              <input className="form-input" value={item.name} onChange={(e) => onChange("name", e.target.value)} placeholder="e.g. What the Jorts" />
             </div>
 
             <div className={styles.formGroup}>
               <label className="form-label">Brewery *</label>
-              <input
-                className="form-input"
-                value={item.brewery}
-                onChange={(e) => onChange("brewery", e.target.value)}
-                placeholder="e.g. Kitsune Brewing Co."
-              />
+              <input className="form-input" value={item.brewery} onChange={(e) => onChange("brewery", e.target.value)} placeholder="e.g. Kitsune Brewing Co." />
             </div>
 
             <div className={styles.formGroup}>
               <label className="form-label">Style</label>
-              <input
-                className="form-input"
-                value={item.style ?? ""}
-                onChange={(e) => onChange("style", e.target.value)}
-                placeholder="e.g. Hazy IPA"
-              />
+              <input className="form-input" value={item.style ?? ""} onChange={(e) => onChange("style", e.target.value)} placeholder="e.g. Hazy IPA" />
             </div>
 
             <div className={styles.formGroup}>
               <label className="form-label">ABV</label>
-              <input
-                className="form-input"
-                value={item.abv ?? ""}
-                onChange={(e) => onChange("abv", e.target.value)}
-                placeholder="e.g. 6.5%"
-              />
+              <input className="form-input" value={item.abv ?? ""} onChange={(e) => onChange("abv", e.target.value)} placeholder="e.g. 6.5%" />
             </div>
 
             <div className={styles.formGroup}>
-              <label className="form-label">SRM (beer color number)</label>
-              <input
-                className="form-input"
-                value={item.srm ?? ""}
-                onChange={(e) => onChange("srm", e.target.value)}
-                placeholder="e.g. 4"
-              />
+              <label className="form-label">SRM (beer color 1–40)</label>
+              <input className="form-input" value={item.srm ?? ""} onChange={(e) => onChange("srm", e.target.value)} placeholder="e.g. 4 = golden, 35 = black" />
             </div>
 
             <div className={styles.formGroup}>
               <label className="form-label">Size *</label>
-              <input
-                className="form-input"
-                value={item.size}
-                onChange={(e) => onChange("size", e.target.value)}
-                placeholder="e.g. 16 oz draft"
-              />
+              <input className="form-input" value={item.size} onChange={(e) => onChange("size", e.target.value)} placeholder="e.g. 16 oz draft" />
             </div>
 
             <div className={styles.formGroup}>
               <label className="form-label">Price *</label>
-              <input
-                className="form-input"
-                value={item.price}
-                onChange={(e) => onChange("price", e.target.value)}
-                placeholder="e.g. $7"
-              />
+              <input className="form-input" value={item.price} onChange={(e) => onChange("price", e.target.value)} placeholder="e.g. $7" />
             </div>
 
             <div className={styles.formGroup}>
               <label className="form-label">Glass Type</label>
-              <select
-                className="form-input"
-                value={item.glassType}
-                onChange={(e) => onChange("glassType", e.target.value)}
-              >
-                {GLASS_OPTIONS.map((g) => (
-                  <option key={g} value={g}>{g}</option>
-                ))}
+              <select className="form-input" value={item.glassType} onChange={(e) => onChange("glassType", e.target.value)}>
+                {GLASS_OPTIONS.map((g) => <option key={g} value={g}>{g}</option>)}
               </select>
             </div>
 
             <div className={styles.formGroup}>
               <label className="form-label">Glass Color (hex, no #)</label>
               <div className={styles.colorRow}>
-                <input
-                  type="color"
-                  className={styles.colorSwatch}
-                  value={`#${item.glassColor}`}
-                  onChange={(e) => onChange("glassColor", e.target.value.replace("#", ""))}
-                />
-                <input
-                  className="form-input"
-                  value={item.glassColor}
-                  onChange={(e) => onChange("glassColor", e.target.value.replace("#", ""))}
-                  placeholder="e.g. f9e09f"
-                  maxLength={6}
-                />
+                <input type="color" className={styles.colorSwatch} value={`#${item.glassColor}`} onChange={(e) => onChange("glassColor", e.target.value.replace("#", ""))} />
+                <input className="form-input" value={item.glassColor} onChange={(e) => onChange("glassColor", e.target.value.replace("#", ""))} placeholder="e.g. f9e09f" maxLength={6} />
                 {item.glassType && item.glassColor && (
-                  <Image
-                    src={`${TAPLIST_IMG}/${item.glassType}?color=${item.glassColor}`}
-                    alt="preview"
-                    width={40}
-                    height={40}
-                    unoptimized
-                  />
+                  <Image src={`${TAPLIST_IMG}/${item.glassType}?color=${item.glassColor}`} alt="preview" width={40} height={40} unoptimized />
                 )}
               </div>
             </div>
           </div>
 
           <div className={styles.modalFooter}>
-            <button className="btn btn-outline" onClick={onCancel} disabled={saving}>
-              Cancel
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={onSave}
-              disabled={saving || !item.name || !item.brewery || !item.size || !item.price}
-            >
+            <button className="btn btn-outline" onClick={onCancel} disabled={saving}>Cancel</button>
+            <button className="btn btn-primary" onClick={onSave} disabled={saving || !item.name || !item.brewery || !item.size || !item.price}>
               {saving ? "Saving…" : "Save Item"}
             </button>
           </div>
@@ -294,27 +264,22 @@ export default function MenuAdminClient({ initialMenu }: Props) {
 
   return (
     <div className={styles.page}>
-      {/* Flash */}
       {flash && (
         <div className={`${styles.flash} ${flash.type === "error" ? styles.flashError : styles.flashSuccess}`}>
           {flash.msg}
         </div>
       )}
 
-      {/* Header */}
       <div className={styles.pageHeader}>
         <div>
           <h1 className={styles.pageTitle}>Menu Management</h1>
           <p className={styles.pageDesc}>
-            Add, edit, or remove items from the What&rsquo;s On Tap menu. Changes reflect on the homepage immediately.
+            Add, edit, or remove items. Drag the <span className={styles.handleHint}>⠿</span> handle on the right to reorder. Changes go live on the homepage immediately.
           </p>
         </div>
-        <button className="btn btn-primary" onClick={() => openAdd()}>
-          + Add Item
-        </button>
+        <button className="btn btn-primary" onClick={() => openAdd()}>+ Add Item</button>
       </div>
 
-      {/* Category sections */}
       {CATEGORIES.map((category) => {
         const items = menu[category] ?? [];
         return (
@@ -337,14 +302,23 @@ export default function MenuAdminClient({ initialMenu }: Props) {
               <div className={styles.itemsTable}>
                 <div className={styles.tableHead}>
                   <span>Item</span>
-                  <span>Style / ABV</span>
+                  <span>Style / ABV / SRM</span>
                   <span>Size</span>
                   <span>Price</span>
                   <span>Glass</span>
                   <span>Actions</span>
+                  <span></span>
                 </div>
                 {items.map((item, idx) => (
-                  <div key={`${item.name}-${idx}`} className={styles.tableRow}>
+                  <div
+                    key={`${item.name}-${idx}`}
+                    className={`${styles.tableRow} ${dragItem.current?.category === category && dragItem.current?.index === idx ? styles.dragging : ""}`}
+                    draggable
+                    onDragStart={() => onDragStart(category, idx)}
+                    onDragEnter={() => onDragEnter(category, idx)}
+                    onDragEnd={() => onDragEnd(category)}
+                    onDragOver={(e) => e.preventDefault()}
+                  >
                     <div className={styles.itemName}>
                       <strong>{item.name}</strong>
                       <small>{item.brewery}</small>
@@ -352,35 +326,24 @@ export default function MenuAdminClient({ initialMenu }: Props) {
                     <div className={styles.itemMeta}>
                       {item.style && <span>{item.style}</span>}
                       {item.abv && <span>{item.abv}</span>}
+                      {item.srm && <span className={styles.srmBadge}>SRM {item.srm}</span>}
                     </div>
                     <div>{item.size}</div>
                     <div className={styles.price}>{item.price}</div>
                     <div className={styles.glassCell}>
-                      <Image
-                        src={`${TAPLIST_IMG}/${item.glassType}?color=${item.glassColor}`}
-                        alt={item.glassType}
-                        width={32}
-                        height={32}
-                        unoptimized
-                      />
+                      <Image src={`${TAPLIST_IMG}/${item.glassType}?color=${item.glassColor}`} alt={item.glassType} width={32} height={32} unoptimized />
                     </div>
                     <div className={styles.actions}>
-                      <button
-                        className={styles.editBtn}
-                        onClick={() => openEdit(category, idx)}
-                      >
-                        Edit
-                      </button>
+                      <button className={styles.editBtn} onClick={() => openEdit(category, idx)}>Edit</button>
                       <button
                         className={styles.deleteBtn}
                         disabled={deletingKey === `${category}-${idx}`}
-                        onClick={() => {
-                          if (confirm(`Delete "${item.name}"?`)) handleDelete(category, idx);
-                        }}
+                        onClick={() => { if (confirm(`Delete "${item.name}"?`)) handleDelete(category, idx); }}
                       >
                         {deletingKey === `${category}-${idx}` ? "…" : "Delete"}
                       </button>
                     </div>
+                    <div className={styles.dragHandle} title="Drag to reorder">⠿</div>
                   </div>
                 ))}
               </div>
@@ -389,27 +352,21 @@ export default function MenuAdminClient({ initialMenu }: Props) {
         );
       })}
 
-      {/* Edit Modal */}
       {editing && (
         <ItemForm
           title={`Edit: ${editing.item.name}`}
           item={editing.item}
-          onChange={(field, value) =>
-            setEditing((prev) => prev ? { ...prev, item: { ...prev.item, [field]: value } } : null)
-          }
+          onChange={(field, value) => setEditing((prev) => prev ? { ...prev, item: { ...prev.item, [field]: value } } : null)}
           onSave={handleSaveEdit}
           onCancel={() => setEditing(null)}
         />
       )}
 
-      {/* Add Modal */}
       {adding && (
         <ItemForm
           title="Add Menu Item"
           item={adding}
-          onChange={(field, value) =>
-            setAdding((prev) => prev ? { ...prev, [field]: value } : null)
-          }
+          onChange={(field, value) => setAdding((prev) => prev ? { ...prev, [field]: value } : null)}
           onSave={handleAdd}
           onCancel={() => setAdding(null)}
         />

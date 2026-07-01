@@ -161,6 +161,20 @@
   color:           rgba(255, 255, 255, 0.4);
 }
 
+.adminLink,
+.adminLink:link,
+.adminLink:visited {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #666666;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.adminLink:hover { color: #999999; }
+
 @media (max-width: 900px) {
   .footerInner {
     grid-template-columns: 1fr 1fr;

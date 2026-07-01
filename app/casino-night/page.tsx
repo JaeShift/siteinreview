@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageSection from "@/components/PageSection";
 import PromoTixEmbed from "@/components/PromoTixEmbed";
+import AddressBar from "@/components/AddressBar";
 import styles from "./casino.module.css";
 
 export const metadata: Metadata = {
@@ -64,6 +65,7 @@ export default function CasinoNightPage() {
           </div>
         </div>
       </PageSection>
+      <AddressBar />
     </>
   );
 }

@@ -2,6 +2,7 @@
   min-height: 100vh;
   background: #111111;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 24px;
@@ -53,6 +54,35 @@
   gap: 6px;
 }
 
+.passwordWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordWrap .form-input,
+.passwordWrap input {
+  width: 100%;
+  padding-right: 60px;
+}
+
+.showToggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+.showToggle:hover { color: var(--color-black); }
+
 .error {
   font-size: 13px;
   color: var(--color-accent);
@@ -65,10 +95,17 @@
   padding: 14px;
 }
 
-.hint {
-  font-size: 11px;
-  color: var(--color-muted);
-  text-align: center;
-  line-height: 1.5;
-  margin-top: 8px;
+.backLink,
+.backLink:link,
+.backLink:visited {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-accent);
+  margin-top: 24px;
+  transition: color 0.15s;
 }
+.backLink:hover { color: #cc0000; }

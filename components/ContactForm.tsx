@@ -209,7 +209,7 @@ export default function ContactForm() {
         <textarea
           id="message"
           name="message"
-          rows={6}
+          rows={5}
           value={form.message}
           onChange={handleChange}
           className={`form-input ${fieldErrors.message ? "has-error" : ""}`}
@@ -280,11 +280,12 @@ export default function ContactForm() {
         .submit-btn {
           align-self: flex-start;
           min-width: 140px;
+          border-radius: 8px;
         }
 
         textarea.form-input {
           resize: vertical;
-          min-height: 140px;
+          min-height: 120px;
         }
 
         @media (max-width: 480px) {
