@@ -55,6 +55,7 @@ function LoginForm() {
             className="form-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter" && password && !loading) handleSubmit(e as unknown as React.FormEvent); }}
             placeholder="Enter admin password"
             autoComplete="current-password"
             autoFocus

@@ -12,12 +12,14 @@ const MTG_PATHS = [
   "/mtg-and-more",
   "/pre-release",
   "/card-shop",
+  "/card-shop-singles",
   "/events",
   "/magic-mamas-pre-release",
   "/private-events",
+  "/commander-nights",
 ];
 
-const NO_FOOTER_PATHS = ["/casino-night", "/contact", "/calendar"];
+const NO_FOOTER_PATHS = ["/casino-night", "/contact", "/calendar", "/mtg-and-more", "/card-shop", "/card-shop-singles", "/pre-release", "/private-events", "/commander-nights"];
 
 function isMtgPage(pathname: string) {
   return MTG_PATHS.some(

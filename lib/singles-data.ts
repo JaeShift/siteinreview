@@ -8,14 +8,18 @@ export type CardType =
   | "Artifact"
   | "Planeswalker"
   | "Land"
-  | "Battle";
-export type Rarity = "Common" | "Uncommon" | "Rare" | "Mythic";
+  | "Battle"
+  | "Kindred"
+  | "Legendary";
+export type Rarity = "Common" | "Uncommon" | "Rare" | "Mythic Rare" | "Land" | "Special";
+export type Availability = "In Stock" | "Presale";
 
 export interface SingleCard {
   id: string;
   name: string;
   set: string;
   setCode: string;
+  collectorNumber?: string;
   condition: Condition;
   foil: boolean;
   price: number;
@@ -25,6 +29,16 @@ export interface SingleCard {
   type: CardType;
   rarity: Rarity;
   manaCost?: string;
+  // Extended fields matching shop filters
+  colorIdentity?: string[];
+  power?: string;
+  toughness?: string;
+  cmc?: number;
+  oracleText?: string;
+  availability?: Availability;
+  formats?: string[];
+  hidden?: boolean;
+  marketPrice?: number;
 }
 
 export type SortOption = "price-asc" | "price-desc" | "name-asc" | "name-desc" | "newest";
@@ -34,11 +48,18 @@ export interface SinglesFilters {
   sets: string[];
   conditions: Condition[];
   colors: CardColor[];
+  colorIdentity: string[];
   types: CardType[];
   rarities: Rarity[];
+  formats: string[];
+  availability: string[];
   foilOnly: boolean;
   minPrice: number;
   maxPrice: number;
+  power: string;
+  toughness: string;
+  cmc: string;
+  oracle: string;
   sort: SortOption;
 }
 
@@ -61,7 +82,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Mabel", "4a2c0a", "ffd700"),
     color: "R",
     type: "Creature",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{1}{R}{W}",
   },
   {
@@ -76,7 +97,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Mabel FOIL", "ffd700", "4a2c0a"),
     color: "R",
     type: "Creature",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{1}{R}{W}",
   },
   {
@@ -91,7 +112,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Ajani NP", "ffffff", "000000"),
     color: "W",
     type: "Planeswalker",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{1}{W}",
   },
   {
@@ -106,7 +127,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Ral CW", "1a3a6b", "ffffff"),
     color: "U",
     type: "Planeswalker",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{2}{U}{R}",
   },
   {
@@ -183,7 +204,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Valgavoth", "1a0a2e", "cc44ff"),
     color: "B",
     type: "Creature",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{5}{B}{B}",
   },
   {
@@ -198,7 +219,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Valgavoth FOIL", "cc44ff", "1a0a2e"),
     color: "B",
     type: "Creature",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{5}{B}{B}",
   },
   {
@@ -213,7 +234,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Overlord Flood", "003366", "66ccff"),
     color: "U",
     type: "Creature",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{6}{U}{U}",
   },
   {
@@ -442,7 +463,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Grief", "0d0d1a", "9966ff"),
     color: "B",
     type: "Creature",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{4}{B}",
   },
   {
@@ -457,7 +478,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Grief FOIL", "9966ff", "0d0d1a"),
     color: "B",
     type: "Creature",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{4}{B}",
   },
   {
@@ -472,7 +493,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Phlage", "cc3300", "ffcc00"),
     color: "Multi",
     type: "Creature",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{3}{R}{W}",
   },
   {
@@ -487,7 +508,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Tamiyo IS", "003366", "99ccff"),
     color: "U",
     type: "Planeswalker",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{U}",
   },
   {
@@ -564,7 +585,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Oko Ringleader", "1a6b1a", "cc9900"),
     color: "Multi",
     type: "Planeswalker",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{1}{G}{U}",
   },
   {
@@ -579,7 +600,7 @@ export const singles: SingleCard[] = [
     imageUrl: IMG("Vraska Silencer", "1a3d1a", "9966ff"),
     color: "Multi",
     type: "Planeswalker",
-    rarity: "Mythic",
+    rarity: "Mythic Rare",
     manaCost: "{3}{B}{G}",
   },
   {
@@ -810,7 +831,8 @@ export const availableSets = [
 
 export function filterSingles(cards: SingleCard[], filters: Partial<SinglesFilters>): SingleCard[] {
   const indexed = cards.map((card, i) => ({ card, i }));
-  let result = indexed;
+  // Always hide cards with no stock or explicitly hidden
+  let result = indexed.filter(({ card: c }) => c.quantity > 0 && !c.hidden);
 
   if (filters.search) {
     const q = filters.search.toLowerCase();
@@ -822,8 +844,9 @@ export function filterSingles(cards: SingleCard[], filters: Partial<SinglesFilte
     );
   }
 
+  // Filter by set full name (matches what FilterSidebar sends)
   if (filters.sets?.length) {
-    result = result.filter(({ card: c }) => filters.sets!.includes(c.setCode));
+    result = result.filter(({ card: c }) => filters.sets!.includes(c.set));
   }
 
   if (filters.conditions?.length) {
@@ -834,12 +857,30 @@ export function filterSingles(cards: SingleCard[], filters: Partial<SinglesFilte
     result = result.filter(({ card: c }) => filters.colors!.includes(c.color));
   }
 
+  if (filters.colorIdentity?.length) {
+    result = result.filter(({ card: c }) =>
+      filters.colorIdentity!.every((ci) => c.colorIdentity?.includes(ci))
+    );
+  }
+
   if (filters.types?.length) {
     result = result.filter(({ card: c }) => filters.types!.includes(c.type));
   }
 
   if (filters.rarities?.length) {
-    result = result.filter(({ card: c }) => filters.rarities!.includes(c.rarity));
+    result = result.filter(({ card: c }) => filters.rarities!.includes(normalizeRarity(c.rarity)));
+  }
+
+  if (filters.formats?.length) {
+    result = result.filter(({ card: c }) =>
+      filters.formats!.some((f) => c.formats?.includes(f))
+    );
+  }
+
+  if (filters.availability?.length) {
+    result = result.filter(({ card: c }) =>
+      filters.availability!.includes(c.availability ?? "In Stock")
+    );
   }
 
   if (filters.foilOnly) {
@@ -852,6 +893,23 @@ export function filterSingles(cards: SingleCard[], filters: Partial<SinglesFilte
 
   if (filters.maxPrice !== undefined && filters.maxPrice > 0) {
     result = result.filter(({ card: c }) => c.price <= filters.maxPrice!);
+  }
+
+  if (filters.power) {
+    result = result.filter(({ card: c }) => c.power === filters.power);
+  }
+
+  if (filters.toughness) {
+    result = result.filter(({ card: c }) => c.toughness === filters.toughness);
+  }
+
+  if (filters.cmc) {
+    result = result.filter(({ card: c }) => String(c.cmc) === filters.cmc);
+  }
+
+  if (filters.oracle) {
+    const q = filters.oracle.toLowerCase();
+    result = result.filter(({ card: c }) => c.oracleText?.toLowerCase().includes(q));
   }
 
   const sort = filters.sort ?? "name-asc";
@@ -878,6 +936,40 @@ export function formatCondition(condition: Condition): string {
     DMG: "Damaged",
   };
   return map[condition];
+}
+
+export function normalizeRarity(rarity: string): Rarity {
+  const map: Record<string, Rarity> = {
+    common: "Common",
+    uncommon: "Uncommon",
+    rare: "Rare",
+    mythic: "Mythic Rare",
+    "mythic rare": "Mythic Rare",
+    Mythic: "Mythic Rare",
+    special: "Special",
+    land: "Land",
+    Common: "Common",
+    Uncommon: "Uncommon",
+    Rare: "Rare",
+    "Mythic Rare": "Mythic Rare",
+    Land: "Land",
+    Special: "Special",
+  };
+  return map[rarity] ?? "Common";
+}
+
+export function rarityBadgeLabel(rarity: string): string {
+  return normalizeRarity(rarity) === "Mythic Rare" ? "MR" : normalizeRarity(rarity)[0];
+}
+
+export function formatSetDisplay(
+  set: string,
+  setCode?: string,
+  collectorNumber?: string
+): string {
+  const code = setCode ? ` · ${setCode.toUpperCase()}` : "";
+  const number = collectorNumber ? ` #${collectorNumber}` : "";
+  return `${set}${code}${number}`;
 }
 
 export function getConditionColor(condition: Condition): string {

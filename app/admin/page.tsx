@@ -130,7 +130,6 @@ export default function AdminDashboardPage() {
           <h2 className={styles.panelTitle}>Quick Actions</h2>
         </div>
         <div className={styles.quickActions}>
-          <Link href="/admin/menu" className={`btn btn-primary ${styles.actionBtn}`}>Edit Menu</Link>
           <Link href="/admin/events" className={`btn btn-outline ${styles.actionBtn}`}>Manage Events</Link>
           <Link href="/admin/orders" className={`btn btn-outline ${styles.actionBtn}`}>View Orders</Link>
           <Link href="/admin/inventory" className={`btn btn-outline ${styles.actionBtn}`}>Singles Inventory</Link>

@@ -6,7 +6,6 @@ import styles from "./AdminTopBar.module.css";
 
 const navItems = [
   { href: "/admin", label: "Dashboard" },
-  { href: "/admin/menu", label: "Menu" },
   { href: "/admin/events", label: "Events" },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/inventory", label: "Inventory" },

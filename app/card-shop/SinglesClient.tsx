@@ -7,7 +7,7 @@ import SingleCard from "@/components/mtg/SingleCard";
 import EmptyState from "@/components/ui/EmptyState";
 import Pagination from "@/components/ui/Pagination";
 import { useCart } from "@/lib/cart-context";
-import { singles, filterSingles, type SinglesFilters } from "@/lib/singles-data";
+import { filterSingles, type SinglesFilters, type SingleCard } from "@/lib/singles-data";
 import styles from "./singles.module.css";
 
 const PAGE_SIZE = 12;
@@ -17,25 +17,33 @@ const DEFAULT_FILTERS: SinglesFilters = {
   sets: [],
   conditions: [],
   colors: [],
+  colorIdentity: [],
   types: [],
   rarities: [],
+  formats: [],
+  availability: [],
   foilOnly: false,
   minPrice: 0,
   maxPrice: 0,
+  power: "",
+  toughness: "",
+  cmc: "",
+  oracle: "",
   sort: "name-asc",
 };
 
-export default function SinglesClient() {
-  return <SinglesInner />;
+
+export default function SinglesClient({ initialCards = [] }: { initialCards?: SingleCard[] }) {
+  return <SinglesInner initialCards={initialCards} />;
 }
 
-function SinglesInner() {
+function SinglesInner({ initialCards }: { initialCards: SingleCard[] }) {
   const [filters, setFilters] = useState<SinglesFilters>(DEFAULT_FILTERS);
   const [page, setPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { totalCount, openCart } = useCart();
 
-  const filtered = useMemo(() => filterSingles(singles, filters), [filters]);
+  const filtered = useMemo(() => filterSingles(initialCards, filters), [initialCards, filters]);
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
@@ -51,7 +59,7 @@ function SinglesInner() {
   return (
     <>
       <div className={styles.page}>
-        {/* Mobile filter toggle */}
+        {/* Mobile bar */}
         <div className={styles.mobileBar}>
           <SearchBar
             value={filters.search}
@@ -63,7 +71,7 @@ function SinglesInner() {
             className={`btn btn-outline ${styles.filterToggleBtn}`}
             onClick={() => setSidebarOpen((v) => !v)}
           >
-            Filters {filtered.length !== singles.length ? `(${filtered.length})` : ""}
+            Filters {filtered.length !== initialCards.length ? `(${filtered.length})` : ""}
           </button>
         </div>
 
@@ -77,9 +85,9 @@ function SinglesInner() {
             />
           </div>
 
-          {/* Main content */}
+          {/* Main */}
           <div className={styles.main}>
-            {/* Desktop search bar */}
+            {/* Desktop search */}
             <div className={styles.desktopSearch}>
               <SearchBar
                 value={filters.search}
@@ -89,16 +97,13 @@ function SinglesInner() {
               />
             </div>
 
-            {/* Results info */}
+            {/* Results count */}
             <div className={styles.resultsInfo}>
+              <h2 className={styles.inventoryHeading}>Kitsune Card Inventory</h2>
               <span className={styles.resultCount}>
-                {filtered.length} card{filtered.length !== 1 ? "s" : ""} found
+                Showing {filtered.length} result{filtered.length !== 1 ? "s" : ""}
+                {page > 1 && ` — Page ${page} of ${totalPages}`}
               </span>
-              {page > 1 && (
-                <span className={styles.pageInfo}>
-                  Page {page} of {totalPages}
-                </span>
-              )}
             </div>
 
             {paginated.length > 0 ? (
@@ -130,21 +135,43 @@ function SinglesInner() {
             )}
           </div>
         </div>
-
-        <div className={styles.disclaimer}>
-          <div className="container">
-            <p>
-              <strong>Note:</strong> Inventory is updated regularly but may not reflect real-time stock.
-              Prices subject to change.<br />
-              Contact us at{" "}
-              <a href="tel:+16022458593">(602) 245-8593</a>{" "}
-              for bulk inquiries or specific card requests.
-            </p>
-          </div>
-        </div>
       </div>
 
-      {/* Floating cart button */}
+      {/* Newsletter */}
+      <section className={styles.newsletter}>
+        <div className={`container ${styles.newsletterInner}`}>
+          <div className={styles.newsletterText}>
+            <h2 className={styles.newsletterHeading}>NEVER MISS A DROP.</h2>
+            <p className={styles.newsletterBody}>
+              Join the Kitsune Inner Circle for first access to rare singles, prerelease kits, and exclusive MTG events.
+            </p>
+          </div>
+          <div className={styles.newsletterForm}>
+            <input
+              type="email"
+              placeholder="EMAIL ADDRESS"
+              className={styles.newsletterInput}
+              aria-label="Email address"
+            />
+            <button className={styles.newsletterBtn}>SUBSCRIBE</button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className={styles.shopFooter}>
+        <p className={styles.shopFooterName}>Kitsune Brewing Company</p>
+        <div className={styles.shopFooterLinks}>
+          <a href="tel:+16022458593" className={styles.shopFooterLink}>(602) 245-8593</a>
+          <a href="http://instagram.com/kitsunebrewingco" target="_blank" rel="noopener noreferrer" className={styles.shopFooterLink}>Instagram</a>
+          <a href="https://www.facebook.com/KitsuneBrewCo" target="_blank" rel="noopener noreferrer" className={styles.shopFooterLink}>Facebook</a>
+        </div>
+        <p className={styles.shopFooterCopy}>
+          &copy; {new Date().getFullYear()} Kitsune Brewing Company. 3321 E Bell Rd Suite B-5 Phoenix, AZ 85032
+        </p>
+      </footer>
+
+      {/* Floating cart */}
       <button
         className={styles.cartFab}
         onClick={openCart}

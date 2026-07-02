@@ -11,9 +11,9 @@
 
 import fs from "fs";
 import path from "path";
-import { menuData, type MenuItem, type MenuCategory } from "./menu-data";
 import { mtgEvents, type MtgEvent } from "./events-data";
 import { foodTrucks, type FoodTruck } from "./food-trucks-data";
+import { singles, type SingleCard } from "./singles-data";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 
@@ -38,45 +38,6 @@ function readJson<T>(filename: string, defaultData: T): T {
 function writeJson<T>(filename: string, data: T): void {
   ensureDir();
   fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2), "utf-8");
-}
-
-// ─── Menu ────────────────────────────────────────────────────────────────────
-
-export type StoredMenu = Record<MenuCategory, MenuItem[]>;
-
-export function getMenuStore(): StoredMenu {
-  return readJson<StoredMenu>("menu.json", menuData as StoredMenu);
-}
-
-export function saveMenuStore(data: StoredMenu): void {
-  writeJson("menu.json", data);
-}
-
-/** Add a new item to a category. Returns the updated store. */
-export function addMenuItem(category: MenuCategory, item: MenuItem): StoredMenu {
-  const store = getMenuStore();
-  if (!store[category]) store[category] = [];
-  store[category] = [...store[category], item];
-  saveMenuStore(store);
-  return store;
-}
-
-/** Update an existing item by index within its category. */
-export function updateMenuItem(category: MenuCategory, index: number, item: MenuItem): StoredMenu {
-  const store = getMenuStore();
-  const items = [...(store[category] ?? [])];
-  items[index] = item;
-  store[category] = items;
-  saveMenuStore(store);
-  return store;
-}
-
-/** Delete an item by index within its category. */
-export function deleteMenuItem(category: MenuCategory, index: number): StoredMenu {
-  const store = getMenuStore();
-  store[category] = (store[category] ?? []).filter((_, i) => i !== index);
-  saveMenuStore(store);
-  return store;
 }
 
 // ─── Events ──────────────────────────────────────────────────────────────────
@@ -166,3 +127,34 @@ export function deleteFoodTruck(id: string): FoodTruck[] {
   saveFoodTrucksStore(trucks);
   return trucks;
 }
+
+// ─── Singles Inventory ────────────────────────────────────────────────────────
+
+export function getSinglesStore(): SingleCard[] {
+  return readJson<SingleCard[]>("singles.json", singles);
+}
+
+export function saveSinglesStore(cards: SingleCard[]): void {
+  writeJson("singles.json", cards);
+}
+
+export function addSingle(card: SingleCard): SingleCard[] {
+  const existing = getSinglesStore();
+  const cards = [...existing, card];
+  saveSinglesStore(cards);
+  return cards;
+}
+
+export function deleteSingle(id: string): SingleCard[] {
+  const cards = getSinglesStore().filter((c) => c.id !== id);
+  saveSinglesStore(cards);
+  return cards;
+}
+
+export function updateSingle(id: string, patch: Partial<SingleCard>): SingleCard[] {
+  const cards = getSinglesStore().map((c) => c.id === id ? { ...c, ...patch } : c);
+  saveSinglesStore(cards);
+  return cards;
+}
+
+export { type SingleCard };

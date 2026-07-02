@@ -36,6 +36,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://p.typekit.net" crossOrigin="" />
         {/* Adobe Fonts kit — loads futura-pt + proxima-nova */}
         <link rel="stylesheet" href="https://use.typekit.net/nkn8ouk.css" />
+        {/* Mana font — official MTG mana/set symbols */}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css" />
       </head>
       <body>
         <SiteShell>{children}</SiteShell>

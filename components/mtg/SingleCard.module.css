@@ -1,148 +1,215 @@
 .card {
-  background: var(--color-white);
-  border: 1px solid #e8e8e8;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: transparent;
+  border: none;
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
 }
 
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
+/* ── Image — standalone floating card ── */
 .imageWrap {
   position: relative;
   width: 100%;
-  padding-bottom: 140%;
+  padding-bottom: 140%; /* MTG card ratio: 2.5" × 3.5" = 5:7 */
   overflow: hidden;
-  background-color: #1a1a2e;
+  background-color: #e8e8e8;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.10);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover .imageWrap {
+  box-shadow: 0 10px 28px rgba(0,0,0,0.24), 0 3px 8px rgba(0,0,0,0.12);
+  transform: perspective(600px) rotateY(6deg) rotateX(-2deg);
+}
+
+.imageBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s ease;
+}
+
+
+.metaFixed {
+  padding-top: 6px;
+  border-top: 1px solid #f0f0f0;
+  margin-bottom: 2px;
+}
+
+.metaRarity {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 2px;
+}
+
+.metaCond {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+
+.rarityBadge {
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 7px;
 }
 
 .foilBadge {
   position: absolute;
   top: 8px;
   right: 8px;
-  padding: 2px 8px;
-  background: linear-gradient(135deg, #ffd700, #ff8c00, #ffd700);
-  background-size: 200% 100%;
-  animation: foilShimmer 2s linear infinite;
+  background: linear-gradient(135deg, #ffd700, #ff8c00);
+  color: #000;
   font-family: var(--font-heading);
-  font-size: 8px;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 5px 8px;
+  line-height: 1.2;
+  border-radius: 3px;
+  z-index: 1;
+}
+
+.condBadge {
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: #000;
-  z-index: 1;
+  text-transform: uppercase;
+  padding: 3px 7px;
 }
 
-@keyframes foilShimmer {
-  0%   { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-.rarityDot {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  z-index: 1;
-}
-
-.rarityDot[data-rarity="Common"]   { background: #aaaaaa; }
-.rarityDot[data-rarity="Uncommon"] { background: #c0c0c0; box-shadow: 0 0 4px #c0c0c0; }
-.rarityDot[data-rarity="Rare"]     { background: #ffd700; box-shadow: 0 0 4px #ffd700; }
-.rarityDot[data-rarity="Mythic"]   { background: #ff8c00; box-shadow: 0 0 6px #ff8c00; }
-
+/* ── Body — detached info panel ── */
 .body {
-  padding: 12px;
+  background: var(--color-white);
+  border: 1px solid #e2e2e2;
+  border-top: 3px solid #e2e2e2;
+  border-radius: 8px;
+  padding: 12px 14px 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
   flex: 1;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transition: border-color 0.25s ease, border-top-color 0.25s ease;
 }
 
-.nameRow {
-  display: flex;
-  align-items: flex-start;
+.card:hover .body {
+  border-color: #e2e2e2;
+  border-top-color: var(--color-accent);
+}
+
+
+.setName {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 6px;
+  opacity: 0.8;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .name {
   font-family: var(--font-heading);
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 700;
+  letter-spacing: 0.04em;
   color: var(--color-black);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
   line-height: 1.3;
-  flex: 1;
-}
-
-.meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-}
-
-.set {
-  font-size: 10px;
-  color: var(--color-muted);
-  font-family: var(--font-body);
+  margin: 0 0 4px;
+  transition: color 0.2s;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  text-transform: none;
 }
 
-.condition {
-  font-family: var(--font-heading);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  flex-shrink: 0;
+.card:hover .name {
+  color: var(--color-accent);
 }
 
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: auto;
-  padding-top: 8px;
-  border-top: 1px solid var(--color-border);
+.bodyTop {
+  flex: 1;
 }
 
 .price {
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
-  color: var(--color-orange);
+  color: var(--color-accent);
+  margin: 12px 0 16px;
+  line-height: 1;
+}
+
+.viewBtn {
+  width: 100%;
+  padding: 12px;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.viewBtn:hover {
+  background: var(--color-accent);
 }
 
 .addBtn {
   font-size: 10px;
-  padding: 6px 12px;
+  padding: 10px 20px;
   letter-spacing: 0.15em;
-  transition: background 0.15s, color 0.15s, transform 0.1s;
 }
 
 .addedBtn {
   background: #22c55e !important;
   border-color: #22c55e !important;
-  transform: scale(1.05);
 }
 
 .soldOut {
   font-family: var(--font-heading);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-muted);
 }
 
-/* Modal */
+/* ── Modal ── */
 .modalBackdrop {
   position: fixed;
   inset: 0;
@@ -193,9 +260,11 @@
 .modalImageWrap {
   position: relative;
   width: 100%;
-  padding-bottom: 140%;
+  padding-bottom: 140%; /* MTG card ratio: 5:7 */
   overflow: hidden;
-  background-color: #1a1a2e;
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
 }
 
 .modalInfo {
@@ -257,7 +326,7 @@
   font-family: var(--font-heading);
   font-size: 28px;
   font-weight: 700;
-  color: var(--color-orange);
+  color: var(--color-accent);
 }
 
 @media (max-width: 560px) {

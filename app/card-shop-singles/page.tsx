@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import SinglesClient from "./SinglesClient";
+import SinglesClient from "@/app/card-shop/SinglesClient";
 import { getSinglesStore } from "@/lib/store";
-import styles from "./singles.module.css";
+import styles from "@/app/card-shop/singles.module.css";
 
 export const metadata: Metadata = {
-  title: "Shop Magic",
+  title: "Singles | Kitsune Brewing Co.",
   description:
-    "Browse our MTG singles, sealed product, booster boxes, and commander decks at Kitsune Brewing Co. in Phoenix, AZ.",
+    "Browse our full MTG singles inventory at Kitsune Brewing Co. in Phoenix, AZ.",
 };
 
 export const dynamic = "force-dynamic";
 
-export default function SinglesPage() {
+export default function CardShopSinglesPage() {
   const cards = getSinglesStore();
   return (
     <>
@@ -22,7 +22,7 @@ export default function SinglesPage() {
         />
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>
-          <h1 className={styles.bannerTitle}>SHOP MAGIC</h1>
+          <h1 className={styles.bannerTitle}>SINGLES</h1>
           <div className={styles.bannerAccent} />
         </div>
       </section>

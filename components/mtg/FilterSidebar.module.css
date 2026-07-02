@@ -9,54 +9,42 @@
 .sidebarHeader {
   display: flex;
   align-items: baseline;
-  gap: 10px;
-  padding-bottom: 16px;
+  justify-content: space-between;
+  padding-bottom: 14px;
   border-bottom: 2px solid var(--color-black);
   margin-bottom: 4px;
-  flex-wrap: wrap;
 }
 
 .sidebarTitle {
   font-family: var(--font-heading);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
   color: var(--color-black);
 }
 
 .resultCount {
+  font-family: var(--font-body);
   font-size: 12px;
   color: var(--color-muted);
-  font-family: var(--font-body);
-  margin-left: auto;
 }
 
-.clearAll {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font-heading);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-accent);
-  padding: 0;
-  transition: opacity 0.15s ease;
-}
-
-.clearAll:hover {
-  opacity: 0.7;
-}
-
+/* ── Collapsible group ── */
 .group {
-  padding: 16px 0;
   border-bottom: 1px solid var(--color-border);
 }
 
-.group:last-child {
-  border-bottom: none;
+.groupHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
 }
 
 .groupTitle {
@@ -65,19 +53,69 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--color-text-light);
-  margin-bottom: 10px;
+  color: var(--color-accent);
 }
 
+.groupChevron {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--color-black);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.groupBody {
+  padding-bottom: 14px;
+}
+
+/* ── Text inputs ── */
+.textInput {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text);
+  outline: none;
+  border-radius: 0;
+  transition: border-color 0.15s;
+}
+
+.textInput:focus {
+  border-color: var(--color-accent);
+}
+
+/* ── Select ── */
+.select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text);
+  cursor: pointer;
+  outline: none;
+  border-radius: 0;
+  transition: border-color 0.15s;
+  appearance: none;
+}
+
+.select:focus {
+  border-color: var(--color-accent);
+}
+
+/* ── Checkboxes ── */
 .groupItems {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
 }
 
 .checkboxLabel {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   cursor: pointer;
 }
@@ -88,66 +126,204 @@
   accent-color: var(--color-black);
   cursor: pointer;
   flex-shrink: 0;
+  margin-top: 1px;
 }
 
 .checkboxText {
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 12px;
   color: var(--color-text);
-  transition: color 0.15s ease;
+  line-height: 1.4;
+  transition: color 0.15s;
 }
 
 .checkboxLabel:hover .checkboxText {
   color: var(--color-black);
 }
 
-.select {
-  padding: 8px 10px;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.priceRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.priceInput {
-  flex: 1;
-  padding: 8px 10px;
-  font-size: 13px;
-  min-width: 0;
-}
-
-.priceSep {
-  color: var(--color-muted);
-  font-size: 14px;
-  flex-shrink: 0;
-}
-
-.colorGrid {
+/* ── Rarity grid ── */
+.rarityGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 6px;
 }
 
-.colorBtn {
-  aspect-ratio: 1;
-  background: var(--color-gray-light);
+.rarityBtn {
   border: 1px solid var(--color-border);
+  background: none;
+  padding: 8px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   cursor: pointer;
-  font-size: 16px;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  color: var(--color-text);
+}
+
+.rarityBtn:hover {
+  border-color: var(--color-black);
+}
+
+.rarityBtnActive {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(255, 0, 0, 0.04);
+}
+
+/* ── Mana symbol pips ── */
+.colorRow {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+.manaPip {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  padding: 0;
+  flex-shrink: 0;
 }
 
-.colorBtn:hover {
-  border-color: var(--color-black);
+.manaPip i {
+  font-size: 20px;
+  line-height: 1;
+  display: block;
 }
 
-.colorBtnActive {
+.manaPip i::before {
+  position: relative;
+  top: 2px;
+}
+
+.manaPip:hover {
+  transform: scale(1.15);
+}
+
+.manaPipActive {
   border-color: var(--color-black);
+  box-shadow: 0 0 0 1px var(--color-black);
+}
+
+/* ── Power / Toughness ── */
+.ptRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.ptField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ptLabel {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.ptInput {
+  width: 100%;
+  padding: 8px 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text);
+  outline: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.ptInput:focus {
+  border-color: var(--color-accent);
+}
+
+.ptSep {
+  font-size: 20px;
+  color: var(--color-muted);
+  flex-shrink: 0;
+  padding-bottom: 6px;
+}
+
+/* ── Price slider ── */
+.priceSliderWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.priceSlider {
+  width: 100%;
+  accent-color: var(--color-black);
+  cursor: pointer;
+  height: 4px;
+}
+
+.priceLabels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+/* ── Action buttons ── */
+.filterBtns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.applyBtn {
+  padding: 12px 8px;
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.applyBtn:hover {
+  background: #cc3300;
+}
+
+.clearBtn {
+  padding: 12px 8px;
   background: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.clearBtn:hover {
+  background: #333;
 }

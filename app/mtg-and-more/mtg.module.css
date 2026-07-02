@@ -1,12 +1,641 @@
-.eventsGrid {
+/* ─── Hero ─────────────────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 614px;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--color-black);
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+.heroVignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+  z-index: 1;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 900px;
+}
+
+.heroTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--color-white);
+  margin-bottom: 20px;
+}
+
+.heroSubtitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* ─── Intro ─────────────────────────────────────────────────────────────────── */
+.intro {
+  background: var(--color-white);
+  padding: 80px 24px;
+}
+
+.introInner {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.introLabel {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.introHeading {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  color: var(--color-black);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.introBody {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.8;
+  color: var(--color-text);
+  max-width: 620px;
+}
+
+/* ─── Bento Grid ─────────────────────────────────────────────────────────────── */
+.bentoSection {
+  background: var(--color-white);
+  padding: 0 0 80px;
+}
+
+.bentoInner {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.bentoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+}
+
+.bentoCard {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e2e2e2;
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.bentoCard:link,
+.bentoCard:visited {
+  color: inherit;
+}
+
+.bentoCard:hover {
+  border-color: var(--color-accent);
+}
+
+.bentoImg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.7s ease;
+  z-index: 0;
+}
+
+.bentoCard:hover .bentoImg {
+  transform: scale(1.05);
+}
+
+.bentoGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+  z-index: 1;
+}
+
+.bentoGradientSide {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.9) 0%, transparent 70%);
+  z-index: 1;
+}
+
+.bentoText {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 24px;
+  color: var(--color-white);
+  z-index: 2;
+}
+
+.bentoTextCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px;
+  color: var(--color-white);
+  z-index: 2;
+  max-width: 560px;
+}
+
+.bentoTitle {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.bentoDesc {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.8);
+  margin: 0 0 16px;
+  max-width: 420px;
+  line-height: 1.6;
+}
+
+.bentoTitleLg {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  margin: 0 0 12px;
+  line-height: 1.1;
+}
+
+.bentoDescLg {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.8);
+  margin: 0 0 24px;
+  line-height: 1.7;
+}
+
+.bentoBtnPrimary {
+  display: inline-block;
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 12px 28px;
+  transition: background 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.bentoBtnPrimary:hover {
+  background: #cc0000;
+}
+
+.bentoBtnOutline {
+  display: inline-block;
+  border: 1px solid var(--color-white);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.bentoBtnOutline:hover {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+.bentoBtnUnderline {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: 4px;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.bentoCard:hover .bentoBtnUnderline {
+  color: var(--color-accent);
+}
+
+/* ─── Weekly Play ────────────────────────────────────────────────────────────── */
+.scheduleSection {
+  background: var(--color-white);
+  padding: 80px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.scheduleInner {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.scheduleHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+}
+
+.scheduleLabel {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 6px;
+}
+
+.scheduleHeading {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  margin: 0;
+  line-height: 1;
+}
+
+.scheduleCalLink {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  text-decoration: none;
+  transition: color 0.2s;
+  white-space: nowrap;
+  padding-bottom: 2px;
+}
+
+.scheduleCalLink:link,
+.scheduleCalLink:visited {
+  color: var(--color-black);
+}
+
+.scheduleCalLink:hover {
+  color: var(--color-accent);
+}
+
+.scheduleRows {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.scheduleRow {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  margin-bottom: -1px;
+  transition: border-color 0.2s;
   gap: 32px;
 }
 
-.emptyState {
-  text-align: center;
+.scheduleRow:hover {
+  border-color: var(--color-accent);
+  z-index: 1;
+  position: relative;
+}
+
+.scheduleDay {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.scheduleInfo {
+  flex: 1;
+}
+
+.scheduleEventTitle {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+
+.scheduleEventDesc {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.scheduleTime {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: var(--color-black);
+  color: var(--color-white);
+  padding: 8px 16px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── CTA ────────────────────────────────────────────────────────────────────── */
+.cta {
+  position: relative;
+  background: var(--color-black);
   padding: 80px 24px;
-  color: var(--color-gray-mid);
+  overflow: hidden;
+}
+
+.ctaBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.25;
+  z-index: 0;
+}
+
+.ctaInner {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ctaHeading {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  margin: 0 0 24px;
+  line-height: 1.1;
+}
+
+.ctaBody {
+  font-family: var(--font-body);
   font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+  margin: 0 0 40px;
+}
+
+.ctaButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.ctaBtnPrimary {
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 16px 40px;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.ctaBtnPrimary:link,
+.ctaBtnPrimary:visited {
+  color: var(--color-white);
+}
+
+.ctaBtnPrimary:hover {
+  transform: scale(1.05);
+  background: #cc0000;
+}
+
+.ctaBtnOutline {
+  border: 1px solid var(--color-white);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 16px 40px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.15s, color 0.15s;
+}
+
+.ctaBtnOutline:link,
+.ctaBtnOutline:visited {
+  color: var(--color-white);
+}
+
+.ctaBtnOutline:hover {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+/* ─── MTG Footer ─────────────────────────────────────────────────────────────── */
+.mtgFooter {
+  background: var(--color-black);
+  color: var(--color-white);
+  padding: 48px 24px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.mtgFooterName {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  margin: 0;
+}
+
+.mtgFooterLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+}
+
+.mtgFooterLink {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.mtgFooterLink:link,
+.mtgFooterLink:visited {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.mtgFooterLink:hover {
+  color: var(--color-accent);
+}
+
+.mtgFooterCopy {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .bentoGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .bentoCard {
+    grid-column: span 1 !important;
+    height: 280px !important;
+  }
+
+  .bentoTextCenter {
+    padding: 24px;
+  }
+
+  .scheduleRow {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .scheduleTime {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    height: 480px;
+  }
+
+  .bentoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bentoCard {
+    height: 260px !important;
+  }
+
+  .scheduleHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .scheduleRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .scheduleTime {
+    margin-left: 0;
+    align-self: flex-start;
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ctaBtnPrimary,
+  .ctaBtnOutline {
+    width: 100%;
+    text-align: center;
+  }
 }
