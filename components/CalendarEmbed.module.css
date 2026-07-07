@@ -13,6 +13,11 @@
 }
 
 @media (max-width: 768px) {
+  .calendarWrapper {
+    width: 100%;
+    margin-left: 0;
+  }
+
   .calendarIframe {
     height: 500px;
   }

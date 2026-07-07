@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { getEventsStore, saveEventsStore, addOrder } from "@/lib/store";
+import {
+  getEventsStore,
+  saveEventsStore,
+  addOrder,
+  addRegistration,
+  getRegistrationsByEvent,
+  type Registration,
+} from "@/lib/store";
+import {
+  sendEventConfirmationEmail,
+  sendAdminRegistrationNotification,
+} from "@/lib/email";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET ?? "";
 
@@ -23,17 +34,69 @@ export async function POST(request: NextRequest) {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
     const meta = session.metadata ?? {};
-    const { eventSlug, eventTitle, eventDate, eventFormat, firstName, lastName, phone, notes } = meta;
+    const { eventSlug, eventTitle, eventDate, eventFormat, firstName, lastName, phone, notes } =
+      meta;
 
-    // ── 1. Increment registered count for the event ─────────────────────────
-    if (eventSlug) {
+    // ── 1. Save registration for paid event registrations ────────────────────
+    if (eventSlug && session.payment_status === "paid") {
       const events = getEventsStore();
-      const updated = events.map((e) =>
-        e.slug === eventSlug
-          ? { ...e, registeredCount: e.registeredCount + 1 }
-          : e
+      const mtgEvent = events.find((e) => e.slug === eventSlug);
+      const email =
+        session.customer_email ??
+        session.customer_details?.email ??
+        meta.email ??
+        "";
+
+      // Guard against double-fire: check if stripeSessionId already recorded
+      const existing = getRegistrationsByEvent(eventSlug);
+      const alreadyRegistered = existing.some(
+        (r) => r.stripeSessionId === session.id
       );
-      saveEventsStore(updated);
+
+      if (!alreadyRegistered) {
+        const confirmedCount = existing.filter((r) => r.status === "confirmed").length;
+        const isFull =
+          mtgEvent && mtgEvent.playerLimit > 0 && confirmedCount >= mtgEvent.playerLimit;
+
+        const registration: Registration = {
+          id: crypto.randomUUID(),
+          eventSlug,
+          firstName: firstName ?? "",
+          lastName: lastName ?? "",
+          email,
+          phone: phone ?? "",
+          notes: notes ?? undefined,
+          status: isFull ? "waitlisted" : "confirmed",
+          stripeSessionId: session.id,
+          amountPaid: session.amount_total ?? undefined,
+          checkedIn: false,
+          createdAt: new Date(event.created * 1000).toISOString(),
+        };
+
+        addRegistration(registration);
+
+        // Sync registeredCount from actual confirmed registrations
+        if (!isFull) {
+          const updatedEvents = events.map((e) =>
+            e.slug === eventSlug
+              ? { ...e, registeredCount: confirmedCount + 1 }
+              : e
+          );
+          saveEventsStore(updatedEvents);
+        }
+
+        // Send confirmation emails
+        if (mtgEvent) {
+          Promise.all([
+            sendEventConfirmationEmail(registration, mtgEvent),
+            sendAdminRegistrationNotification(registration, mtgEvent),
+          ]).catch((err) => console.error("Webhook email error:", err));
+        }
+
+        console.log(
+          `✓ Registration saved — ${registration.firstName} ${registration.lastName} | ${eventTitle} | ${registration.status}`
+        );
+      }
     }
 
     // ── 2. Build a human-readable description ────────────────────────────────
@@ -69,7 +132,9 @@ export async function POST(request: NextRequest) {
       createdAt: new Date(event.created * 1000).toISOString(),
     });
 
-    console.log(`✓ Order saved — ${customerName} | ${description} | $${((session.amount_total ?? 0) / 100).toFixed(2)}`);
+    console.log(
+      `✓ Order saved — ${customerName} | ${description} | $${((session.amount_total ?? 0) / 100).toFixed(2)}`
+    );
   }
 
   return NextResponse.json({ received: true });

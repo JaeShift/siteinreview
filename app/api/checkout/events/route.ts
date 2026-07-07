@@ -26,8 +26,8 @@ export async function POST(request: NextRequest) {
   if (!event) {
     return NextResponse.json({ error: "Event not found" }, { status: 404 });
   }
-  if (event.entryFee === 0) {
-    return NextResponse.json({ error: "Event is free — no payment needed" }, { status: 400 });
+  if (!event.entryFee || event.entryFee < 0.5) {
+    return NextResponse.json({ error: "Event is free or below minimum charge — no payment needed" }, { status: 400 });
   }
 
   const session = await stripe.checkout.sessions.create({

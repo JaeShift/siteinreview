@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { getEventsStore } from "@/lib/store";
 import EventsClient from "./EventsClient";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "MTG Events",
@@ -8,5 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default function EventsPage() {
-  return <EventsClient />;
+  const events = getEventsStore();
+  return <EventsClient events={events} />;
 }

@@ -123,6 +123,14 @@
   text-decoration: none;
 }
 
+.mobileCartLink {
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+}
+
 .mobileNavLink:hover,
 .mobileNavLinkActive,
 .mobileNavLink:hover:link,
@@ -235,6 +243,21 @@
 }
 
 @media (max-width: 900px) {
+  .header {
+    padding-top: 24px;
+    padding-bottom: 32px;
+  }
+
+  .headerInner {
+    width: calc(100% - 48px);
+    height: 78px;
+  }
+
+  .headerLogo img {
+    width: 124px;
+    height: auto;
+  }
+
   .headerNav {
     display: none;
   }
@@ -245,9 +268,35 @@
 }
 
 @media (max-width: 600px) {
+  .header {
+    padding-top: 16px;
+    padding-bottom: 22px;
+  }
+
   .headerInner {
     width: calc(100% - 32px);
+    height: 68px;
     margin-left: 16px;
     margin-right: 16px;
+  }
+
+  .headerLogo {
+    margin-left: 0;
+  }
+
+  .headerLogo img {
+    width: 112px;
+  }
+
+  .mobileNav {
+    padding: 10px 18px 18px;
+  }
+
+  .mobileNavLink,
+  .mobileNavLink:link,
+  .mobileNavLink:visited {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 }

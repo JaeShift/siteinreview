@@ -92,11 +92,37 @@
 }
 
 @media (max-width: 640px) {
+  .controls {
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+  }
+
+  .filterBar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filterPill {
+    min-height: 42px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+
   .grid {
     grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .searchWrap {
     max-width: 100%;
+  }
+
+  .infoBanner {
+    padding: 36px 18px;
+  }
+
+  .infoGrid {
+    gap: 24px;
   }
 }

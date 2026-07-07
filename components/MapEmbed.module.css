@@ -69,7 +69,17 @@
   }
 
   .addressBar {
+    width: 100%;
+    margin-left: 0;
+    padding-left: 18px;
+    padding-right: 18px;
     padding-bottom: 56px;
     margin-bottom: -48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mapIframe {
+    height: 280px;
   }
 }

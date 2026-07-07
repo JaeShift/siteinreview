@@ -69,6 +69,20 @@
   letter-spacing: 0.05em;
 }
 
+.duplicateBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff3f3;
+  border: 1.5px solid #e53e3e;
+  border-radius: 8px;
+  color: #c53030;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
 .textarea {
   resize: vertical;
   min-height: 80px;
@@ -164,7 +178,26 @@
 }
 
 @media (max-width: 480px) {
+  .form {
+    gap: 16px;
+  }
+
+  .eventSummary,
+  .successDetails {
+    padding: 14px;
+  }
+
   .row {
     grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .confirmationBox {
+    width: 100%;
+    padding: 14px 18px;
+  }
+
+  .confirmationNumber {
+    font-size: 20px;
   }
 }

@@ -34,3 +34,23 @@
   color: var(--color-gray-mid);
   line-height: 1.6;
 }
+
+@media (max-width: 480px) {
+  .holdingPage {
+    min-height: 60vh;
+    padding: 40px 18px;
+  }
+
+  .holdingContent {
+    gap: 16px;
+  }
+
+  .holdingLogo img {
+    width: 140px;
+    height: auto;
+  }
+
+  .holdingTitle {
+    font-size: clamp(2rem, 12vw, 2.8rem);
+  }
+}

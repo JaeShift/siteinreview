@@ -57,3 +57,19 @@
   font-size: 13px;
   padding: 10px 24px;
 }
+
+@media (max-width: 640px) {
+  .eventCardBody {
+    padding: 18px;
+  }
+
+  .eventCardTitle {
+    font-size: 16px;
+  }
+
+  .eventCardCta {
+    width: 100%;
+    align-self: stretch;
+    text-align: center;
+  }
+}

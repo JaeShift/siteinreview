@@ -22,18 +22,19 @@
 .heroImage {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
+  aspect-ratio: auto;
+  overflow: visible;
 }
 
 .heroImg {
-  object-fit: cover;
-  filter: grayscale(100%);
+  width: 100%;
+  height: auto;
+  display: block;
   transition: filter 0.5s ease;
 }
 
 .heroImage:hover .heroImg {
-  filter: grayscale(0%);
+  filter: brightness(1.05);
 }
 
 .heroImgBorder {
@@ -143,11 +144,13 @@
   line-height: 1;
 }
 
-.registerBtn {
+.registerBtn,
+.registerBtn:link,
+.registerBtn:visited {
   display: block;
   width: 100%;
   background: var(--color-accent);
-  color: var(--color-white);
+  color: #ffffff !important;
   text-align: center;
   padding: 16px;
   font-family: var(--font-heading);
@@ -161,8 +164,8 @@
 }
 
 .registerBtn:hover {
-  background: var(--color-white);
-  color: var(--color-black);
+  background: #ffffff;
+  color: var(--color-accent) !important;
 }
 
 /* ── What is a Prerelease ── */
@@ -397,10 +400,12 @@
   flex-wrap: wrap;
 }
 
-.ctaBtnPrimary {
+.ctaBtnPrimary,
+.ctaBtnPrimary:link,
+.ctaBtnPrimary:visited {
   display: inline-block;
   background: var(--color-accent);
-  color: var(--color-white);
+  color: #ffffff !important;
   padding: 16px 40px;
   font-family: var(--font-heading);
   font-size: 11px;
@@ -413,8 +418,8 @@
 }
 
 .ctaBtnPrimary:hover {
-  background: var(--color-white);
-  color: var(--color-black);
+  background: #ffffff;
+  color: var(--color-accent) !important;
 }
 
 .ctaBtnOutline {
@@ -486,4 +491,67 @@
   color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 48px 18px;
+  }
+
+  .heroInner {
+    gap: 28px;
+  }
+
+  .heroTitle {
+    font-size: clamp(32px, 11vw, 46px);
+    margin-bottom: 22px;
+  }
+
+  .priceBox {
+    padding: 18px;
+    margin-bottom: 24px;
+  }
+
+  .priceRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .includesItem {
+    align-items: flex-start;
+    line-height: 1.45;
+  }
+
+  .explainSection,
+  .faqSection,
+  .cta {
+    padding: 56px 18px;
+  }
+
+  .explainImage {
+    height: 220px;
+  }
+
+  .stepCard {
+    padding: 20px;
+  }
+
+  .faqInner {
+    gap: 28px;
+  }
+
+  .ctaBtns {
+    flex-direction: column;
+  }
+
+  .ctaBtnPrimary,
+  .ctaBtnOutline {
+    width: 100%;
+    text-align: center;
+  }
+
+  .footerLinks {
+    gap: 16px;
+  }
 }

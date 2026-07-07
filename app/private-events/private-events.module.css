@@ -58,6 +58,37 @@
   margin: 0 auto;
 }
 
+@media (max-width: 640px) {
+  .hero {
+    height: 420px;
+  }
+
+  .heroContent {
+    padding: 0 18px;
+  }
+
+  .heroTitle {
+    font-size: clamp(34px, 12vw, 48px);
+  }
+
+  .intro,
+  .formSection {
+    padding: 56px 18px;
+  }
+
+  .introGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .eventCard {
+    padding: 20px;
+  }
+
+  .formWrap {
+    padding: 28px 18px;
+  }
+}
+
 /* ── Intro ── */
 .intro {
   padding: 80px 24px;

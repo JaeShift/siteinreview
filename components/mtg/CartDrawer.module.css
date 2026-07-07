@@ -309,3 +309,30 @@
 }
 
 .clearBtn:hover { color: var(--color-accent); }
+
+@media (max-width: 480px) {
+  .drawer {
+    width: 100%;
+  }
+
+  .header,
+  .footer {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .item,
+  .undoRow {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .itemControls {
+    margin-left: 54px;
+  }
+}

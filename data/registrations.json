@@ -1,0 +1,65 @@
+[
+  {
+    "id": "a693809e-65d8-4a94-bee8-a9eac06e0e42",
+    "eventSlug": "hobbit-prerelease",
+    "firstName": "Rylee",
+    "lastName": "Nichols",
+    "email": "ryleejae1009@gmail.com",
+    "phone": "(614) 955-1111",
+    "notes": "",
+    "status": "confirmed",
+    "stripeSessionId": "cs_test_a1HIQ0Rcrw3R75jwWEP07mbNLy9rHd1X2tfXztgDAaiX6Pug5tFNgQKzl0",
+    "amountPaid": 4499,
+    "checkedIn": false,
+    "createdAt": "2026-07-07T21:48:06.072Z"
+  },
+  {
+    "id": "fff43b8e-500d-4e26-93e2-48f27f795d2f",
+    "eventSlug": "commander-night-jul-7",
+    "firstName": "Rylee",
+    "lastName": "Nichols",
+    "email": "ryleejae1009@gmail.com",
+    "phone": "(614) 955-1111",
+    "notes": "",
+    "status": "confirmed",
+    "checkedIn": false,
+    "createdAt": "2026-07-07T21:45:33.214Z"
+  },
+  {
+    "id": "ffeb4b9b-a614-49ce-9243-a0015d7f6a96",
+    "eventSlug": "commander-night-jul-7",
+    "firstName": "Rylee",
+    "lastName": "Nichols",
+    "email": "kitsune@test.com",
+    "phone": "(614) 955-1111",
+    "notes": "",
+    "status": "confirmed",
+    "checkedIn": false,
+    "createdAt": "2026-07-07T21:44:04.907Z"
+  },
+  {
+    "id": "19dd10c6-966f-44da-ae73-14564bb0e2b9",
+    "eventSlug": "commander-night-jul-7",
+    "firstName": "Rylee",
+    "lastName": "Nichols",
+    "email": "ryleejae1009@gmail.com",
+    "phone": "(614) 955-1111",
+    "notes": "",
+    "status": "confirmed",
+    "checkedIn": false,
+    "createdAt": "2026-07-07T21:37:25.280Z"
+  },
+  {
+    "id": "0af8c283-910f-4cd5-9807-9e8c8701a1a8",
+    "eventSlug": "commander-night-jul-7",
+    "firstName": "Rylee",
+    "lastName": "Nichols",
+    "email": "ryleejaenichols@gmail.com",
+    "phone": "6149551111",
+    "notes": "",
+    "status": "confirmed",
+    "checkedIn": false,
+    "tableAssignment": "",
+    "createdAt": "2026-07-07T20:48:38.237Z"
+  }
+]

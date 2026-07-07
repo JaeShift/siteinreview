@@ -205,6 +205,43 @@
   }
 }
 
+@media (max-width: 640px) {
+  .hero {
+    height: 420px;
+    min-height: 360px;
+  }
+
+  .heroContent {
+    padding: 0 18px;
+  }
+
+  .heroTitle {
+    font-size: clamp(38px, 13vw, 54px);
+  }
+
+  .intro,
+  .howSection {
+    padding: 56px 18px;
+  }
+
+  .introImages {
+    gap: 10px;
+  }
+
+  .introImg2 {
+    margin-top: 24px;
+  }
+
+  .howHeader {
+    margin-bottom: 32px;
+  }
+
+  .howCardLight,
+  .howCardDark {
+    padding: 24px 20px;
+  }
+}
+
 .howCardLight {
   background: var(--color-white);
   border-left: 4px solid var(--color-accent);

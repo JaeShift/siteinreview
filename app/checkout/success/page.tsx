@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Stripe from "stripe";
-import { addOrder, getOrdersStore, getEventsStore, saveEventsStore } from "@/lib/store";
+import {
+  addOrder,
+  addRegistration,
+  getOrdersStore,
+  getRegistrationsByEvent,
+  getEventsStore,
+  saveEventsStore,
+  type Registration,
+} from "@/lib/store";
 import styles from "./success.module.css";
 
 export const metadata: Metadata = { title: "Order Confirmed" };
@@ -92,16 +100,47 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           createdAt: new Date().toISOString(),
         });
 
-        // For event registrations: increment the registered count
+        // For event registrations: save registration + sync count
         if (!isCart && meta.eventSlug) {
-          const events = getEventsStore();
-          saveEventsStore(
-            events.map((e) =>
-              e.slug === meta.eventSlug
-                ? { ...e, registeredCount: e.registeredCount + 1 }
-                : e
-            )
+          const eventSlug = meta.eventSlug;
+          const existing = getRegistrationsByEvent(eventSlug);
+          const alreadyRegistered = existing.some(
+            (r) => r.stripeSessionId === session.id
           );
+
+          if (!alreadyRegistered) {
+            const confirmedCount = existing.filter((r) => r.status === "confirmed").length;
+            const events = getEventsStore();
+            const mtgEvent = events.find((e) => e.slug === eventSlug);
+            const isFull = mtgEvent && mtgEvent.playerLimit > 0 && confirmedCount >= mtgEvent.playerLimit;
+
+            const registration: Registration = {
+              id: crypto.randomUUID(),
+              eventSlug,
+              firstName: meta.firstName ?? "",
+              lastName: meta.lastName ?? "",
+              email,
+              phone: meta.phone ?? "",
+              notes: meta.notes ?? undefined,
+              status: isFull ? "waitlisted" : "confirmed",
+              stripeSessionId: session.id,
+              amountPaid: session.amount_total ?? undefined,
+              checkedIn: false,
+              createdAt: new Date().toISOString(),
+            };
+
+            addRegistration(registration);
+
+            if (!isFull) {
+              saveEventsStore(
+                events.map((e) =>
+                  e.slug === eventSlug
+                    ? { ...e, registeredCount: confirmedCount + 1 }
+                    : e
+                )
+              );
+            }
+          }
         }
       }
     } catch {

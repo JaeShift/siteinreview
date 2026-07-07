@@ -1,31 +1,36 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getEventsStore } from "@/lib/store";
+import FaqAccordion from "./FaqAccordion";
 import styles from "./prerelease.module.css";
 
-const FAQS = [
-  {
-    q: "What do I need to bring?",
-    a: "Just yourself! All materials including your Prerelease Kit and basic lands are provided. You may bring your own dice or sleeves if you prefer.",
-  },
-  {
-    q: "Is there an age limit?",
-    a: "Prerelease events are open to all ages. Players under 18 are welcome — Kitsune Brewing Co. is a family-friendly environment during our gaming events.",
-  },
-  {
-    q: "How long do events last?",
-    a: "Typically 3–4 hours. We run three rounds of Swiss-style pairings, so plan for around four hours from start to finish.",
-  },
-  {
-    q: "Can I buy cards there?",
-    a: "Yes! Our singles inventory and sealed product are available in-store before and after events. Check our card shop online to browse current stock.",
-  },
-];
+export const dynamic = "force-dynamic";
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
 
 export default function PreReleasePage() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const today = new Date().toISOString().split("T")[0];
+  const events = getEventsStore();
+
+  // Find the next upcoming Prerelease event
+  const event = events
+    .filter((e) => e.format === "Prerelease" && e.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))[0];
+
+  // Fallback values if no upcoming prerelease exists
+  const title = event?.title ?? "MTG Prerelease";
+  const imageUrl = event?.imageUrl ?? "/images/hobbitprerelease.webp";
+  const price = event?.entryFee ?? 44.99;
+  const dateLabel = event ? formatDate(event.date) : "";
+  const description = event?.shortDescription ?? "Be the first to play the latest Magic set! Sealed prerelease packs, prizes, and more.";
+  const eventSlug = event?.slug;
 
   return (
     <>
@@ -34,35 +39,42 @@ export default function PreReleasePage() {
         <div className={styles.heroInner}>
           <div className={styles.heroImage}>
             <Image
-              src="/images/marvel-mtg-prerelease.png"
-              alt="MTG Prerelease Event"
-              fill
+              src={imageUrl}
+              alt={title}
+              width={0}
+              height={0}
+              sizes="100vw"
               className={styles.heroImg}
-              sizes="(max-width: 768px) 100vw, 58vw"
             />
             <div className={styles.heroImgBorder} />
           </div>
 
           <div className={styles.heroText}>
             <span className={styles.featuredLabel}>FEATURED EVENT</span>
-            <h1 className={styles.heroTitle}>MTG PRERELEASE EVENTS</h1>
+            <h1 className={styles.heroTitle}>{title.toUpperCase()}</h1>
+
+            {dateLabel && (
+              <p style={{ color: "rgba(255,255,255,0.7)", fontFamily: "var(--font-heading)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+                {dateLabel} · Kitsune Brewing Co.
+              </p>
+            )}
 
             <div className={styles.priceBox}>
               <div className={styles.priceRow}>
                 <div>
                   <span className={styles.admissionLabel}>ADMISSION</span>
-                  <span className={styles.price}>$35</span>
+                  <span className={styles.price}>${price % 1 === 0 ? price : price.toFixed(2)}</span>
                 </div>
                 <span className={styles.perPlayer}>PER PLAYER</span>
               </div>
               <ul className={styles.includes}>
                 <li className={styles.includesItem}>
                   <span className={styles.check}>✓</span>
-                  1x MTG Prerelease Kit
+                  1x {title} Kit
                 </li>
                 <li className={styles.includesItem}>
                   <span className={styles.check}>✓</span>
-                  2x Play Booster Prize Support
+                  Entry into Prerelease Event
                 </li>
               </ul>
             </div>
@@ -78,13 +90,8 @@ export default function PreReleasePage() {
       <section className={styles.explainSection}>
         <div className={styles.explainInner}>
           <span className={styles.sectionLabel}>01 / THE EXPERIENCE</span>
-          <h2 className={styles.explainTitle}>WHAT IS A PRERELEASE?</h2>
-          <p className={styles.explainBody}>
-            Prerelease events are the first opportunity for the Magic community to get their hands
-            on the latest expansion. It&apos;s a &ldquo;Sealed Deck&rdquo; format tournament where
-            everyone starts on a level playing field, building a minimum 40-card deck from a special
-            Prerelease Kit.
-          </p>
+          <h2 className={styles.explainTitle}>{title.toUpperCase()}</h2>
+          <p className={styles.explainBody}>{description}</p>
 
           <div className={styles.explainImage}>
             <Image
@@ -100,22 +107,19 @@ export default function PreReleasePage() {
             <div className={styles.stepCard}>
               <h3 className={styles.stepTitle}>1. BUILD</h3>
               <p className={styles.stepBody}>
-                Open your kit containing 6 Play Boosters and build a 40-card deck. Land is provided
-                by the shop.
+                Open your kit and build a 40-card deck. Basic lands are provided by the shop.
               </p>
             </div>
             <div className={styles.stepCard}>
               <h3 className={styles.stepTitle}>2. BATTLE</h3>
               <p className={styles.stepBody}>
-                Play three rounds of Swiss-style pairings. Win or lose, you keep all the cards from
-                your kit.
+                Play rounds of Swiss-style pairings. Win or lose, you keep everything you open.
               </p>
             </div>
             <div className={styles.stepCard}>
               <h3 className={styles.stepTitle}>3. WIN</h3>
               <p className={styles.stepBody}>
-                Prizes are awarded based on match wins. Everyone walks away with at least one
-                additional pack.
+                Prizes are awarded based on match wins. Everyone walks away with extra value.
               </p>
             </div>
           </div>
@@ -132,39 +136,28 @@ export default function PreReleasePage() {
             </p>
             <div className={styles.faqAccent} />
           </div>
-
-          <div className={styles.faqRight}>
-            {FAQS.map((item, i) => (
-              <div key={i} className={styles.faqItem}>
-                <button
-                  className={styles.faqQuestion}
-                  onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                  aria-expanded={openIndex === i}
-                >
-                  <span>{item.q.toUpperCase()}</span>
-                  <span className={styles.faqIcon}>{openIndex === i ? "−" : "+"}</span>
-                </button>
-                {openIndex === i && (
-                  <p className={styles.faqAnswer}>{item.a}</p>
-                )}
-              </div>
-            ))}
-          </div>
+          <FaqAccordion />
         </div>
       </section>
 
       {/* ── CTA ── */}
       <section className={styles.cta} id="register">
         <div className={styles.ctaInner}>
-          <h2 className={styles.ctaTitle}>READY TO DECK BUILD?</h2>
+          <h2 className={styles.ctaTitle}>READY TO PLAY?</h2>
           <p className={styles.ctaBody}>
-            Seats fill up fast for our weekend Prerelease events. Secure your spot today and be
-            among the first to play the new set.
+            Seats fill up fast — secure your spot{dateLabel ? ` for ${title} on ${dateLabel}` : ""} and be
+            among the first players in Phoenix to crack open the new set.
           </p>
           <div className={styles.ctaBtns}>
-            <a href="https://www.protix.com" target="_blank" rel="noopener noreferrer" className={styles.ctaBtnPrimary}>
-              BOOK YOUR SEAT
-            </a>
+            {eventSlug ? (
+              <Link href={`/events/${eventSlug}`} className={styles.ctaBtnPrimary}>
+                BOOK YOUR SEAT
+              </Link>
+            ) : (
+              <Link href="/events" className={styles.ctaBtnPrimary}>
+                VIEW EVENTS
+              </Link>
+            )}
             <Link href="/contact" className={styles.ctaBtnOutline}>
               CONTACT US
             </Link>

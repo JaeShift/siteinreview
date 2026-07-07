@@ -13,7 +13,7 @@ const navLinks: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "Casino Night", href: "/casino-night" },
   { label: "MTG AND MORE", href: "/mtg-and-more" },
-  { label: "Calendar", href: "/calendar" },
+  { label: "Magic Mamas Pre-Release", href: "/magic-mamas-pre-release" },
   { label: "Contact Us", href: "/contact" },
 ];
 
@@ -78,6 +78,16 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
+          <button
+            className={`${styles.mobileNavLink} ${styles.mobileCartLink}`}
+            onClick={() => {
+              setMenuOpen(false);
+              openCart();
+            }}
+            aria-label={`Open cart — ${totalCount} item${totalCount !== 1 ? "s" : ""}`}
+          >
+            CART ({totalCount})
+          </button>
         </nav>
       )}
     </header>

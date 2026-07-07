@@ -377,12 +377,41 @@
     padding: 40px 16px 60px;
   }
 
+  .container {
+    gap: 24px;
+  }
+
+  .pageTitle {
+    font-size: clamp(34px, 12vw, 46px);
+  }
+
   .item {
+    flex-direction: column;
     padding: 16px 12px;
   }
 
   .itemImageWrap {
-    width: 70px;
-    height: 98px;
+    width: 100%;
+    max-width: 160px;
+    height: auto;
+    aspect-ratio: 5 / 7;
+  }
+
+  .itemTop,
+  .itemBottom,
+  .summaryRow {
+    gap: 12px;
+  }
+
+  .itemBottom {
+    flex-wrap: wrap;
+  }
+
+  .summary {
+    padding: 22px 18px 26px;
+  }
+
+  .footerLinks {
+    gap: 16px;
   }
 }

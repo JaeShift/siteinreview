@@ -108,3 +108,31 @@
     padding: 28px;
   }
 }
+
+@media (max-width: 640px) {
+  .contactSection {
+    padding: 28px 0 36px;
+  }
+
+  .contactGrid {
+    gap: 28px;
+  }
+
+  .contactHeading {
+    font-size: clamp(32px, 11vw, 42px);
+  }
+
+  .contactSubtitle {
+    margin-top: 20px;
+    margin-bottom: 26px;
+    line-height: 1.5;
+  }
+
+  .contactInfoCol {
+    padding: 22px 18px;
+  }
+
+  .hoursRow {
+    gap: 16px;
+  }
+}

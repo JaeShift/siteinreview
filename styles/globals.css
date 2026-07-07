@@ -86,6 +86,7 @@ body {
   color:            var(--color-text);
   background-color: var(--color-bg);
   overscroll-behavior: none;
+  overflow-x: hidden;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -296,4 +297,61 @@ button {
   letter-spacing: 0.08em;
   line-height:    1em;
   color:          var(--color-white);
+}
+
+@media (max-width: 768px) {
+  h1,
+  h2 {
+    font-size: clamp(28px, 8vw, 35px);
+    line-height: 1.08;
+  }
+
+  p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .section {
+    padding-top: 44px;
+    padding-bottom: 44px;
+  }
+
+  .btn {
+    width: 100%;
+    min-height: 44px;
+    padding: 12px 18px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
+  }
+
+  .page-banner {
+    padding: 48px 18px;
+  }
+
+  .page-banner h1 {
+    font-size: clamp(2rem, 12vw, 3.2rem);
+    letter-spacing: 0.05em;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .section {
+    padding-top: 36px;
+    padding-bottom: 36px;
+  }
+
+  .page-banner {
+    padding: 40px 14px;
+  }
 }

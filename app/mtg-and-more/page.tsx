@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getEventsStore } from "@/lib/store";
 import styles from "./mtg.module.css";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "MTG and More",
@@ -68,14 +71,19 @@ const PRIVATE_EVENTS_IMG =
 
 const CTA_IMG = "/images/swirl.png";
 
-const schedule = [
-  { day: "JUL 7",  title: "COMMANDER NIGHT", desc: "Free play, pods start every 30 minutes. All power levels welcome.", time: "5:30 PM – 9:00 PM" },
-  { day: "JUL 14", title: "COMMANDER NIGHT", desc: "Free play, pods start every 30 minutes. All power levels welcome.", time: "5:30 PM – 9:00 PM" },
-  { day: "JUL 20", title: "MARVEL SUPERHEROES PRERELEASE", desc: "Be the first to play Marvel Superheroes. Sealed prerelease packs, prizes, and more.", time: "2:00 PM (~4 HRS)" },
-  { day: "JUL 21", title: "COMMANDER NIGHT", desc: "Free play, pods start every 30 minutes. All power levels welcome.", time: "5:30 PM – 9:00 PM" },
-];
-
 export default function MtgPage() {
+  const today = new Date().toISOString().split("T")[0];
+  const schedule = getEventsStore()
+    .filter((e) => e.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, 4)
+    .map((e) => {
+      const d = new Date(e.date + "T00:00:00");
+      const day = d.toLocaleDateString("en-US", { month: "short", day: "numeric" }).toUpperCase();
+      const time = e.endTime ? `${e.time} – ${e.endTime}` : e.time;
+      return { day, title: e.title.toUpperCase(), desc: e.shortDescription, time, slug: e.slug };
+    });
+
   return (
     <>
       {/* ── Hero ── */}
@@ -165,15 +173,19 @@ export default function MtgPage() {
             </Link>
           </div>
           <div className={styles.scheduleRows}>
-            {schedule.map((row) => (
-              <div key={row.day} className={styles.scheduleRow}>
+            {schedule.length === 0 ? (
+              <p style={{ color: "var(--color-muted)", padding: "24px 0", fontSize: 14 }}>
+                No upcoming events scheduled. Check back soon!
+              </p>
+            ) : schedule.map((row) => (
+              <Link key={`${row.day}-${row.title}`} href={`/events/${row.slug}`} className={styles.scheduleRow}>
                 <span className={styles.scheduleDay}>{row.day}</span>
                 <div className={styles.scheduleInfo}>
                   <h4 className={styles.scheduleEventTitle}>{row.title}</h4>
                   <p className={styles.scheduleEventDesc}>{row.desc}</p>
                 </div>
                 <span className={styles.scheduleTime}>{row.time}</span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { MtgEvent, EventFormat } from "@/lib/events-data";
+import type { MtgEvent, EventFormat, CustomQuestion, EventAddOn } from "@/lib/events-data";
 import styles from "./admin-events.module.css";
 
 const FORMAT_OPTIONS: EventFormat[] = [
@@ -39,18 +39,23 @@ function makeEmpty(): MtgEvent {
 
 interface Props {
   initialEvents: MtgEvent[];
+  currentPrerelease: MtgEvent | null;
 }
 
-export default function EventsAdminClient({ initialEvents }: Props) {
+
+export default function EventsAdminClient({ initialEvents, currentPrerelease }: Props) {
   const [events, setEvents] = useState<MtgEvent[]>(initialEvents);
   const [editing, setEditing] = useState<MtgEvent | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
   const [flash, setFlash] = useState<{ msg: string; type: "success" | "error" } | null>(null);
+  const [prereleaseSetName, setPrereleaseSetName] = useState("");
 
   const today = new Date().toISOString().split("T")[0];
-  const sorted = [...events].sort((a, b) => b.date.localeCompare(a.date));
+  const upcoming = [...events].filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+  const past = [...events].filter((e) => e.date < today).sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = [...upcoming, ...past];
 
   function showFlash(msg: string, type: "success" | "error" = "success") {
     setFlash({ msg, type });
@@ -60,11 +65,18 @@ export default function EventsAdminClient({ initialEvents }: Props) {
   function openAdd() {
     setIsNew(true);
     setEditing(makeEmpty());
+    setPrereleaseSetName("");
   }
 
   function openEdit(event: MtgEvent) {
     setIsNew(false);
     setEditing({ ...event });
+    // Pre-populate set name from title if it's a prerelease (strip " Prerelease" suffix)
+    if (event.format === "Prerelease") {
+      setPrereleaseSetName(event.title.replace(/\s*Prerelease\s*/i, "").trim());
+    } else {
+      setPrereleaseSetName("");
+    }
   }
 
   function changeField(field: keyof MtgEvent, value: unknown) {
@@ -104,6 +116,23 @@ export default function EventsAdminClient({ initialEvents }: Props) {
     }
   }
 
+  async function toggleRegistration(slug: string, open: boolean) {
+    try {
+      const event = events.find((e) => e.slug === slug);
+      if (!event) return;
+      const res = await fetch(`/api/admin/events/${slug}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...event, registrationOpen: open }),
+      });
+      if (!res.ok) throw new Error();
+      setEvents(await res.json());
+      showFlash(`Registration ${open ? "opened" : "closed"} for "${event.title}".`);
+    } catch {
+      showFlash("Failed to update registration status.", "error");
+    }
+  }
+
   async function handleDelete(slug: string, title: string) {
     if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
     setDeletingSlug(slug);
@@ -139,16 +168,17 @@ export default function EventsAdminClient({ initialEvents }: Props) {
         <div className={styles.tableHeader}>
           <span>Event</span>
           <span>Date</span>
-          <span>Format</span>
+          <span>Type</span>
           <span>Entry</span>
           <span>Players</span>
-          <span>Status</span>
+          <span>Registration</span>
           <span>Actions</span>
         </div>
 
         {sorted.map((event) => {
           const isPast = event.date < today;
           const seatsLeft = event.playerLimit - event.registeredCount;
+          const regOpen = event.registrationOpen !== false;
           return (
             <div key={event.slug} className={`${styles.tableRow} ${isPast ? styles.pastRow : ""}`}>
               <div className={styles.eventCell}>
@@ -171,9 +201,15 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   />
                 </div>
               </div>
-              <span className={`${styles.statusBadge} ${isPast ? styles.statusPast : seatsLeft === 0 ? styles.statusSoldOut : styles.statusUpcoming}`}>
-                {isPast ? "Past" : seatsLeft === 0 ? "Sold Out" : "Upcoming"}
-              </span>
+              <div>
+                <button
+                  className={`${styles.regToggleBtn} ${regOpen ? styles.regOpen : styles.regClosed}`}
+                  onClick={() => toggleRegistration(event.slug, !regOpen)}
+                  title={regOpen ? "Click to close registration" : "Click to open registration"}
+                >
+                  {regOpen ? "Open" : "Closed"}
+                </button>
+              </div>
               <div className={styles.actionsCell}>
                 <Link href={`/events/${event.slug}`} target="_blank" className={styles.actionLink} title="View public page">↗</Link>
                 <button className={styles.actionLink} onClick={() => openEdit(event)} title="Edit event">✎</button>
@@ -197,14 +233,14 @@ export default function EventsAdminClient({ initialEvents }: Props) {
 
       {/* ── Edit/Add Modal ── */}
       {editing && (
-        <div className={styles.modalOverlay} onClick={() => setEditing(null)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle}>{isNew ? "New Event" : `Edit: ${editing.title}`}</h2>
               <button className={styles.closeBtn} onClick={() => setEditing(null)}>✕</button>
             </div>
 
-            <div className={styles.formGrid}>
+            <form onSubmit={(e) => e.preventDefault()} className={styles.formGrid}>
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                 <label className="form-label">Title *</label>
                 <input className="form-input" value={editing.title} onChange={(e) => changeField("title", e.target.value)} placeholder="e.g. Friday Night Commander" />
@@ -239,13 +275,54 @@ export default function EventsAdminClient({ initialEvents }: Props) {
 
               <div className={styles.formGroup}>
                 <label className="form-label">Entry Fee ($)</label>
-                <input type="number" min={0} className="form-input" value={editing.entryFee} onChange={(e) => changeField("entryFee", parseInt(e.target.value) || 0)} />
+                <input type="number" min={0} step={0.01} className="form-input" value={editing.entryFee} onChange={(e) => changeField("entryFee", parseFloat(e.target.value) || 0)} />
               </div>
 
               <div className={styles.formGroup}>
                 <label className="form-label">Player Limit</label>
                 <input type="number" min={1} className="form-input" value={editing.playerLimit} onChange={(e) => changeField("playerLimit", parseInt(e.target.value) || 32)} />
               </div>
+
+              {editing.format === "Prerelease" && (
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label className="form-label">Set Name</label>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                    <input
+                      className="form-input"
+                      style={{ flex: 1 }}
+                      value={prereleaseSetName}
+                      placeholder="e.g. The Hobbit, Duskmourn, Bloomburrow…"
+                      onChange={(e) => {
+                        setPrereleaseSetName(e.target.value);
+                        if (isNew && e.target.value.trim()) {
+                          changeField("title", `${e.target.value.trim()} Prerelease`);
+                        }
+                      }}
+                    />
+                    {currentPrerelease && prereleaseSetName.trim() && (
+                      <button
+                        type="button"
+                        className="btn btn-outline"
+                        style={{ whiteSpace: "nowrap", fontSize: 12 }}
+                        onClick={() => {
+                          const oldName = currentPrerelease.title.replace(/\s*Prerelease\s*/i, "").trim();
+                          const newName = prereleaseSetName.trim();
+                          const replace = (text: string) =>
+                            text.replace(new RegExp(oldName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), newName);
+                          changeField("shortDescription", replace(editing.shortDescription));
+                          changeField("description", replace(editing.description));
+                          if (isNew) changeField("title", `${newName} Prerelease`);
+                        }}
+                      >
+                        Update Descriptions
+                      </button>
+                    )}
+                  </div>
+                  <span style={{ fontSize: 11, color: "var(--color-text-light)", marginTop: 4 }}>
+                    Type a new set name, then click &ldquo;Update Descriptions&rdquo; to replace the old name throughout.
+                  </span>
+                </div>
+              )}
 
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                 <label className="form-label">Short Description</label>
@@ -255,11 +332,6 @@ export default function EventsAdminClient({ initialEvents }: Props) {
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                 <label className="form-label">Full Description</label>
                 <textarea className="form-input" rows={4} value={editing.description} onChange={(e) => changeField("description", e.target.value)} placeholder="Full event details, rules, etc." />
-              </div>
-
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Prize Support</label>
-                <input className="form-input" value={editing.prizeSupport} onChange={(e) => changeField("prizeSupport", e.target.value)} placeholder="e.g. Booster packs for top 4" />
               </div>
 
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
@@ -277,10 +349,6 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                 </select>
               </div>
 
-              <div className={styles.formGroup}>
-                <label className="form-label">Tags (comma-separated)</label>
-                <input className="form-input" value={editing.tags.join(", ")} onChange={(e) => changeField("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))} placeholder="commander, casual, weekly" />
-              </div>
 
               <div className={styles.formGroup}>
                 <label className="form-label">Featured</label>
@@ -289,7 +357,130 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   <option value="yes">Yes – show in spotlight</option>
                 </select>
               </div>
-            </div>
+
+              {/* ── Custom Questions Editor ── */}
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label className="form-label">Custom Registration Questions</label>
+                {(editing.customQuestions ?? []).map((q, idx) => (
+                  <div key={q.id} className={styles.faqItem}>
+                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                      <input
+                        className="form-input"
+                        style={{ flex: 1 }}
+                        value={q.label}
+                        placeholder="Question text"
+                        onChange={(e) => {
+                          const qs = (editing.customQuestions ?? []).map((item, i) =>
+                            i === idx ? { ...item, label: e.target.value } : item
+                          );
+                          changeField("customQuestions", qs);
+                        }}
+                      />
+                      <label style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, whiteSpace: "nowrap" }}>
+                        <input
+                          type="checkbox"
+                          checked={q.required}
+                          onChange={(e) => {
+                            const qs = (editing.customQuestions ?? []).map((item, i) =>
+                              i === idx ? { ...item, required: e.target.checked } : item
+                            );
+                            changeField("customQuestions", qs);
+                          }}
+                        />
+                        Required
+                      </label>
+                      <button
+                        type="button"
+                        className={styles.faqRemoveBtn}
+                        onClick={() => {
+                          const qs = (editing.customQuestions ?? []).filter((_, i) => i !== idx);
+                          changeField("customQuestions", qs);
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  style={{ marginTop: 8, fontSize: 12 }}
+                  onClick={() => {
+                    const newQ: CustomQuestion = { id: crypto.randomUUID(), label: "", required: false };
+                    changeField("customQuestions", [...(editing.customQuestions ?? []), newQ]);
+                  }}
+                >
+                  + Add Question
+                </button>
+              </div>
+
+              {/* ── Add-Ons Editor ── */}
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label className="form-label">Add-Ons (optional paid extras)</label>
+                {(editing.addOns ?? []).map((addon, idx) => (
+                  <div key={addon.id} className={styles.faqItem}>
+                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                      <input
+                        className="form-input"
+                        style={{ flex: 1 }}
+                        value={addon.label}
+                        placeholder="Add-on label (e.g. Extra Pack)"
+                        onChange={(e) => {
+                          const addons = (editing.addOns ?? []).map((a, i) =>
+                            i === idx ? { ...a, label: e.target.value } : a
+                          );
+                          changeField("addOns", addons);
+                        }}
+                      />
+                      <input
+                        className="form-input"
+                        style={{ width: 90 }}
+                        type="number"
+                        min={0}
+                        step={0.01}
+                        placeholder="Price"
+                        value={addon.price}
+                        onChange={(e) => {
+                          const addons = (editing.addOns ?? []).map((a, i) =>
+                            i === idx ? { ...a, price: parseFloat(e.target.value) || 0 } : a
+                          );
+                          changeField("addOns", addons);
+                        }}
+                      />
+                      <button
+                        type="button"
+                        className={styles.faqRemoveBtn}
+                        onClick={() => {
+                          const addons = (editing.addOns ?? []).filter((_, i) => i !== idx);
+                          changeField("addOns", addons);
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  style={{ marginTop: 8, fontSize: 12 }}
+                  onClick={() => {
+                    const newAddon: EventAddOn = { id: crypto.randomUUID(), label: "", price: 0 };
+                    changeField("addOns", [...(editing.addOns ?? []), newAddon]);
+                  }}
+                >
+                  + Add Add-On
+                </button>
+              </div>
+
+              {!isNew && (
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label className="form-label">Registered Count (read-only — managed automatically)</label>
+                  <input className="form-input" value={editing.registeredCount} readOnly style={{ background: "#f5f5f5", cursor: "not-allowed" }} />
+                </div>
+              )}
+            </form>
 
             <div className={styles.modalFooter}>
               <button className="btn btn-outline" onClick={() => setEditing(null)} disabled={saving}>Cancel</button>

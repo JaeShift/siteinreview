@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { mtgEvents, getEventBySlug } from "@/lib/events-data";
+import { getEventsStore } from "@/lib/store";
 import EventDetailClient from "./EventDetailClient";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: { slug: string };
 }
 
-export async function generateStaticParams() {
-  return mtgEvents.map((e) => ({ slug: e.slug }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const event = getEventBySlug(params.slug);
+  const events = getEventsStore();
+  const event = events.find((e) => e.slug === params.slug);
   if (!event) return {};
   return {
     title: event.title,
@@ -21,7 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function EventDetailPage({ params }: Props) {
-  const event = getEventBySlug(params.slug);
+  const events = getEventsStore();
+  const event = events.find((e) => e.slug === params.slug);
   if (!event) notFound();
   return <EventDetailClient event={event} />;
 }

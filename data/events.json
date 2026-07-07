@@ -8,21 +8,42 @@
     "endTime": "9:00 PM",
     "entryFee": 0,
     "playerLimit": 40,
-    "registeredCount": 0,
+    "registeredCount": 4,
     "imageUrl": "https://placehold.co/1200x500/0d2137/c9a84c?text=Commander+Night",
     "shortDescription": "Free Commander Night every Tuesday. Pods start every 30 minutes. All power levels welcome.",
     "description": "Join us every Tuesday for Commander Night at Kitsune Brewing Co.! We organize players into pods of 4 and let the chaos unfold. Casual and competitive pods available — just let us know your preferred power level. New players are always welcome. Free entry, no registration required. Grab a brew and sling some spells!",
     "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
     "prizeSupport": "Free entry. Prizes and giveaways throughout the night.",
-    "tags": ["Commander", "Multiplayer", "Casual", "Free", "Weekly"],
+    "tags": [
+      "Commander",
+      "Multiplayer",
+      "Casual",
+      "Free",
+      "Weekly"
+    ],
     "recurring": "weekly",
     "featured": false,
     "faq": [
-      { "question": "Is there an entry fee?", "answer": "No entry fee — Commander Night is completely free!" },
-      { "question": "Do I need to register?", "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod." },
-      { "question": "What power level should my deck be?", "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod." },
-      { "question": "Are minors allowed?", "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law." },
-      { "question": "Where do I park?", "answer": "Free parking is available in the shopping center lot directly in front of the brewery." }
+      {
+        "question": "Is there an entry fee?",
+        "answer": "No entry fee — Commander Night is completely free!"
+      },
+      {
+        "question": "Do I need to register?",
+        "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod."
+      },
+      {
+        "question": "What power level should my deck be?",
+        "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery."
+      }
     ]
   },
   {
@@ -40,40 +61,82 @@
     "description": "Join us every Tuesday for Commander Night at Kitsune Brewing Co.! We organize players into pods of 4 and let the chaos unfold. Casual and competitive pods available — just let us know your preferred power level. New players are always welcome. Free entry, no registration required. Grab a brew and sling some spells!",
     "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
     "prizeSupport": "Free entry. Prizes and giveaways throughout the night.",
-    "tags": ["Commander", "Multiplayer", "Casual", "Free", "Weekly"],
+    "tags": [
+      "Commander",
+      "Multiplayer",
+      "Casual",
+      "Free",
+      "Weekly"
+    ],
     "recurring": "weekly",
     "featured": false,
     "faq": [
-      { "question": "Is there an entry fee?", "answer": "No entry fee — Commander Night is completely free!" },
-      { "question": "Do I need to register?", "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod." },
-      { "question": "What power level should my deck be?", "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod." },
-      { "question": "Are minors allowed?", "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law." },
-      { "question": "Where do I park?", "answer": "Free parking is available in the shopping center lot directly in front of the brewery." }
+      {
+        "question": "Is there an entry fee?",
+        "answer": "No entry fee — Commander Night is completely free!"
+      },
+      {
+        "question": "Do I need to register?",
+        "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod."
+      },
+      {
+        "question": "What power level should my deck be?",
+        "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery."
+      }
     ]
   },
   {
-    "slug": "marvel-superheroes-prerelease",
-    "title": "Marvel Superheroes Prerelease",
+    "slug": "hobbit-prerelease",
+    "title": "Hobbit Prerelease",
     "format": "Prerelease",
     "date": "2026-07-20",
     "time": "2:00 PM",
     "endTime": "6:00 PM",
     "entryFee": 44.99,
     "playerLimit": 32,
-    "registeredCount": 0,
-    "imageUrl": "https://placehold.co/1200x500/e61c24/f0f0f0?text=Marvel+Superheroes+Prerelease",
-    "shortDescription": "Be the first to play Marvel Superheroes! Sealed prerelease packs, prizes, and more.",
-    "description": "Don't miss the Marvel Superheroes Prerelease at Kitsune Brewing Co.! Be among the first players in Phoenix to crack open Marvel Superheroes packs before the official release. Each player receives a Prerelease Kit, builds a 40-card sealed deck, and competes in 4 rounds of Swiss. Keep everything you open, earn prizes based on your record, and celebrate the launch of one of Magic's most exciting new sets!",
+    "registeredCount": 1,
+    "imageUrl": "/images/hobbitprerelease.webp",
+    "shortDescription": "Be the first to play The Hobbit! Sealed prerelease packs, prizes, and more.",
+    "description": "Don't miss the Hobbit Prerelease at Kitsune Brewing Co.! Be among the first players in Phoenix to crack open Hobbit packs before the official release. Each player receives a Prerelease Kit, builds a 40-card sealed deck, and competes in 4 rounds of Swiss. Keep everything you open, earn prizes based on your record, and celebrate the launch of one of Magic's most exciting new sets!",
     "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
     "prizeSupport": "Stamped promo card for all participants. Bonus packs for top finishers.",
-    "tags": ["Prerelease", "Sealed", "Marvel", "New Set", "All Levels"],
+    "tags": [
+      "Prerelease",
+      "Sealed",
+      "Hobbit",
+      "New Set",
+      "All Levels"
+    ],
     "featured": true,
     "faq": [
-      { "question": "What is included in the Prerelease Kit?", "answer": "Each kit includes Marvel Superheroes booster packs, a stamped foil promo rare, and a deckbuilding guide." },
-      { "question": "How long does it run?", "answer": "Approximately 4 hours. Doors open at 2:00 PM and play typically wraps up around 6:00 PM." },
-      { "question": "Do I need to register in advance?", "answer": "Yes — we recommend registering ahead of time to secure your spot as space is limited." },
-      { "question": "Are minors allowed?", "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law." },
-      { "question": "Where do I park?", "answer": "Free parking is available in the shopping center lot directly in front of the brewery." }
+      {
+        "question": "What is included in the Prerelease Kit?",
+        "answer": "Each kit includes Hobbit booster packs, a stamped foil promo rare, and a deckbuilding guide."
+      },
+      {
+        "question": "How long does it run?",
+        "answer": "Approximately 4 hours. Doors open at 2:00 PM and play typically wraps up around 6:00 PM."
+      },
+      {
+        "question": "Do I need to register in advance?",
+        "answer": "Yes — we recommend registering ahead of time to secure your spot as space is limited."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery."
+      }
     ]
   },
   {
@@ -91,15 +154,36 @@
     "description": "Join us every Tuesday for Commander Night at Kitsune Brewing Co.! We organize players into pods of 4 and let the chaos unfold. Casual and competitive pods available — just let us know your preferred power level. New players are always welcome. Free entry, no registration required. Grab a brew and sling some spells!",
     "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
     "prizeSupport": "Free entry. Prizes and giveaways throughout the night.",
-    "tags": ["Commander", "Multiplayer", "Casual", "Free", "Weekly"],
+    "tags": [
+      "Commander",
+      "Multiplayer",
+      "Casual",
+      "Free",
+      "Weekly"
+    ],
     "recurring": "weekly",
     "featured": false,
     "faq": [
-      { "question": "Is there an entry fee?", "answer": "No entry fee — Commander Night is completely free!" },
-      { "question": "Do I need to register?", "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod." },
-      { "question": "What power level should my deck be?", "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod." },
-      { "question": "Are minors allowed?", "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law." },
-      { "question": "Where do I park?", "answer": "Free parking is available in the shopping center lot directly in front of the brewery." }
+      {
+        "question": "Is there an entry fee?",
+        "answer": "No entry fee — Commander Night is completely free!"
+      },
+      {
+        "question": "Do I need to register?",
+        "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod."
+      },
+      {
+        "question": "What power level should my deck be?",
+        "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery."
+      }
     ]
   },
   {
@@ -117,15 +201,36 @@
     "description": "Join us every Tuesday for Commander Night at Kitsune Brewing Co.! We organize players into pods of 4 and let the chaos unfold. Casual and competitive pods available — just let us know your preferred power level. New players are always welcome. Free entry, no registration required. Grab a brew and sling some spells!",
     "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
     "prizeSupport": "Free entry. Prizes and giveaways throughout the night.",
-    "tags": ["Commander", "Multiplayer", "Casual", "Free", "Weekly"],
+    "tags": [
+      "Commander",
+      "Multiplayer",
+      "Casual",
+      "Free",
+      "Weekly"
+    ],
     "recurring": "weekly",
     "featured": false,
     "faq": [
-      { "question": "Is there an entry fee?", "answer": "No entry fee — Commander Night is completely free!" },
-      { "question": "Do I need to register?", "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod." },
-      { "question": "What power level should my deck be?", "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod." },
-      { "question": "Are minors allowed?", "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law." },
-      { "question": "Where do I park?", "answer": "Free parking is available in the shopping center lot directly in front of the brewery." }
+      {
+        "question": "Is there an entry fee?",
+        "answer": "No entry fee — Commander Night is completely free!"
+      },
+      {
+        "question": "Do I need to register?",
+        "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod."
+      },
+      {
+        "question": "What power level should my deck be?",
+        "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery."
+      }
     ]
   },
   {
@@ -143,15 +248,36 @@
     "description": "Join us every Tuesday for Commander Night at Kitsune Brewing Co.! We organize players into pods of 4 and let the chaos unfold. Casual and competitive pods available — just let us know your preferred power level. New players are always welcome. Free entry, no registration required. Grab a brew and sling some spells!",
     "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
     "prizeSupport": "Free entry. Prizes and giveaways throughout the night.",
-    "tags": ["Commander", "Multiplayer", "Casual", "Free", "Weekly"],
+    "tags": [
+      "Commander",
+      "Multiplayer",
+      "Casual",
+      "Free",
+      "Weekly"
+    ],
     "recurring": "weekly",
     "featured": false,
     "faq": [
-      { "question": "Is there an entry fee?", "answer": "No entry fee — Commander Night is completely free!" },
-      { "question": "Do I need to register?", "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod." },
-      { "question": "What power level should my deck be?", "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod." },
-      { "question": "Are minors allowed?", "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law." },
-      { "question": "Where do I park?", "answer": "Free parking is available in the shopping center lot directly in front of the brewery." }
+      {
+        "question": "Is there an entry fee?",
+        "answer": "No entry fee — Commander Night is completely free!"
+      },
+      {
+        "question": "Do I need to register?",
+        "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod."
+      },
+      {
+        "question": "What power level should my deck be?",
+        "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery."
+      }
     ]
   },
   {
@@ -169,15 +295,36 @@
     "description": "Join us every Tuesday for Commander Night at Kitsune Brewing Co.! We organize players into pods of 4 and let the chaos unfold. Casual and competitive pods available — just let us know your preferred power level. New players are always welcome. Free entry, no registration required. Grab a brew and sling some spells!",
     "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
     "prizeSupport": "Free entry. Prizes and giveaways throughout the night.",
-    "tags": ["Commander", "Multiplayer", "Casual", "Free", "Weekly"],
+    "tags": [
+      "Commander",
+      "Multiplayer",
+      "Casual",
+      "Free",
+      "Weekly"
+    ],
     "recurring": "weekly",
     "featured": false,
     "faq": [
-      { "question": "Is there an entry fee?", "answer": "No entry fee — Commander Night is completely free!" },
-      { "question": "Do I need to register?", "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod." },
-      { "question": "What power level should my deck be?", "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod." },
-      { "question": "Are minors allowed?", "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law." },
-      { "question": "Where do I park?", "answer": "Free parking is available in the shopping center lot directly in front of the brewery." }
+      {
+        "question": "Is there an entry fee?",
+        "answer": "No entry fee — Commander Night is completely free!"
+      },
+      {
+        "question": "Do I need to register?",
+        "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod."
+      },
+      {
+        "question": "What power level should my deck be?",
+        "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery."
+      }
     ]
   },
   {
@@ -195,15 +342,36 @@
     "description": "Join us every Tuesday for Commander Night at Kitsune Brewing Co.! We organize players into pods of 4 and let the chaos unfold. Casual and competitive pods available — just let us know your preferred power level. New players are always welcome. Free entry, no registration required. Grab a brew and sling some spells!",
     "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
     "prizeSupport": "Free entry. Prizes and giveaways throughout the night.",
-    "tags": ["Commander", "Multiplayer", "Casual", "Free", "Weekly"],
+    "tags": [
+      "Commander",
+      "Multiplayer",
+      "Casual",
+      "Free",
+      "Weekly"
+    ],
     "recurring": "weekly",
     "featured": false,
     "faq": [
-      { "question": "Is there an entry fee?", "answer": "No entry fee — Commander Night is completely free!" },
-      { "question": "Do I need to register?", "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod." },
-      { "question": "What power level should my deck be?", "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod." },
-      { "question": "Are minors allowed?", "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law." },
-      { "question": "Where do I park?", "answer": "Free parking is available in the shopping center lot directly in front of the brewery." }
+      {
+        "question": "Is there an entry fee?",
+        "answer": "No entry fee — Commander Night is completely free!"
+      },
+      {
+        "question": "Do I need to register?",
+        "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod."
+      },
+      {
+        "question": "What power level should my deck be?",
+        "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery."
+      }
     ]
   },
   {
@@ -221,15 +389,36 @@
     "description": "Join us every Tuesday for Commander Night at Kitsune Brewing Co.! We organize players into pods of 4 and let the chaos unfold. Casual and competitive pods available — just let us know your preferred power level. New players are always welcome. Free entry, no registration required. Grab a brew and sling some spells!",
     "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
     "prizeSupport": "Free entry. Prizes and giveaways throughout the night.",
-    "tags": ["Commander", "Multiplayer", "Casual", "Free", "Weekly"],
+    "tags": [
+      "Commander",
+      "Multiplayer",
+      "Casual",
+      "Free",
+      "Weekly"
+    ],
     "recurring": "weekly",
     "featured": false,
     "faq": [
-      { "question": "Is there an entry fee?", "answer": "No entry fee — Commander Night is completely free!" },
-      { "question": "Do I need to register?", "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod." },
-      { "question": "What power level should my deck be?", "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod." },
-      { "question": "Are minors allowed?", "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law." },
-      { "question": "Where do I park?", "answer": "Free parking is available in the shopping center lot directly in front of the brewery." }
+      {
+        "question": "Is there an entry fee?",
+        "answer": "No entry fee — Commander Night is completely free!"
+      },
+      {
+        "question": "Do I need to register?",
+        "answer": "No registration required. Just show up between 5:30 PM and 9:00 PM and we'll get you into a pod."
+      },
+      {
+        "question": "What power level should my deck be?",
+        "answer": "We welcome all power levels from casual to cEDH. Let us know your preference and we'll match you to the right pod."
+      },
+      {
+        "question": "Are minors allowed?",
+        "answer": "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law."
+      },
+      {
+        "question": "Where do I park?",
+        "answer": "Free parking is available in the shopping center lot directly in front of the brewery."
+      }
     ]
   }
 ]

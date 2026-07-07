@@ -158,3 +158,138 @@ export function updateSingle(id: string, patch: Partial<SingleCard>): SingleCard
 }
 
 export { type SingleCard };
+
+// ─── Registrations ────────────────────────────────────────────────────────────
+
+export interface Registration {
+  id: string;
+  eventSlug: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  notes?: string;
+  status: "confirmed" | "waitlisted" | "cancelled";
+  stripeSessionId?: string;
+  amountPaid?: number;
+  checkedIn: boolean;
+  checkedInAt?: string;
+  tableAssignment?: string;
+  customAnswers?: Record<string, string>;
+  selectedAddOns?: string[];
+  createdAt: string;
+}
+
+export function getRegistrationsStore(): Registration[] {
+  return readJson<Registration[]>("registrations.json", []);
+}
+
+export function saveRegistrationsStore(registrations: Registration[]): void {
+  writeJson("registrations.json", registrations);
+}
+
+export function addRegistration(registration: Registration): Registration[] {
+  const existing = getRegistrationsStore();
+  // Avoid duplicates if webhook fires twice
+  if (
+    registration.stripeSessionId &&
+    existing.some((r) => r.stripeSessionId === registration.stripeSessionId)
+  ) {
+    return existing;
+  }
+  const registrations = [registration, ...existing];
+  saveRegistrationsStore(registrations);
+  return registrations;
+}
+
+export function updateRegistration(id: string, patch: Partial<Registration>): Registration[] {
+  const registrations = getRegistrationsStore().map((r) =>
+    r.id === id ? { ...r, ...patch } : r
+  );
+  saveRegistrationsStore(registrations);
+  return registrations;
+}
+
+export function deleteRegistration(id: string): Registration[] {
+  const registrations = getRegistrationsStore().filter((r) => r.id !== id);
+  saveRegistrationsStore(registrations);
+  return registrations;
+}
+
+export function getRegistrationsByEvent(eventSlug: string): Registration[] {
+  return getRegistrationsStore().filter((r) => r.eventSlug === eventSlug);
+}
+
+// ─── Promo Codes ──────────────────────────────────────────────────────────────
+
+export interface PromoCode {
+  code: string;
+  discountType: "percent" | "fixed";
+  discountValue: number;
+  maxUses?: number;
+  usedCount: number;
+  eventSlugs?: string[];
+  expiresAt?: string;
+  active: boolean;
+}
+
+export function getPromoCodesStore(): PromoCode[] {
+  return readJson<PromoCode[]>("promo-codes.json", []);
+}
+
+export function savePromoCodesStore(codes: PromoCode[]): void {
+  writeJson("promo-codes.json", codes);
+}
+
+export function addPromoCode(code: PromoCode): PromoCode[] {
+  const codes = [...getPromoCodesStore(), code];
+  savePromoCodesStore(codes);
+  return codes;
+}
+
+export function updatePromoCode(codeStr: string, patch: Partial<PromoCode>): PromoCode[] {
+  const codes = getPromoCodesStore().map((c) =>
+    c.code === codeStr ? { ...c, ...patch } : c
+  );
+  savePromoCodesStore(codes);
+  return codes;
+}
+
+export function deletePromoCode(codeStr: string): PromoCode[] {
+  const codes = getPromoCodesStore().filter((c) => c.code !== codeStr);
+  savePromoCodesStore(codes);
+  return codes;
+}
+
+// ─── Event Credits ────────────────────────────────────────────────────────────
+
+export interface EventCredit {
+  code: string;
+  balance: number;
+  customerEmail: string;
+  expiresAt?: string;
+  issuedAt: string;
+  issuedBy?: string;
+}
+
+export function getEventCreditsStore(): EventCredit[] {
+  return readJson<EventCredit[]>("event-credits.json", []);
+}
+
+export function saveEventCreditsStore(credits: EventCredit[]): void {
+  writeJson("event-credits.json", credits);
+}
+
+export function addEventCredit(credit: EventCredit): EventCredit[] {
+  const credits = [...getEventCreditsStore(), credit];
+  saveEventCreditsStore(credits);
+  return credits;
+}
+
+export function updateEventCredit(code: string, patch: Partial<EventCredit>): EventCredit[] {
+  const credits = getEventCreditsStore().map((c) =>
+    c.code === code ? { ...c, ...patch } : c
+  );
+  saveEventCreditsStore(credits);
+  return credits;
+}

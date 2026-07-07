@@ -179,3 +179,145 @@
     gap: 4px;
   }
 }
+
+/* ─── Promo Codes & Event Credits ──────────────────────────────────────────── */
+.inlineForm {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.codeTable {
+  border: 1px solid var(--color-border);
+  overflow-x: auto;
+}
+
+.codeTableHeader,
+.codeRow {
+  display: grid;
+  grid-template-columns: 1.5fr 1.8fr 1fr 1fr 1fr 0.8fr;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 12px;
+}
+
+.codeTableHeader {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  background: #fafafa;
+}
+
+.codeRow:last-child { border-bottom: none; }
+.codeRow:hover { background: #fafafa; }
+
+.codeName {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-black);
+}
+
+.codeBadge {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+}
+
+.codeBadgeActive   { background: rgba(0,128,0,0.08); color: #15803d; }
+.codeBadgeInactive { background: rgba(0,0,0,0.05); color: var(--color-muted); }
+
+.codeActionBtn {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--color-border);
+  background: none;
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--color-text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.codeActionBtn:hover { border-color: var(--color-black); color: var(--color-black); }
+.codeDeleteBtn:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+.flashInline {
+  padding: 10px 16px;
+  background: #f0fdf4;
+  border-left: 4px solid #22c55e;
+  color: #15803d;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.loadingText,
+.emptyText {
+  font-size: 13px;
+  color: var(--color-muted);
+  padding: 16px 0;
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding: 20px 14px;
+    max-width: none;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .section {
+    padding: 22px 0;
+  }
+
+  .sectionHeader,
+  .inlineForm {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .inlineForm :global(.form-input),
+  .inlineForm button {
+    width: 100%;
+  }
+
+  .codeTable {
+    overflow-x: visible;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .codeTableHeader {
+    display: none;
+  }
+
+  .codeRow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    background: var(--color-white);
+  }
+
+  .codeActionBtn {
+    width: 36px;
+    height: 36px;
+  }
+}

@@ -101,3 +101,20 @@
     gap: 40px;
   }
 }
+
+@media (max-width: 640px) {
+  .casinoContent {
+    gap: 28px;
+  }
+
+  .casinoDescription h2,
+  .ticketCol h2 {
+    font-size: 1.6rem;
+    line-height: 1.15;
+  }
+
+  .ticketIncludes,
+  .prizes {
+    padding: 20px 18px;
+  }
+}

@@ -28,13 +28,17 @@ function ShareButtons({ event }: { event: MtgEvent }) {
     <div className={styles.shareButtons}>
       <span className={styles.shareLabel}>Share:</span>
       <a
-        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(event.title)}&url=${encodeURIComponent(url)}`}
+        href="https://instagram.com/kitsunebrewingco"
         target="_blank"
         rel="noopener noreferrer"
         className={styles.shareBtn}
-        aria-label="Share on X (Twitter)"
+        aria-label="Follow on Instagram"
       >
-        𝕏
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+          <circle cx="12" cy="12" r="4" />
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+        </svg>
       </a>
       <a
         href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
@@ -52,36 +56,11 @@ function ShareButtons({ event }: { event: MtgEvent }) {
   );
 }
 
-function FaqItem({ question, answer }: { question: string; answer: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className={styles.faqItem}>
-      <button
-        className={styles.faqQuestion}
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-      >
-        {question}
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-          aria-hidden="true"
-          style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s ease", flexShrink: 0 }}
-        >
-          <path d="M2 4l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
-      {open && <p className={styles.faqAnswer}>{answer}</p>}
-    </div>
-  );
-}
-
 export default function EventDetailClient({ event }: Props) {
   const [regOpen, setRegOpen] = useState(false);
   const soldOut = isEventSoldOut(event);
   const seatsLeft = getSeatsRemaining(event);
+  const registrationOpen = event.registrationOpen !== false;
 
   return (
     <>
@@ -99,7 +78,6 @@ export default function EventDetailClient({ event }: Props) {
 
             <div className={styles.formatBadge}>
               <span className={styles.formatTag}>{event.format}</span>
-              {event.featured && <span className={styles.featuredTag}>Featured</span>}
             </div>
 
             <h1 className={styles.title}>{event.title}</h1>
@@ -109,19 +87,13 @@ export default function EventDetailClient({ event }: Props) {
               <p>{event.description}</p>
             </div>
 
-            {/* Prize support */}
-            <div className={styles.prizeSection}>
-              <h2 className={styles.sectionHeading}>Prize Support</h2>
-              <p>{event.prizeSupport}</p>
-            </div>
-
             {/* Map placeholder */}
             <div className={styles.mapSection}>
               <h2 className={styles.sectionHeading}>Location</h2>
               <p className={styles.locationText}>{event.location}</p>
               <div className={styles.mapPlaceholder}>
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3327.8!2d-112.0!3d33.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872b743d3cc90001%3A0x9f2b95a12da69e3a!2s3321%20E%20Bell%20Rd%20%23B-5%2C%20Phoenix%2C%20AZ%2085032!5e0!3m2!1sen!2sus!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3321.686131234576!2d-112.01328312380821!3d33.63937933941697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872b71a745da3db1%3A0x6fc2e6b0265490f6!2sKitsune%20Brewing%20Company!5e0!3m2!1sen!2sus!4v1748886554927!5m2!1sen!2sus"
                   width="100%"
                   height="280"
                   style={{ border: 0 }}
@@ -133,17 +105,6 @@ export default function EventDetailClient({ event }: Props) {
               </div>
             </div>
 
-            {/* FAQ */}
-            {event.faq.length > 0 && (
-              <div className={styles.faqSection}>
-                <h2 className={styles.sectionHeading}>Frequently Asked Questions</h2>
-                <div className={styles.faqList}>
-                  {event.faq.map((item, i) => (
-                    <FaqItem key={i} question={item.question} answer={item.answer} />
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Sidebar */}
@@ -193,11 +154,11 @@ export default function EventDetailClient({ event }: Props) {
               </div>
 
               <button
-                className={`btn btn-primary ${styles.registerBtn} ${soldOut ? styles.registerBtnDisabled : ""}`}
-                onClick={() => !soldOut && setRegOpen(true)}
-                disabled={soldOut}
+                className={`btn btn-primary ${styles.registerBtn} ${(soldOut || !registrationOpen) ? styles.registerBtnDisabled : ""}`}
+                onClick={() => registrationOpen && !soldOut && setRegOpen(true)}
+                disabled={soldOut || !registrationOpen}
               >
-                {soldOut ? "Sold Out" : "Register Now"}
+                {soldOut ? "Sold Out" : !registrationOpen ? "Registration Closed" : "Register Now"}
               </button>
 
               <div className={styles.tags}>
@@ -217,7 +178,7 @@ export default function EventDetailClient({ event }: Props) {
       </PageSection>
 
       <Modal isOpen={regOpen} onClose={() => setRegOpen(false)} title="Event Registration" size="md">
-        <RegistrationForm event={event} onSuccess={() => setTimeout(() => setRegOpen(false), 4000)} />
+        <RegistrationForm event={event} />
       </Modal>
     </>
   );

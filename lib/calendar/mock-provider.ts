@@ -1,5 +1,5 @@
 import type { CalendarProvider, CalendarEvent } from "./types";
-import { mtgEvents } from "@/lib/events-data";
+import { getEventsStore } from "@/lib/store";
 import { foodTrucks } from "@/lib/food-trucks-data";
 
 function parseDate(dateStr: string, timeStr: string): Date {
@@ -25,6 +25,7 @@ function inRange(start: Date, end: Date, from: Date, to: Date): boolean {
 export class MockCalendarProvider implements CalendarProvider {
   async getEvents(from: Date, to: Date): Promise<CalendarEvent[]> {
     const results: CalendarEvent[] = [];
+    const mtgEvents = getEventsStore();
 
     for (const event of mtgEvents) {
       const start = parseDate(event.date, event.time);

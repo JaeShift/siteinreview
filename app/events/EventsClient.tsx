@@ -5,7 +5,7 @@ import PageSection from "@/components/PageSection";
 import MtgEventCard from "@/components/mtg/MtgEventCard";
 import SearchBar from "@/components/ui/SearchBar";
 import EmptyState from "@/components/ui/EmptyState";
-import { mtgEvents, type EventFormat } from "@/lib/events-data";
+import type { MtgEvent, EventFormat } from "@/lib/events-data";
 import styles from "./events.module.css";
 
 const FORMATS: EventFormat[] = [
@@ -13,12 +13,16 @@ const FORMATS: EventFormat[] = [
   "Legacy", "Sealed", "Prerelease", "RCQ", "Casual",
 ];
 
-export default function EventsClient() {
+interface Props {
+  events: MtgEvent[];
+}
+
+export default function EventsClient({ events }: Props) {
   const [search, setSearch] = useState("");
   const [activeFormat, setActiveFormat] = useState<EventFormat | "All">("All");
 
   const filtered = useMemo(() => {
-    let result = [...mtgEvents];
+    let result = [...events];
 
     if (activeFormat !== "All") {
       result = result.filter((e) => e.format === activeFormat);
@@ -36,7 +40,7 @@ export default function EventsClient() {
     }
 
     return result.sort((a, b) => a.date.localeCompare(b.date));
-  }, [search, activeFormat]);
+  }, [events, search, activeFormat]);
 
   return (
     <>

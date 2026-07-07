@@ -7,5 +7,9 @@ export const dynamic = "force-dynamic";
 
 export default function AdminEventsPage() {
   const events = getEventsStore();
-  return <EventsAdminClient initialEvents={events} />;
+  const today = new Date().toISOString().split("T")[0];
+  const currentPrerelease = events
+    .filter((e) => e.format === "Prerelease" && e.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null;
+  return <EventsAdminClient initialEvents={events} currentPrerelease={currentPrerelease} />;
 }

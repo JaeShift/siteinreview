@@ -188,11 +188,30 @@
 }
 
 @media (max-width: 640px) {
+  .sectionHeading {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .noTruck {
+    padding: 32px 18px;
+  }
+
   .weekGrid {
     grid-template-columns: 1fr;
   }
 
-  .upcomingGrid {
+  .weekDay {
+    min-height: auto;
+    padding: 14px;
+  }
+
+  .upcomingGrid,
+  .directoryGrid {
     grid-template-columns: 1fr;
+  }
+
+  .directoryLinks {
+    flex-wrap: wrap;
   }
 }

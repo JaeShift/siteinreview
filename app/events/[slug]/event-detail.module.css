@@ -346,6 +346,7 @@
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
 
   .sidebar {
@@ -355,5 +356,51 @@
 
   .sidebarCard {
     padding: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .main {
+    gap: 22px;
+  }
+
+  .breadcrumb {
+    flex-wrap: wrap;
+    line-height: 1.5;
+  }
+
+  .title {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+    letter-spacing: 0.02em;
+  }
+
+  .shareButtons {
+    flex-wrap: wrap;
+  }
+
+  .description p {
+    font-size: 15px;
+  }
+
+  .mapPlaceholder {
+    height: 220px;
+  }
+
+  .sidebarCard,
+  .venueCard {
+    padding: 18px;
+  }
+
+  .metaRow {
+    align-items: flex-start;
+  }
+
+  .metaValue {
+    max-width: 58%;
+    word-break: break-word;
+  }
+
+  .tags {
+    gap: 8px;
   }
 }

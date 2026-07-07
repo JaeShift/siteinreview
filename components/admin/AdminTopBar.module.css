@@ -91,7 +91,34 @@
 .logoutBtn:hover { color: rgba(255,80,80,0.9); }
 
 @media (max-width: 700px) {
-  .nav { gap: 0; }
-  .navLink { padding: 6px 8px; font-size: 10px; }
+  .inner {
+    gap: 10px;
+    height: auto;
+    min-height: 52px;
+    padding: 8px 12px;
+    flex-wrap: wrap;
+  }
+
+  .nav {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: flex-start;
+    gap: 0;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+  }
+
+  .navLink {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
   .brand { display: none; }
+
+  .actions {
+    margin-left: auto;
+    gap: 12px;
+    padding-left: 0;
+    border-left: none;
+  }
 }

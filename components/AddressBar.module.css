@@ -52,7 +52,16 @@
 
 @media (max-width: 768px) {
   .addressBar {
+    width: 100%;
+    margin-left: 0;
+    padding-left: 18px;
+    padding-right: 18px;
     padding-bottom: 56px;
     margin-bottom: -48px;
+  }
+
+  .addressText,
+  .phoneLink {
+    line-height: 1.4;
   }
 }

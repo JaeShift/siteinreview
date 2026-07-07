@@ -15,6 +15,18 @@ export interface EventFaq {
   answer: string;
 }
 
+export interface CustomQuestion {
+  id: string;
+  label: string;
+  required: boolean;
+}
+
+export interface EventAddOn {
+  id: string;
+  label: string;
+  price: number;
+}
+
 export interface MtgEvent {
   slug: string;
   title: string;
@@ -34,6 +46,9 @@ export interface MtgEvent {
   faq: EventFaq[];
   recurring?: "weekly" | "biweekly" | "monthly";
   featured?: boolean;
+  registrationOpen?: boolean;
+  customQuestions?: CustomQuestion[];
+  addOns?: EventAddOn[];
 }
 
 export interface EventRegistration {
@@ -115,10 +130,10 @@ export const mtgEvents: MtgEvent[] = [
   commanderNight("commander-night-jul-14", "2026-07-14"),
   commanderNight("commander-night-jul-21", "2026-07-21"),
   commanderNight("commander-night-jul-28", "2026-07-28"),
-  // ── Marvel Superheroes Prerelease ──
+  // ── Hobbit Prerelease ──
   {
-    slug: "marvel-superheroes-prerelease",
-    title: "Marvel Superheroes Prerelease",
+    slug: "hobbit-prerelease",
+    title: "Hobbit Prerelease",
     format: "Prerelease",
     date: "2026-07-20",
     time: "2:00 PM",
@@ -126,17 +141,17 @@ export const mtgEvents: MtgEvent[] = [
     entryFee: 44.99,
     playerLimit: 32,
     registeredCount: 0,
-    imageUrl: "https://placehold.co/1200x500/e61c24/f0f0f0?text=Marvel+Superheroes+Prerelease",
-    shortDescription: "Be the first to play Marvel Superheroes! Sealed prerelease packs, prizes, and more.",
-    description: "Don't miss the Marvel Superheroes Prerelease at Kitsune Brewing Co.! Be among the first players in Phoenix to crack open Marvel Superheroes packs before the official release. Each player receives a Prerelease Kit, builds a 40-card sealed deck, and competes in 4 rounds of Swiss. Keep everything you open, earn prizes based on your record, and celebrate the launch of one of Magic's most exciting new sets!",
+    imageUrl: "/images/hobbitprerelease.webp",
+    shortDescription: "Be the first to play The Hobbit! Sealed prerelease packs, prizes, and more.",
+    description: "Don't miss the Hobbit Prerelease at Kitsune Brewing Co.! Be among the first players in Phoenix to crack open Hobbit packs before the official release. Each player receives a Prerelease Kit, builds a 40-card sealed deck, and competes in 4 rounds of Swiss. Keep everything you open, earn prizes based on your record, and celebrate the launch of one of Magic's most exciting new sets!",
     location: LOCATION,
     prizeSupport: "Stamped promo card for all participants. Bonus packs for top finishers.",
-    tags: ["Prerelease", "Sealed", "Marvel", "New Set", "All Levels"],
+    tags: ["Prerelease", "Sealed", "Hobbit", "New Set", "All Levels"],
     featured: true,
     faq: [
-      { question: "What is included in the Prerelease Kit?", answer: "Each kit includes Marvel Superheroes booster packs, a stamped foil promo rare, and a deckbuilding guide." },
+      { question: "What is included in the Prerelease Kit?", answer: "Each kit includes Hobbit booster packs, a stamped foil promo rare, and a deckbuilding guide." },
       { question: "How long does it run?", answer: "Approximately 4 hours. Doors open at 2:00 PM and play typically wraps up around 6:00 PM." },
-      { question: "Do I need to register in advance?", answer: "Yes — we recommend registering ahead of time as space is limited to 32 players." },
+      { question: "Do I need to register in advance?", answer: "Yes — we recommend registering ahead of time as space is limited." },
       { question: "Are minors allowed?", answer: "Players of all ages are welcome. Minors must be accompanied by a parent or guardian. Alcohol service follows Arizona state law." },
       { question: "Where do I park?", answer: "Free parking is available in the shopping center lot directly in front of the brewery." },
     ],
@@ -150,21 +165,21 @@ export const mtgEvents: MtgEvent[] = [
 
 // ─── Helper functions ─────────────────────────────────────────────────────────
 
-export function getEventBySlug(slug: string): MtgEvent | undefined {
-  return mtgEvents.find((e) => e.slug === slug);
+export function getEventBySlug(slug: string, events?: MtgEvent[]): MtgEvent | undefined {
+  return (events ?? mtgEvents).find((e) => e.slug === slug);
 }
 
-export function getEventsByFormat(format: EventFormat): MtgEvent[] {
-  return mtgEvents.filter((e) => e.format === format);
+export function getEventsByFormat(format: EventFormat, events?: MtgEvent[]): MtgEvent[] {
+  return (events ?? mtgEvents).filter((e) => e.format === format);
 }
 
-export function getFeaturedEvents(): MtgEvent[] {
-  return mtgEvents.filter((e) => e.featured);
+export function getFeaturedEvents(events?: MtgEvent[]): MtgEvent[] {
+  return (events ?? mtgEvents).filter((e) => e.featured);
 }
 
-export function getUpcomingEvents(limit?: number): MtgEvent[] {
+export function getUpcomingEvents(limit?: number, events?: MtgEvent[]): MtgEvent[] {
   const today = new Date().toISOString().split("T")[0];
-  const upcoming = mtgEvents
+  const upcoming = (events ?? mtgEvents)
     .filter((e) => e.date >= today)
     .sort((a, b) => a.date.localeCompare(b.date));
   return limit ? upcoming.slice(0, limit) : upcoming;
