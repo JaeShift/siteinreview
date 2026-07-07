@@ -84,3 +84,36 @@
 .body {
   padding: 28px;
 }
+
+@media (max-width: 520px) {
+  .sm,
+  .md,
+  .lg {
+    padding: 8px;
+    align-items: flex-end;
+  }
+
+  .content {
+    max-height: 92dvh;
+    border-radius: 0;
+    width: 100%;
+  }
+
+  .sm .content,
+  .md .content,
+  .lg .content {
+    max-width: 100%;
+  }
+
+  .header {
+    padding: 16px 18px 14px;
+  }
+
+  .title {
+    font-size: 15px;
+  }
+
+  .body {
+    padding: 18px;
+  }
+}

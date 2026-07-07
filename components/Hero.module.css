@@ -50,11 +50,11 @@
 
 @media (max-width: 480px) {
   .hero {
-    aspect-ratio: 4 / 3;
-    min-height: 220px;
+    aspect-ratio: 16 / 9;
+    min-height: 180px;
   }
 
   .scrollIndicator {
-    bottom: 18px;
+    bottom: 12px;
   }
 }

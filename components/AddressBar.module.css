@@ -65,3 +65,20 @@
     line-height: 1.4;
   }
 }
+
+@media (max-width: 480px) {
+  .addressBar {
+    padding-bottom: 44px;
+    margin-bottom: -36px;
+  }
+
+  .addressText {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    word-break: break-word;
+  }
+
+  .phoneLink {
+    font-size: 14px;
+  }
+}

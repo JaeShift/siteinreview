@@ -1,6 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import SiteShell from "@/components/SiteShell";
 import "@/styles/globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 // Fonts are loaded by the Adobe Fonts kit in the <head> below.
 // futura-pt → headings   |   proxima-nova → body / nav / forms / footer

@@ -24,19 +24,19 @@ export default function HomePage() {
 
       {/* What's On Tap — Menu */}
       <PageSection background="white" id="menu">
-        <Image src="/images/whats-on.png" alt="What's On Tap?" width={500} height={58} className={styles.sectionHeading} />
+        <Image src="/images/whats-on.png" alt="What's On Tap?" width={500} height={58} className={styles.sectionHeading} style={{ maxWidth: "100%", height: "auto" }} />
         <MenuEmbed />
       </PageSection>
 
       {/* What's Going On — Events Calendar */}
       <PageSection background="light" id="events" className={styles.eventsSection}>
-        <Image src="/images/whats-going-on.png" alt="What's Going On at Kitsune?" width={500} height={58} className={styles.sectionHeading} />
+        <Image src="/images/whats-going-on.png" alt="What's Going On at Kitsune?" width={500} height={58} className={styles.sectionHeading} style={{ maxWidth: "100%", height: "auto" }} />
         <CalendarEmbed />
       </PageSection>
 
       {/* Where Are We — Map + Address */}
       <PageSection background="white" id="location">
-        <Image src="/images/where-are-we.png" alt="Where Are We?" width={500} height={58} className={styles.sectionHeading} />
+        <Image src="/images/where-are-we.png" alt="Where Are We?" width={500} height={58} className={styles.sectionHeading} style={{ maxWidth: "100%", height: "auto" }} />
         <MapEmbed />
       </PageSection>
     </>

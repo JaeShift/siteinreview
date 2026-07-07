@@ -80,6 +80,22 @@
 
 @media (max-width: 480px) {
   .mapIframe {
-    height: 280px;
+    height: 260px;
+  }
+
+  .addressBar {
+    padding-bottom: 44px;
+    margin-bottom: -36px;
+  }
+
+  .addressText {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    word-break: break-word;
+    padding: 0 8px;
+  }
+
+  .phoneLink {
+    font-size: 14px;
   }
 }

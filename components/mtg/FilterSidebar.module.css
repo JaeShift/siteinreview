@@ -6,6 +6,12 @@
   gap: 0;
 }
 
+@media (max-width: 900px) {
+  .sidebar {
+    width: 100%;
+  }
+}
+
 .sidebarHeader {
   display: flex;
   align-items: baseline;

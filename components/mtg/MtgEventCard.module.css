@@ -171,3 +171,24 @@
   cursor: default;
   pointer-events: none;
 }
+
+@media (max-width: 640px) {
+  .body {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 15px;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .cta {
+    width: 100%;
+    text-align: center;
+  }
+}

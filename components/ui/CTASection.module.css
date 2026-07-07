@@ -66,3 +66,21 @@
   color: var(--color-black);
   border-color: var(--color-white);
 }
+
+@media (max-width: 640px) {
+  .cta {
+    padding: 56px 18px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions .primaryBtn,
+  .actions .secondaryBtn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
