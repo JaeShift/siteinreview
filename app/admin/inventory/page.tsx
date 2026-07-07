@@ -155,7 +155,7 @@ async function fetchAllPrints(name: string, setCode?: string): Promise<ScryfallC
   const cards: ScryfallCard[] = [];
 
   while (url) {
-    const res = await fetch(url);
+    const res: Response = await fetch(url);
     if (res.status === 404) return [];
     if (!res.ok) throw new Error("Search failed");
     const data = await res.json();
