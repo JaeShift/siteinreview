@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kitsune Brewing Co. | Magic &amp; Craft Beer</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#904d00",
+                    "on-primary": "#4d2600",
+                    "on-secondary-fixed": "#1c1c19",
+                    "mana-red": "#B91C1C",
+                    "surface-charcoal": "#231F20",
+                    "background": "#161311",
+                    "on-tertiary": "#1e3700",
+                    "on-secondary-fixed-variant": "#474743",
+                    "on-surface": "#eae1dd",
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#c9c6c2",
+                    "on-background": "#eae1dd",
+                    "surface-container": "#231f1d",
+                    "on-primary-fixed-variant": "#6e3900",
+                    "surface-container-lowest": "#110d0c",
+                    "error-container": "#93000a",
+                    "secondary-container": "#474743",
+                    "surface-tint": "#ffb77d",
+                    "on-surface-variant": "#dbc2b0",
+                    "surface-bright": "#3d3836",
+                    "on-secondary": "#31302d",
+                    "tertiary-fixed": "#bbf37c",
+                    "outline": "#a38c7c",
+                    "surface-variant": "#393431",
+                    "outline-variant": "#554336",
+                    "on-error": "#690005",
+                    "surface-container-low": "#1f1b19",
+                    "deep-ink": "#0D0C22",
+                    "surface-container-highest": "#393431",
+                    "surface-dim": "#161311",
+                    "inverse-surface": "#eae1dd",
+                    "tertiary-container": "#6d9f32",
+                    "inverse-on-surface": "#342f2d",
+                    "on-secondary-container": "#b7b5b0",
+                    "primary": "#ffb77d",
+                    "primary-fixed-dim": "#ffb77d",
+                    "tertiary-fixed-dim": "#a0d663",
+                    "on-primary-container": "#432100",
+                    "secondary": "#c9c6c2",
+                    "primary-container": "#d97707",
+                    "surface": "#161311",
+                    "on-tertiary-fixed": "#0f2000",
+                    "on-tertiary-fixed-variant": "#2e4f00",
+                    "primary-fixed": "#ffdcc3",
+                    "tertiary": "#a0d663",
+                    "error": "#ffb4ab",
+                    "on-primary-fixed": "#2f1500",
+                    "secondary-fixed": "#e5e2dd",
+                    "on-tertiary-container": "#192f00",
+                    "surface-container-high": "#2e2927"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter-desktop": "24px",
+                    "margin-mobile": "20px",
+                    "gutter-mobile": "16px",
+                    "container-max": "1280px",
+                    "base": "8px",
+                    "margin-desktop": "48px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Playfair Display"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "headline-sm": ["Playfair Display"],
+                    "title-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["36px", {"lineHeight": "42px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #161311;
+            color: #eae1dd;
+            overflow-x: hidden;
+        }
+        .grain-texture {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.03;
+            background-image: url("https://www.transparenttextures.com/patterns/felt.png");
+        }
+        .amber-bloom {
+            filter: blur(80px);
+            background: radial-gradient(circle, rgba(217, 119, 6, 0.15) 0%, rgba(217, 119, 6, 0) 70%);
+        }
+        .premium-border {
+            border: 1px solid rgba(255, 183, 125, 0.1);
+        }
+        .premium-border:hover {
+            border-color: rgba(255, 183, 125, 0.3);
+        }
+        .nav-link-active {
+            color: #ffb77d;
+            font-weight: bold;
+            border-bottom: 2px solid #ffb77d;
+            padding-bottom: 4px;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<div class="grain-texture"></div>
+<!-- Navigation -->
+<header class="bg-surface-charcoal/90 dark:bg-surface-charcoal/90 border-b border-outline-variant/30 backdrop-blur-md docked full-width top-0 sticky z-40">
+<nav class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="font-display-lg text-headline-sm md:text-display-lg text-primary dark:text-primary-fixed-dim tracking-tight">
+                Kitsune Brewing Co.
+            </div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md" href="#">Home</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary hover:scale-105 transition-all duration-300" href="#">Magic Events</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary hover:scale-105 transition-all duration-300" href="#">Shop Magic</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary hover:scale-105 transition-all duration-300" href="#">Commander Nights</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary hover:scale-105 transition-all duration-300" href="#">Food &amp; Drink</a>
+</div>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 font-label-md text-label-md rounded-lg hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg shadow-primary-container/20">
+                Join Event
+            </button>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center opacity-60" data-alt="A cinematic, low-angle shot of a premium dimly lit tavern and brewery. Polished dark wood tables are arranged perfectly, with warm amber candlelight casting long shadows. In the background, large copper brewing vats glisten under soft spotlights. The atmosphere is quiet and cozy, with a hint of magical mist swirling near the floor. Deep charcoal and rich mahogany wood tones dominate the palette, accented by warm gold glows." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCHUZO5UO9f-sLw3ejx5fuoDcJLVgcmwLycNoz_HDUoKjTmAxqlf2bULSgC_Nkzs9n7A76iMhS22pTDJschjiui1xT3a7obaeMkrSnC6P9ncfWUOd4zaH69IExUNVDsX4G4_l4WcgFpaUkX4i6EiHSWqijwhrfZ0b41wftLGVIHW9N2TPezromDBdfloWWslRpBjcbyFFhMnRpIhz-oaVMdZOtmnbXEmmVm_sluPRqJqJsUt9FLVdk6DtLeqbZG-NizMU3ZBs_RGeg')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+</div>
+<div class="relative z-10 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="max-w-3xl">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-6 leading-tight">
+                        Your Local Home for <span class="text-primary">Magic</span>, Drafts, and Craft Brews.
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl">
+                        Enter a sanctuary where high-fantasy tabletop gaming meets artisanal brewing. Pull up a chair, crack a pack, and enjoy the finest local spirits.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-primary text-deep-ink font-label-md text-label-md px-10 py-4 rounded-xl hover:scale-[1.02] transition-all duration-300 shadow-[0_0_30px_rgba(217,119,6,0.2)]">
+                            View MTG Events
+                        </button>
+<button class="border border-primary/50 text-primary bg-primary/5 font-label-md text-label-md px-10 py-4 rounded-xl hover:bg-primary/10 transition-all duration-300">
+                            Shop Magic
+                        </button>
+</div>
+</div>
+</div>
+<!-- Floating Glow Decor -->
+<div class="absolute -bottom-24 -right-24 w-96 h-96 amber-bloom opacity-40"></div>
+</section>
+<!-- MTG Event Spotlight -->
+<section class="py-24 bg-surface-dim">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary mb-2">Upcoming Magic Events</h2>
+<p class="text-on-surface-variant font-body-md text-body-md">Join our thriving community of Planeswalkers every week.</p>
+</div>
+<a class="text-primary flex items-center gap-2 hover:gap-3 transition-all" href="#">
+                        View Full Calendar <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter-desktop">
+<!-- Event Card 1 -->
+<div class="bg-surface-container-low premium-border rounded-xl p-6 group hover:bg-surface-container transition-all cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start mb-12">
+<div class="bg-surface-container-highest px-3 py-1 rounded text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">TUE, NOV 14</div>
+<span class="text-label-sm font-label-sm px-3 py-1 rounded-full border border-[#4D7C0F] text-[#4D7C0F]">Commander</span>
+</div>
+<h3 class="font-title-lg text-title-lg mb-2">Casual Commander Night</h3>
+<p class="text-on-surface-variant mb-6 text-body-md">Bring your favorite 100-card deck for low-stress pod play.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-4 text-on-surface-variant/70 text-label-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 7:00 PM</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">payments</span> $5 Entry</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+</div>
+<!-- Event Card 2 -->
+<div class="bg-surface-container-low premium-border rounded-xl p-6 group hover:bg-surface-container transition-all cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start mb-12">
+<div class="bg-surface-container-highest px-3 py-1 rounded text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">FRI, NOV 17</div>
+<span class="text-label-sm font-label-sm px-3 py-1 rounded-full border border-[#D97706] text-[#D97706]">Draft</span>
+</div>
+<h3 class="font-title-lg text-title-lg mb-2">FNM: Wilds of Eldraine</h3>
+<p class="text-on-surface-variant mb-6 text-body-md">Classic Friday Night Magic draft. 3 packs included with entry.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-4 text-on-surface-variant/70 text-label-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 7:00 PM</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">payments</span> $18 Entry</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+</div>
+<!-- Event Card 3 -->
+<div class="bg-surface-container-low premium-border rounded-xl p-6 group hover:bg-surface-container transition-all cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start mb-12">
+<div class="bg-surface-container-highest px-3 py-1 rounded text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">SAT, NOV 25</div>
+<span class="text-label-sm font-label-sm px-3 py-1 rounded-full border border-on-surface/30 text-on-surface/70">Standard</span>
+</div>
+<h3 class="font-title-lg text-title-lg mb-2">Store Championship</h3>
+<p class="text-on-surface-variant mb-6 text-body-md">Competitive Standard play with exclusive promo prize support.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-4 text-on-surface-variant/70 text-label-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 12:00 PM</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">payments</span> $15 Entry</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- New to Magic Section -->
+<section class="py-20 relative">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="bg-surface-container-high rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-2xl">
+<div class="md:w-1/2 p-10 md:p-16 flex flex-col justify-center">
+<span class="text-primary font-label-sm text-label-sm uppercase tracking-widest mb-4">Start Your Journey</span>
+<h2 class="font-headline-md text-headline-md mb-6 leading-tight">New to Planeswalking? We've got you covered.</h2>
+<p class="text-on-surface-variant font-body-lg text-body-lg mb-8">
+                            Magic: The Gathering is more than a game—it's a community. Our friendly staff offers free "Learn to Play" sessions every Sunday afternoon. We'll provide the decks; you bring the curiosity.
+                        </p>
+<div>
+<button class="bg-primary-container text-on-primary-container font-label-md text-label-md px-8 py-3 rounded hover:scale-105 transition-transform">
+                                Learn to Play
+                            </button>
+</div>
+</div>
+<div class="md:w-1/2 min-h-[300px] relative">
+<div class="w-full h-full bg-cover bg-center" data-alt="A warm, inviting close-up of a tabletop where a person is teaching another player how to play Magic: The Gathering. The cards on the table are vibrant and colorful, contrasted against the dark wood of the brewery table. The focus is soft, showing only the hands and the cards. In the background, blurred warm lights and the copper brewing tanks create a cozy, safe, and hospitable atmosphere. The lighting is golden and high-fidelity." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCheA8ambtY5GnLvIQyUPDP9uEbpHDLrovNmB5YtsqwvbNEyiHgG4VYrY9Gr_Cqq4pdM4XU6MIN-ITZgAH6MvlXJVmYvt8BUpjtWEJEBGPWOAKAUa1FjwE_cL2UM-dYong2vGc328lvetYDixHV-n-DFgNVXtFtMlqiNX_cmsUz7N4Hd_W-1gFduXLpRKMHlnyqZvRzaXa5KeOAE0cdCgGeZui8pUT0wmmueZ7ndisQ_XTFSIrQ82nSK5pZiYSa8PC1GdIXGbZGwq4')"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Shop Magic Preview -->
+<section class="py-24">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-display-lg text-headline-md md:text-display-lg text-on-surface mb-4">Featured Products</h2>
+<p class="text-on-surface-variant max-w-2xl mx-auto">From the rarest singles to the latest sealed expansions, we stock everything you need to upgrade your arsenal.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter-desktop">
+<!-- Category 1 -->
+<div class="group cursor-pointer">
+<div class="aspect-square bg-surface-container-low premium-border rounded-xl mb-4 overflow-hidden relative">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-700" data-alt="A macro photography shot of rare Magic: The Gathering cards arranged in a stylish fan. The cards have intricate holographic foil patterns that catch the warm amber tavern light. The surface beneath them is a weathered dark leather mat. The shot is high-contrast, emphasizing the mythical and valuable nature of individual 'Singles' in a premium dark fantasy aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCAgvlclRvuhuIcFpmpQ3c6R6Vp8E3sMqJgTz73jGGU8QMZqSk0P-Jk3bSRcWJtvfVsyblrLYDFlkeL6pL-eb_pQSFl2RfpUGpP4T6Rc8TGRGpo_45fwDVwk94_Lv9kwLNTcCcAm4d8pacdjzAhR8r6gp6cfsicxDV2begXHiAy7vcwiVfLgXFEkEultygjJXfAXVzpUMHOsGx9ddbcaWEpn_Q5R6_TBrRnNufNFr0eL9MDeULKJcf4XcpEg69U-Lb9YZqso219axY')"></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<h3 class="font-title-lg text-title-lg group-hover:text-primary transition-colors text-center">Singles</h3>
+</div>
+<!-- Category 2 -->
+<div class="group cursor-pointer">
+<div class="aspect-square bg-surface-container-low premium-border rounded-xl mb-4 overflow-hidden relative">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-700" data-alt="A collection of sealed Magic: The Gathering booster boxes and specialty bundles stacked neatly. The packaging features vibrant fantasy art that pops against the dark, moody lighting of the brewery shelf. Soft dust motes dance in the amber light beams hitting the boxes. The style is crisp and commercial yet maintains the tavern vibe." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDx-CWVMdDDGfpN5mq292j9Gdv5XCXVg1mdU3Q55X-73ZcRohshdZZQGemUhOx3B5Mj3zHl-6ZRKtxyPjgBznK20C5cQ2w7QitfHpX7jIDBWJ0GOxbyqUmY3z65XJsiRmbv_YdDK_EsWeqemdYJ4omrhyMMzKLLjdgQgihz3NZMDdAS9PmZJ5yVjOsfuAzN-yeWG6MjB5Slqy2z6ZltVkcFeLWdR0Ix2XW-0qH3-nlfOVAEjyDRySO7UKNInz4qx-fNwp3Uk58EzS4')"></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<h3 class="font-title-lg text-title-lg group-hover:text-primary transition-colors text-center">Sealed Product</h3>
+</div>
+<!-- Category 3 -->
+<div class="group cursor-pointer">
+<div class="aspect-square bg-surface-container-low premium-border rounded-xl mb-4 overflow-hidden relative">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-700" data-alt="High-end gaming accessories including leather-bound deck boxes, custom-designed playmats with Kitsune art, and heavy metal polyhedral dice. These items are showcased on a dark oak wood surface, illuminated by a single warm spotlight from above, highlighting their craftsmanship and premium textures." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAacWluxPKXQInKj2u9-X4RFoOBM-G3a7hEW66KaAarDMWa2Kx7s4ci4In5BCB2KxcOM5F4W2vNsiAe05Kf3JHw8ed86lpnGN6O5rShJdJ8XgC7-rr_bSGssz-xJ6cuxtM4Qh9OkYZ-lCsxNe9efMLdIfD7oc6MIhg9KKhxzG4ZmcRPxscBOC1aCO08taHVi4MsAYXr3B2ZaCgMnR48DwcJpzvY_iajl5O7Kl5rSRnWGrjfdZ04JjbbIiwkU-z66tkWwmDKLHwsoyk')"></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<h3 class="font-title-lg text-title-lg group-hover:text-primary transition-colors text-center">Accessories</h3>
+</div>
+<!-- Category 4 -->
+<div class="group cursor-pointer">
+<div class="aspect-square bg-surface-container-low premium-border rounded-xl mb-4 overflow-hidden relative">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-700" data-alt="A row of Kitsune Brewing Co. branded apparel and lifestyle goods. Dark charcoal t-shirts with gold embroidered logos and heavy ceramic mugs with fox motifs are displayed on rustic wooden shelves. The atmosphere is upscale and artisanal, suggesting a high-quality brand experience." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxFRFRZYMsIwG_j-vX9PiUE19-kPty9EW2Bv9BQmEfi-E2xH1Y6E4eH0cv78XveBoTa4s_cYBl8U6Phd0df2_-UdIydaP4q4BDK9KW6QE3bQoK0HGpwThLYCEDOmu0Huzw6_Nit8QqqTDZEd6xDmdwP3i6WMUt28RVlOMpoddnLspD46H5lGq4iP7W00LC6xEAnpSAMUXuMftCIshJiBAS5uxxT-3oBprjkiYeEqhOMVsW6LIJyS6sJllZ22vKhPA1782plXH0qvg')"></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+</div>
+<h3 class="font-title-lg text-title-lg group-hover:text-primary transition-colors text-center">Merchandise</h3>
+</div>
+</div>
+</div>
+</section>
+<!-- Community/Play Space -->
+<section class="py-24 bg-surface-container-lowest overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div class="order-2 md:order-1 relative">
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-4 pt-12">
+<div class="aspect-[4/5] rounded-xl overflow-hidden premium-border">
+<div class="w-full h-full bg-cover bg-center" data-alt="A wide shot of players engaged in a game of Commander at a large communal brewery table. The lighting is moody and dramatic, with warm incandescent bulbs overhead. The atmosphere is lively and communal, showing a diverse group of people laughing and playing. The brewery's industrial-chic decor is visible in the background." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBOOwpm9cDO7vsj-RQ32QyXBCmL53kf_8LwU3V7PdtaVsauwUZ0WEDz8a71CvzDDSl7szW3fq2tCdZ3qav4oRGnVIANeMNdgq2MVUfRVrXw325aQ-EDcQT6PQYpi6IiqMBTvtRaaaZ9zUhzucg5KnVZEU7sx4xwZrVnRqNJr07BJ3B6tpyqp4tkMkWag9wXkRYp8bM1ZO0WsZ7xJYehZzY85Z_bThcpA8r7MKnZJEsjj5M5sKxIE2FC2N1L6DiB9iFa5sGnK-Z_sR0')"></div>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden premium-border">
+<div class="w-full h-full bg-cover bg-center" data-alt="A close-up of two players trading cards over a craft beer. The focus is on the cards being exchanged and the unique pint glasses with the Kitsune logo. The background is a blur of warm tavern activity. The image conveys a sense of trust and community bonding." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBmpTZLnWV1WByaTJ_eOz1piPfBze76ZGQv8lyOzVEuXypQdXCxLwdmPu55TLRPSJJmy7ctM1zlvs5AoBJkejqvwN04dXAQqjLLymUfOMsect9imz4kMwyGE_jw7MsG3ziqGxJWsxQa43VqLSnSEqJxKkOCTMiRLd0nXSmB-6-M1u3MMGkdCm2XxCHKsakEkRv8xxB-s1EVT4MtvEWEkUSIDIECA0BWWlbisIrO-NVVJzpj8P0gvGC_1wVLAKSPnDfzQY3meNPvGFk')"></div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="aspect-square rounded-xl overflow-hidden premium-border">
+<div class="w-full h-full bg-cover bg-center" data-alt="An artistic shot of a lone player deck-building at a corner table. A notebook, a tray of craft beer samples, and several piles of Magic cards are spread out. The lighting is focused on the table, creating a quiet, contemplative sanctuary feel within the larger brewery." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAGvivBhxHjUTOD7ZbvxfLfCpBRFFoLgT3hLR03dyvWAP3uYcxiQFolsXEcSZtDYV-Px0baZrKzhY5rzQ9hiGRtqwY7HfVEFaMGwfG8jByGjvvyaCtL0da8pwb4SO0uLC_DiCTMHjG56a492xYM4XlUcts0lBZNvmDV9l0k5NMh-snbFeH89UjKcDgJA-uz1a32Xe1ldy-lx_XbYf2qAUHKAsV7WJoXM1Q4dSbELOylOQMfqYE9rXGKx_IgDScmuoklyRXZ_GIBrOo')"></div>
+</div>
+<div class="aspect-[4/5] rounded-xl overflow-hidden premium-border">
+<div class="w-full h-full bg-cover bg-center" data-alt="A long perspective view of the main hall at Kitsune Brewing Co. on a busy event night. Rows of tables are filled with people playing cards, drinking, and socializing. The architecture features exposed brick and dark wood beams, illuminated by hundreds of tiny amber lights. It looks like a high-end gaming cathedral." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxFkHwI84sfKhTBB6M_TQd5lphxzAGh6l-rVWo_n4GeI7vISgLwaAA13mE7vvZXA_BjDBHCoRSgds68uQ93RquHhIVYUGASR8_iLI4-Wuxe-sthgRdPlXs8xzYmMRQSKQ0QsAHw-Wn-mvh-HsUysktp3754H_1d661_xg7GGxa3RagwagxIF6c9Iv_RjthQd3PBavlSSi_waIAWVnllP_GtWdWycsQiCEcY3jlYn4ETmPXR0J7pmT04cKtqk8y54y3GiKi7IOwmXw')"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="order-1 md:order-2">
+<h2 class="font-display-lg text-headline-md md:text-display-lg mb-6">More Than Just a Table</h2>
+<p class="text-on-surface-variant font-body-lg text-body-lg mb-6">
+                        Our space was designed by gamers, for gamers. From our custom-built 4-player Commander pods to our expansive tournament hall, every inch of Kitsune Brewing Co. is optimized for the perfect play experience.
+                    </p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-on-surface">Spacious 48" wide gaming tables</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-on-surface">Integrated deck-tray and drink holders</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-on-surface">High-speed guest Wi-Fi for companion apps</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-on-surface">Dedicated "Trade Zone" and appraisal station</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Food & Drink -->
+<section class="py-24 bg-surface">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="flex flex-col md:flex-row gap-16 items-center">
+<div class="md:w-1/2">
+<h2 class="font-headline-md text-headline-md text-primary mb-6">Drafts on Tap &amp; Food to Fuel Your Game</h2>
+<p class="text-on-surface-variant font-body-lg text-body-lg mb-8">
+                            Our craft brewery specializes in small-batch releases that honor Magic's history. From our "Urza's Stout" to our crisp "Lotus Lager," we have the perfect pairing for your next match.
+                        </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+<div class="premium-border p-4 rounded-lg bg-surface-container">
+<h4 class="font-title-lg text-title-lg text-primary mb-1">Mana-Infused Sliders</h4>
+<p class="text-sm text-on-surface-variant">Trio of Wagyu sliders with caramelized onion &amp; truffle aioli.</p>
+</div>
+<div class="premium-border p-4 rounded-lg bg-surface-container">
+<h4 class="font-title-lg text-title-lg text-primary mb-1">Kitsune Pale Ale</h4>
+<p class="text-sm text-on-surface-variant">Citrus-forward, easy-drinking 5.2% ABV flagship brew.</p>
+</div>
+</div>
+<button class="mt-10 border border-primary text-primary px-8 py-3 rounded-lg hover:bg-primary/10 transition-all">
+                            View Full Menu
+                        </button>
+</div>
+<div class="md:w-1/2 relative">
+<div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
+<div class="w-full h-80 md:h-[500px] bg-cover bg-center" data-alt="A visually appetizing spread of artisanal pub food and colorful craft beers. A dark wooden board holds gourmet sliders and rosemary fries, next to a flight of beers in varied shades from golden to deep black. The lighting is warm and directional, making the food look fresh and high-end. The scene is set in a cozy corner of the brewery with MTG cards sitting nearby on the table." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCyYIQoGotT1FD6GOsKTuuWRs24tfl1bwxmAmWAjyad_Nqqj77yw7AoMUCDyIrOmZrAhYHfyWfUo7bQ65qwN_keoyn2hSH2VzzMv2JBatR_FxBI1HeJRfo_1E6BZGifMdq8VcSNhZo6y6ltXRii3Cn8NFaCUsD4SbXqtieVM_CE3_9LXP6sJXDvwSetFw4Y2Rdo0_AbYLCFqCLmpkXeW2Xp8mFsQRnlSj44F7VFZ1Kggmc6lDX9uYDFHUDIMjLdYOBTdflgrMa3osM')"></div>
+</div>
+<div class="absolute -top-10 -right-10 w-64 h-64 amber-bloom opacity-20 -z-0"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Private Bookings -->
+<section class="py-24 bg-surface-charcoal relative overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-center relative z-10">
+<h2 class="font-display-lg text-headline-md md:text-display-lg mb-6">Book Your Own Pod</h2>
+<p class="text-on-surface-variant font-body-lg text-body-lg max-w-2xl mx-auto mb-10">
+                    Host your next Commander night or D&amp;D session in one of our private, lore-themed rooms. Includes dedicated server service and specialized lighting control.
+                </p>
+<div class="flex flex-wrap justify-center gap-6">
+<div class="bg-surface-container premium-border p-8 rounded-2xl w-full max-w-xs hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-primary text-4xl mb-4">castle</span>
+<h3 class="font-title-lg text-title-lg mb-2">The Archive</h3>
+<p class="text-sm text-on-surface-variant mb-6">A quiet, library-themed room for intense tactical sessions. Seats up to 6.</p>
+<span class="text-primary font-bold">$30 / Hour</span>
+</div>
+<div class="bg-surface-container premium-border p-8 rounded-2xl w-full max-w-xs hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-primary text-4xl mb-4">forest</span>
+<h3 class="font-title-lg text-title-lg mb-2">Gaea's Cradle</h3>
+<p class="text-sm text-on-surface-variant mb-6">A lush, greenery-filled room with immersive nature sounds. Seats up to 8.</p>
+<span class="text-primary font-bold">$45 / Hour</span>
+</div>
+</div>
+<div class="mt-12">
+<button class="bg-primary text-deep-ink font-bold px-12 py-4 rounded-xl hover:shadow-[0_0_40px_rgba(217,119,6,0.3)] transition-all">
+                        Reserve a Private Room
+                    </button>
+</div>
+</div>
+<!-- Atmospheric BG Effect -->
+<div class="absolute top-0 left-0 w-full h-full opacity-10">
+
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant/20 w-full px-margin-desktop py-12 flex flex-col items-center gap-base max-w-container-max mx-auto">
+<div class="flex flex-col md:flex-row justify-between w-full mb-12 gap-8">
+<div class="max-w-xs">
+<div class="font-headline-sm text-headline-sm text-on-surface mb-4">Kitsune Brewing Co.</div>
+<p class="text-on-surface-variant text-body-md">The intersection of legendary gaming and artisanal brewing. Join the community at our Portland sanctuary.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+<div class="flex flex-col gap-3">
+<span class="text-primary font-label-md text-label-md mb-2">Navigate</span>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-sm font-label-sm" href="#">Location &amp; Hours</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-sm font-label-sm" href="#">Private Bookings</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-sm font-label-sm" href="#">Tournament Rules</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="text-primary font-label-md text-label-md mb-2">Policy</span>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-sm font-label-sm" href="#">Shipping Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-sm font-label-sm" href="#">Contact Us</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-sm font-label-sm" href="#">Terms of Play</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="text-primary font-label-md text-label-md mb-2">Follow Us</span>
+<div class="flex gap-4 mt-2">
+<a class="text-on-surface-variant hover:text-primary" href="#"><span class="material-symbols-outlined">share_reviews</span></a>
+<a class="text-on-surface-variant hover:text-primary" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+<a class="text-on-surface-variant hover:text-primary" href="#"><span class="material-symbols-outlined">public</span></a>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full border-t border-outline-variant/10 pt-8 text-center text-on-surface-variant text-label-sm font-label-sm">
+            © 2024 Kitsune Brewing Co. All rights reserved. Crafted for the MTG community.
+        </div>
+</footer>
+<!-- Mobile Bottom Navigation (Visible only on small screens) -->
+<div class="md:hidden fixed bottom-0 left-0 w-full bg-surface-charcoal/95 backdrop-blur-lg border-t border-outline-variant/30 z-50 flex justify-around py-3 px-4">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="text-[10px]">Events</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="text-[10px]">Shop</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">restaurant</span>
+<span class="text-[10px]">Menu</span>
+</a>
+</div>
+<script>
+        // Micro-interactions for buttons and cards
+        document.querySelectorAll('button, .premium-border').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.97)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = '';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        });
+
+        // Sticky header behavior
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll <= 0) {
+                header.classList.remove('shadow-xl');
+                return;
+            }
+            if (currentScroll > lastScroll) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+                header.classList.add('shadow-xl');
+            }
+            lastScroll = currentScroll;
+        });
+    </script>
+</body></html>

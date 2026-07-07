@@ -20,6 +20,7 @@ interface CartContextValue {
   totalCount: number;
   totalPrice: number;
   isOpen: boolean;
+  hydrated: boolean;
   openCart: () => void;
   closeCart: () => void;
   addToCart: (card: SingleCard) => void;
@@ -33,12 +34,14 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
       const stored = localStorage.getItem("kitsune_cart");
       if (stored) setItems(JSON.parse(stored));
     } catch { /* ignore */ }
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
@@ -82,7 +85,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   return (
     <CartContext.Provider value={{
       items, totalCount, totalPrice,
-      isOpen, openCart, closeCart,
+      isOpen, hydrated, openCart, closeCart,
       addToCart, removeFromCart, updateQuantity, clearCart,
     }}>
       {children}

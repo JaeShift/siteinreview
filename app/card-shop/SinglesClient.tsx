@@ -10,7 +10,7 @@ import { useCart } from "@/lib/cart-context";
 import { filterSingles, type SinglesFilters, type SingleCard } from "@/lib/singles-data";
 import styles from "./singles.module.css";
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 15;
 
 const DEFAULT_FILTERS: SinglesFilters = {
   search: "",
@@ -100,10 +100,29 @@ function SinglesInner({ initialCards }: { initialCards: SingleCard[] }) {
             {/* Results count */}
             <div className={styles.resultsInfo}>
               <h2 className={styles.inventoryHeading}>Kitsune Card Inventory</h2>
-              <span className={styles.resultCount}>
-                Showing {filtered.length} result{filtered.length !== 1 ? "s" : ""}
-                {page > 1 && ` — Page ${page} of ${totalPages}`}
-              </span>
+              <div className={styles.resultsRight}>
+                <span className={styles.resultCount}>
+                  Showing {filtered.length} result{filtered.length !== 1 ? "s" : ""}
+                  {totalPages > 1 && ` — Page ${page} of ${totalPages}`}
+                </span>
+                {totalPages > 1 && (
+                  <div className={styles.topPager}>
+                    <button
+                      className={styles.topPagerBtn}
+                      onClick={() => { setPage((p) => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                      disabled={page === 1}
+                      aria-label="Previous page"
+                    >‹</button>
+                    <span className={styles.topPagerNum}>{page} / {totalPages}</span>
+                    <button
+                      className={styles.topPagerBtn}
+                      onClick={() => { setPage((p) => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                      disabled={page === totalPages}
+                      aria-label="Next page"
+                    >›</button>
+                  </div>
+                )}
+              </div>
             </div>
 
             {paginated.length > 0 ? (

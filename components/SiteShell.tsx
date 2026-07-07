@@ -19,18 +19,14 @@ const MTG_PATHS = [
   "/commander-nights",
 ];
 
-const NO_FOOTER_PATHS = ["/casino-night", "/contact", "/calendar", "/mtg-and-more", "/card-shop", "/card-shop-singles", "/pre-release", "/private-events", "/commander-nights"];
+const NO_FOOTER_PATHS = ["/casino-night", "/contact", "/calendar", "/mtg-and-more", "/card-shop", "/card-shop-singles", "/pre-release", "/private-events", "/commander-nights", "/checkout"];
 
 function isMtgPage(pathname: string) {
-  return MTG_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(p + "/")
-  );
+  return MTG_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
 }
 
 function isNoFooterPage(pathname: string) {
-  return NO_FOOTER_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(p + "/")
-  );
+  return NO_FOOTER_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
 }
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {

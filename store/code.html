@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kitsune Market Inventory - Kitsune Brewing Co.</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#ffb599",
+                        "inverse-on-surface": "#f0f1f1",
+                        "on-surface-variant": "#594138",
+                        "surface-container": "#eeeeee",
+                        "on-primary-fixed-variant": "#7f2b00",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "secondary-container": "#e2e2e2",
+                        "pure-white": "#FFFFFF",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#a63b00",
+                        "surface": "#f9f9f9",
+                        "on-tertiary-container": "#00285e",
+                        "outline-variant": "#e1bfb3",
+                        "tertiary-container": "#4e8fff",
+                        "primary-container": "#f26522",
+                        "on-secondary-container": "#646464",
+                        "tertiary-fixed": "#d8e2ff",
+                        "brand-orange": "#F26522",
+                        "surface-container-high": "#e8e8e8",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f3f3f4",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#ffb599",
+                        "utility-blue": "#4285F4",
+                        "on-primary-container": "#4f1800",
+                        "surface-dim": "#dadada",
+                        "secondary": "#5e5e5e",
+                        "primary": "#a63b00",
+                        "tertiary": "#005ac1",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1a1c1c",
+                        "secondary-fixed-dim": "#c6c6c6",
+                        "surface-bright": "#f9f9f9",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-primary-fixed": "#370e00",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#1b1b1b",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "background": "#f9f9f9",
+                        "pure-black": "#000000",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#004494",
+                        "on-surface": "#1a1c1c",
+                        "outline": "#8d7166",
+                        "primary-fixed": "#ffdbce",
+                        "on-tertiary-fixed": "#001a41"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "16px",
+                        "stack-md": "32px",
+                        "section-padding": "80px",
+                        "container-max": "1200px",
+                        "stack-lg": "64px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Montserrat"],
+                        "label-caps": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "headline-md": ["Montserrat"],
+                        "headline-sm": ["Montserrat"],
+                        "body-lg": ["Montserrat"],
+                        "display-lg": ["Montserrat"],
+                        "body-md": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                        "headline-lg": ["42px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "headline-sm": ["18px", { "lineHeight": "1.4", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "letterSpacing": "0.01em", "fontWeight": "400" }]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        body { background-color: #FFFFFF; color: #000000; font-family: 'Montserrat', sans-serif; }
+    </style>
+</head>
+<body class="bg-pure-white text-on-surface antialiased flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-pure-white dark:bg-pure-black border-b border-outline-variant dark:border-secondary docked full-width top-0 z-50 sticky">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-20">
+<!-- Brand Logo -->
+<div class="flex items-center space-x-2">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-pure-black">
+<img alt="Kitsune Brewing Co Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb8OgAt3pk9rGfPjWuGvkuOtFEJqRsFYuZsNMcVohJoDZHM9XTtfvtZwxB5nV4xLaJAoU8VHOKYf4sQllnLrXN4kBo1hRlMMNSuI70XZx3hIoSqDehZrPr-Fb6yM5QZKp7y8acW08ptpDCOE62Dc61Q1qhM6GMeJ7EM2mdd3-sTiQ8S4Dv1GZSHHWqEzz_cA_AlATPzmB-4b481M7YMbKBhDXFqTVZ3mxU3sXY2gkwb20HJVs_Rv0Bl9WvVZKp_4Mc3cgfMw867Q"/>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface dark:text-inverse-on-surface hidden md:block uppercase">KITSUNE BREWING CO.</span>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex space-x-8">
+<a class="font-label-caps text-label-caps text-on-surface dark:text-inverse-on-surface hover:text-brand-orange transition-colors" href="#">HOME</a>
+<a class="font-label-caps text-label-caps text-on-surface dark:text-inverse-on-surface hover:text-brand-orange transition-colors" href="#">CASINO NIGHT</a>
+<a class="font-label-caps text-label-caps text-brand-orange font-bold border-b-2 border-brand-orange pb-1 scale-95 transition-transform" href="#">MTG AND MORE</a>
+<a class="font-label-caps text-label-caps text-on-surface dark:text-inverse-on-surface hover:text-brand-orange transition-colors" href="#">MAGIC MAMAS PRE-RELEASE</a>
+<a class="font-label-caps text-label-caps text-on-surface dark:text-inverse-on-surface hover:text-brand-orange transition-colors" href="#">CONTACT US</a>
+</nav>
+<!-- Trailing Icon -->
+<div class="flex items-center space-x-4">
+<button class="text-on-surface dark:text-inverse-on-surface hover:text-brand-orange transition-all duration-200">
+<span class="font-label-caps text-label-caps flex items-center gap-1">CART (0) <span class="material-symbols-outlined">shopping_cart</span></span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-gutter py-section-padding flex flex-col md:flex-row gap-gutter">
+<!-- Sidebar Filters (Left) -->
+<aside class="w-full md:w-60 flex-shrink-0 space-y-stack-md">
+<div>
+<h2 class="font-headline-sm text-headline-sm mb-4 uppercase">Search</h2>
+<div class="relative">
+<input class="w-full border border-pure-black rounded-none px-4 py-2 font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-brand-orange" placeholder="Search cards..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-secondary">search</span>
+</div>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-4 uppercase border-b border-surface-dim pb-2">Color</h3>
+<div class="space-y-2 font-body-md text-body-md">
+<label class="flex items-center space-x-2 cursor-pointer group">
+<input class="form-checkbox text-brand-orange border-pure-black rounded-none focus:ring-brand-orange" type="checkbox"/>
+<span class="group-hover:text-brand-orange transition-colors">White</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer group">
+<input class="form-checkbox text-brand-orange border-pure-black rounded-none focus:ring-brand-orange" type="checkbox"/>
+<span class="group-hover:text-brand-orange transition-colors">Blue</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer group">
+<input class="form-checkbox text-brand-orange border-pure-black rounded-none focus:ring-brand-orange" type="checkbox"/>
+<span class="group-hover:text-brand-orange transition-colors">Black</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer group">
+<input checked="" class="form-checkbox text-brand-orange border-pure-black rounded-none focus:ring-brand-orange" type="checkbox"/>
+<span class="group-hover:text-brand-orange transition-colors font-bold text-brand-orange">Red</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer group">
+<input class="form-checkbox text-brand-orange border-pure-black rounded-none focus:ring-brand-orange" type="checkbox"/>
+<span class="group-hover:text-brand-orange transition-colors">Green</span>
+</label>
+</div>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-4 uppercase border-b border-surface-dim pb-2">Rarity</h3>
+<div class="space-y-2 font-body-md text-body-md">
+<label class="flex items-center space-x-2 cursor-pointer group">
+<input class="form-checkbox text-brand-orange border-pure-black rounded-none focus:ring-brand-orange" type="checkbox"/>
+<span class="group-hover:text-brand-orange transition-colors">Common</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer group">
+<input class="form-checkbox text-brand-orange border-pure-black rounded-none focus:ring-brand-orange" type="checkbox"/>
+<span class="group-hover:text-brand-orange transition-colors">Uncommon</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer group">
+<input checked="" class="form-checkbox text-brand-orange border-pure-black rounded-none focus:ring-brand-orange" type="checkbox"/>
+<span class="group-hover:text-brand-orange transition-colors font-bold text-brand-orange">Rare</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer group">
+<input class="form-checkbox text-brand-orange border-pure-black rounded-none focus:ring-brand-orange" type="checkbox"/>
+<span class="group-hover:text-brand-orange transition-colors">Mythic Rare</span>
+</label>
+</div>
+</div>
+<button class="w-full bg-pure-black text-pure-white font-label-caps text-label-caps py-3 hover:bg-brand-orange transition-colors">APPLY FILTERS</button>
+</aside>
+<!-- Product Grid (Right) -->
+<section class="flex-grow">
+<!-- Results Header -->
+<div class="flex justify-between items-center mb-stack-md pb-4 border-b border-surface-dim">
+<h1 class="font-headline-md text-headline-md uppercase">Kitsune Market Inventory</h1>
+<span class="font-body-md text-body-md text-secondary">Showing 24 Results</span>
+</div>
+<!-- Grid: Refined to 4 columns on desktop with slightly smaller cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card Item 1 -->
+<div class="group flex flex-col cursor-pointer">
+<div class="aspect-[2.5/3.5] mb-3 overflow-hidden border border-surface-dim relative bg-surface-container-low">
+<img alt="Neon Nectar Fox - Rare MTG Style Art" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgNguJJNHNxS5vFb4g8qVQw6xOYW-AsWMRjHQqVJkgcGCh2rlLXxxIlHY3chpEhb7LOULIwYj51gAigx_HIo5YZMcnD8xwF3FtKTwiy1pjhaTUXsYptx1mfApoKkzS_-0K2OW8YhBYlWSCfOhvwp2NwtyAVARkJXxc0kxuO1st-1FKwI49Ae1XvpKLOHTz1WO-PXsIUBtkSYdZmXTypCF_xFS-8nAl4dkhQVbbLHdPnCdAuDzZyCOcHcYol-h0CdcjCJFdZ1JnJQ"/>
+<div class="absolute top-2 right-2 bg-pure-black text-pure-white font-label-caps text-[9px] px-1.5 py-0.5">RARE</div>
+<!-- Subtle Condition Indicator -->
+<div class="absolute bottom-2 left-2 bg-pure-white/90 backdrop-blur-sm border border-pure-black/10 text-on-surface font-label-caps text-[8px] px-1.5 py-0.5">NM/MINT</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-[14px] uppercase group-hover:text-brand-orange transition-colors truncate">Neon Nectar Fox</h3>
+<span class="font-bold text-[14px]">$14.99</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-body-md text-[11px] text-secondary">Creature - Spirit</p>
+<span class="text-[10px] text-brand-orange font-semibold">4 IN STOCK</span>
+</div>
+</div>
+<button class="mt-3 border border-pure-black text-pure-black font-label-caps text-[11px] py-1.5 hover:bg-pure-black hover:text-pure-white transition-colors w-full uppercase">Add to Stack</button>
+</div>
+<!-- Card Item 2 -->
+<div class="group flex flex-col cursor-pointer">
+<div class="aspect-[2.5/3.5] mb-3 overflow-hidden border border-surface-dim relative bg-surface-container-low">
+<img alt="Citrus Caldera - Land MTG Style Art" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi9c_SE7DurqnkGdvtj0zXr-vmmfg9BMLXq3pBmbiQ6qfouj54k3U-fJydQYb_7_YrCuXYayaaH0z1ODmZ1H4gKDwVa4KPJW6OJG4Ki5CQTrfKFkDNGXwmiDoqAnOz5x4ni_TMy2JGPyFUiOZz6brWR5I9cTG1toIE6teyztDXBPqCm-sYIHX2FCsAFI9MO3NXM6gqoQWxkg5V0KAdUA9KN5QVHK8xWanm2Q_3z42PFe1dEBI98VKj_4szUaa8pgpJAokwpPrZhQ"/>
+<!-- Subtle Condition Indicator -->
+<div class="absolute bottom-2 left-2 bg-pure-white/90 backdrop-blur-sm border border-pure-black/10 text-on-surface font-label-caps text-[8px] px-1.5 py-0.5">LP</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-[14px] uppercase group-hover:text-brand-orange transition-colors truncate">Citrus Caldera</h3>
+<span class="font-bold text-[14px]">$4.50</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-body-md text-[11px] text-secondary">Land - Mountain</p>
+<span class="text-[10px] text-secondary font-semibold">12 IN STOCK</span>
+</div>
+</div>
+<button class="mt-3 border border-pure-black text-pure-black font-label-caps text-[11px] py-1.5 hover:bg-pure-black hover:text-pure-white transition-colors w-full uppercase">Add to Stack</button>
+</div>
+<!-- Card Item 3 -->
+<div class="group flex flex-col cursor-pointer">
+<div class="aspect-[2.5/3.5] mb-3 overflow-hidden border border-surface-dim relative bg-surface-container-low">
+<img alt="Hops Explosion - Mythic MTG Style Art" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3tTsL9jq_cvkIkeyaD9YFqX60CWXbtHa9Tuh7rJfJdD5IbxNAI2PHl8QJhunGm5jJEgVULGrgQZjfhsNDXpHUyW1Ta3f8cUtTUrQ4aoTJ_W9_V1ED76CO9hGxwFFJwh6W2BGZRHi8TU_OatTjTCyEtOY1sALxb7EwzxXfkuN7WxlZ63fCHjSeMcjmcwLrQbvGFZGllLI_2cX7xgGjUfuNeK9jd87wxAqtEkRlNcham6QeDaDPxzt7tn5KPPSHEIo3ZgHnQ7WqqQ"/>
+<div class="absolute top-2 right-2 bg-brand-orange text-pure-white font-label-caps text-[9px] px-1.5 py-0.5">MYTHIC</div>
+<!-- Subtle Condition Indicator -->
+<div class="absolute bottom-2 left-2 bg-pure-white/90 backdrop-blur-sm border border-pure-black/10 text-on-surface font-label-caps text-[8px] px-1.5 py-0.5">NM/MINT</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-[14px] uppercase group-hover:text-brand-orange transition-colors truncate">Hops Explosion</h3>
+<span class="font-bold text-[14px]">$29.99</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-body-md text-[11px] text-secondary">Instant</p>
+<span class="text-[10px] text-error font-semibold uppercase">Low Stock</span>
+</div>
+</div>
+<button class="mt-3 border border-pure-black text-pure-black font-label-caps text-[11px] py-1.5 hover:bg-pure-black hover:text-pure-white transition-colors w-full uppercase">Add to Stack</button>
+</div>
+<!-- Card Item 4 (Added for 4-column representation) -->
+<div class="group flex flex-col cursor-pointer">
+<div class="aspect-[2.5/3.5] mb-3 overflow-hidden border border-surface-dim relative bg-surface-container-low">
+<img alt="Kitsune Alchemist - Uncommon MTG Style Art" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb8OgAt3pk9rGfPjWuGvkuOtFEJqRsFYuZsNMcVohJoDZHM9XTtfvtZwxB5nV4xLaJAoU8VHOKYf4sQllnLrXN4kBo1hRlMMNSuI70XZx3hIoSqDehZrPr-Fb6yM5QZKp7y8acW08ptpDCOE62Dc61Q1qhM6GMeJ7EM2mdd3-sTiQ8S4Dv1GZSHHWqEzz_cA_AlATPzmB-4b481M7YMbKBhDXFqTVZ3mxU3sXY2gkwb20HJVs_Rv0Bl9WvVZKp_4Mc3cgfMw867Q"/>
+<div class="absolute top-2 right-2 bg-secondary text-pure-white font-label-caps text-[9px] px-1.5 py-0.5">UNCOMMON</div>
+<!-- Subtle Condition Indicator -->
+<div class="absolute bottom-2 left-2 bg-pure-white/90 backdrop-blur-sm border border-pure-black/10 text-on-surface font-label-caps text-[8px] px-1.5 py-0.5">EXCELLENT</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-[14px] uppercase group-hover:text-brand-orange transition-colors truncate">Fox Alchemist</h3>
+<span class="font-bold text-[14px]">$2.25</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-body-md text-[11px] text-secondary">Creature - Fox</p>
+<span class="text-[10px] text-secondary font-semibold">20+ IN STOCK</span>
+</div>
+</div>
+<button class="mt-3 border border-pure-black text-pure-black font-label-caps text-[11px] py-1.5 hover:bg-pure-black hover:text-pure-white transition-colors w-full uppercase">Add to Stack</button>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-stack-lg flex justify-center items-center space-x-4">
+<button class="p-2 border border-surface-dim text-secondary hover:text-pure-black hover:border-pure-black transition-colors disabled:opacity-50"><span class="material-symbols-outlined">chevron_left</span></button>
+<span class="font-headline-sm text-headline-sm">1 / 4</span>
+<button class="p-2 border border-surface-dim text-pure-black hover:text-pure-black hover:border-pure-black transition-colors"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-pure-black text-pure-white full-width bottom flex flex-col items-center justify-center w-full py-stack-lg px-gutter space-y-stack-sm text-center">
+<h2 class="font-headline-md text-headline-md text-pure-white uppercase">KITSUNE BREWING CO.</h2>
+<div class="flex flex-wrap justify-center gap-6 my-4">
+<a class="font-label-caps text-label-caps text-pure-white opacity-80 hover:opacity-100 hover:text-brand-orange transition-colors focus:outline-none ring-2 ring-transparent focus:ring-brand-orange" href="#">(602) 245-8593</a>
+<a class="font-label-caps text-label-caps text-pure-white opacity-80 hover:opacity-100 hover:text-brand-orange transition-colors focus:outline-none ring-2 ring-transparent focus:ring-brand-orange" href="#">INSTAGRAM</a>
+<a class="font-label-caps text-label-caps text-pure-white opacity-80 hover:opacity-100 hover:text-brand-orange transition-colors focus:outline-none ring-2 ring-transparent focus:ring-brand-orange" href="#">FACEBOOK</a>
+</div>
+<p class="font-body-md text-body-md opacity-60 max-w-lg mt-4">© 2024 KITSUNE BREWING COMPANY. 3321 E BELL RD SUITE B-5 PHOENIX, AZ 85032</p>
+</footer>
+</body></html>

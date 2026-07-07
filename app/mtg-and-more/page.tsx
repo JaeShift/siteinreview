@@ -8,8 +8,7 @@ export const metadata: Metadata = {
     "Magic events, sealed product, singles, prereleases, Commander nights, and private play at Kitsune Brewing Co. in Phoenix, AZ.",
 };
 
-const HERO_IMG =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCX5fjY2uq6OZl1qTgy5jtsYFdc3F-ztYeJba593tcdW5Mp3uoXBswHYqi1jrpN7YuNHD46udAAr4GfUa_OiRFHfpTsAt_F-RtWW3uhmav1uKm1nscwf-h7TX3f2N56dA5qoqjPiYUXYgEjdkQnGqKguhkPCsFi_GlRl1b-iv0pswMCtziWnzTSDoHCMvrxuwCjY0qpqQd8R7EOUeP9LqS4HUgwOUizh0LHdb0sqb7N03wyDXFmh1U";
+const HERO_IMG = "/images/mtg-more-banner-1920x820-glow-extended.webp";
 
 const bentoCards = [
   {
@@ -70,10 +69,10 @@ const PRIVATE_EVENTS_IMG =
 const CTA_IMG = "/images/swirl.png";
 
 const schedule = [
-  { day: "MON", title: "COMMANDER NIGHT", desc: "Free play, pods start every 30 minutes. All power levels welcome.", time: "6:00 PM – CLOSE" },
-  { day: "WED", title: "DRAFT NIGHT", desc: "Current set drafts. Prize packs for 3-0 records.", time: "7:00 PM START" },
-  { day: "FRI", title: "FRIDAY NIGHT MAGIC", desc: "Modern & Pioneer events with FNM promos.", time: "6:30 PM START" },
-  { day: "SUN", title: "SUNDAY EDH SOCIAL", desc: "Brunch and brews while you battle. Casual atmosphere.", time: "12:00 PM – 5 PM" },
+  { day: "JUL 7",  title: "COMMANDER NIGHT", desc: "Free play, pods start every 30 minutes. All power levels welcome.", time: "5:30 PM – 9:00 PM" },
+  { day: "JUL 14", title: "COMMANDER NIGHT", desc: "Free play, pods start every 30 minutes. All power levels welcome.", time: "5:30 PM – 9:00 PM" },
+  { day: "JUL 20", title: "MARVEL SUPERHEROES PRERELEASE", desc: "Be the first to play Marvel Superheroes. Sealed prerelease packs, prizes, and more.", time: "2:00 PM (~4 HRS)" },
+  { day: "JUL 21", title: "COMMANDER NIGHT", desc: "Free play, pods start every 30 minutes. All power levels welcome.", time: "5:30 PM – 9:00 PM" },
 ];
 
 export default function MtgPage() {
@@ -159,7 +158,7 @@ export default function MtgPage() {
           <div className={styles.scheduleHeader}>
             <div>
               <span className={styles.scheduleLabel}>Schedule</span>
-              <h2 className={styles.scheduleHeading}>WEEKLY PLAY</h2>
+              <h2 className={styles.scheduleHeading}>MONTHLY PLAY</h2>
             </div>
             <Link href="/calendar" className={styles.scheduleCalLink}>
               FULL CALENDAR →

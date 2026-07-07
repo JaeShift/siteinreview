@@ -103,10 +103,18 @@
 .item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 24px;
+  gap: 10px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--color-border);
+}
+
+.itemThumb {
+  width: 44px;
+  height: 62px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
 }
 
 .itemInfo {
@@ -114,6 +122,7 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+  flex: 1;
 }
 
 .itemName {
@@ -186,6 +195,63 @@
 }
 
 .removeBtn:hover { color: #991b1b; }
+
+/* ── Undo inline row ── */
+.undoRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  background: #fafafa;
+}
+
+.undoThumb {
+  opacity: 0.45;
+  filter: grayscale(60%);
+}
+
+.undoText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.undoCardName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #71717a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: line-through;
+}
+
+.undoSub {
+  font-size: 11px;
+  color: #a1a1aa;
+}
+
+.undoBtn {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-black);
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.undoBtn:hover {
+  background: #f0f0f0;
+}
 
 /* ── Footer ── */
 .footer {

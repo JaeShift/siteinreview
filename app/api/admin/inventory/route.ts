@@ -37,6 +37,15 @@ export async function POST(request: NextRequest) {
     oracleText: body.oracleText,
     availability: body.availability ?? "In Stock",
     formats: body.formats,
+    marketPrice: body.marketPrice !== undefined ? Number(body.marketPrice) : undefined,
+    backImageUrl: body.backImageUrl,
+    hidden: body.hidden ?? false,
+    backName: body.backName,
+    backType: body.backType,
+    backManaCost: body.backManaCost,
+    backOracleText: body.backOracleText,
+    backPower: body.backPower,
+    backToughness: body.backToughness,
   };
 
   const cards = addSingle(card);

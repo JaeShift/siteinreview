@@ -156,6 +156,59 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+.resultsRight {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.topPager {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topPagerBtn {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 700;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.15s, border-color 0.15s;
+  line-height: 1;
+  padding: 0;
+}
+
+.topPagerBtn:hover:not(:disabled) {
+  background: var(--color-black);
+  color: var(--color-white);
+  border-color: var(--color-black);
+}
+
+.topPagerBtn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.topPagerNum {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+  min-width: 28px;
+  text-align: center;
+}
+
 .inventoryHeading {
   font-family: var(--font-heading);
   font-size: 20px;
@@ -333,6 +386,7 @@
   color: var(--color-accent);
 }
 
+
 .shopFooterCopy {
   font-family: var(--font-body);
   font-size: 12px;
@@ -349,6 +403,7 @@
   right: 32px;
   width: 56px;
   height: 56px;
+  border-radius: 50%;
   background: var(--color-black);
   color: var(--color-white);
   border: none;

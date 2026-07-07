@@ -23,7 +23,10 @@
 .heroVignette {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+  background:
+    linear-gradient(to top,    rgba(255,255,255,0.35) 0%,   transparent 22%),
+    linear-gradient(to right,  rgba(255,255,255,0.25) 0%,   transparent 18%),
+    linear-gradient(to left,   rgba(255,255,255,0.25) 0%,   transparent 18%);
   z-index: 1;
 }
 
@@ -376,12 +379,14 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--color-accent);
-  min-width: 80px;
+  width: 110px;
+  min-width: 110px;
   flex-shrink: 0;
 }
 
 .scheduleInfo {
   flex: 1;
+  padding-left: 16px;
 }
 
 .scheduleEventTitle {

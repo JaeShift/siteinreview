@@ -10,14 +10,16 @@ import styles from "./checkout.module.css";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function EmbeddedCheckoutClient() {
-  const { items, clearCart } = useCart();
+  const { items, hydrated, clearCart } = useCart();
   const router = useRouter();
   const [error, setError] = useState("");
 
-  // If cart is empty on arrival, redirect back
+  // Wait for localStorage to hydrate before checking cart — avoids false redirect
   useEffect(() => {
-    if (items.length === 0) router.replace("/card-shop");
-  }, [items, router]);
+    if (hydrated && items.length === 0) router.replace("/checkout");
+  }, [hydrated, items, router]);
+
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   const fetchClientSecret = useCallback(async () => {
     const res = await fetch("/api/checkout/session", {
@@ -30,8 +32,18 @@ export default function EmbeddedCheckoutClient() {
       setError(data.error ?? "Failed to start checkout.");
       throw new Error(data.error);
     }
+    if (data.sessionId) setSessionId(data.sessionId);
     return data.clientSecret as string;
   }, [items]);
+
+  // Fallback: if Stripe doesn't auto-redirect after payment, navigate manually
+  function handleComplete() {
+    clearCart();
+    const dest = sessionId
+      ? `/checkout/return?session_id=${sessionId}`
+      : "/checkout/return";
+    router.replace(dest);
+  }
 
   if (error) {
     return (
@@ -42,13 +54,13 @@ export default function EmbeddedCheckoutClient() {
     );
   }
 
-  if (items.length === 0) return null;
+  if (!hydrated || items.length === 0) return null;
 
   return (
     <div className={styles.checkoutPage}>
       <EmbeddedCheckoutProvider
         stripe={stripePromise}
-        options={{ fetchClientSecret }}
+        options={{ fetchClientSecret, onComplete: handleComplete }}
       >
         <EmbeddedCheckout />
       </EmbeddedCheckoutProvider>

@@ -12,23 +12,22 @@ interface Props {
 
 type ManaEntry = { code: string; label: string; ms: string };
 
-const MANA_W: ManaEntry = { code: "W",         label: "White",     ms: "ms-w" };
-const MANA_U: ManaEntry = { code: "U",         label: "Blue",      ms: "ms-u" };
-const MANA_B: ManaEntry = { code: "B",         label: "Black",     ms: "ms-b" };
-const MANA_R: ManaEntry = { code: "R",         label: "Red",       ms: "ms-r" };
-const MANA_G: ManaEntry = { code: "G",         label: "Green",     ms: "ms-g" };
-const MANA_C: ManaEntry = { code: "C",         label: "Colorless", ms: "ms-c" };
+const MANA_W: ManaEntry  = { code: "W",         label: "White",     ms: "ms-w" };
+const MANA_U: ManaEntry  = { code: "U",         label: "Blue",      ms: "ms-u" };
+const MANA_B: ManaEntry  = { code: "B",         label: "Black",     ms: "ms-b" };
+const MANA_R: ManaEntry  = { code: "R",         label: "Red",       ms: "ms-r" };
+const MANA_G: ManaEntry  = { code: "G",         label: "Green",     ms: "ms-g" };
 const MANA_CL: ManaEntry = { code: "Colorless", label: "Colorless", ms: "ms-c" };
+const MANA_C: ManaEntry  = { code: "C",         label: "Colorless", ms: "ms-c" };
 
-const CARD_COLORS: ManaEntry[] = [MANA_W, MANA_U, MANA_B, MANA_R, MANA_G, MANA_CL];
+const CARD_COLORS: ManaEntry[]     = [MANA_W, MANA_U, MANA_B, MANA_R, MANA_G, MANA_CL];
 const IDENTITY_COLORS: ManaEntry[] = [MANA_W, MANA_U, MANA_B, MANA_R, MANA_G, MANA_C];
-const MANA_PRODUCTION_COLORS: ManaEntry[] = [MANA_W, MANA_U, MANA_B, MANA_R, MANA_G, MANA_C];
 
-const RARITIES = ["Common", "Uncommon", "Rare", "Mythic Rare", "Land", "Special"];
-const FORMATS = ["Standard", "Modern", "Commander", "Legacy", "Pioneer", "Vintage", "Alchemy", "Historic", "Brawl", "Timeless", "Oathbreaker"];
-const TYPES = ["Creature", "Instant", "Sorcery", "Enchantment", "Artifact", "Planeswalker", "Land", "Battle", "Kindred", "Legendary"];
+const RARITIES     = ["Common", "Uncommon", "Rare", "Mythic Rare", "Land", "Special"];
+const FORMATS      = ["Standard", "Modern", "Commander", "Legacy", "Pioneer", "Vintage", "Alchemy", "Historic", "Brawl", "Timeless", "Oathbreaker"];
+const TYPES        = ["Creature", "Instant", "Sorcery", "Enchantment", "Artifact", "Planeswalker", "Land", "Battle", "Kindred", "Legendary"];
 const AVAILABILITY = ["In Stock", "Presale"];
-const EDITIONS = [
+const EDITIONS     = [
   "Any",
   "Marvel Super Heroes",
   "Secrets of Strixhaven",
@@ -46,17 +45,10 @@ function toggle<T>(arr: T[], item: T): T[] {
   return arr.includes(item) ? arr.filter((x) => x !== item) : [...arr, item];
 }
 
-// ── Group is defined OUTSIDE the parent component so it is never remounted ──
 function Group({
-  name,
-  open,
-  onToggle,
-  children,
+  name, open, onToggle, children,
 }: {
-  name: string;
-  open: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
+  name: string; open: boolean; onToggle: () => void; children: React.ReactNode;
 }) {
   return (
     <div className={styles.group}>
@@ -69,6 +61,26 @@ function Group({
   );
 }
 
+const DEFAULT_FILTERS: SinglesFilters = {
+  search: "",
+  sets: [],
+  conditions: [],
+  colors: [],
+  colorIdentity: [],
+  types: [],
+  rarities: [],
+  formats: [],
+  availability: [],
+  foilOnly: false,
+  minPrice: 0,
+  maxPrice: 0,
+  power: "",
+  toughness: "",
+  cmc: "",
+  oracle: "",
+  sort: "name-asc",
+};
+
 export default function FilterSidebar({ filters, onChange, totalResults }: Props) {
   const [open, setOpen] = useState<Record<string, boolean>>({
     "Card Name": true,
@@ -78,56 +90,13 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
     "Price": true,
   });
 
-  const [edition, setEdition] = useState<string[]>([]);
-  const [format, setFormat] = useState<string[]>([]);
-  const [availability, setAvailability] = useState<string[]>([]);
-  const [identity, setIdentity] = useState<string[]>([]);
-  const [type, setType] = useState<string[]>([]);
-  const [power, setPower] = useState("");
-  const [toughness, setToughness] = useState("");
-  const [cmc, setCmc] = useState("");
-  const [oracle, setOracle] = useState("");
-  const [rarity, setRarity] = useState<string[]>([]);
-  const [mana, setMana] = useState<string[]>([]);
-
-  const setFilter = <K extends keyof SinglesFilters>(key: K, value: SinglesFilters[K]) =>
+  const set = <K extends keyof SinglesFilters>(key: K, value: SinglesFilters[K]) =>
     onChange({ ...filters, [key]: value });
 
   const tog = (name: string) =>
     setOpen((prev) => ({ ...prev, [name]: !prev[name] }));
 
-  const clearAll = () => {
-    onChange({
-      search: "",
-      sets: [],
-      conditions: [],
-      colors: [],
-      colorIdentity: [],
-      types: [],
-      rarities: [],
-      formats: [],
-      availability: [],
-      foilOnly: false,
-      minPrice: 0,
-      maxPrice: 0,
-      power: "",
-      toughness: "",
-      cmc: "",
-      oracle: "",
-      sort: "name-asc",
-    });
-    setEdition([]);
-    setFormat([]);
-    setAvailability([]);
-    setIdentity([]);
-    setType([]);
-    setPower("");
-    setToughness("");
-    setCmc("");
-    setOracle("");
-    setRarity([]);
-    setMana([]);
-  };
+  const clearAll = () => onChange({ ...DEFAULT_FILTERS, sort: filters.sort });
 
   return (
     <aside className={styles.sidebar}>
@@ -143,7 +112,7 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
           className={styles.textInput}
           placeholder="Search by name…"
           value={filters.search}
-          onChange={(e) => setFilter("search", e.target.value)}
+          onChange={(e) => set("search", e.target.value)}
         />
       </Group>
 
@@ -155,8 +124,8 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
               <input
                 type="checkbox"
                 className={styles.checkbox}
-                checked={edition.includes(ed)}
-                onChange={() => setEdition((prev) => toggle(prev, ed))}
+                checked={filters.sets.includes(ed)}
+                onChange={() => set("sets", toggle(filters.sets, ed))}
               />
               <span className={styles.checkboxText}>{ed}</span>
             </label>
@@ -172,8 +141,8 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
               <input
                 type="checkbox"
                 className={styles.checkbox}
-                checked={format.includes(f)}
-                onChange={() => setFormat((prev) => toggle(prev, f))}
+                checked={filters.formats.includes(f)}
+                onChange={() => set("formats", toggle(filters.formats, f))}
               />
               <span className={styles.checkboxText}>{f}</span>
             </label>
@@ -189,12 +158,21 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
               <input
                 type="checkbox"
                 className={styles.checkbox}
-                checked={availability.includes(a)}
-                onChange={() => setAvailability((prev) => toggle(prev, a))}
+                checked={filters.availability.includes(a)}
+                onChange={() => set("availability", toggle(filters.availability, a))}
               />
               <span className={styles.checkboxText}>{a}</span>
             </label>
           ))}
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              className={styles.checkbox}
+              checked={filters.foilOnly}
+              onChange={(e) => set("foilOnly", e.target.checked)}
+            />
+            <span className={styles.checkboxText}>✦ Foil Only</span>
+          </label>
         </div>
       </Group>
 
@@ -204,10 +182,10 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
           {CARD_COLORS.map(({ code, label, ms }) => (
             <button
               key={code}
-              className={`${styles.manaPip} ${filters.colors.includes(code) ? styles.manaPipActive : ""}`}
-              onClick={() => setFilter("colors", toggle(filters.colors, code))}
+              className={`${styles.manaPip} ${filters.colors.includes(code as CardColor) ? styles.manaPipActive : ""}`}
+              onClick={() => set("colors", toggle(filters.colors, code as CardColor))}
               title={label}
-              aria-pressed={filters.colors.includes(code)}
+              aria-pressed={filters.colors.includes(code as CardColor)}
               aria-label={label}
             >
               <i className={`ms ms-cost ${ms} ms-2x`} />
@@ -222,8 +200,8 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
           {IDENTITY_COLORS.map(({ code, label, ms }) => (
             <button
               key={code}
-              className={`${styles.manaPip} ${identity.includes(code) ? styles.manaPipActive : ""}`}
-              onClick={() => setIdentity((prev) => toggle(prev, code))}
+              className={`${styles.manaPip} ${filters.colorIdentity.includes(code) ? styles.manaPipActive : ""}`}
+              onClick={() => set("colorIdentity", toggle(filters.colorIdentity, code))}
               title={label}
               aria-label={label}
             >
@@ -239,8 +217,8 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
           {RARITIES.map((r) => (
             <button
               key={r}
-              className={`${styles.rarityBtn} ${rarity.includes(r) ? styles.rarityBtnActive : ""}`}
-              onClick={() => setRarity((prev) => toggle(prev, r))}
+              className={`${styles.rarityBtn} ${filters.rarities.includes(r as Rarity) ? styles.rarityBtnActive : ""}`}
+              onClick={() => set("rarities", toggle(filters.rarities, r as Rarity))}
             >
               {r.toUpperCase()}
             </button>
@@ -256,8 +234,8 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
               <input
                 type="checkbox"
                 className={styles.checkbox}
-                checked={type.includes(t)}
-                onChange={() => setType((prev) => toggle(prev, t))}
+                checked={filters.types.includes(t as CardType)}
+                onChange={() => set("types", toggle(filters.types, t as CardType))}
               />
               <span className={styles.checkboxText}>{t}</span>
             </label>
@@ -270,14 +248,14 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
         <div className={styles.ptRow}>
           <div className={styles.ptField}>
             <label className={styles.ptLabel}>Power</label>
-            <select className={styles.ptInput} value={power} onChange={(e) => setPower(e.target.value)}>
+            <select className={styles.ptInput} value={filters.power} onChange={(e) => set("power", e.target.value)}>
               {PT_OPTIONS.map((v) => <option key={v} value={v === "Any" ? "" : v}>{v}</option>)}
             </select>
           </div>
           <span className={styles.ptSep}>/</span>
           <div className={styles.ptField}>
             <label className={styles.ptLabel}>Toughness</label>
-            <select className={styles.ptInput} value={toughness} onChange={(e) => setToughness(e.target.value)}>
+            <select className={styles.ptInput} value={filters.toughness} onChange={(e) => set("toughness", e.target.value)}>
               {PT_OPTIONS.map((v) => <option key={v} value={v === "Any" ? "" : v}>{v}</option>)}
             </select>
           </div>
@@ -286,7 +264,7 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
 
       {/* 10. Converted Cost */}
       <Group name="Converted Cost" open={!!open["Converted Cost"]} onToggle={() => tog("Converted Cost")}>
-        <select className={styles.select} value={cmc} onChange={(e) => setCmc(e.target.value)}>
+        <select className={styles.select} value={filters.cmc} onChange={(e) => set("cmc", e.target.value)}>
           <option value="">Any</option>
           {Array.from({ length: 17 }, (_, i) => (
             <option key={i} value={String(i)}>{i}</option>
@@ -304,7 +282,7 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
             max={1000}
             step={5}
             value={filters.maxPrice || 1000}
-            onChange={(e) => setFilter("maxPrice", Number(e.target.value))}
+            onChange={(e) => set("maxPrice", Number(e.target.value))}
           />
           <div className={styles.priceLabels}>
             <span>$0</span>
@@ -319,51 +297,14 @@ export default function FilterSidebar({ filters, onChange, totalResults }: Props
           type="text"
           className={styles.textInput}
           placeholder="Search card text…"
-          value={oracle}
-          onChange={(e) => setOracle(e.target.value)}
+          value={filters.oracle}
+          onChange={(e) => set("oracle", e.target.value)}
         />
-      </Group>
-
-      {/* 13. Mana Production */}
-      <Group name="Mana Production" open={!!open["Mana Production"]} onToggle={() => tog("Mana Production")}>
-        <div className={styles.colorRow}>
-          {MANA_PRODUCTION_COLORS.map(({ code, label, ms }) => (
-            <button
-              key={code}
-              className={`${styles.manaPip} ${mana.includes(code) ? styles.manaPipActive : ""}`}
-              onClick={() => setMana((prev) => toggle(prev, code))}
-              title={label}
-              aria-label={label}
-            >
-              <i className={`ms ms-cost ${ms} ms-2x`} />
-            </button>
-          ))}
-        </div>
       </Group>
 
       <div className={styles.filterBtns}>
         <button className={styles.clearBtn} onClick={clearAll}>
           CLEAR ALL
-        </button>
-        <button
-          className={styles.applyBtn}
-          onClick={() =>
-            onChange({
-              ...filters,
-              sets: edition,
-              rarities: rarity as Rarity[],
-              types: type as CardType[],
-              colorIdentity: identity,
-              formats: format,
-              availability,
-              power,
-              toughness,
-              cmc,
-              oracle,
-            })
-          }
-        >
-          APPLY FILTERS
         </button>
       </div>
     </aside>

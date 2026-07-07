@@ -39,6 +39,13 @@ export interface SingleCard {
   formats?: string[];
   hidden?: boolean;
   marketPrice?: number;
+  backImageUrl?: string;
+  backName?: string;
+  backType?: string;
+  backManaCost?: string;
+  backOracleText?: string;
+  backPower?: string;
+  backToughness?: string;
 }
 
 export type SortOption = "price-asc" | "price-desc" | "name-asc" | "name-desc" | "newest";
@@ -974,8 +981,8 @@ export function formatSetDisplay(
 
 export function getConditionColor(condition: Condition): string {
   const map: Record<Condition, string> = {
-    NM: "#2d8a4e",
-    LP: "#5c8a2d",
+    NM: "#1a1a1a",
+    LP: "#3a3a3a",
     MP: "#a87c00",
     HP: "#c05000",
     DMG: "#c0302d",
