@@ -31,7 +31,7 @@ export default function PrivateEventsPage() {
       <section className={styles.hero}>
         <div
           className={styles.heroBg}
-          style={{ backgroundImage: `url('/images/singles-cards.png')` }}
+          style={{ backgroundImage: `url('/images/singles-card.png')` }}
         />
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>

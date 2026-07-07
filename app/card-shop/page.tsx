@@ -18,7 +18,7 @@ export default function SinglesPage() {
       <section className={styles.banner}>
         <div
           className={styles.bannerBg}
-          style={{ backgroundImage: `url('/images/singles-cards.png')` }}
+          style={{ backgroundImage: `url('/images/singles-card.png')` }}
         />
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>
