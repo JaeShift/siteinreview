@@ -7,7 +7,7 @@ import SingleCard from "@/components/mtg/SingleCard";
 import EmptyState from "@/components/ui/EmptyState";
 import Pagination from "@/components/ui/Pagination";
 import { useCart } from "@/lib/cart-context";
-import { filterSingles, type SinglesFilters, type SingleCard } from "@/lib/singles-data";
+import { filterSingles, type SinglesFilters, type SingleCard as SingleCardData } from "@/lib/singles-data";
 import styles from "./singles.module.css";
 
 const PAGE_SIZE = 15;
@@ -33,11 +33,11 @@ const DEFAULT_FILTERS: SinglesFilters = {
 };
 
 
-export default function SinglesClient({ initialCards = [] }: { initialCards?: SingleCard[] }) {
+export default function SinglesClient({ initialCards = [] }: { initialCards?: SingleCardData[] }) {
   return <SinglesInner initialCards={initialCards} />;
 }
 
-function SinglesInner({ initialCards }: { initialCards: SingleCard[] }) {
+function SinglesInner({ initialCards }: { initialCards: SingleCardData[] }) {
   const [filters, setFilters] = useState<SinglesFilters>(DEFAULT_FILTERS);
   const [page, setPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);

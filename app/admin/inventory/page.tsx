@@ -474,7 +474,7 @@ export default function AdminInventoryPage() {
     if (selected.size === 0) return;
     setBulkDeleting(true);
     await Promise.all(
-      [...selected].map((id) => fetch(`/api/admin/inventory/${id}`, { method: "DELETE" }))
+      Array.from(selected).map((id) => fetch(`/api/admin/inventory/${id}`, { method: "DELETE" }))
     );
     setCards((prev) => prev.filter((c) => !selected.has(c.id)));
     setSelected(new Set());
@@ -755,7 +755,7 @@ export default function AdminInventoryPage() {
                 className={`btn btn-outline ${styles.editBtn}`}
                 disabled={bulkDeleting}
                 onClick={() => {
-                  const id = [...selected][0];
+                  const id = Array.from(selected)[0];
                   const card = cards.find((c) => c.id === id);
                   if (card) startEdit(card);
                 }}
@@ -1200,7 +1200,7 @@ export default function AdminInventoryPage() {
                       {setsLoading ? (
                         <p className={styles.setPickerLoading}>Loading sets…</p>
                       ) : (
-                        [...allSets]
+                        Array.from(allSets)
                           .filter((s) =>
                             !setPickerSearch ||
                             s.code.toLowerCase().includes(setPickerSearch.toLowerCase()) ||

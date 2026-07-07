@@ -17,7 +17,7 @@ const MANA_CLASS: Record<string, string> = {
 };
 
 function ManaCost({ cost }: { cost: string }) {
-  const symbols = [...cost.matchAll(/\{([^}]+)\}/g)].map((m) => m[1]);
+  const symbols = Array.from(cost.matchAll(/\{([^}]+)\}/g)).map((m) => m[1]);
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
       {symbols.map((sym, i) => {
@@ -222,7 +222,9 @@ export default function SingleCard({ card }: Props) {
                       : (card.power && card.toughness ? ["Power / Toughness", `${card.power} / ${card.toughness}`] : null),
                     ["Condition", formatCondition(card.condition)],
                     card.availability ? ["Availability", card.availability] : null,
-                  ].filter(Boolean).map(([label, value]) => (
+                  ]
+                    .filter((row): row is [string, string] => row !== null)
+                    .map(([label, value]) => (
                     <div key={label as string} className={styles.modalRow}>
                       <span className={styles.modalLabel}>{label}</span>
                       <span className={styles.modalValue} style={label === "Condition" ? { color: conditionColor } : undefined}>
