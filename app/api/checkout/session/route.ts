@@ -3,7 +3,6 @@ import Stripe from "stripe";
 import { getEventsStore } from "@/lib/store";
 import type { CartItem } from "@/lib/cart-context";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 const CONDITION_LABELS: Record<string, string> = {
@@ -17,10 +16,13 @@ const CONDITION_LABELS: Record<string, string> = {
  * Returns: { clientSecret }
  */
 export async function POST(request: NextRequest) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const body = await request.json().catch(() => null);
   if (!body?.type) return NextResponse.json({ error: "Missing type" }, { status: 400 });
 
-  const returnUrl = `${siteUrl}/checkout/return?session_id={CHECKOUT_SESSION_ID}`;
+  // Use the request origin so the return URL always matches where the user actually is
+  const origin = request.headers.get("origin") ?? request.headers.get("referer")?.replace(/\/[^/]*$/, "") ?? siteUrl;
+  const returnUrl = `${origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`;
 
   // ── Cart checkout ────────────────────────────────────────────────────────
   if (body.type === "cart") {
@@ -45,6 +47,7 @@ export async function POST(request: NextRequest) {
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
+      automatic_tax: { enabled: true },
       billing_address_collection: "required",
       shipping_address_collection: { allowed_countries: ["US"] },
       shipping_options: [
@@ -84,7 +87,7 @@ export async function POST(request: NextRequest) {
       return_url: returnUrl,
     });
 
-    return NextResponse.json({ clientSecret: session.client_secret });
+    return NextResponse.json({ clientSecret: session.client_secret, sessionId: session.id });
   }
 
   // ── Event checkout ───────────────────────────────────────────────────────

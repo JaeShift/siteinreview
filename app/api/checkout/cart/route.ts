@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import type { CartItem } from "@/lib/cart-context";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 const CONDITION_LABELS: Record<string, string> = {
@@ -14,6 +13,7 @@ const CONDITION_LABELS: Record<string, string> = {
 };
 
 export async function POST(request: NextRequest) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const body = await request.json().catch(() => null);
   if (!body?.items || !Array.isArray(body.items) || body.items.length === 0) {
     return NextResponse.json({ error: "Cart is empty" }, { status: 400 });

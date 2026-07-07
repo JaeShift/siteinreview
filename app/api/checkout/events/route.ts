@@ -2,12 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getEventsStore } from "@/lib/store";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export async function POST(request: NextRequest) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const body = await request.json().catch(() => null);
   if (!body?.eventSlug) {
     return NextResponse.json({ error: "Missing eventSlug" }, { status: 400 });
