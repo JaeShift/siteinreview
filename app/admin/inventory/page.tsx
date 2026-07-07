@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import type { SingleCard, Condition, CardColor, CardType, Rarity, Availability } from "@/lib/singles-data";
 import { formatCondition, formatSetDisplay, normalizeRarity, rarityBadgeLabel } from "@/lib/singles-data";
@@ -8,6 +8,7 @@ import styles from "./admin-inventory.module.css";
 
 // ── Scryfall helpers ──────────────────────────────────────────────────────────
 interface ScryfallCardFace {
+  name?: string;
   colors?: string[];
   image_uris?: { normal: string; png: string };
   mana_cost?: string;
@@ -41,7 +42,7 @@ interface ScryfallCard {
 function scryfallCardColors(card: ScryfallCard): string[] {
   if (card.colors?.length) return card.colors;
   const fromFaces = card.card_faces?.flatMap((face) => face.colors ?? []) ?? [];
-  if (fromFaces.length) return [...new Set(fromFaces)];
+  if (fromFaces.length) return Array.from(new Set(fromFaces));
   return [];
 }
 
@@ -109,6 +110,12 @@ function scryfallImage(card: ScryfallCard): string {
   return face?.image_uris?.png ?? face?.image_uris?.normal ?? "";
 }
 
+function scryfallBackImage(card: ScryfallCard): string {
+  if (!card.card_faces || card.card_faces.length < 2) return "";
+  const back = card.card_faces[1];
+  return back.image_uris?.png ?? back.image_uris?.normal ?? "";
+}
+
 function populateFormFromScryfall(card: ScryfallCard) {
   const face = card.card_faces?.[0];
   return {
@@ -127,22 +134,47 @@ function populateFormFromScryfall(card: ScryfallCard) {
     toughness: card.toughness ?? face?.toughness ?? "",
     oracleText: card.oracle_text ?? face?.oracle_text ?? "",
     imageUrl: scryfallImage(card),
+    backImageUrl: scryfallBackImage(card),
     formats: scryfallFormats(card.legalities),
-    price: card.prices?.usd ?? "",
-    marketPrice: card.prices?.usd ?? "",
+    price: card.prices?.usd ?? card.prices?.usd_foil ?? "",
+    marketPrice: card.prices?.usd ?? card.prices?.usd_foil ?? "",
+    backName: card.card_faces?.[1]?.name ?? "",
+    backType: card.card_faces?.[1]?.type_line ?? "",
+    backManaCost: card.card_faces?.[1]?.mana_cost ?? "",
+    backOracleText: card.card_faces?.[1]?.oracle_text ?? "",
+    backPower: card.card_faces?.[1]?.power ?? "",
+    backToughness: card.card_faces?.[1]?.toughness ?? "",
   };
 }
 
-async function fetchAllPrints(name: string): Promise<ScryfallCard[]> {
+async function fetchAllPrints(name: string, setCode?: string): Promise<ScryfallCard[]> {
   const escaped = name.replace(/"/g, '\\"');
+  const setClause = setCode ? `+e:${setCode.toLowerCase()}` : "";
   let url: string | null =
-    `https://api.scryfall.com/cards/search?q=${encodeURIComponent(`!"${escaped}"`)}&unique=prints&order=released&dir=desc`;
+    `https://api.scryfall.com/cards/search?q=${encodeURIComponent(`!"${escaped}"${setClause}`)}&unique=prints&order=released&dir=desc`;
   const cards: ScryfallCard[] = [];
 
   while (url) {
     const res = await fetch(url);
     if (res.status === 404) return [];
     if (!res.ok) throw new Error("Search failed");
+    const data = await res.json();
+    cards.push(...(data.data ?? []));
+    url = data.has_more ? data.next_page : null;
+  }
+
+  return cards;
+}
+
+async function fetchCardsInSet(setCode: string): Promise<ScryfallCard[]> {
+  let url: string | null =
+    `https://api.scryfall.com/cards/search?q=${encodeURIComponent(`e:${setCode.toLowerCase()}`)}&order=name&unique=prints`;
+  const cards: ScryfallCard[] = [];
+
+  while (url) {
+    const res = await fetch(url);
+    if (res.status === 404) return [];
+    if (!res.ok) throw new Error("Set search failed");
     const data = await res.json();
     cards.push(...(data.data ?? []));
     url = data.has_more ? data.next_page : null;
@@ -200,6 +232,7 @@ const BLANK_FORM = {
   marketPrice: "",
   quantity: "1",
   imageUrl: "",
+  backImageUrl: "",
   color: "Colorless" as CardColor,
   colorIdentity: [] as string[],
   type: "Creature" as CardType,
@@ -211,6 +244,12 @@ const BLANK_FORM = {
   oracleText: "",
   availability: "In Stock" as Availability,
   formats: [] as string[],
+  backName: "",
+  backType: "",
+  backManaCost: "",
+  backOracleText: "",
+  backPower: "",
+  backToughness: "",
 };
 
 function formatAmount(price: number) {
@@ -223,6 +262,52 @@ function toggleArr<T>(arr: T[], item: T): T[] {
 
 function colorLabel(code: CardColor): string {
   return CARD_COLORS.find((c) => c.code === code)?.label ?? code;
+}
+
+function PrintOption({ print, frontImg, backImg, isDFC, onSelect }: {
+  print: ScryfallCard;
+  frontImg: string;
+  backImg: string;
+  isDFC: boolean;
+  onSelect: () => void;
+}) {
+  const [flipped, setFlipped] = useState(false);
+  const img = flipped ? backImg : frontImg;
+  return (
+    <div className={styles.printOption}>
+      <div className={styles.printOptionImgWrap}>
+        <button type="button" className={styles.printOptionImgBtn} onClick={onSelect}>
+          {img ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={img} alt={print.name} className={styles.printOptionImg} />
+          ) : (
+            <div className={styles.printOptionImgEmpty}>No image</div>
+          )}
+        </button>
+        {isDFC && (
+          <button
+            type="button"
+            className={styles.printFlipBtn}
+            onClick={(e) => { e.stopPropagation(); setFlipped((v) => !v); }}
+            title={flipped ? "Show front face" : "Show back face"}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 4v6h6" />
+              <path d="M23 20v-6h-6" />
+              <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15" />
+            </svg>
+          </button>
+        )}
+      </div>
+      <span className={styles.printOptionSet}>
+        {formatSetDisplay(print.set_name, print.set.toUpperCase(), print.collector_number)}
+      </span>
+      <span className={styles.printOptionMeta}>
+        {scryfallRarity(print.rarity)}
+        {print.prices?.usd ? ` · $${print.prices.usd}` : ""}
+      </span>
+    </div>
+  );
 }
 
 export default function AdminInventoryPage() {
@@ -238,9 +323,20 @@ export default function AdminInventoryPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
   const [previewCard, setPreviewCard] = useState<SingleCard | null>(null);
+  const [previewFlipped, setPreviewFlipped] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshResult, setRefreshResult] = useState<{ updated: number; failed: number } | null>(null);
 
   // ── Scryfall search ──────────────────────────────────────────────────────────
   const [sfQuery, setSfQuery] = useState("");
+  const [sfSetFilter, setSfSetFilter] = useState("");
+  const [showSetPicker, setShowSetPicker] = useState(false);
+  const [allSets, setAllSets] = useState<{ code: string; name: string; set_type: string }[]>([]);
+  const [setPickerSearch, setSetPickerSearch] = useState("");
+  const [setsLoading, setSetsLoading] = useState(false);
+  const [starredSets, setStarredSets] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem("kitsune_starred_sets") ?? "[]"); } catch { return []; }
+  });
   const [sfSuggestions, setSfSuggestions] = useState<string[]>([]);
   const [sfPrints, setSfPrints] = useState<ScryfallCard[]>([]);
   const [sfCard, setSfCard] = useState<ScryfallCard | null>(null);
@@ -250,6 +346,12 @@ export default function AdminInventoryPage() {
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const sfDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sfInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (addMode === "scryfall") {
+      setTimeout(() => sfInputRef.current?.focus(), 50);
+    }
+  }, [addMode]);
 
   function onSfQueryChange(val: string) {
     setSfQuery(val);
@@ -274,6 +376,47 @@ export default function AdminInventoryPage() {
     setForm(populateFormFromScryfall(card));
   }
 
+  async function openSetPicker() {
+    setShowSetPicker(true);
+    setSetPickerSearch("");
+    if (allSets.length > 0) return;
+    setSetsLoading(true);
+    try {
+      const res = await fetch("https://api.scryfall.com/sets");
+      const data = await res.json();
+      setAllSets(data.data ?? []);
+    } catch { /* ignore */ }
+    setSetsLoading(false);
+  }
+
+  function toggleStarSet(code: string) {
+    setStarredSets((prev) => {
+      const next = prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code];
+      localStorage.setItem("kitsune_starred_sets", JSON.stringify(next));
+      return next;
+    });
+  }
+
+  async function fetchPrintsForSet() {
+    const setCode = sfSetFilter.trim();
+    if (!setCode) return;
+    setSfSuggestions([]);
+    setSfOpen(false);
+    setSfLoading(true);
+    setSfError(null);
+    setSfCard(null);
+    setSfPrints([]);
+    try {
+      const cards = await fetchCardsInSet(setCode);
+      if (cards.length === 0) { setSfError(`No cards found for set "${setCode}".`); return; }
+      setSfPrints(cards);
+    } catch {
+      setSfError("Failed to fetch set. Check the set code and try again.");
+    } finally {
+      setSfLoading(false);
+    }
+  }
+
   async function fetchPrintsForName(name: string) {
     const trimmed = name.trim();
     if (!trimmed) return;
@@ -287,9 +430,10 @@ export default function AdminInventoryPage() {
     setSfPrints([]);
 
     try {
-      let prints = await fetchAllPrints(trimmed);
+      const setCode = sfSetFilter.trim() || undefined;
+      let prints = await fetchAllPrints(trimmed, setCode);
 
-      if (prints.length === 0) {
+      if (prints.length === 0 && !setCode) {
         const res = await fetch(`https://api.scryfall.com/cards/named?fuzzy=${encodeURIComponent(trimmed)}`);
         if (res.ok) prints = [await res.json()];
       }
@@ -347,6 +491,50 @@ export default function AdminInventoryPage() {
 
   useEffect(() => { load(); }, [load]);
 
+  // ── Inventory filter/sort state ──────────────────────────────────────────────
+  const [invSearch, setInvSearch] = useState("");
+  const [invRarity, setInvRarity] = useState("");
+  const [invCondition, setInvCondition] = useState("");
+  const [invFoil, setInvFoil] = useState<"" | "foil" | "nonfoil">("");
+  const [invVisibility, setInvVisibility] = useState<"" | "live" | "hidden" | "overpriced" | "underpriced">("");
+  const [invSort, setInvSort] = useState<"name-asc" | "name-desc" | "price-asc" | "price-desc" | "market-asc" | "market-desc" | "qty-asc" | "qty-desc" | "rarity">("name-asc");
+
+  const displayCards = useMemo(() => {
+    let list = [...cards];
+    if (invSearch) {
+      const q = invSearch.toLowerCase();
+      list = list.filter((c) => c.name.toLowerCase().includes(q) || c.set.toLowerCase().includes(q) || c.setCode.toLowerCase().includes(q));
+    }
+    if (invRarity) list = list.filter((c) => normalizeRarity(c.rarity) === invRarity);
+    if (invCondition) list = list.filter((c) => c.condition === invCondition);
+    if (invFoil === "foil") list = list.filter((c) => c.foil);
+    if (invFoil === "nonfoil") list = list.filter((c) => !c.foil);
+    if (invVisibility === "live") list = list.filter((c) => !c.hidden);
+    if (invVisibility === "hidden") list = list.filter((c) => !!c.hidden);
+    if (invVisibility === "overpriced") list = list.filter((c) => c.marketPrice !== undefined && c.marketPrice < c.price);
+    if (invVisibility === "underpriced") list = list.filter((c) => c.marketPrice !== undefined && c.marketPrice > c.price);
+    if (invSort === "market-desc") list = list.filter((c) => c.marketPrice !== undefined && c.marketPrice < c.price);
+    if (invSort === "market-asc") list = list.filter((c) => c.marketPrice !== undefined && c.marketPrice > c.price);
+    list.sort((a, b) => {
+      switch (invSort) {
+        case "name-asc":    return a.name.localeCompare(b.name);
+        case "name-desc":   return b.name.localeCompare(a.name);
+        case "price-asc":   return a.price - b.price;
+        case "price-desc":  return b.price - a.price;
+        case "market-asc":  return (b.marketPrice! - b.price) - (a.marketPrice! - a.price);
+        case "market-desc": return (b.price - b.marketPrice!) - (a.price - a.marketPrice!);
+        case "qty-asc":     return a.quantity - b.quantity;
+        case "qty-desc":    return b.quantity - a.quantity;
+        case "rarity": {
+          const order = ["Common","Uncommon","Rare","Mythic Rare","Land","Special"];
+          return order.indexOf(normalizeRarity(a.rarity)) - order.indexOf(normalizeRarity(b.rarity));
+        }
+        default: return 0;
+      }
+    });
+    return list;
+  }, [cards, invSearch, invRarity, invCondition, invFoil, invVisibility, invSort]);
+
   const totalValue = cards.reduce((s, c) => s + c.price * c.quantity, 0);
   const totalQty = cards.reduce((s, c) => s + c.quantity, 0);
   const setsCount = EDITIONS.length;
@@ -376,6 +564,7 @@ export default function AdminInventoryPage() {
       marketPrice: card.marketPrice !== undefined ? String(card.marketPrice) : "",
       quantity: String(card.quantity),
       imageUrl: card.imageUrl ?? "",
+      backImageUrl: card.backImageUrl ?? "",
       color: card.color,
       colorIdentity: card.colorIdentity ?? [],
       type: card.type,
@@ -387,6 +576,12 @@ export default function AdminInventoryPage() {
       oracleText: card.oracleText ?? "",
       availability: card.availability ?? "In Stock",
       formats: card.formats ?? [],
+      backName: card.backName ?? "",
+      backType: card.backType ?? "",
+      backManaCost: card.backManaCost ?? "",
+      backOracleText: card.backOracleText ?? "",
+      backPower: card.backPower ?? "",
+      backToughness: card.backToughness ?? "",
     });
     setEditCard(card);
     setError(null);
@@ -410,6 +605,12 @@ export default function AdminInventoryPage() {
       cmc: form.cmc !== "" ? parseInt(form.cmc, 10) : undefined,
       setCode: form.setCode || form.set.slice(0, 3).toUpperCase(),
       formats: form.formats,
+      backName: form.backName || undefined,
+      backType: form.backType || undefined,
+      backManaCost: form.backManaCost || undefined,
+      backOracleText: form.backOracleText || undefined,
+      backPower: form.backPower || undefined,
+      backToughness: form.backToughness || undefined,
     };
 
     if (addMode === "edit" && editCard) {
@@ -459,7 +660,9 @@ export default function AdminInventoryPage() {
   function setFinish(foil: boolean) {
     set("foil", foil);
     if (!sfCard) return;
-    const market = foil ? sfCard.prices?.usd_foil : sfCard.prices?.usd;
+    const market = foil
+      ? (sfCard.prices?.usd_foil ?? sfCard.prices?.usd)
+      : (sfCard.prices?.usd ?? sfCard.prices?.usd_foil);
     if (market) { set("price", market); set("marketPrice", market); }
   }
 
@@ -467,6 +670,7 @@ export default function AdminInventoryPage() {
     setSfCard(null);
     setSfPrints([]);
     setSfQuery("");
+    setSfSetFilter("");
     setForm({ ...BLANK_FORM });
     setAdvancedOpen(false);
   }
@@ -485,6 +689,33 @@ export default function AdminInventoryPage() {
           <p className={styles.subtitle}>{cards.length} unique cards · {totalQty} total copies</p>
         </div>
         <div className={styles.headerActions}>
+          <div className={styles.refreshWrap}>
+            <button
+              className={`btn btn-outline ${styles.refreshBtn}`}
+              disabled={refreshing}
+              title="Fetch latest Scryfall market prices for all cards"
+              onClick={async () => {
+                setRefreshing(true);
+                setRefreshResult(null);
+                const res = await fetch("/api/admin/inventory/refresh-prices", { method: "POST" });
+                if (res.ok) {
+                  const data = await res.json();
+                  setRefreshResult(data);
+                  await load();
+                }
+                setRefreshing(false);
+              }}
+            >
+              {refreshing ? (
+                <><span className={styles.spinIcon}>⟳</span> Refreshing…</>
+              ) : "↻ Refresh Prices"}
+            </button>
+            {refreshResult && (
+              <span className={styles.refreshResult}>
+                Updated {refreshResult.updated} · {refreshResult.failed} failed
+              </span>
+            )}
+          </div>
           <button className="btn btn-primary" onClick={() => setAddMode("choose")}>
             + Add Card
           </button>
@@ -539,6 +770,48 @@ export default function AdminInventoryPage() {
         </div>
       )}
 
+      {/* Filter / Sort Bar */}
+      <div className={styles.invFilterBar}>
+        <input
+          className={styles.invSearch}
+          placeholder="Search name, set…"
+          value={invSearch}
+          onChange={(e) => setInvSearch(e.target.value)}
+        />
+        <select className={styles.invSelect} value={invCondition} onChange={(e) => setInvCondition(e.target.value)}>
+          <option value="">All Conditions</option>
+          {CONDITIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+        </select>
+        <select className={styles.invSelect} value={invFoil} onChange={(e) => setInvFoil(e.target.value as "" | "foil" | "nonfoil")}>
+          <option value="">Foil + Non-foil</option>
+          <option value="foil">Foil Only</option>
+          <option value="nonfoil">Non-foil Only</option>
+        </select>
+        <select className={styles.invSelect} value={invVisibility} onChange={(e) => setInvVisibility(e.target.value as "" | "live" | "hidden")}>
+          <option value="">All Visibility</option>
+          <option value="live">Live</option>
+          <option value="hidden">Hidden</option>
+        </select>
+        <select className={styles.invSelect} value={invSort} onChange={(e) => setInvSort(e.target.value as typeof invSort)}>
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="price-asc">Price ↑</option>
+          <option value="price-desc">Price ↓</option>
+          <option value="market-asc">Market ↑</option>
+          <option value="market-desc">Market ↓</option>
+          <option value="qty-asc">Qty ↑</option>
+          <option value="qty-desc">Qty ↓</option>
+          <option value="rarity">Rarity</option>
+        </select>
+        <button
+          className={styles.invClearBtn}
+          onClick={() => { setInvSearch(""); setInvRarity(""); setInvCondition(""); setInvFoil(""); setInvVisibility(""); setInvSort("name-asc"); }}
+        >
+          Clear Filters
+        </button>
+        <span className={styles.invCount}>{displayCards.length} of {cards.length}</span>
+      </div>
+
       {/* Table */}
       <div className={styles.tableWrap}>
         <div className={styles.tableHeader}>
@@ -559,16 +832,16 @@ export default function AdminInventoryPage() {
           <span>Foil</span>
           <span>Rarity</span>
           <span>Price</span>
-          <span>Qty</span>
           <span>Market $</span>
+          <span>Qty</span>
           <span>Visibility</span>
         </div>
         {loading ? (
           <div className={styles.emptyState}>Loading…</div>
-        ) : cards.length === 0 ? (
-          <div className={styles.emptyState}>No cards in inventory. Add one to get started.</div>
+        ) : displayCards.length === 0 ? (
+          <div className={styles.emptyState}>{cards.length === 0 ? "No cards in inventory. Add one to get started." : "No cards match your filters."}</div>
         ) : (
-          cards.map((card) => (
+          displayCards.map((card) => (
             <div
               key={card.id}
               className={`${styles.tableRow} ${selected.has(card.id) ? styles.tableRowSelected : ""}`}
@@ -582,7 +855,7 @@ export default function AdminInventoryPage() {
                   aria-label={`Select ${card.name}`}
                 />
               </span>
-              <span className={styles.thumbCell} onClick={() => setPreviewCard(card)}>
+              <span className={styles.thumbCell} onClick={() => { setPreviewCard(card); setPreviewFlipped(false); }}>
                 {card.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={card.imageUrl} alt={card.name} className={styles.thumb} />
@@ -605,10 +878,20 @@ export default function AdminInventoryPage() {
                 {rarityBadgeLabel(card.rarity)}
               </span>
               <span className={styles.price}>{formatAmount(card.price)}</span>
-              <span className={`${styles.qty} ${card.quantity <= 2 ? styles.qtyLow : ""}`}>{card.quantity}</span>
               <span className={styles.total} title="Scryfall market price">
-                {card.marketPrice !== undefined ? formatAmount(card.marketPrice) : "—"}
+                {card.marketPrice !== undefined ? (
+                  <>
+                    {formatAmount(card.marketPrice)}
+                    {card.marketPrice > card.price && (
+                      <span className={styles.priceUp} title="Market price is above your listing price"> ▲</span>
+                    )}
+                    {card.marketPrice < card.price && (
+                      <span className={styles.priceDown} title="Market price is below your listing price"> ▼</span>
+                    )}
+                  </>
+                ) : "—"}
               </span>
+              <span className={`${styles.qty} ${card.quantity <= 2 ? styles.qtyLow : ""}`}>{card.quantity}</span>
               <button
                 className={`${styles.visibilityBtn} ${card.hidden ? styles.visibilityHidden : styles.visibilityLive}`}
                 onClick={async () => {
@@ -726,10 +1009,6 @@ export default function AdminInventoryPage() {
                   <input className={styles.input} type="number" min="0" step="0.01" value={form.price} onChange={(e) => set("price", e.target.value)} required />
                 </div>
                 <div className={styles.field}>
-                  <label className={styles.label}>Market Price ($)</label>
-                  <input className={styles.input} type="number" min="0" step="0.01" value={form.marketPrice} onChange={(e) => set("marketPrice", e.target.value)} placeholder="Scryfall market value" />
-                </div>
-                <div className={styles.field}>
                   <label className={styles.label}>Quantity *</label>
                   <input className={styles.input} type="number" min="0" step="1" value={form.quantity} onChange={(e) => set("quantity", e.target.value)} required />
                 </div>
@@ -844,7 +1123,7 @@ export default function AdminInventoryPage() {
               {addMode === "scryfall" && !sfCard && sfPrints.length === 0 && <div className={styles.sfSection}>
                 <p className={styles.sfLabel}>SEARCH TO AUTOFILL CARD DETAILS</p>
                 <div className={styles.sfSearchWrap}>
-                  <div className={styles.sfInputWrap}>
+                  <div className={styles.sfInputWrap} style={{ flex: 1 }}>
                     <input
                       ref={sfInputRef}
                       className={styles.sfInput}
@@ -872,6 +1151,27 @@ export default function AdminInventoryPage() {
                       document.body
                     )}
                   </div>
+                  <span className={styles.sfOrDivider}>OR</span>
+                  <div className={styles.sfSetWrap}>
+                    <input
+                      className={styles.sfSetInput}
+                      value={sfSetFilter}
+                      onChange={(e) => setSfSetFilter(e.target.value.toUpperCase())}
+                      placeholder="Set code…"
+                      maxLength={8}
+                      title="Optional: filter by set code (e.g. MSH, BLB)"
+                      autoComplete="off"
+                      onKeyDown={(e) => { if (e.key === "Enter" && sfSetFilter && !sfQuery) fetchPrintsForSet(); }}
+                    />
+                    <button type="button" className={styles.setPickerBtn} onClick={openSetPicker} title="Browse all set codes">
+                      ⋯
+                    </button>
+                  </div>
+                  {!sfLoading && sfSetFilter && !sfQuery && (
+                    <button type="button" className={styles.sfFetchBtn} onClick={fetchPrintsForSet}>
+                      Browse Set
+                    </button>
+                  )}
                   {sfQuery && !sfLoading && (
                     <button type="button" className={styles.sfFetchBtn} onClick={() => fetchPrintsForName(sfQuery)}>
                       Search
@@ -881,6 +1181,66 @@ export default function AdminInventoryPage() {
                 {sfError && <p className={styles.sfErr}>{sfError}</p>}
               </div>}
 
+              {/* ── Set Picker Popup ── */}
+              {showSetPicker && typeof document !== "undefined" && createPortal(
+                <div className={styles.setPickerOverlay} onClick={() => setShowSetPicker(false)}>
+                  <div className={styles.setPickerPopup} onClick={(e) => e.stopPropagation()}>
+                    <div className={styles.setPickerHeader}>
+                      <span className={styles.setPickerTitle}>All Sets</span>
+                      <button className={styles.setPickerClose} onClick={() => setShowSetPicker(false)}>✕</button>
+                    </div>
+                    <input
+                      className={styles.setPickerSearch}
+                      placeholder="Search sets…"
+                      value={setPickerSearch}
+                      onChange={(e) => setSetPickerSearch(e.target.value)}
+                      autoFocus
+                    />
+                    <div className={styles.setPickerList}>
+                      {setsLoading ? (
+                        <p className={styles.setPickerLoading}>Loading sets…</p>
+                      ) : (
+                        [...allSets]
+                          .filter((s) =>
+                            !setPickerSearch ||
+                            s.code.toLowerCase().includes(setPickerSearch.toLowerCase()) ||
+                            s.name.toLowerCase().includes(setPickerSearch.toLowerCase())
+                          )
+                          .sort((a, b) => {
+                            const aS = starredSets.includes(a.code);
+                            const bS = starredSets.includes(b.code);
+                            if (aS && !bS) return -1;
+                            if (!aS && bS) return 1;
+                            return 0;
+                          })
+                          .map((s) => {
+                            const starred = starredSets.includes(s.code);
+                            return (
+                              <div key={s.code} className={`${styles.setPickerRow} ${starred ? styles.setPickerRowStarred : ""}`}>
+                                <button
+                                  className={styles.setStarBtn}
+                                  onClick={(e) => { e.stopPropagation(); toggleStarSet(s.code); }}
+                                  title={starred ? "Unpin" : "Pin to top"}
+                                >
+                                  {starred ? "★" : "☆"}
+                                </button>
+                                <button
+                                  className={styles.setPickerRowInner}
+                                  onClick={() => { setSfSetFilter(s.code.toUpperCase()); setShowSetPicker(false); }}
+                                >
+                                  <span className={styles.setPickerCode}>{s.code.toUpperCase()}</span>
+                                  <span className={styles.setPickerName}>{s.name}</span>
+                                </button>
+                              </div>
+                            );
+                          })
+                      )}
+                    </div>
+                  </div>
+                </div>,
+                document.body
+              )}
+
               {/* ── Print Picker ── */}
               {addMode === "scryfall" && sfPrints.length > 0 && !sfCard && (
                 <section className={styles.printPicker}>
@@ -888,7 +1248,10 @@ export default function AdminInventoryPage() {
                     <div>
                       <p className={styles.sfLabel}>SELECT A PRINTING</p>
                       <p className={styles.printPickerSub}>
-                        {sfPrints.length} printing{sfPrints.length !== 1 ? "s" : ""} found for <strong>{sfQuery}</strong>
+                        {sfQuery
+                          ? <>{sfPrints.length} printing{sfPrints.length !== 1 ? "s" : ""} found for <strong>{sfQuery}</strong>{sfSetFilter ? <> in <strong>{sfSetFilter}</strong></> : ""}</>
+                          : <>{sfPrints.length} card{sfPrints.length !== 1 ? "s" : ""} in set <strong>{sfSetFilter}</strong></>
+                        }
                       </p>
                     </div>
                     <button type="button" className={styles.changeCardBtn} onClick={resetImportSearch}>
@@ -897,28 +1260,18 @@ export default function AdminInventoryPage() {
                   </div>
                   <div className={styles.printGrid}>
                     {sfPrints.map((print) => {
-                      const img = scryfallImage(print);
+                      const frontImg = scryfallImage(print);
+                      const backImg = scryfallBackImage(print);
+                      const isDFC = !!backImg;
                       return (
-                        <button
+                        <PrintOption
                           key={print.id}
-                          type="button"
-                          className={styles.printOption}
-                          onClick={() => applySfCard(print)}
-                        >
-                          {img ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={img} alt={print.name} className={styles.printOptionImg} />
-                          ) : (
-                            <div className={styles.printOptionImgEmpty}>No image</div>
-                          )}
-                          <span className={styles.printOptionSet}>
-                            {formatSetDisplay(print.set_name, print.set.toUpperCase(), print.collector_number)}
-                          </span>
-                          <span className={styles.printOptionMeta}>
-                            {scryfallRarity(print.rarity)}
-                            {print.prices?.usd ? ` · $${print.prices.usd}` : ""}
-                          </span>
-                        </button>
+                          print={print}
+                          frontImg={frontImg}
+                          backImg={backImg}
+                          isDFC={isDFC}
+                          onSelect={() => applySfCard(print)}
+                        />
                       );
                     })}
                   </div>
@@ -1308,12 +1661,31 @@ export default function AdminInventoryPage() {
           <div className={styles.previewModal} onClick={(e) => e.stopPropagation()}>
             <button className={styles.previewClose} onClick={() => setPreviewCard(null)}>✕</button>
             <div className={styles.previewInner}>
-              {previewCard.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={previewCard.imageUrl} alt={previewCard.name} className={styles.previewImg} />
-              ) : (
-                <div className={styles.previewNoImg}>No image</div>
-              )}
+              <div className={styles.previewImgCol}>
+                <div className={styles.previewImgWrap}>
+                  {(() => {
+                    const previewDisplayImg = previewFlipped && previewCard.backImageUrl ? previewCard.backImageUrl : previewCard.imageUrl;
+                    return previewDisplayImg ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={previewDisplayImg} alt={previewCard.name} className={styles.previewImg} />
+                    ) : (
+                      <div className={styles.previewNoImg}>No image</div>
+                    );
+                  })()}
+                  {previewCard.backImageUrl && (
+                    <button
+                      className={styles.previewFlipBtn}
+                      onClick={() => setPreviewFlipped((v) => !v)}
+                      aria-label={previewFlipped ? "Show front face" : "Show back face"}
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 4v6h6"/><path d="M23 20v-6h-6"/>
+                        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              </div>
               <div className={styles.previewDetails}>
                 <h2 className={styles.previewName}>{previewCard.name}</h2>
                 {previewCard.manaCost && <p className={styles.previewMana}>{previewCard.manaCost}</p>}
