@@ -6,14 +6,13 @@ import styles from "../success/success.module.css";
 import ClearCartOnSuccess from "./ClearCartOnSuccess";
 
 export const metadata: Metadata = { title: "Order Confirmed" };
+export const dynamic = "force-dynamic";
 
 interface Props {
   searchParams: { session_id?: string };
 }
 
 export default async function CheckoutReturnPage({ searchParams }: Props) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
   let headline   = "Order Confirmed!";
   let subline    = "";
   let amountPaid = "";
@@ -23,6 +22,11 @@ export default async function CheckoutReturnPage({ searchParams }: Props) {
 
   if (searchParams.session_id) {
     try {
+      const stripeSecret = process.env.STRIPE_SECRET_KEY;
+      if (!stripeSecret) {
+        throw new Error("Missing STRIPE_SECRET_KEY");
+      }
+      const stripe = new Stripe(stripeSecret);
       const session: Stripe.Checkout.Session = await stripe.checkout.sessions.retrieve(
         searchParams.session_id,
         { expand: ["line_items", "shipping_cost.shipping_rate"] }
