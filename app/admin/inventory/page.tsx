@@ -172,7 +172,7 @@ async function fetchCardsInSet(setCode: string): Promise<ScryfallCard[]> {
   const cards: ScryfallCard[] = [];
 
   while (url) {
-    const res = await fetch(url);
+    const res: Response = await fetch(url);
     if (res.status === 404) return [];
     if (!res.ok) throw new Error("Set search failed");
     const data = await res.json();
