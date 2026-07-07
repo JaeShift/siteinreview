@@ -11,7 +11,7 @@ const FORMAT_OPTIONS: EventFormat[] = [
 ];
 
 function slugify(str: string) {
-  return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+  return str.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 }
 
 function makeEmpty(): MtgEvent {
