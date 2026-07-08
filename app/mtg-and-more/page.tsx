@@ -32,7 +32,7 @@ const bentoCards = [
     btnStyle: "outline" as const,
     colSpan: 4,
     height: 400,
-    img: "/images/singles-cards.png",
+    img: "/images/singles-bento.png",
   },
   {
     title: "MTG EVENTS",
