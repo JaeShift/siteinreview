@@ -18,7 +18,7 @@ export default function CardShopSinglesPage() {
       <section className={styles.banner}>
         <div
           className={styles.bannerBg}
-          style={{ backgroundImage: `url('/images/singles-card.png')` }}
+          style={{ backgroundImage: `url('/images/singles-cards.png')` }}
         />
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>

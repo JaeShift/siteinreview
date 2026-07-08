@@ -85,7 +85,7 @@ export default function CommanderNightsPage() {
           <div className={styles.introImages}>
             <div
               className={styles.introImg1}
-              style={{ backgroundImage: `url('/images/singles-card.png')` }}
+              style={{ backgroundImage: `url('/images/singles-cards.png')` }}
             />
             <div
               className={styles.introImg2}

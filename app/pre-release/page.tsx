@@ -95,7 +95,7 @@ export default function PreReleasePage() {
 
           <div className={styles.explainImage}>
             <Image
-              src="/images/singles-card.png"
+              src="/images/singles-cards.png"
               alt="Magic cards spread across a gaming table"
               fill
               className={styles.explainImg}
