@@ -22,7 +22,7 @@ const bentoCards = [
     btnStyle: "primary" as const,
     colSpan: 8,
     height: 400,
-    img: "/images/cases.png",
+    img: "/images/shopmagic.webp",
   },
   {
     title: "SINGLES",
@@ -32,6 +32,16 @@ const bentoCards = [
     btnStyle: "outline" as const,
     colSpan: 4,
     height: 400,
+    img: "/images/singles-bento.png",
+  },
+  {
+    title: "COMMANDER NIGHTS",
+    desc: "Casual EDH for all power levels.",
+    href: "/commander-nights",
+    btnLabel: null,
+    btnStyle: "none" as const,
+    colSpan: 4,
+    height: 350,
     img: "/images/singlesss.png",
   },
   {
@@ -45,16 +55,6 @@ const bentoCards = [
     img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAcu5ehCJVipQUa0XMQj7XdFJ5MhSHk4OHFP686p2MWHxc45V2dysu1HK6PUT_3jNHZbJUhF5edxIwnn_wuEDHmLRsVIA5zEOmB0RTDxtaMBl-3ym3LFpes0A5Q4gwWiaqOJ8wTR9PQC75ClRCF0TPxMzpmNqedaBqothVKYM0GQHmIoXPo8Ek7DBoTlZ0YDaUnjxOKP5kjGaougNyg_VeaD46M4rJERoruZ-q9v4Hk-rUyCfsmjPY",
   },
   {
-    title: "COMMANDER NIGHTS",
-    desc: "Casual EDH for all power levels.",
-    href: "/commander-nights",
-    btnLabel: null,
-    btnStyle: "none" as const,
-    colSpan: 4,
-    height: 350,
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuD6CDt5-UaeChQfxsWgItDHjaQvaGQLGwAmLulonexFrJG81z5YZTe4tvLM0bn1BchwOCc3Bq4s83KhnJyKUQ1gn11ILbC6h1CA1nsEORjneolPqsOmyV3S1s-OzsptF7bLQsdDs8GHwc8JiYWRzPl6VrUwtNwRUoHzpacf2h2LbdCKsJL4i7OIHtW2jCKTkLRwg5gX4qiWrVBQFwOKzZCtGYz9b5wOnivR3getLDYJvMKQKF4ju-o",
-  },
-  {
     title: "PRERELEASE",
     desc: "Be the first to play the new sets.",
     href: "/pre-release",
@@ -62,7 +62,7 @@ const bentoCards = [
     btnStyle: "none" as const,
     colSpan: 4,
     height: 350,
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCJtZrY9s__efeP-oPme1g_8RcgQirPGDbJU3IL0qE9CKN80_iv8sq-awQMIjHYvoFjm6ym-RWHhO4hBjqbqRQNOTeNhMYIPov2-BPfr3X1UhfdIw3XIXex5XyF6xIdLU6F8a8MUf8CmmKDmTBSvlCUbtmXvGx4hOGnK9ecWxzUV2eocBmE4-KqC3Cs1rdk6bxZBkXAGjX2UN7GRvUyxUlqKVcIoYgmX6k3oInv60-c8ruUs",
+    img: "/images/prerelease%20test.jpg",
   },
 ];
 
