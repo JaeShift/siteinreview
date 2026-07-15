@@ -1,19 +1,5 @@
 [
   {
-    "id": "a693809e-65d8-4a94-bee8-a9eac06e0e42",
-    "eventSlug": "hobbit-prerelease",
-    "firstName": "Rylee",
-    "lastName": "Nichols",
-    "email": "ryleejae1009@gmail.com",
-    "phone": "(614) 955-1111",
-    "notes": "",
-    "status": "confirmed",
-    "stripeSessionId": "cs_test_a1HIQ0Rcrw3R75jwWEP07mbNLy9rHd1X2tfXztgDAaiX6Pug5tFNgQKzl0",
-    "amountPaid": 4499,
-    "checkedIn": false,
-    "createdAt": "2026-07-07T21:48:06.072Z"
-  },
-  {
     "id": "fff43b8e-500d-4e26-93e2-48f27f795d2f",
     "eventSlug": "commander-night-jul-7",
     "firstName": "Rylee",

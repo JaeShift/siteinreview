@@ -31,7 +31,7 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 0.78,
+    "marketPrice": 0.88,
     "backImageUrl": "",
     "hidden": false
   },
@@ -64,7 +64,7 @@
       "Vintage",
       "Oathbreaker"
     ],
-    "marketPrice": 1.94,
+    "marketPrice": 1.52,
     "backImageUrl": "",
     "hidden": true
   },
@@ -104,7 +104,7 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 0.18,
+    "marketPrice": 0.26,
     "backImageUrl": "",
     "hidden": false
   },
@@ -140,7 +140,7 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 5.26,
+    "marketPrice": 6.72,
     "backImageUrl": "",
     "hidden": false
   },
@@ -181,7 +181,7 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 20.08,
+    "marketPrice": 24.3,
     "backImageUrl": "https://cards.scryfall.io/png/back/0/e/0e99dad7-b3ca-4e89-8d9f-8f8f43195537.png?1782681579",
     "hidden": false
   },
@@ -225,7 +225,7 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 194.39,
+    "marketPrice": 252.71,
     "backImageUrl": "",
     "hidden": false
   },
@@ -269,8 +269,105 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 19.21,
+    "marketPrice": 23.92,
     "backImageUrl": "",
     "hidden": false
+  },
+  {
+    "id": "card-1784069631365",
+    "name": "Iron Man, Bleeding Edge",
+    "set": "Marvel Super Heroes Commander",
+    "setCode": "MSC",
+    "collectorNumber": "626",
+    "condition": "NM",
+    "foil": true,
+    "price": 20.25,
+    "quantity": 1,
+    "imageUrl": "https://cards.scryfall.io/png/front/b/1/b14b6721-6491-41a4-afb4-93bd76f21173.png?1783903072",
+    "color": "U",
+    "type": "Creature",
+    "rarity": "Rare",
+    "manaCost": "{3}{U}{U}",
+    "colorIdentity": [
+      "U"
+    ],
+    "power": "3",
+    "toughness": "5",
+    "cmc": 5,
+    "oracleText": "Flying\nWhenever you cast an artifact spell, you may copy it, except the copy isn't legendary. Do this only once each turn. (The copy becomes a token.)",
+    "availability": "In Stock",
+    "formats": [
+      "Commander",
+      "Legacy",
+      "Vintage",
+      "Historic",
+      "Brawl",
+      "Timeless",
+      "Oathbreaker"
+    ],
+    "marketPrice": 20.25,
+    "backImageUrl": "",
+    "hidden": false
+  },
+  {
+    "id": "card-1784075188354",
+    "name": "Iron Man, Armored Avenger",
+    "set": "Marvel Super Heroes Commander",
+    "setCode": "MSC",
+    "collectorNumber": "332",
+    "condition": "NM",
+    "foil": false,
+    "price": 9.66,
+    "quantity": 1,
+    "imageUrl": "https://cards.scryfall.io/png/front/b/2/b269e492-8e67-4e4a-8eae-2e0bda7c2728.png?1783903169",
+    "color": "U",
+    "type": "Creature",
+    "rarity": "Rare",
+    "manaCost": "{3}{U}",
+    "colorIdentity": [
+      "U"
+    ],
+    "power": "2",
+    "toughness": "2",
+    "cmc": 4,
+    "oracleText": "Flying\nWhenever you draw a card, put a +1/+1 counter on target creature.\nWhenever Iron Man attacks, other attacking modified creatures gain flying until end of turn. (Equipment, Auras you control, and counters are modifications.)",
+    "availability": "In Stock",
+    "formats": [
+      "Commander",
+      "Legacy",
+      "Vintage",
+      "Oathbreaker"
+    ],
+    "marketPrice": 9.66,
+    "backImageUrl": "",
+    "hidden": false
+  },
+  {
+    "id": "card-1784075246772",
+    "name": "Sol Ring",
+    "set": "Secret Lair Drop",
+    "setCode": "SLD",
+    "collectorNumber": "2683",
+    "condition": "NM",
+    "foil": false,
+    "price": 1.85,
+    "quantity": 1,
+    "imageUrl": "https://cards.scryfall.io/png/front/c/a/cadcddad-2f37-4a5c-81e4-242a20573952.png?1783902787",
+    "color": "Colorless",
+    "type": "Artifact",
+    "rarity": "Rare",
+    "manaCost": "{1}",
+    "colorIdentity": [],
+    "power": "",
+    "toughness": "",
+    "cmc": 1,
+    "oracleText": "{T}: Add {C}{C}.",
+    "availability": "In Stock",
+    "formats": [
+      "Commander",
+      "Vintage"
+    ],
+    "backImageUrl": "",
+    "hidden": true
   }
 ]
