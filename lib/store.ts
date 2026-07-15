@@ -100,6 +100,12 @@ export function addOrder(order: Order): Order[] {
   return orders;
 }
 
+export function deleteOrder(id: string): Order[] {
+  const orders = getOrdersStore().filter((o) => o.id !== id);
+  saveOrdersStore(orders);
+  return orders;
+}
+
 // ─── Food Trucks ─────────────────────────────────────────────────────────────
 
 export function getFoodTrucksStore(): FoodTruck[] {

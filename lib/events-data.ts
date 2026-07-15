@@ -112,7 +112,7 @@ function commanderNight(slug: string, date: string): MtgEvent {
     entryFee: 0,
     playerLimit: 40,
     registeredCount: 0,
-    imageUrl: "https://placehold.co/1200x500/0d2137/c9a84c?text=Commander+Night",
+    imageUrl: "/images/commander.jpg",
     shortDescription: "Free Commander Night every Tuesday. Pods form every 30 minutes. All power levels welcome.",
     description: "Join us every Tuesday for Commander Night at Kitsune Brewing Co.! We organize players into pods of 4 and let the chaos unfold. Casual and competitive pods available — just let us know your preferred power level. New players are always welcome. Free entry, no registration required. Grab a brew and sling some spells!",
     location: LOCATION,

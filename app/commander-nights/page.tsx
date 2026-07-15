@@ -36,7 +36,7 @@ export default function CommanderNightsPage() {
       <section className={styles.hero}>
         <div
           className={styles.heroBg}
-          style={{ backgroundImage: `url('/images/banner.png')` }}
+          style={{ backgroundImage: `url('/images/commander.jpg')` }}
         />
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getEventsStore } from "@/lib/store";
 import FaqAccordion from "./FaqAccordion";
+import RegisterNowButton from "./RegisterNowButton";
 import styles from "./prerelease.module.css";
 
 export const dynamic = "force-dynamic";
@@ -79,9 +80,10 @@ export default function PreReleasePage() {
               </ul>
             </div>
 
-            <a href="#register" className={styles.registerBtn}>
-              REGISTER NOW
-            </a>
+            <RegisterNowButton
+              event={event ?? null}
+              fallbackHref="/events"
+            />
           </div>
         </div>
       </section>

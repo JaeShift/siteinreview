@@ -34,7 +34,7 @@ export default function MtgEventCard({ event }: Props) {
             src={event.imageUrl}
             alt={event.title}
             fill
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: "contain" }}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
           />
           <span
@@ -44,9 +44,6 @@ export default function MtgEventCard({ event }: Props) {
             {event.format}
           </span>
           {soldOut && <span className={styles.soldOutBadge}>SOLD OUT</span>}
-          {event.featured && !soldOut && (
-            <span className={styles.featuredBadge}>FEATURED</span>
-          )}
         </div>
 
         <div className={styles.body}>
@@ -67,6 +64,11 @@ export default function MtgEventCard({ event }: Props) {
                 <path d="M7 4v3.5l2 2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
               </svg>
               <span>{event.time} – {event.endTime}</span>
+              {!soldOut && (
+                <span className={`${styles.seats} ${seatsLeft <= 5 ? styles.seatsLow : ""}`}>
+                  {seatsLeft} seat{seatsLeft !== 1 ? "s" : ""} left
+                </span>
+              )}
             </div>
           </div>
 
@@ -75,11 +77,6 @@ export default function MtgEventCard({ event }: Props) {
               <span className={styles.fee}>
                 {event.entryFee === 0 ? "FREE" : `$${event.entryFee}`}
               </span>
-              {!soldOut && (
-                <span className={`${styles.seats} ${seatsLeft <= 5 ? styles.seatsLow : ""}`}>
-                  {seatsLeft} seat{seatsLeft !== 1 ? "s" : ""} left
-                </span>
-              )}
             </div>
             <span className={`btn btn-primary ${styles.cta} ${soldOut ? styles.ctaSoldOut : ""}`}>
               {soldOut ? "Sold Out" : "Register"}
