@@ -232,8 +232,8 @@
 }
 
 .quickAddBtn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border: none;
   background: transparent;
   color: var(--color-black);
@@ -300,6 +300,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  min-height: 44px;
 }
 
 .viewBtn:hover {
@@ -559,5 +560,18 @@
 
   .modal {
     padding: 24px 16px;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cardFlipBtn {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    width: 48px;
+    height: 48px;
+  }
+
+  .card:hover .imageWrap {
+    transform: none;
   }
 }

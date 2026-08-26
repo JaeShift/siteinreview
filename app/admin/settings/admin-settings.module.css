@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  max-width: 760px;
+  max-width: 1100px;
 }
 
 .header {
@@ -269,6 +269,158 @@
   font-size: 13px;
   color: var(--color-muted);
   padding: 16px 0;
+}
+
+/* ─── Notifications ─────────────────────────────────────────────────────── */
+.notifBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.notifBlock:first-of-type {
+  padding-top: 0;
+}
+
+.notifBlockLabel {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-muted);
+}
+
+.notifEmailRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.notifConfiguredTag {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1a7a3a;
+  background: rgba(26, 122, 58, 0.09);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.notifSetupTag {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c05000;
+  background: rgba(192, 80, 0, 0.08);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.notifToggles {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  overflow: hidden;
+}
+
+.notifGroupHeader {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-muted);
+  background: #fafafa;
+  padding: 7px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.notifToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+}
+
+.notifToggle:last-child {
+  border-bottom: none;
+}
+
+.notifToggleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.notifToggleName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+.notifToggleDesc {
+  font-size: 12px;
+  color: var(--color-text-light);
+}
+
+/* Toggle switch */
+.toggleSwitch {
+  flex-shrink: 0;
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-border);
+  cursor: pointer;
+  padding: 2px;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.toggleSwitchOn {
+  background: var(--color-black);
+}
+
+.toggleThumb {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.toggleSwitchOn .toggleThumb {
+  transform: translateX(18px);
+}
+
+.notifDenied {
+  font-size: 13px;
+  color: #c05000;
+  background: #fff8f0;
+  border: 1px solid #ffd0a0;
+  border-left: 3px solid #cc7700;
+  padding: 12px 14px;
+  line-height: 1.5;
+}
+
+.notifPermissionRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 @media (max-width: 760px) {

@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-height: calc(100vh - 60px);
 }
 
 .header {
@@ -177,8 +178,9 @@
 .tableHeader,
 .tableRow {
   display: grid;
-  grid-template-columns: 32px 56px 1.8fr 1.1fr 0.7fr 0.5fr 0.5fr 0.7fr 0.7fr 0.5fr 90px;
-  gap: 6px;
+  grid-template-columns: 32px 56px 1.6fr 1fr 1fr 0.85fr 0.85fr 0.85fr 1.2fr 0.85fr 0.6fr 100px;
+  gap: 10px;
+  min-width: 1300px;
   align-items: center;
   padding: 10px 16px;
   border-bottom: 1px solid var(--color-border);
@@ -237,19 +239,238 @@
   background: rgba(255, 255, 255, 0.08) !important;
 }
 
+.bulkVisBtn {
+  border-color: #6b6b72 !important;
+  color: #d4d4d8 !important;
+  background: transparent !important;
+  white-space: nowrap;
+}
+
+.bulkVisBtn:hover:not(:disabled) {
+  border-color: var(--color-white) !important;
+  color: var(--color-white) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.bulkPriceWrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bulkPriceDollar {
+  color: #a1a1aa;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bulkPriceInput {
+  width: 80px;
+  height: 34px;
+  padding: 0 8px;
+  background: #27272a;
+  border: 1px solid #52525b;
+  border-radius: 3px;
+  color: #e4e4e7;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  outline: none;
+}
+
+.bulkPriceInput:focus { border-color: #a1a1aa; }
+
+/* ── Bulk price editor modal ── */
+.bulkPriceTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: #f0fdf4;
+  border-bottom: 1px solid #bbf7d0;
+  gap: 12px;
+}
+
+.bulkPriceTopBarHint {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #15803d;
+}
+
+.bulkPriceSetAllBtn {
+  flex-shrink: 0;
+  background: #15803d;
+  color: #fff;
+  border: none;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.15s;
+}
+.bulkPriceSetAllBtn:hover { background: #166534; }
+
+.bulkPriceList {
+  overflow-y: auto;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bulkPriceRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.bulkPriceRow:last-child { border-bottom: none; }
+
+.bulkPriceThumb {
+  width: 44px;
+  height: 62px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.bulkPriceThumbEmpty {
+  width: 44px;
+  height: 62px;
+  background: #f0f0f0;
+  border: 1px dashed var(--color-border);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.bulkPriceInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.bulkPriceCardName {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bulkPriceCardMeta {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-muted);
+  letter-spacing: 0.04em;
+}
+
+.bulkPriceRec {
+  font-size: 13px;
+  color: #15803d;
+  font-family: var(--font-heading);
+  letter-spacing: 0.03em;
+}
+
+.bulkPriceControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.bulkPriceUseBtn {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #15803d;
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.bulkPriceUseBtn:hover { background: #dcfce7; border-color: #4ade80; }
+
+.bulkPriceInputWrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.bulkPriceDollarSign {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-light);
+}
+
+.bulkPriceFieldInput {
+  width: 100px;
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-black);
+  text-align: right;
+  outline: none;
+  border-radius: 0;
+  transition: border-color 0.15s;
+}
+
+.bulkPriceFieldInput:focus { border-color: var(--color-black); }
+.bulkPriceFieldInput::-webkit-outer-spin-button,
+.bulkPriceFieldInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.bulkPriceFieldInput[type=number] { -moz-appearance: textfield; }
+
 .tableHeader {
   font-family: var(--font-heading);
-  font-size: 8px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--color-muted);
+  color: #444;
   background: #fafafa;
   position: sticky;
   top: 0;
+  min-height: 64px;
+  align-items: end;
+  padding-bottom: 10px;
+}
+
+.tableHeader > span {
+  overflow: visible;
+  white-space: nowrap;
+  align-self: end;
 }
 
 .tableRow:last-child { border-bottom: none; }
+
+.tableRow:hover {
+  outline: 2px solid var(--color-black);
+  outline-offset: -2px;
+  background: #f9f9f9;
+}
 
 .cardName {
   font-weight: 600;
@@ -270,6 +491,7 @@
   word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
 }
 
 .condition {
@@ -278,16 +500,36 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--color-text-light);
+  text-align: center;
 }
 
 .foil {
-  font-size: 11px;
-  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .foilYes {
-  color: #cc7700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d4a017;
+  color: #fff;
+  font-size: 9px;
   font-weight: 700;
+  font-family: var(--font-heading);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.rarityCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .rarityBadge {
@@ -302,16 +544,17 @@
   border-radius: 50%;
 }
 
-.rarity_Common   { background: #eee; color: #888; }
-.rarity_Uncommon { background: #e8e8e8; color: #999; }
-.rarity_Rare     { background: #fff8e0; color: #cc9900; }
-.rarity_MythicRare { background: #fff0e0; color: #cc5500; }
+.rarity_Common     { background: #d4d4d4; color: #444; }
+.rarity_Uncommon   { background: #c8d8e8; color: #2a5a80; }
+.rarity_Rare       { background: #fef3a0; color: #a07000; }
+.rarity_MythicRare { background: #fde0c0; color: #b83c00; }
 
 .price {
   font-family: var(--font-heading);
   font-size: 12px;
   font-weight: 700;
   color: var(--color-black);
+  text-align: center;
 }
 
 .qty {
@@ -319,6 +562,7 @@
   font-size: 12px;
   font-weight: 700;
   color: var(--color-text);
+  text-align: center;
 }
 
 .qtyLow {
@@ -330,6 +574,10 @@
   font-size: 12px;
   font-weight: 700;
   color: var(--color-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .priceUp {
@@ -340,6 +588,13 @@
 .priceDown {
   color: #dc2626;
   font-size: 10px;
+}
+
+.marketMinus15 {
+  display: block;
+  font-size: 10px;
+  color: var(--color-text-light);
+  margin-top: 2px;
 }
 
 .editBtn {
@@ -720,10 +975,11 @@
   border: 1px solid var(--color-border);
   width: 100%;
   max-width: 960px;
-  max-height: 92vh;
+  max-height: 98vh;
+  height: 98vh;
   display: flex;
   flex-direction: column;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .modalHeader {
@@ -897,6 +1153,73 @@
   padding-top: 6px;
 }
 
+/* ── Card queue ── */
+.queuePanel {
+  border: 1px solid var(--color-border);
+  background: #f7f7f7;
+}
+
+.queueTitle {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-accent);
+  padding: 10px 14px 6px;
+  margin: 0;
+}
+
+.queueList {
+  display: flex;
+  flex-direction: column;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.queueItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  border-top: 1px solid var(--color-border);
+  font-size: 12px;
+}
+
+.queueItemName {
+  font-weight: 600;
+  color: var(--color-black);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.queueItemMeta {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.queueRemoveBtn {
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+.queueRemoveBtn:hover { color: #cc2200; }
+
+.queueBtn {
+  white-space: nowrap;
+}
+
 .modalFooter {
   display: flex;
   gap: 10px;
@@ -904,7 +1227,530 @@
   padding-top: 4px;
   border-top: 1px solid var(--color-border);
   padding-top: 16px;
+  padding-bottom: 16px;
+  padding-right: 18px;
   flex-shrink: 0;
+}
+
+/* ── Pick Modal Two-Column Layout ── */
+.pickModalLayout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pickModalMain {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 20px 20px 0 20px;
+}
+
+.pickModalSidebar {
+  width: 380px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 14px 16px 14px;
+  overflow-y: auto;
+  background: var(--color-surface, #fafafa);
+}
+
+.pickSidebarEmpty {
+  font-size: 12px;
+  color: var(--color-muted);
+  text-align: center;
+  line-height: 1.5;
+  padding: 20px 0;
+}
+
+.pickSidebarContinue {
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.pickSidebarContinue small {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* ── Set + Number Quick-Add ── */
+.setNumRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--color-border);
+}
+
+.setNumDividerLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+.setNumInputs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.setNumHash {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+.setNumInput {
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  padding: 0 10px;
+  font-size: 13px;
+  background: var(--color-white);
+  color: var(--color-text);
+  width: 120px;
+}
+
+/* ── Pick Context Menu ── */
+.ctxOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+}
+
+.ctxMenu {
+  position: fixed;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  min-width: 180px;
+  z-index: 10001;
+}
+
+.ctxItem {
+  padding: 9px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: background 0.1s;
+  user-select: none;
+}
+
+.ctxItem:hover {
+  background: var(--color-surface, #f5f5f5);
+}
+
+/* ── Card Detail Popup ── */
+.cardDetailOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardDetailPopup {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+  width: 580px;
+  max-width: 94vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 24px;
+}
+
+.cardDetailClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--color-muted);
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.cardDetailClose:hover {
+  color: var(--color-text);
+  background: var(--color-surface, #f5f5f5);
+}
+
+.cardDetailLayout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.cardDetailImgCol {
+  flex-shrink: 0;
+  width: 200px;
+}
+
+.cardDetailImg {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.cardDetailImgEmpty {
+  width: 100%;
+  aspect-ratio: 2/3;
+  background: var(--color-border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.cardDetailInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardDetailName {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.cardDetailMana {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin: 0;
+  font-family: var(--font-heading);
+  letter-spacing: 0.03em;
+}
+
+.cardDetailType {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.cardDetailSet {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.cardDetailOracle {
+  font-size: 13px;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.55;
+  white-space: pre-line;
+  padding: 10px 12px;
+  background: var(--color-surface, #f8f8f8);
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+}
+
+.cardDetailPT {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+  text-align: right;
+}
+
+.cardDetailPrices {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.cardDetailPrices strong {
+  color: var(--color-text);
+}
+
+.cardDetailAddBtn {
+  margin-top: 6px;
+  width: 100%;
+}
+
+/* ── Pick Queue (Phase 1) ── */
+.pickQueueSection {
+  margin-top: 18px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 14px;
+}
+
+.pickQueueGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.pickQueueCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 6px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  background: var(--color-white);
+  position: relative;
+  text-align: center;
+  min-width: 0;
+}
+
+.pickQueueCardRemove {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 1;
+}
+
+.pickQueueCard:hover .pickQueueCardRemove {
+  opacity: 1;
+}
+
+.pickQueueCardImg {
+  width: 100%;
+  aspect-ratio: 5/7;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.pickQueueCardImgEmpty {
+  width: 100%;
+  aspect-ratio: 5/7;
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+.pickQueueCardName {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  width: 100%;
+}
+
+.pickQueueQtyWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.pickQueueQtyLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+.pickQueueQtyInput {
+  width: 52px;
+  height: 26px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0 4px;
+  font-size: 12px;
+  text-align: center;
+  background: var(--color-white);
+  color: var(--color-text);
+}
+
+.pickQueueRemoveBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-muted);
+  font-size: 13px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
+}
+
+.pickQueueRemoveBtn:hover {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+/* ── Detail Forms (Phase 2) ── */
+.detailFormsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detailFormsRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface, #fafafa);
+}
+
+.detailFormsThumb {
+  width: 44px;
+  height: 62px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.detailFormsThumbEmpty {
+  width: 44px;
+  height: 62px;
+  background: var(--color-border);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.detailFormsCardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.detailFormsCardName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.detailFormsCardMeta {
+  font-size: 11px;
+  color: var(--color-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detailFormsFields {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.detailFormsField {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detailFormsLabel {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+.detailFormsSelect {
+  height: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  padding: 0 8px;
+  font-size: 13px;
+  background: var(--color-white);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.detailFormsInput {
+  height: 32px;
+  width: 56px;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  padding: 0 8px;
+  font-size: 13px;
+  background: var(--color-white);
+  color: var(--color-text);
+}
+
+.detailFormsInputWrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--color-white);
+  height: 32px;
+}
+
+.detailFormsInputWrap > span {
+  padding: 0 6px;
+  font-size: 13px;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+.detailFormsMkt {
+  font-size: 11px;
+  color: var(--color-muted);
+  white-space: nowrap;
+  margin-top: 2px;
 }
 
 /* ── Mode chooser ── */
@@ -945,6 +1791,11 @@
 }
 .chooserOption:last-child { border-right: none; }
 .chooserOption:hover { background: #f5f5f5; }
+
+.bulkImportBtn {
+  font-size: 11px;
+  white-space: nowrap;
+}
 
 .chooserIcon {
   font-size: 28px;
@@ -1346,6 +2197,31 @@
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
+.printOptionSelected {
+  border-color: #16a34a !important;
+  box-shadow: 0 0 0 2px #bbf7d0 !important;
+  background: #f0fdf4 !important;
+}
+
+.printOptionCheck {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 2;
+  background: #16a34a;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
 .printOptionImgWrap {
   position: relative;
   width: 100%;
@@ -1380,6 +2256,25 @@
 }
 
 .printFlipBtn:hover { background: rgba(0,0,0,0.8); }
+
+.printDetailsBtn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
 
 
 .printOptionImg {
@@ -1565,6 +2460,51 @@
   align-items: flex-start;
 }
 
+.priceDiscountWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.priceDiscountWrap .detailInput {
+  max-width: 120px;
+}
+
+.discountToggle {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  color: var(--color-text-light);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.discountToggle:hover {
+  border-color: #15803d;
+  color: #15803d;
+}
+
+.discountToggleOn {
+  background: #f0fdf4;
+  border-color: #15803d;
+  color: #15803d;
+}
+
+.discountHint {
+  font-size: 11px;
+  color: var(--color-muted);
+  font-family: var(--font-heading);
+  white-space: nowrap;
+}
+
 .detailRowFormats .checkRow {
   padding-top: 2px;
 }
@@ -1712,5 +2652,579 @@
 
   .bulkActions {
     flex-wrap: wrap;
+  }
+}
+
+/* ─── Bulk Import Modal ───────────────────────────────────────────────────── */
+.bulkModal {
+  max-width: 900px;
+  width: 96vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bulkInputStep {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bulkDesc {
+  font-size: 13px;
+  color: var(--color-text-light);
+  line-height: 1.6;
+}
+
+.bulkDesc code {
+  font-family: monospace;
+  background: #f3f3f3;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.bulkTemplateRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bulkTemplateLabel {
+  font-size: 12px;
+  color: var(--color-muted);
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.bulkTemplateBtn {
+  font-size: 11px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: none;
+  border: 1px solid var(--color-border);
+  padding: 4px 10px;
+  cursor: pointer;
+  color: var(--color-text-light);
+  border-radius: 2px;
+}
+
+.bulkTemplateBtn:hover { background: #f5f5f5; }
+
+.bulkTextarea {
+  width: 100%;
+  min-height: 220px;
+  font-family: monospace;
+  font-size: 12px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  resize: vertical;
+  color: var(--color-text);
+  background: #fafafa;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+.bulkTextarea:focus { outline: 2px solid var(--color-black); outline-offset: -1px; }
+
+.bulkFileRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bulkFileLabel {
+  font-size: 12px;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.bulkFileInput {
+  font-size: 12px;
+}
+
+/* ── Preview step ── */
+.bulkPreviewStep {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  flex: 1;
+}
+
+.bulkPreviewActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bulkEnrichBtn {
+  font-size: 11px;
+  padding: 6px 14px;
+  white-space: nowrap;
+}
+
+.bulkPreviewHint {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.bulkTableWrap {
+  overflow: auto;
+  flex: 1;
+  border: 1px solid var(--color-border);
+  max-height: 420px;
+}
+
+.bulkTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.bulkTable th {
+  position: sticky;
+  top: 0;
+  background: #fafafa;
+  border-bottom: 1px solid var(--color-border);
+  padding: 8px 10px;
+  text-align: left;
+  font-family: var(--font-heading);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.bulkTable td {
+  padding: 5px 8px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.bulkNumCell {
+  color: var(--color-muted);
+  font-size: 11px;
+  width: 28px;
+  text-align: center;
+}
+
+.bulkCellInput {
+  width: 100%;
+  min-width: 90px;
+  padding: 4px 6px;
+  border: 1px solid var(--color-border);
+  font-size: 12px;
+  background: var(--color-white);
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.bulkCellInputSm { min-width: 56px; max-width: 80px; }
+.bulkCellSelect  { padding: 4px 6px; border: 1px solid var(--color-border); font-size: 12px; border-radius: 2px; }
+.bulkCellCenter  { text-align: center; }
+
+.bulkRowError   { background: #fff5f5; }
+.bulkRowEnriched { background: #f0fdf4; }
+
+.bulkStatusCell { white-space: nowrap; min-width: 90px; }
+.bulkStatusOk      { color: #15803d; font-size: 11px; font-weight: 600; }
+.bulkStatusErr     { color: #991b1b; font-size: 11px; font-weight: 600; }
+.bulkStatusPending { color: var(--color-muted); font-size: 11px; }
+
+/* ── Result step ── */
+.bulkResultStep {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bulkResultSummary {
+  display: flex;
+  gap: 40px;
+}
+
+.bulkResultStat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bulkResultNum {
+  font-family: var(--font-heading);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--color-black);
+  line-height: 1;
+}
+
+.bulkResultNumErr { color: #991b1b; }
+
+.bulkResultLabel {
+  font-size: 12px;
+  color: var(--color-muted);
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bulkErrorList {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 14px 16px;
+  border-radius: 3px;
+}
+
+.bulkErrorListTitle {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: #991b1b;
+}
+
+.bulkErrorItem {
+  font-size: 12px;
+  color: #7f1d1d;
+  margin-bottom: 4px;
+  font-family: monospace;
+}
+
+/* ─── Inventory hub ──────────────────────────────────────────────────────── */
+.hubHeader {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hubGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.hubCard,
+.hubCardDisabled {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 28px;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+.hubCard {
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.hubCard:hover {
+  border-color: var(--color-black);
+  background: #fafafa;
+}
+
+.hubCardDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(0.6);
+}
+
+.hubCardIcon {
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+}
+
+.hubCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hubCardLabel {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+.hubCardDesc {
+  font-size: 12px;
+  color: var(--color-text-light);
+  line-height: 1.5;
+}
+
+.hubCardMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 0 8px;
+  border-left: 1px solid var(--color-border);
+}
+
+.hubCardStatNum {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-black);
+  line-height: 1;
+}
+
+.hubCardStatLabel {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  white-space: nowrap;
+}
+
+.hubCardCta {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  white-space: nowrap;
+}
+
+.hubComingSoonBadge {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  background: rgba(0, 0, 0, 0.06);
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+/* ─── Back button (shared by cards + merchandise views) ─────────────────── */
+.backBtn {
+  background: none;
+  border: none;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 6px;
+  transition: color 0.2s;
+  display: block;
+}
+
+.backBtn:hover {
+  color: var(--color-black);
+}
+
+/* ─── Merchandise placeholder ───────────────────────────────────────────── */
+.merchandisePlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 40px;
+  text-align: center;
+  border: 1px dashed var(--color-border);
+  border-radius: 2px;
+}
+
+.merchandisePlaceholderIcon {
+  color: var(--color-text-light);
+  opacity: 0.5;
+}
+
+.merchandisePlaceholderTitle {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+.merchandisePlaceholderDesc {
+  font-size: 14px;
+  color: var(--color-text-light);
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+@media (max-width: 760px) {
+  .hubGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .hubCard,
+  .hubCardDisabled {
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    padding: 20px;
+    text-align: left;
+  }
+
+  .hubCardMeta,
+  .hubCardCta,
+  .hubComingSoonBadge {
+    grid-column: 2;
+    align-items: flex-start;
+    justify-self: start;
+  }
+
+  .hubCardMeta {
+    border-left: 0;
+    padding: 8px 0 0;
+  }
+
+  .tableHeader,
+  .tableRow {
+    min-width: 0;
+  }
+
+  .overlay {
+    align-items: flex-end;
+    padding: var(--safe-top) 0 0;
+  }
+
+  .modal {
+    width: 100vw !important;
+    max-width: none !important;
+    height: calc(100dvh - var(--safe-top)) !important;
+    max-height: calc(100dvh - var(--safe-top)) !important;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+  }
+
+  .modalHeader {
+    padding: 12px 14px;
+  }
+
+  .modalClose,
+  .cardDetailClose {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+  }
+
+  .modalBody {
+    padding: 18px 14px;
+  }
+
+  .modalFooter {
+    flex-wrap: wrap;
+    padding: 12px 14px max(12px, var(--safe-bottom));
+  }
+
+  .modalFooter :global(.btn) {
+    flex: 1 1 140px;
+  }
+
+  .chooserOptions {
+    grid-template-columns: 1fr;
+  }
+
+  .pickModalLayout {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .pickModalMain {
+    overflow: visible;
+    padding: 16px 14px;
+  }
+
+  .pickModalSidebar {
+    width: 100%;
+    min-height: 260px;
+    max-height: none;
+    border-top: 1px solid var(--color-border);
+    border-left: 0;
+  }
+
+  .sfSearchWrap,
+  .setNumInputs,
+  .bulkPriceRow,
+  .bulkPriceControls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sfOrDivider {
+    align-self: center;
+  }
+
+  .sfSearchWrap :global(.btn),
+  .setNumInputs :global(.btn) {
+    width: 100%;
+  }
+
+  .cardDetailPopup {
+    width: 100%;
+    max-width: none;
+    max-height: calc(100dvh - var(--safe-top));
+    border-radius: 0;
+  }
+
+  .cardDetailLayout {
+    flex-direction: column;
+  }
+
+  .cardDetailImgCol {
+    width: min(220px, 70vw);
+    align-self: center;
+  }
+
+  .bulkPriceRow {
+    padding: 16px 14px;
+  }
+
+  .bulkPriceControls {
+    width: 100%;
+  }
+
+  .bulkPriceControls input {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .bulkModal {
+    width: 100vw;
+    max-height: calc(100dvh - var(--safe-top));
+  }
+
+  .merchandisePlaceholder {
+    padding: 52px 20px;
+  }
+
+  .printDetailsBtn {
+    display: flex;
+    width: 44px;
+    height: 44px;
+  }
+
+  .printFlipBtn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .printDetailsBtn {
+    display: flex;
   }
 }

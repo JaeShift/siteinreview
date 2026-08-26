@@ -46,9 +46,29 @@
   cursor: pointer;
   font-size: 11px;
   color: var(--color-muted);
-  padding: 2px 4px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   transition: color 0.15s ease;
   flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .toastContainer {
+    left: max(14px, var(--safe-left));
+    right: max(14px, var(--safe-right));
+    bottom: max(84px, calc(var(--safe-bottom) + 70px));
+    max-width: none;
+  }
+
+  .toast {
+    width: 100%;
+  }
+
+  .toastClose {
+    width: var(--touch-min);
+    height: var(--touch-min);
+  }
 }
 
 .toastClose:hover {

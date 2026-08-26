@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import styles from "./AdminSidebar.module.css";
+
+const STORAGE_KNOWN = "kitsune_orders_known_count";
 
 const navItems = [
   {
@@ -33,6 +36,18 @@ const navItems = [
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
         <rect x="1" y="2" width="14" height="13" rx="1" stroke="currentColor" strokeWidth="1.5" />
         <path d="M1 6h14M5 1v2M11 1v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    href: "/admin/orders",
+    label: "Orders",
+    badge: true,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M2 2h2l2 7h6l1.5-5H5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="7" cy="13" r="1" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="11" cy="13" r="1" stroke="currentColor" strokeWidth="1.5" />
       </svg>
     ),
   },
@@ -74,9 +89,44 @@ const navItems = [
 export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [newOrderCount, setNewOrderCount] = useState(0);
 
   const isActive = (href: string) =>
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
+
+  // Poll for new orders — compare live count to last-known count stored in localStorage
+  useEffect(() => {
+    let cancelled = false;
+
+    async function checkCount() {
+      try {
+        const res = await fetch("/api/admin/orders/count");
+        if (!res.ok || cancelled) return;
+        const { count } = await res.json() as { count: number };
+        const known = parseInt(localStorage.getItem(STORAGE_KNOWN) ?? "0", 10);
+        setNewOrderCount(Math.max(0, count - known));
+      } catch { /* ignore network errors */ }
+    }
+
+    checkCount();
+    const id = setInterval(checkCount, 30_000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
+
+  // When the user navigates to /admin/orders, reset the badge
+  useEffect(() => {
+    if (!pathname.startsWith("/admin/orders")) return;
+    async function resetBadge() {
+      try {
+        const res = await fetch("/api/admin/orders/count");
+        if (!res.ok) return;
+        const { count } = await res.json() as { count: number };
+        localStorage.setItem(STORAGE_KNOWN, String(count));
+        setNewOrderCount(0);
+      } catch { /* ignore */ }
+    }
+    resetBadge();
+  }, [pathname]);
 
   async function handleLogout() {
     await fetch("/api/admin/auth", { method: "DELETE" });
@@ -99,7 +149,10 @@ export default function AdminSidebar() {
             className={`${styles.navLink} ${isActive(item.href) ? styles.navLinkActive : ""}`}
           >
             <span className={styles.icon}>{item.icon}</span>
-            {item.label}
+            <span className={styles.navLinkLabel}>{item.label}</span>
+            {item.badge && newOrderCount > 0 && (
+              <span className={styles.navBadge}>{newOrderCount > 99 ? "99+" : newOrderCount}</span>
+            )}
           </Link>
         ))}
       </nav>

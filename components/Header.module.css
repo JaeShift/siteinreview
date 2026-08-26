@@ -3,6 +3,7 @@
   background-color: #ffffff;
   padding-top: 90px;
   padding-bottom: 140px;
+  z-index: 300;
 }
 
 .headerInner {
@@ -80,8 +81,8 @@
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   background: none;
   border: none;
   cursor: pointer;
@@ -105,6 +106,23 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 302;
+  max-height: calc(100dvh - 100%);
+  overflow-y: auto;
+  padding-bottom: max(24px, var(--safe-bottom));
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.12);
+}
+
+.mobileBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 301;
+  border: 0;
+  background: rgba(0, 0, 0, 0.35);
 }
 
 .mobileNavLink,
@@ -244,6 +262,7 @@
 
 @media (max-width: 900px) {
   .header {
+    position: relative;
     padding-top: 24px;
     padding-bottom: 32px;
   }

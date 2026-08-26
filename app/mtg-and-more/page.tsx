@@ -22,7 +22,40 @@ const bentoCards = [
     btnStyle: "primary" as const,
     colSpan: 8,
     height: 400,
-    img: "/images/shopmagic.webp",
+    img: "/images/uploads/beer and magic.png",
+    bgPosition: "70% center",
+    bgSize: "110%",
+  },
+  {
+    title: "PRERELEASE",
+    desc: "Be the first to play the new sets.",
+    href: "/pre-release",
+    btnLabel: "LEARN MORE",
+    btnStyle: "outline" as const,
+    colSpan: 4,
+    height: 400,
+    img: "/images/prerelease%20test.jpg",
+  },
+  {
+    title: "MTG EVENTS",
+    desc: "Competitive and social tournaments.",
+    href: "/events",
+    btnLabel: "VIEW EVENTS",
+    btnStyle: "outline" as const,
+    colSpan: 4,
+    height: 350,
+    img: "/images/uploads/upclose die.png",
+    bgSize: "95%",
+  },
+  {
+    title: "COMMANDER NIGHTS",
+    desc: "Casual EDH for all power levels.",
+    href: "/commander-nights",
+    btnLabel: "JOIN A NIGHT",
+    btnStyle: "outline" as const,
+    colSpan: 4,
+    height: 350,
+    img: "/images/commander.jpg",
   },
   {
     title: "SINGLES",
@@ -31,38 +64,8 @@ const bentoCards = [
     btnLabel: "VIEW INVENTORY",
     btnStyle: "outline" as const,
     colSpan: 4,
-    height: 400,
+    height: 350,
     img: "/images/singles-bento.png",
-  },
-  {
-    title: "COMMANDER NIGHTS",
-    desc: "Casual EDH for all power levels.",
-    href: "/commander-nights",
-    btnLabel: null,
-    btnStyle: "none" as const,
-    colSpan: 4,
-    height: 350,
-    img: "/images/commander.jpg",
-  },
-  {
-    title: "MTG EVENTS",
-    desc: "Competitive and social tournaments.",
-    href: "/events",
-    btnLabel: null,
-    btnStyle: "none" as const,
-    colSpan: 4,
-    height: 350,
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAcu5ehCJVipQUa0XMQj7XdFJ5MhSHk4OHFP686p2MWHxc45V2dysu1HK6PUT_3jNHZbJUhF5edxIwnn_wuEDHmLRsVIA5zEOmB0RTDxtaMBl-3ym3LFpes0A5Q4gwWiaqOJ8wTR9PQC75ClRCF0TPxMzpmNqedaBqothVKYM0GQHmIoXPo8Ek7DBoTlZ0YDaUnjxOKP5kjGaougNyg_VeaD46M4rJERoruZ-q9v4Hk-rUyCfsmjPY",
-  },
-  {
-    title: "PRERELEASE",
-    desc: "Be the first to play the new sets.",
-    href: "/pre-release",
-    btnLabel: null,
-    btnStyle: "none" as const,
-    colSpan: 4,
-    height: 350,
-    img: "/images/prerelease%20test.jpg",
   },
 ];
 
@@ -126,7 +129,7 @@ export default function MtgPage() {
                   height: `${card.height}px`,
                 }}
               >
-                <div className={styles.bentoImg} style={{ backgroundImage: `url('${card.img}')` }} />
+                <div className={styles.bentoImg} style={{ backgroundImage: `url('${card.img}')`, backgroundPosition: card.bgPosition ?? "center", backgroundSize: card.bgSize ?? "cover" }} />
                 <div className={styles.bentoGradient} />
                 <div className={styles.bentoText}>
                   <h3 className={styles.bentoTitle}>{card.title}</h3>
@@ -146,7 +149,7 @@ export default function MtgPage() {
               className={`${styles.bentoCard} ${styles.bentoCardWide}`}
               style={{ gridColumn: "span 12", height: "300px" }}
             >
-              <div className={styles.bentoImg} style={{ backgroundImage: `url('${PRIVATE_EVENTS_IMG}')` }} />
+              <div className={styles.bentoImg} style={{ backgroundImage: `url('/images/uploads/fox tails tap.png')`, backgroundPosition: "center 70%", backgroundSize: "95%" }} />
               <div className={styles.bentoGradientSide} />
               <div className={styles.bentoTextCenter}>
                 <h3 className={styles.bentoTitleLg}>PRIVATE EVENTS</h3>

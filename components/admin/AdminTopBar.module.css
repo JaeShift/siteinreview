@@ -4,6 +4,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  padding-top: var(--safe-top);
 }
 
 .inner {
@@ -46,6 +47,9 @@
   padding: 6px 12px;
   white-space: nowrap;
   transition: color 0.15s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 .navLink:hover { color: rgba(255,255,255,0.85); }
 .navLinkActive {
@@ -72,6 +76,9 @@
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.15s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 .siteLink:hover { color: #cc0000; }
 
@@ -84,7 +91,8 @@
   color: rgba(255,80,80,0.6);
   background: none;
   border: none;
-  padding: 0;
+  min-height: 44px;
+  padding: 0 8px;
   cursor: pointer;
   transition: color 0.15s;
 }
@@ -106,11 +114,13 @@
     gap: 0;
     padding-bottom: 2px;
     scrollbar-width: thin;
+    scroll-snap-type: x proximity;
   }
 
   .navLink {
-    padding: 8px 10px;
+    padding: 10px 12px;
     font-size: 10px;
+    scroll-snap-align: start;
   }
 
   .brand { display: none; }
@@ -120,5 +130,11 @@
     gap: 12px;
     padding-left: 0;
     border-left: none;
+  }
+}
+
+@media print {
+  .topBar {
+    display: none !important;
   }
 }

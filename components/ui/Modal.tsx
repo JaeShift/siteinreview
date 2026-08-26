@@ -44,14 +44,14 @@ export default function Modal({ isOpen, onClose, title, children, size = "md" }:
     return () => dialog.removeEventListener("cancel", handleCancel);
   }, [onClose]);
 
-  const mouseDownTarget = useRef<EventTarget | null>(null);
+  const pointerDownTarget = useRef<EventTarget | null>(null);
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDialogElement>) => {
-    mouseDownTarget.current = e.target;
+  const handlePointerDown = (e: React.PointerEvent<HTMLDialogElement>) => {
+    pointerDownTarget.current = e.target;
   };
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
-    if (e.target === dialogRef.current && mouseDownTarget.current === dialogRef.current) {
+    if (e.target === dialogRef.current && pointerDownTarget.current === dialogRef.current) {
       onClose();
     }
   };
@@ -62,7 +62,7 @@ export default function Modal({ isOpen, onClose, title, children, size = "md" }:
     <dialog
       ref={dialogRef}
       className={`${styles.modal} ${styles[size]}`}
-      onMouseDown={handleMouseDown}
+      onPointerDown={handlePointerDown}
       onClick={handleBackdropClick}
       aria-modal="true"
       aria-labelledby={title ? "modal-title" : undefined}

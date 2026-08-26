@@ -93,6 +93,11 @@
   width: 240px;
 }
 
+.mobileFilterHeader,
+.filterBackdrop {
+  display: none;
+}
+
 .main {
   flex: 1;
   min-width: 0;
@@ -176,8 +181,8 @@
   color: var(--color-text);
   font-size: 14px;
   font-weight: 700;
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -399,8 +404,8 @@
 /* ── Floating cart ───────────────────────────────────────────────────────────── */
 .cartFab {
   position: fixed;
-  bottom: 32px;
-  right: 32px;
+  bottom: max(32px, calc(var(--safe-bottom) + 16px));
+  right: max(32px, calc(var(--safe-right) + 16px));
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -452,7 +457,16 @@
   }
 
   .sidebarWrap {
-    width: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 701;
+    width: min(88vw, 360px);
+    padding: max(18px, var(--safe-top)) 18px max(18px, var(--safe-bottom));
+    overflow-y: auto;
+    background: var(--color-white);
+    box-shadow: 12px 0 32px rgba(0, 0, 0, 0.18);
     display: none;
   }
 
@@ -460,12 +474,77 @@
     display: block;
   }
 
+  .filterBackdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 700;
+    border: 0;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .mobileFilterHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+    margin-bottom: 10px;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .mobileFilterHeader button {
+    width: var(--touch-min);
+    height: var(--touch-min);
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
   .desktopSearch {
     display: none;
   }
 
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
     gap: 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .mobileBar {
+    padding: 12px 14px;
+    flex-direction: column;
+  }
+
+  .filterToggleBtn {
+    width: 100%;
+  }
+
+  .layout {
+    padding-top: 18px;
+    padding-bottom: 40px;
+  }
+
+  .resultsRight {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .cartFab {
+    right: max(14px, var(--safe-right));
+    bottom: max(14px, calc(var(--safe-bottom) + 10px));
+  }
+}
+
+@media (max-width: 340px) {
+  .grid {
+    grid-template-columns: 1fr;
   }
 }

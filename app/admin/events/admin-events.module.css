@@ -28,6 +28,11 @@
   margin-top: 4px;
 }
 
+.headerActions {
+  display: flex;
+  gap: 10px;
+}
+
 .tableWrap {
   background: var(--color-white);
   border: 1px solid var(--color-border);
@@ -234,6 +239,15 @@
     font-size: 22px;
   }
 
+  .headerActions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .headerActions :global(.btn) {
+    flex: 1 1 180px;
+  }
+
   .tableWrap {
     overflow-x: visible;
     border: none;
@@ -268,8 +282,19 @@
     padding-top: 4px;
   }
 
+  .actionLink {
+    width: 44px;
+    height: 44px;
+  }
+
   .regToggleBtn {
-    min-height: 36px;
+    min-height: 44px;
+  }
+
+  .flash {
+    top: max(12px, var(--safe-top));
+    left: 12px;
+    right: 12px;
   }
 }
 
@@ -445,4 +470,51 @@
   background: var(--color-accent);
   color: #fff;
   border-color: var(--color-accent);
+}
+
+/* ─── Pre-Release button & toggle ──────────────────────────────────────────── */
+.prereleaseBtn {
+  position: relative;
+}
+
+.prereleaseLiveDot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1a7a3a;
+  margin-left: 7px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+.prToggle {
+  flex-shrink: 0;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-border);
+  cursor: pointer;
+  padding: 3px;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.prToggleOn {
+  background: #1a7a3a;
+}
+
+.prToggleThumb {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.prToggleOn .prToggleThumb {
+  transform: translateX(20px);
 }

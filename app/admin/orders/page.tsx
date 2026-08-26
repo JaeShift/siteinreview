@@ -6,6 +6,8 @@ export const metadata: Metadata = { title: "Orders" };
 export const dynamic = "force-dynamic";
 
 export default function AdminOrdersPage() {
-  const orders = getOrdersStore();
+  const orders = getOrdersStore().sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
   return <OrdersClient orders={orders} />;
 }

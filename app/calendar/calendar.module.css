@@ -27,3 +27,18 @@
   gap: 16px;
   flex-wrap: wrap;
 }
+
+@media (max-width: 640px) {
+  .quickSection {
+    padding: 28px 14px;
+  }
+
+  .quickLinks {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .quickLinks :global(.btn) {
+    width: 100%;
+  }
+}

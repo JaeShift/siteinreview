@@ -10,6 +10,30 @@
   .sidebar {
     width: 100%;
   }
+
+  .textInput,
+  .select,
+  .ptInput {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .checkboxLabel {
+    min-height: 44px;
+    align-items: center;
+    padding: 6px 0;
+  }
+
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    margin-top: 0;
+  }
+
+  .applyBtn,
+  .clearBtn {
+    min-height: 44px;
+  }
 }
 
 .sidebarHeader {

@@ -7,7 +7,7 @@
     "collectorNumber": "511",
     "condition": "NM",
     "foil": false,
-    "price": 0.78,
+    "price": 1,
     "quantity": 1,
     "imageUrl": "https://cards.scryfall.io/png/front/0/b/0b82c865-ae3e-43f0-9ac8-fabdd5539b36.png?1782682230",
     "color": "G",
@@ -31,7 +31,7 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 0.88,
+    "marketPrice": 1.58,
     "backImageUrl": "",
     "hidden": false
   },
@@ -64,9 +64,9 @@
       "Vintage",
       "Oathbreaker"
     ],
-    "marketPrice": 1.52,
+    "marketPrice": 1.14,
     "backImageUrl": "",
-    "hidden": true
+    "hidden": false
   },
   {
     "id": "card-1783010520936",
@@ -76,7 +76,7 @@
     "collectorNumber": "319",
     "condition": "NM",
     "foil": false,
-    "price": 0.18,
+    "price": 0.19,
     "quantity": 1,
     "imageUrl": "https://cards.scryfall.io/png/front/8/e/8e3fdece-348a-45eb-871f-fffa91a1fbda.png?1782681632",
     "color": "B",
@@ -104,9 +104,9 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 0.26,
+    "marketPrice": 0.22,
     "backImageUrl": "",
-    "hidden": false
+    "hidden": true
   },
   {
     "id": "card-1783010569847",
@@ -140,7 +140,7 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 6.72,
+    "marketPrice": 4.48,
     "backImageUrl": "",
     "hidden": false
   },
@@ -181,9 +181,9 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 24.3,
+    "marketPrice": 23.4,
     "backImageUrl": "https://cards.scryfall.io/png/back/0/e/0e99dad7-b3ca-4e89-8d9f-8f8f43195537.png?1782681579",
-    "hidden": false
+    "hidden": true
   },
   {
     "id": "card-1783010729938",
@@ -225,9 +225,9 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 252.71,
+    "marketPrice": 156.42,
     "backImageUrl": "",
-    "hidden": false
+    "hidden": true
   },
   {
     "id": "card-1783383323719",
@@ -269,9 +269,9 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 23.92,
+    "marketPrice": 14.82,
     "backImageUrl": "",
-    "hidden": false
+    "hidden": true
   },
   {
     "id": "card-1784069631365",
@@ -305,7 +305,7 @@
       "Timeless",
       "Oathbreaker"
     ],
-    "marketPrice": 20.25,
+    "marketPrice": 16.58,
     "backImageUrl": "",
     "hidden": false
   },
@@ -338,7 +338,7 @@
       "Vintage",
       "Oathbreaker"
     ],
-    "marketPrice": 9.66,
+    "marketPrice": 8.6,
     "backImageUrl": "",
     "hidden": false
   },
@@ -368,6 +368,7 @@
       "Vintage"
     ],
     "backImageUrl": "",
-    "hidden": true
+    "hidden": true,
+    "marketPrice": 8.88
   }
 ]

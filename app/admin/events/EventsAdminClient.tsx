@@ -3,11 +3,23 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { MtgEvent, EventFormat, CustomQuestion, EventAddOn } from "@/lib/events-data";
+import type { PrereleaseConfig } from "@/lib/store";
 import styles from "./admin-events.module.css";
+
+const BLANK_PRERELEASE: PrereleaseConfig = {
+  active: false,
+  setName: "",
+  tagline: "",
+  date: "",
+  time: "",
+  description: "",
+  imageUrl: "",
+  eventSlug: "",
+};
 
 const FORMAT_OPTIONS: EventFormat[] = [
   "Commander", "Draft", "Standard", "Modern", "Pioneer",
-  "Legacy", "Sealed", "Prerelease", "RCQ", "Casual",
+  "Legacy", "Sealed", "RCQ", "Casual",
 ];
 
 function slugify(str: string) {
@@ -39,18 +51,21 @@ function makeEmpty(): MtgEvent {
 
 interface Props {
   initialEvents: MtgEvent[];
-  currentPrerelease: MtgEvent | null;
+  initialPrerelease: PrereleaseConfig;
 }
 
-
-export default function EventsAdminClient({ initialEvents, currentPrerelease }: Props) {
+export default function EventsAdminClient({ initialEvents, initialPrerelease }: Props) {
   const [events, setEvents] = useState<MtgEvent[]>(initialEvents);
   const [editing, setEditing] = useState<MtgEvent | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
   const [flash, setFlash] = useState<{ msg: string; type: "success" | "error" } | null>(null);
-  const [prereleaseSetName, setPrereleaseSetName] = useState("");
+
+  // Pre-release page modal
+  const [showPRModal, setShowPRModal] = useState(false);
+  const [prConfig, setPrConfig] = useState<PrereleaseConfig>(initialPrerelease);
+  const [prSaving, setPrSaving] = useState(false);
 
   const today = new Date().toISOString().split("T")[0];
   const upcoming = [...events].filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
@@ -65,17 +80,30 @@ export default function EventsAdminClient({ initialEvents, currentPrerelease }: 
   function openAdd() {
     setIsNew(true);
     setEditing(makeEmpty());
-    setPrereleaseSetName("");
   }
 
   function openEdit(event: MtgEvent) {
     setIsNew(false);
     setEditing({ ...event });
-    // Pre-populate set name from title if it's a prerelease (strip " Prerelease" suffix)
-    if (event.format === "Prerelease") {
-      setPrereleaseSetName(event.title.replace(/\s*Prerelease\s*/i, "").trim());
-    } else {
-      setPrereleaseSetName("");
+  }
+
+  async function savePrereleaseConfig() {
+    setPrSaving(true);
+    try {
+      const res = await fetch("/api/admin/prerelease", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(prConfig),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      const saved = await res.json();
+      setPrConfig(saved);
+      setShowPRModal(false);
+      showFlash("Pre-release page updated.");
+    } catch {
+      showFlash("Failed to save pre-release config.", "error");
+    } finally {
+      setPrSaving(false);
     }
   }
 
@@ -161,7 +189,16 @@ export default function EventsAdminClient({ initialEvents, currentPrerelease }: 
           <h1 className={styles.title}>Events</h1>
           <p className={styles.subtitle}>{events.length} total · {events.filter(e => e.date >= today).length} upcoming</p>
         </div>
-        <button className="btn btn-primary" onClick={openAdd}>+ New Event</button>
+        <div className={styles.headerActions}>
+          <button
+            className={`btn btn-outline ${styles.prereleaseBtn}`}
+            onClick={() => { setPrConfig(initialPrerelease); setShowPRModal(true); }}
+          >
+            ⚡ Pre-Release Page
+            {prConfig.active && <span className={styles.prereleaseLiveDot} title="Page is live" />}
+          </button>
+          <button className="btn btn-primary" onClick={openAdd}>+ New Event</button>
+        </div>
       </div>
 
       <div className={styles.tableWrap}>
@@ -231,6 +268,168 @@ export default function EventsAdminClient({ initialEvents, currentPrerelease }: 
         )}
       </div>
 
+      {/* ── Pre-Release Page Modal ── */}
+      {showPRModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Pre-Release Page</h2>
+              <button className={styles.closeBtn} onClick={() => setShowPRModal(false)}>✕</button>
+            </div>
+
+            <form onSubmit={(e) => e.preventDefault()} className={styles.formGrid}>
+              {/* Live toggle */}
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label className="form-label">Page Status</label>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={prConfig.active}
+                    className={`${styles.prToggle} ${prConfig.active ? styles.prToggleOn : ""}`}
+                    onClick={() => setPrConfig((c) => ({ ...c, active: !c.active }))}
+                  >
+                    <span className={styles.prToggleThumb} />
+                  </button>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: prConfig.active ? "var(--color-green, #1a7a3a)" : "var(--color-text-light)" }}>
+                    {prConfig.active ? "Live — page shows event content" : "Holding — page shows coming soon"}
+                  </span>
+                </div>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className="form-label">Set Name *</label>
+                <input
+                  className="form-input"
+                  value={prConfig.setName}
+                  onChange={(e) => setPrConfig((c) => ({ ...c, setName: e.target.value }))}
+                  placeholder="e.g. Aetherdrift, Bloomburrow…"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className="form-label">Tagline</label>
+                <input
+                  className="form-input"
+                  value={prConfig.tagline}
+                  onChange={(e) => setPrConfig((c) => ({ ...c, tagline: e.target.value }))}
+                  placeholder="Short teaser line shown under the set name"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className="form-label">Date</label>
+                <input
+                  type="date"
+                  className="form-input"
+                  value={prConfig.date}
+                  onChange={(e) => setPrConfig((c) => ({ ...c, date: e.target.value }))}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className="form-label">Time</label>
+                <input
+                  className="form-input"
+                  value={prConfig.time}
+                  onChange={(e) => setPrConfig((c) => ({ ...c, time: e.target.value }))}
+                  placeholder="e.g. 2:00 PM"
+                />
+              </div>
+
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label className="form-label">Description</label>
+                <textarea
+                  className="form-input"
+                  rows={4}
+                  value={prConfig.description}
+                  onChange={(e) => setPrConfig((c) => ({ ...c, description: e.target.value }))}
+                  placeholder="Event details shown on the pre-release page…"
+                />
+              </div>
+
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label className="form-label">Hero Image URL</label>
+                <input
+                  className="form-input"
+                  value={prConfig.imageUrl}
+                  onChange={(e) => setPrConfig((c) => ({ ...c, imageUrl: e.target.value }))}
+                  placeholder="https://… (set key art or banner)"
+                />
+              </div>
+
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label className="form-label">Linked Event Slug</label>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <input
+                    className="form-input"
+                    style={{ flex: 1 }}
+                    value={prConfig.eventSlug}
+                    onChange={(e) => setPrConfig((c) => ({ ...c, eventSlug: e.target.value }))}
+                    placeholder="Event slug for the Register Now button (leave blank to hide button)"
+                  />
+                  {prConfig.eventSlug && (
+                    <Link
+                      href={`/events/${prConfig.eventSlug}`}
+                      target="_blank"
+                      className="btn btn-outline"
+                      style={{ fontSize: 12, whiteSpace: "nowrap" }}
+                    >
+                      Preview ↗
+                    </Link>
+                  )}
+                </div>
+                <span style={{ fontSize: 11, color: "var(--color-text-light)", marginTop: 4, display: "block" }}>
+                  Select from an existing event slug to link registration. Leave blank to show no register button.
+                </span>
+                {events.filter((e) => e.date >= today).length > 0 && (
+                  <div style={{ marginTop: 6, display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {events.filter((e) => e.date >= today).map((e) => (
+                      <button
+                        key={e.slug}
+                        type="button"
+                        className="btn btn-outline"
+                        style={{ fontSize: 11, padding: "3px 10px" }}
+                        onClick={() => setPrConfig((c) => ({ ...c, eventSlug: e.slug }))}
+                      >
+                        {e.title}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </form>
+
+            <div className={styles.modalFooter}>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <Link
+                  href="/magic-mamas-pre-release"
+                  target="_blank"
+                  className="btn btn-outline"
+                  style={{ fontSize: 12 }}
+                >
+                  View Page ↗
+                </Link>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => setPrConfig(BLANK_PRERELEASE)}
+                  style={{ fontSize: 12 }}
+                >
+                  Reset
+                </button>
+              </div>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button className="btn btn-outline" onClick={() => setShowPRModal(false)} disabled={prSaving}>Cancel</button>
+                <button className="btn btn-primary" onClick={savePrereleaseConfig} disabled={prSaving || !prConfig.setName}>
+                  {prSaving ? "Saving…" : "Save Page"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Edit/Add Modal ── */}
       {editing && (
         <div className={styles.modalOverlay}>
@@ -283,46 +482,6 @@ export default function EventsAdminClient({ initialEvents, currentPrerelease }: 
                 <input type="number" min={1} className="form-input" value={editing.playerLimit} onChange={(e) => changeField("playerLimit", parseInt(e.target.value) || 32)} />
               </div>
 
-              {editing.format === "Prerelease" && (
-                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                  <label className="form-label">Set Name</label>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                    <input
-                      className="form-input"
-                      style={{ flex: 1 }}
-                      value={prereleaseSetName}
-                      placeholder="e.g. The Hobbit, Duskmourn, Bloomburrow…"
-                      onChange={(e) => {
-                        setPrereleaseSetName(e.target.value);
-                        if (isNew && e.target.value.trim()) {
-                          changeField("title", `${e.target.value.trim()} Prerelease`);
-                        }
-                      }}
-                    />
-                    {currentPrerelease && prereleaseSetName.trim() && (
-                      <button
-                        type="button"
-                        className="btn btn-outline"
-                        style={{ whiteSpace: "nowrap", fontSize: 12 }}
-                        onClick={() => {
-                          const oldName = currentPrerelease.title.replace(/\s*Prerelease\s*/i, "").trim();
-                          const newName = prereleaseSetName.trim();
-                          const replace = (text: string) =>
-                            text.replace(new RegExp(oldName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), newName);
-                          changeField("shortDescription", replace(editing.shortDescription));
-                          changeField("description", replace(editing.description));
-                          if (isNew) changeField("title", `${newName} Prerelease`);
-                        }}
-                      >
-                        Update Descriptions
-                      </button>
-                    )}
-                  </div>
-                  <span style={{ fontSize: 11, color: "var(--color-text-light)", marginTop: 4 }}>
-                    Type a new set name, then click &ldquo;Update Descriptions&rdquo; to replace the old name throughout.
-                  </span>
-                </div>
-              )}
 
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                 <label className="form-label">Short Description</label>

@@ -35,6 +35,121 @@
   line-height: 1.6;
 }
 
+/* ─── Active pre-release page ────────────────────────────────────────────── */
+.prereleasePage {
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+.prereleaseHero {
+  position: relative;
+  height: clamp(340px, 55vh, 560px);
+  overflow: hidden;
+}
+
+.prereleaseHeroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.65) 100%);
+}
+
+.prereleaseHeroContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px clamp(24px, 6vw, 80px);
+  color: #fff;
+}
+
+.prereleasePlainHeader {
+  padding: 60px clamp(24px, 6vw, 80px) 40px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prereleaseEyebrow {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+
+.prereleaseTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin: 0 0 12px;
+}
+
+.prereleaseTagline {
+  font-size: clamp(15px, 2vw, 18px);
+  opacity: 0.85;
+  margin: 0;
+  max-width: 560px;
+}
+
+.prereleaseBody {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: clamp(32px, 5vw, 60px) clamp(24px, 6vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.prereleaseInfoBar {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding: 24px 28px;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+.prereleaseInfoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.prereleaseInfoLabel {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+}
+
+.prereleaseInfoValue {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+.prereleaseDesc {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--color-text);
+}
+
+.prereleaseDesc p {
+  margin: 0 0 12px;
+}
+
+.prereleaseCtas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 480px) {
   .holdingPage {
     min-height: 60vh;
@@ -52,5 +167,34 @@
 
   .holdingTitle {
     font-size: clamp(2rem, 12vw, 2.8rem);
+  }
+
+  .prereleaseHero {
+    height: min(58dvh, 440px);
+  }
+
+  .prereleaseHeroContent,
+  .prereleasePlainHeader {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .prereleaseBody {
+    padding: 30px 18px max(36px, var(--safe-bottom));
+    gap: 26px;
+  }
+
+  .prereleaseInfoBar {
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px;
+  }
+
+  .prereleaseCtas {
+    flex-direction: column;
+  }
+
+  .prereleaseCtas :global(.btn) {
+    width: 100%;
   }
 }

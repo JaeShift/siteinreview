@@ -63,7 +63,9 @@
   border: none;
   cursor: pointer;
   color: var(--color-muted);
-  padding: 6px;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  padding: 0;
   transition: color 0.15s ease;
   display: flex;
   align-items: center;
@@ -94,7 +96,7 @@
   }
 
   .content {
-    max-height: 92dvh;
+    max-height: calc(100dvh - var(--safe-top));
     border-radius: 0;
     width: 100%;
   }
@@ -114,6 +116,6 @@
   }
 
   .body {
-    padding: 18px;
+    padding: 18px 18px max(18px, var(--safe-bottom));
   }
 }

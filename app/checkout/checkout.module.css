@@ -1,6 +1,7 @@
 /* ── Cart Review Page ── */
 .page {
   min-height: 100vh;
+  min-height: 100dvh;
   background: #fff;
   padding: 60px 24px 80px;
 }
@@ -346,6 +347,7 @@
 /* ── Stripe payment page ── */
 .checkoutPage {
   min-height: 100vh;
+  min-height: 100dvh;
   background: #f6f9fc;
 }
 
@@ -374,7 +376,7 @@
 
 @media (max-width: 560px) {
   .page {
-    padding: 40px 16px 60px;
+    padding: 40px 16px max(60px, var(--safe-bottom));
   }
 
   .container {
@@ -409,6 +411,17 @@
 
   .summary {
     padding: 22px 18px 26px;
+  }
+
+  .qtyBtn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .checkoutPage {
+    padding-left: max(8px, var(--safe-left));
+    padding-right: max(8px, var(--safe-right));
+    padding-bottom: var(--safe-bottom);
   }
 
   .footerLinks {

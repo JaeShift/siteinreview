@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import StatsCard from "@/components/admin/StatsCard";
+import LiveClock from "@/components/admin/LiveClock";
 import { getEventsStore, getOrdersStore } from "@/lib/store";
 import styles from "./dashboard.module.css";
 
@@ -16,44 +17,54 @@ export default function AdminDashboardPage() {
   const orders = getOrdersStore();
 
   const today = new Date().toISOString().split("T")[0];
+  const endOfWeek = new Date();
+  endOfWeek.setDate(endOfWeek.getDate() + (6 - endOfWeek.getDay()));
+  const endOfWeekStr = endOfWeek.toISOString().split("T")[0];
+  const in30DaysStr = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+
+  const eventsThisWeek = events.filter((e) => e.date >= today && e.date <= endOfWeekStr);
+  const eventsNext30 = events.filter((e) => e.date >= today && e.date <= in30DaysStr);
+
   const upcoming = events
     .filter((e) => e.date >= today)
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(0, 5);
 
   const recentOrders = orders.slice(0, 5);
-  const totalRevenue = orders
-    .filter((o) => o.status === "paid")
-    .reduce((sum, o) => sum + o.amountTotal, 0);
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const ordersLast30 = orders.filter((o) => o.createdAt >= thirtyDaysAgo);
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Dashboard</h1>
-        <p className={styles.subtitle}>
-          {new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-        </p>
+        <div>
+          <h1 className={styles.title}>Dashboard</h1>
+          <p className={styles.subtitle}>
+            {new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "America/Phoenix" })}
+          </p>
+        </div>
+        <LiveClock />
       </div>
 
       {/* Stats */}
       <div className={styles.statsGrid}>
         <StatsCard
-          label="Total Orders"
-          value={orders.length}
-          subtext={orders.length > 0 ? `${formatAmount(totalRevenue)} collected` : "no orders yet"}
+          label="Orders (Last 30 Days)"
+          value={ordersLast30.length}
+          subtext={ordersLast30.length > 0 ? "orders placed" : "no orders yet"}
           icon={<OrderIcon />}
           accent
         />
         <StatsCard
-          label="Upcoming Events"
-          value={upcoming.length}
-          subtext="scheduled ahead"
+          label="Events This Week"
+          value={eventsThisWeek.length}
+          subtext={eventsThisWeek.length > 0 ? "happening this week" : "nothing this week"}
           icon={<CalendarIcon />}
         />
         <StatsCard
-          label="Total Events"
-          value={events.length}
-          subtext="in the system"
+          label="Upcoming Events (Next 30 Days)"
+          value={eventsNext30.length}
+          subtext={eventsNext30.length > 0 ? "coming up" : "nothing scheduled"}
           icon={<CalendarIcon />}
         />
       </div>

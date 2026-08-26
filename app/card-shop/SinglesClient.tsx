@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import SearchBar from "@/components/ui/SearchBar";
 import FilterSidebar from "@/components/mtg/FilterSidebar";
 import SingleCard from "@/components/mtg/SingleCard";
@@ -47,6 +47,20 @@ function SinglesInner({ initialCards }: { initialCards: SingleCardData[] }) {
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSidebarOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [sidebarOpen]);
+
   const handleFiltersChange = (newFilters: SinglesFilters) => {
     setFilters(newFilters);
     setPage(1);
@@ -75,9 +89,22 @@ function SinglesInner({ initialCards }: { initialCards: SingleCardData[] }) {
           </button>
         </div>
 
+        {sidebarOpen && (
+          <button
+            type="button"
+            className={styles.filterBackdrop}
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close filters"
+          />
+        )}
+
         <div className={`container ${styles.layout}`}>
           {/* Sidebar */}
           <div className={`${styles.sidebarWrap} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
+            <div className={styles.mobileFilterHeader}>
+              <strong>Filters</strong>
+              <button type="button" onClick={() => setSidebarOpen(false)} aria-label="Close filters">✕</button>
+            </div>
             <FilterSidebar
               filters={filters}
               onChange={handleFiltersChange}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { PromoCode, EventCredit } from "@/lib/store";
+import MediaLibrary from "@/components/admin/MediaLibrary";
 import styles from "./admin-settings.module.css";
 
 function PromoCodesSection() {
@@ -294,11 +295,143 @@ function EventCreditsSection() {
   );
 }
 
+const NOTIF_TRIGGERS = [
+  // Orders
+  { key: "order_new",       label: "New Order Placed",            desc: "A customer completes a purchase",                       group: "Orders" },
+  { key: "order_cancelled", label: "Order Cancelled",             desc: "A customer cancels or voids an order",                  group: "Orders" },
+  { key: "order_refund",    label: "Refund / Dispute",            desc: "A refund is issued or a payment is disputed",           group: "Orders" },
+  // Events & Registrations
+  { key: "reg_new",         label: "New Event Registration",      desc: "Someone registers (confirmed) for an event",            group: "Events & Registrations" },
+  { key: "reg_waitlist",    label: "Waitlist Registration",       desc: "Someone joins an event waitlist",                       group: "Events & Registrations" },
+  { key: "reg_cancelled",   label: "Registration Cancelled",      desc: "An attendee cancels or is removed from an event",       group: "Events & Registrations" },
+  { key: "event_soldout",   label: "Event Sold Out",              desc: "An event reaches its player limit",                     group: "Events & Registrations" },
+  { key: "event_upcoming",  label: "Event Starting Tomorrow",     desc: "Daily reminder the morning before a scheduled event",   group: "Events & Registrations" },
+  // Inventory
+  { key: "inv_low",         label: "Low Card Stock",              desc: "A card's quantity drops to 2 or below",                 group: "Inventory" },
+  { key: "inv_outofstock",  label: "Card Out of Stock",           desc: "A card's quantity reaches 0",                          group: "Inventory" },
+  // Promos
+  { key: "promo_used",      label: "Promo Code Redeemed",         desc: "A customer successfully applies a discount code",       group: "Promotions" },
+  { key: "promo_maxed",     label: "Promo Code Maxed Out",        desc: "A promo code reaches its maximum number of uses",       group: "Promotions" },
+] as const;
+
+type TriggerKey = (typeof NOTIF_TRIGGERS)[number]["key"];
+
+function NotificationsSection() {
+  const [mounted, setMounted] = useState(false);
+  const [email, setEmail] = useState("");
+  const [triggers, setTriggers] = useState<Record<TriggerKey, boolean>>({} as Record<TriggerKey, boolean>);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setEmail(localStorage.getItem("kitsune_notif_email") ?? "");
+    const loaded: Record<string, boolean> = {};
+    for (const t of NOTIF_TRIGGERS) {
+      loaded[t.key] = localStorage.getItem(`kitsune_notif_${t.key}`) === "1";
+    }
+    setTriggers(loaded as Record<TriggerKey, boolean>);
+  }, []);
+
+  function toggle(key: TriggerKey) {
+    setTriggers((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  function save() {
+    localStorage.setItem("kitsune_notif_email", email);
+    for (const t of NOTIF_TRIGGERS) {
+      localStorage.setItem(`kitsune_notif_${t.key}`, triggers[t.key] ? "1" : "0");
+    }
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+  }
+
+  if (!mounted) return null;
+
+  // Group triggers for rendering
+  const groups = Array.from(new Set(NOTIF_TRIGGERS.map((t) => t.group)));
+
+  return (
+    <section className={styles.section}>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>Notifications</h2>
+      </div>
+
+      {/* Email address */}
+      <div className={styles.notifBlock}>
+        <div className={styles.notifBlockLabel}>Notification Email</div>
+        <div className={styles.notifEmailRow}>
+          <input
+            className="form-input"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{ flex: 1, maxWidth: 340 }}
+          />
+        </div>
+      </div>
+
+      {/* Trigger toggles grouped */}
+      <div className={styles.notifBlock}>
+        <div className={styles.notifBlockLabel}>Alert me when…</div>
+        <div className={styles.notifToggles}>
+          {groups.map((group) => (
+            <>
+              <div key={`group-${group}`} className={styles.notifGroupHeader}>{group}</div>
+              {NOTIF_TRIGGERS.filter((t) => t.group === group).map((t) => (
+                <label key={t.key} className={styles.notifToggle}>
+                  <div className={styles.notifToggleInfo}>
+                    <span className={styles.notifToggleName}>{t.label}</span>
+                    <span className={styles.notifToggleDesc}>{t.desc}</span>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={!!triggers[t.key]}
+                    className={`${styles.toggleSwitch} ${triggers[t.key] ? styles.toggleSwitchOn : ""}`}
+                    onClick={() => toggle(t.key)}
+                  >
+                    <span className={styles.toggleThumb} />
+                  </button>
+                </label>
+              ))}
+            </>
+          ))}
+        </div>
+      </div>
+
+
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+        <button className="btn btn-primary" onClick={save}>Save Preferences</button>
+        {saved && (
+          <span style={{ fontSize: 13, color: "var(--color-green)", fontWeight: 600 }}>Saved!</span>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function MediaLibrarySection() {
+  return (
+    <section className={styles.section} style={{ maxWidth: "none" }}>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>Media Library</h2>
+      </div>
+      <p className={styles.sectionDesc}>
+        Upload and manage images used across the site. Copy URLs to use them in events, menus, or anywhere else.
+      </p>
+      <MediaLibrary />
+    </section>
+  );
+}
+
 export default function SettingsClient() {
   return (
     <>
+      <NotificationsSection />
       <PromoCodesSection />
       <EventCreditsSection />
+      <MediaLibrarySection />
     </>
   );
 }

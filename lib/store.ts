@@ -267,6 +267,39 @@ export function deletePromoCode(codeStr: string): PromoCode[] {
   return codes;
 }
 
+// ─── Pre-Release Page Config ─────────────────────────────────────────────────
+
+export interface PrereleaseConfig {
+  active: boolean;
+  setName: string;
+  tagline: string;
+  date: string;
+  time: string;
+  description: string;
+  imageUrl: string;
+  eventSlug: string;
+}
+
+const PRERELEASE_DEFAULT: PrereleaseConfig = {
+  active: false,
+  setName: "",
+  tagline: "",
+  date: "",
+  time: "",
+  description: "",
+  imageUrl: "",
+  eventSlug: "",
+};
+
+export function getPrereleaseConfig(): PrereleaseConfig {
+  return readJson<PrereleaseConfig>("prerelease.json", PRERELEASE_DEFAULT);
+}
+
+export function savePrereleaseConfig(config: PrereleaseConfig): PrereleaseConfig {
+  writeJson("prerelease.json", config);
+  return config;
+}
+
 // ─── Event Credits ────────────────────────────────────────────────────────────
 
 export interface EventCredit {

@@ -225,6 +225,12 @@
     gap: 18px;
   }
 
+  .checkinBtn,
+  .actionBtn {
+    width: 44px;
+    height: 44px;
+  }
+
   .header {
     align-items: flex-start;
     flex-direction: column;
@@ -434,6 +440,59 @@
   border-top: 1px solid var(--color-border);
 }
 
+@media screen and (max-width: 600px) {
+  .modalOverlay {
+    align-items: flex-end;
+    padding: var(--safe-top) 0 0;
+  }
+
+  .modal {
+    max-width: none;
+    max-height: calc(100dvh - var(--safe-top));
+  }
+
+  .modalHeader {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 14px 16px;
+    background: var(--color-white);
+  }
+
+  .closeBtn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+    padding: 18px 16px;
+  }
+
+  .fullWidth {
+    grid-column: auto;
+  }
+
+  .modalFooter {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    padding: 12px 16px max(12px, var(--safe-bottom));
+    background: var(--color-white);
+  }
+
+  .modalFooter :global(.btn) {
+    flex: 1;
+  }
+
+  .flash {
+    top: max(12px, var(--safe-top));
+    left: 12px;
+    right: 12px;
+  }
+}
+
 /* ─── Flash ─────────────────────────────────────────────────────────────────── */
 .flash {
   position: fixed;
@@ -456,16 +515,66 @@
 
 /* ─── Print ─────────────────────────────────────────────────────────────────── */
 @media print {
+  /* Hide interactive chrome */
   .header,
   .controls,
   .headerActions,
   .actionsCell,
+  .checkinBtn,
   .flash,
   .modalOverlay {
     display: none !important;
   }
 
-  .page { padding: 0; }
-  .statsRow { margin-bottom: 16px; }
-  .tableRow { break-inside: avoid; }
+  /* Page layout */
+  .page {
+    padding: 0;
+    background: #fff;
+  }
+
+  /* Stats strip */
+  .statsRow {
+    margin-bottom: 16px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 12px;
+  }
+
+  /* Print title */
+  .title {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  /* Table */
+  .tableWrap {
+    border: none;
+  }
+
+  .tableRow {
+    break-inside: avoid;
+    border-bottom: 1px solid #eee;
+  }
+
+  .tableHeader {
+    background: #f0f0f0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Status badges print in colour */
+  .statusConfirmed,
+  .statusWaitlisted,
+  .statusCancelled {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Show check-in time without button */
+  .checkinTime {
+    display: inline !important;
+  }
 }

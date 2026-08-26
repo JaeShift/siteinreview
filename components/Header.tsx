@@ -26,6 +26,20 @@ export default function Header() {
     setMenuOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [menuOpen]);
+
   return (
     <header className={styles.header}>
       <div className={styles.headerInner}>
@@ -67,28 +81,36 @@ export default function Header() {
 
       {/* Mobile Drawer */}
       {menuOpen && (
-        <nav className={styles.mobileNav} aria-label="Mobile navigation">
-          {navLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`${styles.mobileNavLink} ${pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/")) ? styles.mobileNavLinkActive : ""}`}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+        <>
           <button
-            className={`${styles.mobileNavLink} ${styles.mobileCartLink}`}
-            onClick={() => {
-              setMenuOpen(false);
-              openCart();
-            }}
-            aria-label={`Open cart — ${totalCount} item${totalCount !== 1 ? "s" : ""}`}
-          >
-            CART ({totalCount})
-          </button>
-        </nav>
+            type="button"
+            className={styles.mobileBackdrop}
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+          />
+          <nav className={styles.mobileNav} aria-label="Mobile navigation">
+            {navLinks.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`${styles.mobileNavLink} ${pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/")) ? styles.mobileNavLinkActive : ""}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <button
+              className={`${styles.mobileNavLink} ${styles.mobileCartLink}`}
+              onClick={() => {
+                setMenuOpen(false);
+                openCart();
+              }}
+              aria-label={`Open cart — ${totalCount} item${totalCount !== 1 ? "s" : ""}`}
+            >
+              CART ({totalCount})
+            </button>
+          </nav>
+        </>
       )}
     </header>
   );

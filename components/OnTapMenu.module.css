@@ -311,11 +311,22 @@
   }
 
   .menuScroll {
-    height: 520px;
+    height: min(520px, 68dvh);
   }
 
   .item {
+    min-height: 128px;
     padding: 14px 12px;
+  }
+
+  .menuTitle {
+    font-size: 1.35rem;
+    white-space: normal;
+  }
+
+  .pill {
+    min-height: 44px;
+    padding: 8px 16px;
   }
 
   .glassWrap {

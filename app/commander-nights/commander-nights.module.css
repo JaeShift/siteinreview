@@ -595,6 +595,31 @@
   transition: border-color 0.15s;
 }
 
+@media (max-width: 640px) {
+  .scheduleItem {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .discordForm {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .discordInput {
+    width: 100%;
+    min-height: 48px;
+    font-size: 16px;
+    border-right: 1px solid var(--color-black);
+  }
+
+  .discordBtn {
+    width: 100%;
+    min-height: 48px;
+  }
+}
+
 .discordInput:focus {
   border-color: var(--color-accent);
 }

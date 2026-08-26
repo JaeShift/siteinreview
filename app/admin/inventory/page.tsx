@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import type { SingleCard, Condition, CardColor, CardType, Rarity, Availability } from "@/lib/singles-data";
 import { formatCondition, formatSetDisplay, normalizeRarity, rarityBadgeLabel } from "@/lib/singles-data";
+import BulkImportModal from "./BulkImportModal";
 import styles from "./admin-inventory.module.css";
 
 // ── Scryfall helpers ──────────────────────────────────────────────────────────
@@ -264,19 +265,23 @@ function colorLabel(code: CardColor): string {
   return CARD_COLORS.find((c) => c.code === code)?.label ?? code;
 }
 
-function PrintOption({ print, frontImg, backImg, isDFC, onSelect }: {
+function PrintOption({ print, frontImg, backImg, isDFC, onSelect, isSelected, onShowDetails, onOpenDetails }: {
   print: ScryfallCard;
   frontImg: string;
   backImg: string;
   isDFC: boolean;
   onSelect: () => void;
+  isSelected?: boolean;
+  onShowDetails?: (e: React.MouseEvent) => void;
+  onOpenDetails?: () => void;
 }) {
   const [flipped, setFlipped] = useState(false);
   const img = flipped ? backImg : frontImg;
   return (
-    <div className={styles.printOption}>
+    <div className={`${styles.printOption} ${isSelected ? styles.printOptionSelected : ""}`}>
       <div className={styles.printOptionImgWrap}>
-        <button type="button" className={styles.printOptionImgBtn} onClick={onSelect}>
+        {isSelected && <div className={styles.printOptionCheck}>✓</div>}
+        <button type="button" className={styles.printOptionImgBtn} onClick={onSelect} onContextMenu={onShowDetails}>
           {img ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={img} alt={print.name} className={styles.printOptionImg} />
@@ -298,6 +303,17 @@ function PrintOption({ print, frontImg, backImg, isDFC, onSelect }: {
             </svg>
           </button>
         )}
+        {onOpenDetails && (
+          <button
+            type="button"
+            className={styles.printDetailsBtn}
+            onClick={(e) => { e.stopPropagation(); onOpenDetails(); }}
+            aria-label={`Show details for ${print.name}`}
+            title="Show details"
+          >
+            ⋯
+          </button>
+        )}
       </div>
       <span className={styles.printOptionSet}>
         {formatSetDisplay(print.set_name, print.set.toUpperCase(), print.collector_number)}
@@ -311,21 +327,40 @@ function PrintOption({ print, frontImg, backImg, isDFC, onSelect }: {
 }
 
 export default function AdminInventoryPage() {
+  const [inventoryView, setInventoryView] = useState<null | "cards" | "merchandise">(null);
   const [cards, setCards] = useState<SingleCard[]>([]);
   const [loading, setLoading] = useState(true);
-  const [addMode, setAddMode] = useState<null | "choose" | "manual" | "scryfall" | "edit">(null);
+  const [addMode, setAddMode] = useState<null | "choose" | "manual" | "scryfall" | "edit" | "bulk" | "pick" | "details">(null);
   const [form, setForm] = useState({ ...BLANK_FORM });
   const [editCard, setEditCard] = useState<SingleCard | null>(null);
   const [saving, setSaving] = useState(false);
+  const [cardQueue, setCardQueue] = useState<typeof BLANK_FORM[]>([]);
+  const [savingAll, setSavingAll] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<SingleCard | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [bulkUpdating, setBulkUpdating] = useState(false);
+  const [showBulkPriceModal, setShowBulkPriceModal] = useState(false);
+  const [bulkPriceEdits, setBulkPriceEdits] = useState<Record<string, string>>({});
   const [previewCard, setPreviewCard] = useState<SingleCard | null>(null);
   const [previewFlipped, setPreviewFlipped] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshResult, setRefreshResult] = useState<{ updated: number; failed: number } | null>(null);
+  const [autoDiscount, setAutoDiscount] = useState(true);
+  const [pickContextMenu, setPickContextMenu] = useState<{ x: number; y: number; card: ScryfallCard } | null>(null);
+  const [pickDetailCard, setPickDetailCard] = useState<ScryfallCard | null>(null);
+  const [sfCollectorNumber, setSfCollectorNumber] = useState("");
+  const [setNumLoading, setSetNumLoading] = useState(false);
+  const [setNumError, setSetNumError] = useState<string | null>(null);
+  const sfCollectorRef = useRef<HTMLInputElement>(null);
+
+  // ── Pick-then-Details flow ──────────────────────────────────────────────────
+  const [pickQueue, setPickQueue] = useState<ScryfallCard[]>([]);
+  const [pickQueueQty, setPickQueueQty] = useState<Record<string, number>>({});
+  type DetailForm = typeof BLANK_FORM & { _sfCard: ScryfallCard; _autoDiscount: boolean };
+  const [detailForms, setDetailForms] = useState<DetailForm[]>([]);
 
   // ── Scryfall search ──────────────────────────────────────────────────────────
   const [sfQuery, setSfQuery] = useState("");
@@ -353,21 +388,39 @@ export default function AdminInventoryPage() {
     }
   }, [addMode]);
 
-  function onSfQueryChange(val: string) {
+  function onSfQueryChange(val: string, isPickMode = false) {
     setSfQuery(val);
     setSfCard(null);
-    setSfPrints([]);
     setSfError(null);
     if (sfDebounce.current) clearTimeout(sfDebounce.current);
-    if (val.length < 2) { setSfSuggestions([]); setSfOpen(false); return; }
+    if (val.length < 2) {
+      setSfSuggestions([]);
+      setSfOpen(false);
+      if (isPickMode) setSfPrints([]);
+      return;
+    }
     sfDebounce.current = setTimeout(async () => {
-      try {
-        const res = await fetch(`https://api.scryfall.com/cards/autocomplete?q=${encodeURIComponent(val)}`);
-        const data = await res.json();
-        setSfSuggestions(data.data?.slice(0, 8) ?? []);
-        setSfOpen(true);
-      } catch { setSfSuggestions([]); }
-    }, 250);
+      if (isPickMode) {
+        setSfLoading(true);
+        try {
+          const res = await fetch(`https://api.scryfall.com/cards/search?q=${encodeURIComponent(val)}&unique=cards&order=name`);
+          if (res.ok) {
+            const data = await res.json();
+            setSfPrints(data.data ?? []);
+          } else {
+            setSfPrints([]);
+          }
+        } catch { setSfPrints([]); }
+        setSfLoading(false);
+      } else {
+        try {
+          const res = await fetch(`https://api.scryfall.com/cards/autocomplete?q=${encodeURIComponent(val)}`);
+          const data = await res.json();
+          setSfSuggestions(data.data?.slice(0, 8) ?? []);
+          setSfOpen(true);
+        } catch { setSfSuggestions([]); }
+      }
+    }, 300);
   }
 
   function applySfCard(card: ScryfallCard) {
@@ -455,9 +508,6 @@ export default function AdminInventoryPage() {
     }
   }
 
-  const allSelected = cards.length > 0 && selected.size === cards.length;
-  const someSelected = selected.size > 0 && !allSelected;
-
   function toggleSelect(id: string) {
     setSelected((prev) => {
       const next = new Set(prev);
@@ -467,7 +517,17 @@ export default function AdminInventoryPage() {
   }
 
   function toggleSelectAll() {
-    setSelected(allSelected ? new Set() : new Set(cards.map((c) => c.id)));
+    const visibleIds = displayCards.map((c) => c.id);
+    const allVisible = visibleIds.length > 0 && visibleIds.every((id) => selected.has(id));
+    if (allVisible) {
+      setSelected((prev) => {
+        const next = new Set(prev);
+        visibleIds.forEach((id) => next.delete(id));
+        return next;
+      });
+    } else {
+      setSelected((prev) => new Set(Array.from(prev).concat(visibleIds)));
+    }
   }
 
   async function bulkDelete() {
@@ -481,6 +541,52 @@ export default function AdminInventoryPage() {
     setBulkDeleting(false);
   }
 
+  async function bulkSetVisibility(hidden: boolean) {
+    if (selected.size === 0) return;
+    setBulkUpdating(true);
+    await Promise.all(
+      Array.from(selected).map((id) =>
+        fetch(`/api/admin/inventory/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ hidden }),
+        })
+      )
+    );
+    setCards((prev) => prev.map((c) => selected.has(c.id) ? { ...c, hidden } : c));
+    setBulkUpdating(false);
+  }
+
+  function openBulkPriceModal() {
+    const edits: Record<string, string> = {};
+    cards.forEach((c) => {
+      if (selected.has(c.id)) edits[c.id] = String(c.price);
+    });
+    setBulkPriceEdits(edits);
+    setShowBulkPriceModal(true);
+  }
+
+  async function saveAllPrices() {
+    setBulkUpdating(true);
+    const updates = Object.entries(bulkPriceEdits).map(([id, val]) => {
+      const price = parseFloat(val);
+      if (isNaN(price) || price < 0) return null;
+      return fetch(`/api/admin/inventory/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ price }),
+      }).then((r) => r.ok ? { id, price } : null);
+    }).filter(Boolean) as Promise<{ id: string; price: number } | null>[];
+    const results = await Promise.all(updates);
+    setCards((prev) => prev.map((c) => {
+      const result = results.find((r) => r?.id === c.id);
+      return result ? { ...c, price: result.price } : c;
+    }));
+    setShowBulkPriceModal(false);
+    setBulkPriceEdits({});
+    setBulkUpdating(false);
+  }
+
   const load = useCallback(async () => {
     setLoading(true);
     const res = await fetch("/api/admin/inventory");
@@ -489,7 +595,7 @@ export default function AdminInventoryPage() {
     setLoading(false);
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { if (inventoryView === "cards") load(); }, [load, inventoryView]);
 
   // ── Inventory filter/sort state ──────────────────────────────────────────────
   const [invSearch, setInvSearch] = useState("");
@@ -538,6 +644,9 @@ export default function AdminInventoryPage() {
   const totalValue = cards.reduce((s, c) => s + c.price * c.quantity, 0);
   const totalQty = cards.reduce((s, c) => s + c.quantity, 0);
   const setsCount = EDITIONS.length;
+
+  const allSelected = displayCards.length > 0 && displayCards.every((c) => selected.has(c.id));
+  const someSelected = displayCards.some((c) => selected.has(c.id)) && !allSelected;
 
   // ── Delete ──────────────────────────────────────────────────────────────────
   async function confirmDelete() {
@@ -654,8 +763,69 @@ export default function AdminInventoryPage() {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
+  function addToQueue() {
+    setError(null);
+    if (!form.name.trim() || !form.set.trim() || !form.price || !form.quantity) {
+      setError("Name, Edition, Price and Quantity are required before queuing.");
+      return;
+    }
+    setCardQueue((prev) => [...prev, { ...form }]);
+    // Reset form but keep condition/foil/availability for convenience
+    setForm({ ...BLANK_FORM, condition: form.condition, foil: form.foil, availability: form.availability });
+    setSfCard(null);
+    setSfPrints([]);
+    setSfQuery("");
+    setSfSetFilter("");
+    setAdvancedOpen(false);
+    setAutoDiscount(true);
+  }
+
+  function removeFromQueue(index: number) {
+    setCardQueue((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  async function saveAllQueued() {
+    if (cardQueue.length === 0) return;
+    setSavingAll(true);
+    setError(null);
+    try {
+      const results = await Promise.all(
+        cardQueue.map((entry) => {
+          const payload = {
+            ...entry,
+            price: parseFloat(entry.price),
+            marketPrice: entry.marketPrice !== "" ? parseFloat(entry.marketPrice) : undefined,
+            quantity: parseInt(entry.quantity, 10),
+            cmc: entry.cmc !== "" ? parseInt(entry.cmc, 10) : undefined,
+            setCode: entry.setCode || entry.set.slice(0, 3).toUpperCase(),
+          };
+          return fetch("/api/admin/inventory", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          }).then((r) => r.ok ? r.json() : null);
+        })
+      );
+      const saved = results.filter(Boolean);
+      setCards((prev) => [...prev, ...saved]);
+      setCardQueue([]);
+      setAddMode(null);
+      setForm({ ...BLANK_FORM });
+    } catch {
+      setError("Failed to save some cards. Please try again.");
+    }
+    setSavingAll(false);
+  }
+
   const showAddForm = addMode === "manual" || (addMode === "scryfall" && !!sfCard);
   const showImportedLayout = addMode === "scryfall" && !!sfCard;
+
+  function applyDiscountedPrice(marketStr: string, discount: boolean) {
+    const market = parseFloat(marketStr);
+    if (isNaN(market)) return;
+    const listing = discount ? (market * 0.85).toFixed(2) : marketStr;
+    set("price", listing);
+  }
 
   function setFinish(foil: boolean) {
     set("foil", foil);
@@ -663,7 +833,15 @@ export default function AdminInventoryPage() {
     const market = foil
       ? (sfCard.prices?.usd_foil ?? sfCard.prices?.usd)
       : (sfCard.prices?.usd ?? sfCard.prices?.usd_foil);
-    if (market) { set("price", market); set("marketPrice", market); }
+    if (market) {
+      set("marketPrice", market);
+      applyDiscountedPrice(market, autoDiscount);
+    }
+  }
+
+  function toggleAutoDiscount(on: boolean) {
+    setAutoDiscount(on);
+    if (form.marketPrice) applyDiscountedPrice(form.marketPrice, on);
   }
 
   function resetImportSearch() {
@@ -673,19 +851,223 @@ export default function AdminInventoryPage() {
     setSfSetFilter("");
     setForm({ ...BLANK_FORM });
     setAdvancedOpen(false);
+    setAutoDiscount(false);
   }
 
   function backToPrintPicker() {
     setSfCard(null);
     setForm({ ...BLANK_FORM });
     setAdvancedOpen(false);
+    setAutoDiscount(false);
+  }
+
+  // ── Pick-then-Details helpers ────────────────────────────────────────────────
+  function toggleSfCardInPick(card: ScryfallCard) {
+    setPickQueue((prev) => {
+      const idx = prev.findIndex((c) => c.id === card.id);
+      if (idx >= 0) {
+        setPickQueueQty((q) => { const next = { ...q }; delete next[card.id]; return next; });
+        return prev.filter((_, i) => i !== idx);
+      }
+      setPickQueueQty((q) => ({ ...q, [card.id]: 1 }));
+      return [...prev, card];
+    });
+  }
+
+  function removeFromPickQueue(index: number) {
+    setPickQueue((prev) => {
+      const card = prev[index];
+      if (card) setPickQueueQty((q) => { const next = { ...q }; delete next[card.id]; return next; });
+      return prev.filter((_, i) => i !== index);
+    });
+  }
+
+  async function fetchBySetAndNumber() {
+    const set = sfSetFilter.trim().toLowerCase();
+    const num = sfCollectorNumber.trim();
+    if (!set || !num) { setSetNumError("Enter both a set code and collector number."); return; }
+    setSetNumLoading(true);
+    setSetNumError(null);
+    try {
+      const res = await fetch(`https://api.scryfall.com/cards/${encodeURIComponent(set)}/${encodeURIComponent(num)}`);
+      if (!res.ok) { setSetNumError(`Card not found: ${set.toUpperCase()} #${num}`); return; }
+      const card: ScryfallCard = await res.json();
+      setPickQueue((prev) => {
+        if (prev.some((c) => c.id === card.id)) return prev;
+        setPickQueueQty((q) => ({ ...q, [card.id]: 1 }));
+        return [...prev, card];
+      });
+      setSfCollectorNumber("");
+      sfCollectorRef.current?.focus();
+    } catch {
+      setSetNumError("Failed to fetch card. Check set code and collector number.");
+    } finally {
+      setSetNumLoading(false);
+    }
+  }
+
+  function startDetails() {
+    const forms: DetailForm[] = pickQueue.map((card) => {
+      const base = populateFormFromScryfall(card);
+      const market = base.marketPrice ? parseFloat(base.marketPrice) : NaN;
+      const price = !isNaN(market) ? (market * 0.85).toFixed(2) : base.price;
+      const quantity = String(pickQueueQty[card.id] ?? 1);
+      return { ...base, price, quantity, _sfCard: card, _autoDiscount: !isNaN(market) };
+    });
+    setDetailForms(forms);
+    setAddMode("details");
+  }
+
+  function updateDetailForm(index: number, key: keyof typeof BLANK_FORM, value: (typeof BLANK_FORM)[keyof typeof BLANK_FORM]) {
+    setDetailForms((prev) => prev.map((f, i) => i === index ? { ...f, [key]: value } : f));
+  }
+
+  function setDetailFinish(index: number, foil: boolean) {
+    setDetailForms((prev) => prev.map((f, i) => {
+      if (i !== index) return f;
+      const card = f._sfCard;
+      const marketStr = foil
+        ? (card.prices?.usd_foil ?? card.prices?.usd)
+        : (card.prices?.usd ?? card.prices?.usd_foil);
+      const updated: DetailForm = { ...f, foil };
+      if (marketStr) {
+        updated.marketPrice = marketStr;
+        if (f._autoDiscount) updated.price = (parseFloat(marketStr) * 0.85).toFixed(2);
+      }
+      return updated;
+    }));
+  }
+
+  async function saveAllDetails() {
+    setSavingAll(true);
+    setError(null);
+    try {
+      const results = await Promise.all(
+        detailForms.map((entry) => {
+          const payload = {
+            name: entry.name, set: entry.set, setCode: entry.setCode || entry.set.slice(0, 3).toUpperCase(),
+            collectorNumber: entry.collectorNumber, condition: entry.condition, foil: entry.foil,
+            price: parseFloat(entry.price),
+            marketPrice: entry.marketPrice !== "" ? parseFloat(entry.marketPrice) : undefined,
+            quantity: parseInt(entry.quantity, 10),
+            imageUrl: entry.imageUrl, backImageUrl: entry.backImageUrl, color: entry.color,
+            colorIdentity: entry.colorIdentity, type: entry.type, rarity: entry.rarity,
+            manaCost: entry.manaCost, cmc: entry.cmc !== "" ? parseInt(entry.cmc, 10) : undefined,
+            power: entry.power, toughness: entry.toughness, oracleText: entry.oracleText,
+            availability: entry.availability, formats: entry.formats,
+            backName: entry.backName || undefined, backType: entry.backType || undefined,
+            backManaCost: entry.backManaCost || undefined, backOracleText: entry.backOracleText || undefined,
+            backPower: entry.backPower || undefined, backToughness: entry.backToughness || undefined,
+          };
+          return fetch("/api/admin/inventory", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          }).then((r) => r.ok ? r.json() : null);
+        })
+      );
+      const saved = results.filter(Boolean);
+      setCards((prev) => [...prev, ...saved]);
+      setPickQueue([]);
+      setPickQueueQty({});
+      setDetailForms([]);
+      setAddMode(null);
+      setForm({ ...BLANK_FORM });
+    } catch {
+      setError("Failed to save some cards. Please try again.");
+    }
+    setSavingAll(false);
+  }
+
+  // ── Inventory hub picker ────────────────────────────────────────────────────
+  if (inventoryView === null) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.hubHeader}>
+          <h1 className={styles.title}>Inventory</h1>
+          <p className={styles.subtitle}>Select a section to manage</p>
+        </div>
+        <div className={styles.hubGrid}>
+          {/* Card Inventory */}
+          <button className={styles.hubCard} onClick={() => setInventoryView("cards")}>
+            <div className={styles.hubCardIcon}>
+              <svg width="28" height="28" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                <rect x="5" y="6" width="22" height="30" rx="2" stroke="currentColor" strokeWidth="2" />
+                <rect x="13" y="4" width="22" height="30" rx="2" stroke="currentColor" strokeWidth="2" fill="var(--color-white,#fff)" />
+                <line x1="18" y1="13" x2="30" y2="13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                <line x1="18" y1="18" x2="30" y2="18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                <line x1="18" y1="23" x2="26" y2="23" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+            </div>
+            <div className={styles.hubCardBody}>
+              <span className={styles.hubCardLabel}>Card Inventory</span>
+              <span className={styles.hubCardDesc}>Add singles via Scryfall, manage prices, conditions, and quantities.</span>
+            </div>
+            <div className={styles.hubCardMeta}>
+              <span className={styles.hubCardStatNum}>{totalQty > 0 ? totalQty.toLocaleString() : cards.length > 0 ? cards.length : "—"}</span>
+              <span className={styles.hubCardStatLabel}>{totalQty > 0 ? "copies in stock" : "unique cards"}</span>
+            </div>
+            <span className={styles.hubCardCta}>Open →</span>
+          </button>
+
+          {/* Merchandise — coming soon */}
+          <div className={styles.hubCardDisabled}>
+            <div className={styles.hubCardIcon}>
+              <svg width="28" height="28" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                <rect x="4" y="18" width="32" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
+                <path d="M12 18v-4a8 8 0 0 1 16 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                <line x1="4" y1="26" x2="36" y2="26" stroke="currentColor" strokeWidth="1.8" />
+              </svg>
+            </div>
+            <div className={styles.hubCardBody}>
+              <span className={styles.hubCardLabel}>Merchandise</span>
+              <span className={styles.hubCardDesc}>List apparel, accessories, and store goods for sale on the site.</span>
+            </div>
+            <div className={styles.hubCardMeta}>
+              <span className={styles.hubCardStatNum}>—</span>
+              <span className={styles.hubCardStatLabel}>items listed</span>
+            </div>
+            <span className={styles.hubComingSoonBadge}>Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Merchandise placeholder ─────────────────────────────────────────────────
+  if (inventoryView === "merchandise") {
+    return (
+      <div className={styles.page}>
+        <div className={styles.header}>
+          <div>
+            <button className={styles.backBtn} onClick={() => setInventoryView(null)}>← Inventory</button>
+            <h1 className={styles.title}>Merchandise</h1>
+            <p className={styles.subtitle}>Apparel, accessories, and store goods</p>
+          </div>
+        </div>
+        <div className={styles.merchandisePlaceholder}>
+          <div className={styles.merchandisePlaceholderIcon}>
+            <svg width="56" height="56" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+              <rect x="4" y="18" width="32" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
+              <path d="M12 18v-4a8 8 0 0 1 16 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <line x1="4" y1="26" x2="36" y2="26" stroke="currentColor" strokeWidth="1.8" />
+            </svg>
+          </div>
+          <h2 className={styles.merchandisePlaceholderTitle}>Merchandise Inventory</h2>
+          <p className={styles.merchandisePlaceholderDesc}>
+            This section is coming soon. You&apos;ll be able to list merchandise items for sale on the site — apparel, accessories, and other store goods.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Inventory</h1>
+          <button className={styles.backBtn} onClick={() => setInventoryView(null)}>← Inventory</button>
+          <h1 className={styles.title}>Card Inventory</h1>
           <p className={styles.subtitle}>{cards.length} unique cards · {totalQty} total copies</p>
         </div>
         <div className={styles.headerActions}>
@@ -717,7 +1099,7 @@ export default function AdminInventoryPage() {
             )}
           </div>
           <button className="btn btn-primary" onClick={() => setAddMode("choose")}>
-            + Add Card
+            + Add Cards
           </button>
         </div>
       </div>
@@ -747,13 +1129,13 @@ export default function AdminInventoryPage() {
         <div className={styles.bulkBar}>
           <span className={styles.bulkCount}>{selected.size} card{selected.size !== 1 ? "s" : ""} selected</span>
           <div className={styles.bulkActions}>
-            <button className={`btn btn-outline ${styles.bulkDeselectBtn}`} onClick={() => setSelected(new Set())} disabled={bulkDeleting}>
+            <button className={`btn btn-outline ${styles.bulkDeselectBtn}`} onClick={() => setSelected(new Set())} disabled={bulkDeleting || bulkUpdating}>
               Deselect All
             </button>
             {selected.size === 1 && (
               <button
                 className={`btn btn-outline ${styles.editBtn}`}
-                disabled={bulkDeleting}
+                disabled={bulkDeleting || bulkUpdating}
                 onClick={() => {
                   const id = Array.from(selected)[0];
                   const card = cards.find((c) => c.id === id);
@@ -763,7 +1145,28 @@ export default function AdminInventoryPage() {
                 Edit
               </button>
             )}
-            <button className={`btn btn-primary ${styles.dangerBtn}`} onClick={bulkDelete} disabled={bulkDeleting}>
+            <button
+              className={`btn btn-outline ${styles.bulkVisBtn}`}
+              disabled={bulkDeleting || bulkUpdating}
+              onClick={() => bulkSetVisibility(false)}
+            >
+              {bulkUpdating ? "…" : "Mark Live"}
+            </button>
+            <button
+              className={`btn btn-outline ${styles.bulkVisBtn}`}
+              disabled={bulkDeleting || bulkUpdating}
+              onClick={() => bulkSetVisibility(true)}
+            >
+              {bulkUpdating ? "…" : "Mark Hidden"}
+            </button>
+            <button
+              className={`btn btn-outline ${styles.bulkVisBtn}`}
+              disabled={bulkDeleting || bulkUpdating}
+              onClick={openBulkPriceModal}
+            >
+              Edit Prices
+            </button>
+            <button className={`btn btn-primary ${styles.dangerBtn}`} onClick={bulkDelete} disabled={bulkDeleting || bulkUpdating}>
               {bulkDeleting ? "Deleting…" : `Delete ${selected.size}`}
             </button>
           </div>
@@ -827,14 +1230,15 @@ export default function AdminInventoryPage() {
           </span>
           <span></span>{/* thumbnail */}
           <span>Card Name</span>
-          <span>Set</span>
-          <span>Condition</span>
-          <span>Foil</span>
-          <span>Rarity</span>
-          <span>Price</span>
-          <span>Market $</span>
-          <span>Qty</span>
-          <span>Visibility</span>
+          <span style={{ textAlign: "center", display: "block" }}>Set</span>
+          <span style={{ textAlign: "center", display: "block" }}>Condition</span>
+          <span style={{ textAlign: "center", display: "block" }}>Foil</span>
+          <span style={{ textAlign: "center", display: "block" }}>Rarity</span>
+          <span style={{ textAlign: "center", display: "block" }}>Listed Price</span>
+          <span style={{ textAlign: "center", display: "block" }}>−15% Below Market</span>
+          <span style={{ textAlign: "center", display: "block" }}>Scryfall Price</span>
+          <span style={{ textAlign: "center", display: "block" }}>Qty</span>
+          <span style={{ textAlign: "center", display: "block" }}>Visibility</span>
         </div>
         {loading ? (
           <div className={styles.emptyState}>Loading…</div>
@@ -868,28 +1272,23 @@ export default function AdminInventoryPage() {
                 {formatSetDisplay(card.set, card.setCode, card.collectorNumber)}
               </span>
               <span className={styles.condition}>{card.condition}</span>
-              <span className={`${styles.foil} ${card.foil ? styles.foilYes : ""}`}>
-                {card.foil ? "Foil" : "—"}
+              <span className={styles.foil}>
+                {card.foil && <span className={styles.foilYes}>Foil</span>}
               </span>
-              <span
-                className={`${styles.rarityBadge} ${styles[`rarity_${normalizeRarity(card.rarity).replace(/\s+/g, "")}`] ?? ""}`}
-                title={normalizeRarity(card.rarity)}
-              >
-                {rarityBadgeLabel(card.rarity)}
+              <span className={styles.rarityCell}>
+                <span
+                  className={`${styles.rarityBadge} ${styles[`rarity_${normalizeRarity(card.rarity).replace(/\s+/g, "")}`] ?? ""}`}
+                  title={normalizeRarity(card.rarity)}
+                >
+                  {rarityBadgeLabel(card.rarity)}
+                </span>
               </span>
               <span className={styles.price}>{formatAmount(card.price)}</span>
+              <span className={styles.total} title="15% below Scryfall market price" style={{ textAlign: "center" }}>
+                {card.marketPrice !== undefined ? formatAmount(card.marketPrice * 0.85) : "—"}
+              </span>
               <span className={styles.total} title="Scryfall market price">
-                {card.marketPrice !== undefined ? (
-                  <>
-                    {formatAmount(card.marketPrice)}
-                    {card.marketPrice > card.price && (
-                      <span className={styles.priceUp} title="Market price is above your listing price"> ▲</span>
-                    )}
-                    {card.marketPrice < card.price && (
-                      <span className={styles.priceDown} title="Market price is below your listing price"> ▼</span>
-                    )}
-                  </>
-                ) : "—"}
+                {card.marketPrice !== undefined ? formatAmount(card.marketPrice) : "—"}
               </span>
               <span className={`${styles.qty} ${card.quantity <= 2 ? styles.qtyLow : ""}`}>{card.quantity}</span>
               <button
@@ -1082,7 +1481,7 @@ export default function AdminInventoryPage() {
             <div className={styles.chooserOptions}>
               <button
                 className={styles.chooserOption}
-                onClick={() => { setForm({ ...BLANK_FORM }); setError(null); setSfQuery(""); setSfCard(null); setSfPrints([]); setSfSuggestions([]); setSfError(null); setAdvancedOpen(false); setAddMode("scryfall"); }}
+                onClick={() => { setPickQueue([]); setForm({ ...BLANK_FORM }); setError(null); setSfQuery(""); setSfCard(null); setSfPrints([]); setSfSuggestions([]); setSfError(null); setAdvancedOpen(false); setAddMode("pick"); }}
               >
                 <span className={styles.chooserIcon}>⬡</span>
                 <span className={styles.chooserOptionTitle}>Database Search</span>
@@ -1101,9 +1500,394 @@ export default function AdminInventoryPage() {
         </div>
       )}
 
+      {/* ── Phase 1: Pick Cards ────────────────────────────────────────────── */}
+      {addMode === "pick" && (
+        <div className={styles.overlay} onMouseDown={(e) => { if (e.target === e.currentTarget) { setAddMode(null); setPickQueue([]); } }}>
+          <div className={styles.modal} style={{ maxWidth: 1400, width: "95vw", ...(sfPrints.length === 0 && pickQueue.length === 0 ? { height: "auto", maxHeight: "420px" } : {}) }} onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>
+                {sfPrints.length > 0 && !sfCard ? `${sfQuery ? `Printings of "${sfQuery}"` : `Set ${sfSetFilter}`}` : "Select Cards"}
+              </h2>
+              <button className={styles.modalClose} onClick={() => { setAddMode(null); setPickQueue([]); }}>✕</button>
+            </div>
+
+            <div className={styles.pickModalLayout}>
+              {/* ── Left: Search + Grid ── */}
+              <div className={styles.pickModalMain}>
+                {/* Search bar */}
+                <div className={styles.sfSection}>
+                    <p className={styles.sfLabel}>SEARCH CARDS TO ADD</p>
+                    <div className={styles.sfSearchWrap}>
+                      <div className={styles.sfInputWrap} style={{ flex: 1 }}>
+                        <input
+                          ref={sfInputRef}
+                          className={styles.sfInput}
+                          value={sfQuery}
+                          onChange={(e) => onSfQueryChange(e.target.value, true)}
+                          placeholder="Start typing a card name…"
+                          autoComplete="off"
+                        />
+                        {sfLoading && <span className={styles.sfSpinner}>⟳</span>}
+                      </div>
+                      <span className={styles.sfOrDivider}>OR</span>
+                      <div className={styles.sfSetWrap}>
+                        <input
+                          className={styles.sfSetInput}
+                          value={sfSetFilter}
+                          onChange={(e) => setSfSetFilter(e.target.value.toUpperCase())}
+                          placeholder="Set code…"
+                          maxLength={8}
+                          autoComplete="off"
+                          onKeyDown={(e) => { if (e.key === "Enter" && sfSetFilter && !sfQuery) fetchPrintsForSet(); }}
+                        />
+                        <button type="button" className={styles.setPickerBtn} onClick={openSetPicker} title="Browse all set codes">⋯</button>
+                      </div>
+                      {!sfLoading && sfSetFilter && !sfQuery && (
+                        <button type="button" className={styles.sfFetchBtn} onClick={fetchPrintsForSet}>Browse Set</button>
+                      )}
+                    </div>
+
+                    {/* Set code + collector number quick-add */}
+                    <div className={styles.setNumRow}>
+                      <span className={styles.setNumDividerLabel}>OR — add by set code + card number</span>
+                      <div className={styles.setNumInputs}>
+                        <input
+                          className={styles.sfSetInput}
+                          value={sfSetFilter}
+                          onChange={(e) => { setSfSetFilter(e.target.value.toUpperCase()); setSetNumError(null); }}
+                          placeholder="Set code…"
+                          maxLength={8}
+                          autoComplete="off"
+                          style={{ width: 90 }}
+                          onKeyDown={(e) => { if (e.key === "Enter" && sfSetFilter.trim()) { e.preventDefault(); sfCollectorRef.current?.focus(); sfCollectorRef.current?.select(); } }}
+                        />
+                        <span className={styles.setNumHash}>#</span>
+                        <input
+                          ref={sfCollectorRef}
+                          className={styles.setNumInput}
+                          value={sfCollectorNumber}
+                          onChange={(e) => { setSfCollectorNumber(e.target.value); setSetNumError(null); }}
+                          placeholder="Card number…"
+                          autoComplete="off"
+                          onKeyDown={(e) => { if (e.key === "Enter") fetchBySetAndNumber(); }}
+                        />
+                        <button
+                          type="button"
+                          className={styles.sfFetchBtn}
+                          onClick={fetchBySetAndNumber}
+                          disabled={setNumLoading || !sfSetFilter.trim() || !sfCollectorNumber.trim()}
+                        >
+                          {setNumLoading ? "⟳" : "Add →"}
+                        </button>
+                      </div>
+                      {setNumError && <p className={styles.sfErr}>{setNumError}</p>}
+                    </div>
+
+                    {sfError && <p className={styles.sfErr}>{sfError}</p>}
+                </div>
+
+                {/* Set Picker Popup */}
+                {showSetPicker && typeof document !== "undefined" && createPortal(
+                  <div className={styles.setPickerOverlay} onClick={() => setShowSetPicker(false)}>
+                    <div className={styles.setPickerPopup} onClick={(e) => e.stopPropagation()}>
+                      <div className={styles.setPickerHeader}>
+                        <span className={styles.setPickerTitle}>All Sets</span>
+                        <button className={styles.setPickerClose} onClick={() => setShowSetPicker(false)}>✕</button>
+                      </div>
+                      <input
+                        className={styles.setPickerSearch}
+                        placeholder="Search sets…"
+                        value={setPickerSearch}
+                        onChange={(e) => setSetPickerSearch(e.target.value)}
+                        autoFocus
+                      />
+                      <div className={styles.setPickerList}>
+                        {setsLoading ? (
+                          <p className={styles.setPickerLoading}>Loading sets…</p>
+                        ) : (
+                          Array.from(allSets)
+                            .filter((s) =>
+                              !setPickerSearch ||
+                              s.code.toLowerCase().includes(setPickerSearch.toLowerCase()) ||
+                              s.name.toLowerCase().includes(setPickerSearch.toLowerCase())
+                            )
+                            .sort((a, b) => {
+                              const aS = starredSets.includes(a.code);
+                              const bS = starredSets.includes(b.code);
+                              if (aS && !bS) return -1;
+                              if (!aS && bS) return 1;
+                              return 0;
+                            })
+                            .map((s) => {
+                              const starred = starredSets.includes(s.code);
+                              return (
+                                <div key={s.code} className={`${styles.setPickerRow} ${starred ? styles.setPickerRowStarred : ""}`}>
+                                  <button className={styles.setStarBtn} onClick={(e) => { e.stopPropagation(); toggleStarSet(s.code); }} title={starred ? "Unpin" : "Pin to top"}>
+                                    {starred ? "★" : "☆"}
+                                  </button>
+                                  <button className={styles.setPickerRowInner} onClick={() => { setSfSetFilter(s.code.toUpperCase()); setShowSetPicker(false); }}>
+                                    <span className={styles.setPickerCode}>{s.code.toUpperCase()}</span>
+                                    <span className={styles.setPickerName}>{s.name}</span>
+                                  </button>
+                                </div>
+                              );
+                            })
+                        )}
+                      </div>
+                    </div>
+                  </div>,
+                  document.body
+                )}
+
+                {/* Print Grid */}
+                {sfPrints.length > 0 && !sfCard && (
+                  <section className={styles.printPicker}>
+                    <div className={styles.printPickerHeader}>
+                      <p className={styles.sfLabel}>
+                        {sfQuery
+                          ? <>{sfPrints.length} result{sfPrints.length !== 1 ? "s" : ""} for <strong>{sfQuery}</strong>{sfSetFilter ? <> in <strong>{sfSetFilter}</strong></> : ""} — click to select</>
+                          : <>{sfPrints.length} card{sfPrints.length !== 1 ? "s" : ""} in <strong>{sfSetFilter}</strong> — click to select</>
+                        }
+                      </p>
+                      {!sfQuery && (
+                        <button type="button" className={styles.changeCardBtn} onClick={() => { setSfPrints([]); setSfSetFilter(""); setSfError(null); }}>
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                    <div className={styles.printGrid}>
+                      {sfPrints.map((print) => {
+                        const frontImg = scryfallImage(print);
+                        const backImg = scryfallBackImage(print);
+                        const isDFC = !!backImg;
+                        const isSelected = pickQueue.some((c) => c.id === print.id);
+                        return (
+                        <PrintOption
+                          key={print.id}
+                          print={print}
+                          frontImg={frontImg}
+                          backImg={backImg}
+                          isDFC={isDFC}
+                          isSelected={isSelected}
+                          onSelect={() => toggleSfCardInPick(print)}
+                          onShowDetails={(e) => { e.preventDefault(); setPickContextMenu({ x: e.clientX, y: e.clientY, card: print }); }}
+                          onOpenDetails={() => setPickDetailCard(print)}
+                        />
+                        );
+                      })}
+                    </div>
+                  </section>
+                )}
+              </div>
+
+              {/* ── Right: Selected Sidebar ── */}
+              <div className={styles.pickModalSidebar}>
+                <p className={styles.sfLabel}>SELECTED ({pickQueue.length})</p>
+                {pickQueue.length === 0 ? (
+                  <p className={styles.pickSidebarEmpty}>No cards selected yet.<br />Click a card to add it.</p>
+                ) : (
+                  <div className={styles.pickQueueGrid}>
+                    {pickQueue.map((card, i) => {
+                      const img = scryfallImage(card);
+                      return (
+                        <div key={i} className={styles.pickQueueCard}>
+                          <button type="button" className={styles.pickQueueCardRemove} onClick={() => removeFromPickQueue(i)} aria-label="Remove">✕</button>
+                          {img
+                            ? <img src={img} alt={card.name} className={styles.pickQueueCardImg} />
+                            : <div className={styles.pickQueueCardImgEmpty} />
+                          }
+                          <span className={styles.pickQueueCardName}>{card.name}</span>
+                          <div className={styles.pickQueueQtyWrap}>
+                            <span className={styles.pickQueueQtyLabel}>Qty</span>
+                            <input
+                              className={styles.pickQueueQtyInput}
+                              type="number"
+                              min="1"
+                              step="1"
+                              value={pickQueueQty[card.id] ?? 1}
+                              onChange={(e) => setPickQueueQty((q) => ({ ...q, [card.id]: parseInt(e.target.value) || 1 }))}
+                              onFocus={(e) => { e.target.value = ""; }}
+                              onBlur={(e) => { if (!e.target.value || parseInt(e.target.value) < 1) setPickQueueQty((q) => ({ ...q, [card.id]: 1 })); }}
+                              onMouseDown={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className={styles.modalFooter}>
+              <button type="button" className="btn btn-outline" onClick={() => { setAddMode(null); setPickQueue([]); }}>Cancel</button>
+              {pickQueue.length > 0 && (
+                <button type="button" className="btn btn-primary" onClick={startDetails}>
+                  Continue to Details ({pickQueue.length} card{pickQueue.length !== 1 ? "s" : ""}) →
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Pick Context Menu ──────────────────────────────────────────────── */}
+      {pickContextMenu && typeof document !== "undefined" && createPortal(
+        <div className={styles.ctxOverlay} onClick={() => setPickContextMenu(null)} onContextMenu={(e) => e.preventDefault()}>
+          <ul
+            className={styles.ctxMenu}
+            style={{ top: pickContextMenu.y, left: pickContextMenu.x }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <li className={styles.ctxItem} onClick={() => { setPickDetailCard(pickContextMenu.card); setPickContextMenu(null); }}>
+              🔍 Show Details
+            </li>
+            <li className={styles.ctxItem} onClick={() => { toggleSfCardInPick(pickContextMenu.card); setPickContextMenu(null); }}>
+              {pickQueue.some((c) => c.id === pickContextMenu.card.id) ? "✕ Remove from Selection" : "✓ Add to Selection"}
+            </li>
+          </ul>
+        </div>,
+        document.body
+      )}
+
+      {/* ── Pick Card Detail Popup ─────────────────────────────────────────── */}
+      {pickDetailCard && typeof document !== "undefined" && createPortal(
+        <div className={styles.cardDetailOverlay} onClick={() => setPickDetailCard(null)}>
+          <div className={styles.cardDetailPopup} onClick={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
+            <button className={styles.cardDetailClose} onClick={() => setPickDetailCard(null)}>✕</button>
+            <div className={styles.cardDetailLayout}>
+              <div className={styles.cardDetailImgCol}>
+                {scryfallImage(pickDetailCard) ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={scryfallImage(pickDetailCard)} alt={pickDetailCard.name} className={styles.cardDetailImg} />
+                ) : (
+                  <div className={styles.cardDetailImgEmpty}>No image</div>
+                )}
+              </div>
+              <div className={styles.cardDetailInfo}>
+                <h3 className={styles.cardDetailName}>{pickDetailCard.name}</h3>
+                {pickDetailCard.mana_cost && (
+                  <p className={styles.cardDetailMana}>{pickDetailCard.mana_cost}</p>
+                )}
+                <p className={styles.cardDetailType}>
+                  {pickDetailCard.type_line ?? pickDetailCard.card_faces?.[0]?.type_line ?? ""}
+                </p>
+                <p className={styles.cardDetailSet}>
+                  {formatSetDisplay(pickDetailCard.set_name, pickDetailCard.set.toUpperCase(), pickDetailCard.collector_number)}
+                  {" · "}{scryfallRarity(pickDetailCard.rarity)}
+                </p>
+                {(pickDetailCard.oracle_text ?? pickDetailCard.card_faces?.[0]?.oracle_text) && (
+                  <p className={styles.cardDetailOracle}>
+                    {pickDetailCard.oracle_text ?? pickDetailCard.card_faces?.[0]?.oracle_text}
+                  </p>
+                )}
+                {(pickDetailCard.power || pickDetailCard.toughness) && (
+                  <p className={styles.cardDetailPT}>
+                    {pickDetailCard.power ?? "—"} / {pickDetailCard.toughness ?? "—"}
+                  </p>
+                )}
+                <div className={styles.cardDetailPrices}>
+                  {pickDetailCard.prices?.usd && <span>Nonfoil <strong>${pickDetailCard.prices.usd}</strong></span>}
+                  {pickDetailCard.prices?.usd_foil && <span>Foil <strong>${pickDetailCard.prices.usd_foil}</strong></span>}
+                </div>
+                <button
+                  className={`btn ${pickQueue.some((c) => c.id === pickDetailCard.id) ? "btn-outline" : "btn-primary"} ${styles.cardDetailAddBtn}`}
+                  onClick={() => { toggleSfCardInPick(pickDetailCard); setPickDetailCard(null); }}
+                >
+                  {pickQueue.some((c) => c.id === pickDetailCard.id) ? "✕ Remove from Selection" : "✓ Add to Selection"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* ── Phase 2: Inventory Details ─────────────────────────────────────── */}
+      {addMode === "details" && (
+        <div className={styles.overlay} onMouseDown={(e) => { if (e.target === e.currentTarget) { setAddMode(null); setPickQueue([]); setDetailForms([]); } }}>
+          <div className={styles.modal} style={{ maxWidth: 900 }} onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Inventory Details — {detailForms.length} card{detailForms.length !== 1 ? "s" : ""}</h2>
+              <button className={styles.modalClose} onClick={() => { setAddMode(null); setPickQueue([]); setDetailForms([]); }}>✕</button>
+            </div>
+            <div className={styles.modalBody}>
+              {error && <div className={styles.formError}>{error}</div>}
+              <div className={styles.detailFormsList}>
+                {detailForms.map((entry, i) => (
+                  <div key={i} className={styles.detailFormsRow}>
+                    {entry.imageUrl
+                      ? <img src={entry.imageUrl} alt={entry.name} className={styles.detailFormsThumb} />
+                      : <div className={styles.detailFormsThumbEmpty} />
+                    }
+                    <div className={styles.detailFormsCardInfo}>
+                      <span className={styles.detailFormsCardName}>{entry.name}</span>
+                      <span className={styles.detailFormsCardMeta}>{formatSetDisplay(entry.set, entry.setCode, entry.collectorNumber)}</span>
+                    </div>
+                    <div className={styles.detailFormsFields}>
+                      <div className={styles.detailFormsField}>
+                        <span className={styles.detailFormsLabel}>Condition</span>
+                        <select
+                          className={styles.detailFormsSelect}
+                          value={entry.condition}
+                          onChange={(e) => updateDetailForm(i, "condition", e.target.value as Condition)}
+                        >
+                          {CONDITIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      </div>
+                      <div className={styles.detailFormsField}>
+                        <span className={styles.detailFormsLabel}>Finish</span>
+                        <div className={styles.finishToggle}>
+                          <button type="button" className={`${styles.finishBtn} ${!entry.foil ? styles.finishBtnActive : ""}`} onClick={() => setDetailFinish(i, false)}>Non</button>
+                          <button type="button" className={`${styles.finishBtn} ${entry.foil ? styles.finishBtnActive : ""}`} onClick={() => setDetailFinish(i, true)}>Foil</button>
+                        </div>
+                      </div>
+                      <div className={styles.detailFormsField}>
+                        <span className={styles.detailFormsLabel}>Qty</span>
+                        <input
+                          className={styles.detailFormsInput}
+                          type="number"
+                          min="1"
+                          step="1"
+                          value={entry.quantity}
+                          onChange={(e) => updateDetailForm(i, "quantity", e.target.value)}
+                        />
+                      </div>
+                      <div className={styles.detailFormsField}>
+                        <span className={styles.detailFormsLabel}>Price</span>
+                        <div className={styles.detailFormsInputWrap}>
+                          <span className={styles.bulkPriceDollarSign}>$</span>
+                          <input
+                            className={styles.bulkPriceFieldInput}
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={entry.price}
+                            onChange={(e) => updateDetailForm(i, "price", e.target.value)}
+                          />
+                        </div>
+                        {entry.marketPrice && (
+                          <span className={styles.detailFormsMkt}>Mkt ${parseFloat(entry.marketPrice).toFixed(2)}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className={styles.modalFooter}>
+              <button type="button" className="btn btn-outline" onClick={() => setAddMode("pick")}>← Back</button>
+              <button type="button" className="btn btn-primary" onClick={saveAllDetails} disabled={savingAll}>
+                {savingAll ? "Saving…" : `Save All (${detailForms.length})`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Add Card Modal ─────────────────────────────────────────────────── */}
       {(addMode === "manual" || addMode === "scryfall") && (
-        <div className={styles.overlay} onClick={() => setAddMode(null)}>
+        <div className={styles.overlay} onClick={() => { setAddMode(null); setCardQueue([]); }}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle}>
@@ -1113,7 +1897,7 @@ export default function AdminInventoryPage() {
                     ? "Search Database"
                     : "Add Card to Inventory"}
               </h2>
-              <button className={styles.modalClose} onClick={() => setAddMode(null)}>✕</button>
+              <button className={styles.modalClose} onClick={() => { setAddMode(null); setCardQueue([]); }}>✕</button>
             </div>
 
             <form onSubmit={handleSubmit} className={styles.modalBody}>
@@ -1341,7 +2125,31 @@ export default function AdminInventoryPage() {
                       </div>
                       <div className={styles.detailRow}>
                         <span className={styles.detailLabel}>Price</span>
-                        <input className={styles.detailInput} type="number" min="0" step="0.01" value={form.price} onChange={(e) => set("price", e.target.value)} placeholder="0.00" required />
+                        <div className={styles.priceDiscountWrap}>
+                          <input
+                            className={styles.detailInput}
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={form.price}
+                            onChange={(e) => { setAutoDiscount(false); set("price", e.target.value); }}
+                            placeholder="0.00"
+                            required
+                          />
+                          <button
+                            type="button"
+                            className={`${styles.discountToggle} ${autoDiscount ? styles.discountToggleOn : ""}`}
+                            onClick={() => toggleAutoDiscount(!autoDiscount)}
+                            title={autoDiscount ? "Listing at 15% below market — click to disable" : "Click to list at 15% below market price"}
+                          >
+                            {autoDiscount ? "−15% ✓" : "−15%"}
+                          </button>
+                          {form.marketPrice && (
+                            <span className={styles.discountHint}>
+                              Market: ${parseFloat(form.marketPrice).toFixed(2)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <div className={styles.detailRow}>
                         <span className={styles.detailLabel}>Availability</span>
@@ -1638,21 +2446,158 @@ export default function AdminInventoryPage() {
               </div>
               )}
 
+              {/* ── Queue list ── */}
+              {cardQueue.length > 0 && (
+                <div className={styles.queuePanel}>
+                  <p className={styles.queueTitle}>Queue — {cardQueue.length} card{cardQueue.length !== 1 ? "s" : ""} ready to save</p>
+                  <div className={styles.queueList}>
+                    {cardQueue.map((entry, i) => (
+                      <div key={i} className={styles.queueItem}>
+                        <span className={styles.queueItemName}>{entry.name}</span>
+                        <span className={styles.queueItemMeta}>{entry.condition}{entry.foil ? " · Foil" : ""} · ${parseFloat(entry.price).toFixed(2)} · Qty {entry.quantity}</span>
+                        <button type="button" className={styles.queueRemoveBtn} onClick={() => removeFromQueue(i)} aria-label="Remove">✕</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {showAddForm ? (
               <div className={styles.modalFooter}>
-                <button type="button" className="btn btn-outline" onClick={() => setAddMode(null)}>Cancel</button>
-                <button type="submit" className="btn btn-primary" disabled={saving}>
-                  {saving ? "Saving…" : "Add to Inventory"}
+                <button type="button" className="btn btn-outline" onClick={() => { setAddMode(null); setCardQueue([]); }}>Cancel</button>
+                <button type="button" className={`btn btn-outline ${styles.queueBtn}`} onClick={addToQueue} disabled={saving || savingAll}>
+                  + Add to Queue
+                </button>
+                {cardQueue.length > 0 && (
+                  <button type="button" className="btn btn-primary" onClick={saveAllQueued} disabled={savingAll}>
+                    {savingAll ? "Saving…" : `Save All (${cardQueue.length})`}
+                  </button>
+                )}
+                <button type="submit" className="btn btn-primary" disabled={saving || savingAll}>
+                  {saving ? "Saving…" : "Save This Card"}
                 </button>
               </div>
               ) : addMode === "scryfall" && !sfCard && (
               <div className={styles.modalFooter}>
-                <button type="button" className="btn btn-outline" onClick={() => setAddMode(null)}>Cancel</button>
+                <button type="button" className="btn btn-outline" onClick={() => { setAddMode(null); setCardQueue([]); }}>Cancel</button>
               </div>
               )}
             </form>
           </div>
         </div>
+      )}
+
+      {/* ── Bulk Price Editor Modal ────────────────────────────────────────── */}
+      {showBulkPriceModal && (() => {
+        const selectedCards = cards.filter((c) => selected.has(c.id));
+        const hasAnyMarket = selectedCards.some((c) => c.marketPrice !== undefined);
+        function applyRecommended(card: typeof selectedCards[0]) {
+          if (card.marketPrice === undefined) return;
+          const rec = (card.marketPrice * 0.85).toFixed(2);
+          setBulkPriceEdits((prev) => ({ ...prev, [card.id]: rec }));
+        }
+        function applyAllRecommended() {
+          const edits: Record<string, string> = { ...bulkPriceEdits };
+          selectedCards.forEach((card) => {
+            if (card.marketPrice !== undefined) edits[card.id] = (card.marketPrice * 0.85).toFixed(2);
+          });
+          setBulkPriceEdits(edits);
+        }
+        return (
+          <div className={styles.overlay} onMouseDown={(e) => { if (e.target === e.currentTarget) setShowBulkPriceModal(false); }}>
+            <div className={styles.modal} style={{ maxWidth: 780 }} onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.modalHeader}>
+                <h2 className={styles.modalTitle}>Edit Prices — {selectedCards.length} cards</h2>
+                <button className={styles.modalClose} onClick={() => setShowBulkPriceModal(false)}>✕</button>
+              </div>
+              {hasAnyMarket && (
+                <div className={styles.bulkPriceTopBar}>
+                  <span className={styles.bulkPriceTopBarHint}>Recommended price is −15% below Scryfall market price</span>
+                  <button className={styles.bulkPriceSetAllBtn} type="button" onClick={applyAllRecommended}>
+                    Set All to Recommended
+                  </button>
+                </div>
+              )}
+              <div className={styles.bulkPriceList}>
+                {selectedCards.map((card) => {
+                  const recommended = card.marketPrice !== undefined ? (card.marketPrice * 0.85) : null;
+                  return (
+                    <div key={card.id} className={styles.bulkPriceRow}>
+                      {card.imageUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={card.imageUrl} alt={card.name} className={styles.bulkPriceThumb} />
+                      ) : (
+                        <div className={styles.bulkPriceThumbEmpty} />
+                      )}
+                      <div className={styles.bulkPriceInfo}>
+                        <span className={styles.bulkPriceCardName}>{card.name}</span>
+                        <span className={styles.bulkPriceCardMeta}>{card.condition}{card.foil ? " · Foil" : ""} · {card.set}</span>
+                        {recommended !== null && (
+                          <span className={styles.bulkPriceRec}>
+                            Recommended: <strong>${recommended.toFixed(2)}</strong>
+                            {card.marketPrice !== undefined && <> · Market: ${card.marketPrice.toFixed(2)}</>}
+                          </span>
+                        )}
+                      </div>
+                      <div className={styles.bulkPriceControls}>
+                        {recommended !== null && (
+                          <button
+                            type="button"
+                            className={styles.bulkPriceUseBtn}
+                            onClick={() => applyRecommended(card)}
+                            title="Apply −15% recommended price"
+                          >
+                            Use
+                          </button>
+                        )}
+                        <div className={styles.bulkPriceInputWrap}>
+                          <span className={styles.bulkPriceDollarSign}>$</span>
+                          <input
+                            className={styles.bulkPriceFieldInput}
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            data-price-index={selectedCards.indexOf(card)}
+                            value={bulkPriceEdits[card.id] ?? String(card.price)}
+                            onChange={(e) => setBulkPriceEdits((prev) => ({ ...prev, [card.id]: e.target.value }))}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === "ArrowDown") {
+                                e.preventDefault();
+                                const next = document.querySelector<HTMLInputElement>(`[data-price-index="${selectedCards.indexOf(card) + 1}"]`);
+                                next?.focus();
+                              } else if (e.key === "ArrowUp") {
+                                e.preventDefault();
+                                const prev = document.querySelector<HTMLInputElement>(`[data-price-index="${selectedCards.indexOf(card) - 1}"]`);
+                                prev?.focus();
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className={styles.modalFooter}>
+                <button className="btn btn-outline" onClick={() => setShowBulkPriceModal(false)} disabled={bulkUpdating}>Cancel</button>
+                <button className="btn btn-primary" onClick={saveAllPrices} disabled={bulkUpdating}>
+                  {bulkUpdating ? "Saving…" : "Save All Prices"}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ── Bulk Import Modal ──────────────────────────────────────────────── */}
+      {addMode === "bulk" && (
+        <BulkImportModal
+          onClose={() => setAddMode(null)}
+          onImported={async (count) => {
+            setAddMode(null);
+            await load();
+          }}
+        />
       )}
 
       {/* ── Card Preview Modal ─────────────────────────────────────────────── */}

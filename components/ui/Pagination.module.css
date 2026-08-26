@@ -10,8 +10,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  height: 36px;
+  min-width: 44px;
+  height: 44px;
   padding: 0 8px;
   font-family: var(--font-heading);
   font-size: 12px;
@@ -49,8 +49,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  height: 36px;
+  min-width: 32px;
+  height: 44px;
   color: var(--color-muted);
   font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    gap: 2px;
+    padding: 24px 0;
+  }
+
+  .btn {
+    min-width: 42px;
+    padding: 0 6px;
+  }
 }

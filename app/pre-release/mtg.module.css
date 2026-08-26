@@ -10,3 +10,14 @@
   color: var(--color-gray-mid);
   font-size: 16px;
 }
+
+@media (max-width: 640px) {
+  .eventsGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .emptyState {
+    padding: 48px 14px;
+  }
+}
