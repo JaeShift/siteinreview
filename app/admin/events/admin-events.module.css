@@ -496,10 +496,12 @@
 .prImagePreview {
   display: block;
   width: 100%;
-  max-height: 200px;
-  object-fit: cover;
+  height: auto;
+  max-height: 360px;
+  object-fit: contain;
   border-radius: 8px;
   border: 1px solid var(--color-border);
+  background: #111;
 }
 
 .uploadBtn {
@@ -607,8 +609,8 @@
 
 .draftCard {
   display: flex;
-  align-items: flex-start;
-  gap: 14px;
+  flex-direction: column;
+  gap: 12px;
   padding: 14px;
   border: 1px solid var(--color-border);
   border-radius: 10px;
@@ -617,6 +619,63 @@
 
 .draftCardDim {
   opacity: 0.55;
+}
+
+.draftPreviewWrap {
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.draftPreview {
+  width: 100%;
+  height: auto;
+  max-height: 360px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Image picker strip */
+.draftImageStrip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.draftImageOption {
+  flex-shrink: 0;
+  width: 72px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  background: none;
+  opacity: 0.65;
+  transition: opacity 0.15s, border-color 0.15s;
+}
+
+.draftImageOption:hover {
+  opacity: 1;
+}
+
+.draftImageOptionActive {
+  border-color: var(--color-primary, #1a1a2e);
+  opacity: 1;
+}
+
+.draftImageOptionImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .draftThumb {
@@ -646,9 +705,9 @@
 
 .draftActions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 6px;
-  flex-shrink: 0;
 }
 
 .draftStatusBadge {

@@ -88,8 +88,7 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
   async function runImport() {
     setRunningImport(true);
     try {
-      const res = await fetch("/api/admin/prerelease/import", { method: "POST",
-        headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET ?? ""}` } });
+      const res = await fetch("/api/cron/prerelease-import", { method: "POST" });
       const data = await res.json();
       showFlash(`Import done — ${data.created} new draft(s) created.`);
       const updated = await fetch("/api/admin/prerelease/drafts").then((r) => r.json());
@@ -155,11 +154,13 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
     }
   }
 
-  // Scryfall auto-fill
+  // Scryfall set picker + WPN image auto-fill
   const [scryfallSets, setScryfallSets] = useState<{ code: string; name: string; released_at: string }[]>([]);
   const [scryfallLoading, setScryfallLoading] = useState(false);
   const [scryfallError, setScryfallError] = useState<string | null>(null);
   const [selectedScryfallCode, setSelectedScryfallCode] = useState("");
+  const [prImageOptions, setPrImageOptions] = useState<string[]>([]);
+  const [prImagesLoading, setPrImagesLoading] = useState(false);
 
   async function fetchScryfallSets() {
     setScryfallLoading(true);
@@ -184,27 +185,12 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
   async function applyScryfallSet() {
     const set = scryfallSets.find((s) => s.code === selectedScryfallCode);
     if (!set) return;
-    // Pre-release weekend is the Friday 7 days before official release
+
     const release = new Date(set.released_at + "T12:00:00Z");
     release.setUTCDate(release.getUTCDate() - 7);
     const prereleaseDate = release.toISOString().split("T")[0];
 
-    // Try to fetch art crop from the first mythic (fallback: rare) in the set
-    let imageUrl = "";
-    try {
-      for (const rarity of ["m", "r"]) {
-        const res = await fetch(
-          `https://api.scryfall.com/cards/search?q=set:${set.code}+rarity:${rarity}&order=released&dir=asc&page=1`
-        );
-        if (res.ok) {
-          const data = await res.json();
-          const card = data.data?.[0];
-          const artCrop = card?.image_uris?.art_crop ?? card?.card_faces?.[0]?.image_uris?.art_crop;
-          if (artCrop) { imageUrl = artCrop; break; }
-        }
-      }
-    } catch { /* image stays blank if fetch fails */ }
-
+    // Reset form with set name + date; images loaded separately below
     setPrConfig((c) => ({
       active: c.active,
       setName: set.name,
@@ -212,11 +198,29 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
       date: prereleaseDate,
       time: "",
       description: "",
-      imageUrl,
+      imageUrl: "",
       eventSlug: "",
     }));
+    setPrImageOptions([]);
     setScryfallSets([]);
     setSelectedScryfallCode("");
+
+    // Fetch WPN images + description for this set
+    setPrImagesLoading(true);
+    try {
+      const res = await fetch(`/api/admin/prerelease/wpn-images?releaseDate=${set.released_at}`);
+      if (res.ok) {
+        const data = await res.json() as { images: string[]; description: string };
+        if (data.images.length > 0) {
+          setPrImageOptions(data.images);
+          setPrConfig((c) => ({ ...c, imageUrl: data.images[0] }));
+        }
+        if (data.description) {
+          setPrConfig((c) => ({ ...c, description: data.description }));
+        }
+      }
+    } catch { /* silently skip — user can fill in manually */ }
+    finally { setPrImagesLoading(false); }
   }
 
   const today = new Date().toISOString().split("T")[0];
@@ -571,13 +575,49 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
               </div>
 
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Hero Image URL</label>
+                <label className="form-label">Hero Image</label>
+
+                {/* WPN image picker — shown after Scryfall Apply or when options exist */}
+                {prImagesLoading && (
+                  <p style={{ fontSize: 13, color: "var(--color-text-light)", margin: "6px 0" }}>Fetching WPN images…</p>
+                )}
+                {prImageOptions.length > 0 && (
+                  <>
+                    {/* Large preview of selected image */}
+                    {prConfig.imageUrl && (
+                      <div className={styles.draftPreviewWrap} style={{ marginBottom: 8 }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={prConfig.imageUrl} alt="Selected hero" className={styles.draftPreview} />
+                      </div>
+                    )}
+                    {/* Scrollable thumbnail strip */}
+                    <div className={styles.draftImageStrip} style={{ marginBottom: 10 }}>
+                      {prImageOptions.map((opt, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          className={`${styles.draftImageOption} ${opt === prConfig.imageUrl ? styles.draftImageOptionActive : ""}`}
+                          onClick={() => setPrConfig((c) => ({ ...c, imageUrl: opt }))}
+                          title={`Image ${i + 1}`}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={opt} alt="" className={styles.draftImageOptionImg} />
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {/* URL input + upload (always visible for manual override) */}
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                   <input
                     className="form-input"
                     style={{ flex: 1 }}
                     value={prConfig.imageUrl}
-                    onChange={(e) => setPrConfig((c) => ({ ...c, imageUrl: e.target.value }))}
+                    onChange={(e) => {
+                      setPrConfig((c) => ({ ...c, imageUrl: e.target.value }));
+                      setPrImageOptions([]);
+                    }}
                     placeholder="https://… (set key art or banner)"
                   />
                   <span style={{ fontSize: 12, color: "var(--color-text-light)", flexShrink: 0 }}>or</span>
@@ -598,7 +638,7 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
                           const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
                           const data = await res.json();
                           const url = data.uploaded?.[0]?.url;
-                          if (url) setPrConfig((c) => ({ ...c, imageUrl: url }));
+                          if (url) { setPrConfig((c) => ({ ...c, imageUrl: url })); setPrImageOptions([]); }
                           else showFlash(data.errors?.[0]?.error ?? "Upload failed", "error");
                         } catch {
                           showFlash("Upload failed", "error");
@@ -610,7 +650,9 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
                     />
                   </label>
                 </div>
-                {prConfig.imageUrl && (
+
+                {/* Fallback preview when no picker options (manual URL/upload) */}
+                {prConfig.imageUrl && prImageOptions.length === 0 && (
                   <div style={{ marginTop: 10 }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -716,10 +758,42 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
                   <div className={styles.draftsList}>
                     {drafts.map((draft) => (
                       <div key={draft.id} className={`${styles.draftCard} ${draft.status !== "pending" ? styles.draftCardDim : ""}`}>
+                        {/* Selected image preview */}
                         {draft.imageUrl && (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={draft.imageUrl} alt={draft.setName} className={styles.draftThumb} />
+                          <div className={styles.draftPreviewWrap}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={draft.imageUrl} alt={draft.setName} className={styles.draftPreview} />
+                          </div>
                         )}
+
+                        {/* Image picker strip */}
+                        {(draft.imageOptions?.length ?? 0) > 1 && (
+                          <div className={styles.draftImageStrip}>
+                            {draft.imageOptions.map((opt, i) => (
+                              <button
+                                key={i}
+                                type="button"
+                                className={`${styles.draftImageOption} ${opt === draft.imageUrl ? styles.draftImageOptionActive : ""}`}
+                                onClick={async () => {
+                                  const res = await fetch("/api/admin/prerelease/drafts", {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ id: draft.id, imageUrl: opt }),
+                                  });
+                                  if (res.ok) {
+                                    const updated = await res.json();
+                                    setDrafts((prev) => prev.map((d) => d.id === updated.id ? updated : d));
+                                  }
+                                }}
+                                title={`Image ${i + 1}`}
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={opt} alt={`Option ${i + 1}`} className={styles.draftImageOptionImg} />
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
                         <div className={styles.draftInfo}>
                           <div className={styles.draftSetName}>{draft.setName}</div>
                           <div className={styles.draftMeta}>

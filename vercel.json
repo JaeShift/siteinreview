@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/admin/prerelease/import",
+      "path": "/api/cron/prerelease-import",
       "schedule": "0 9 * * 1"
     }
   ]

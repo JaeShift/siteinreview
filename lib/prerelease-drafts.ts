@@ -18,7 +18,8 @@ export interface PrereleaseDraft {
   setName: string;
   releaseDate: string;      // official WotC release date (YYYY-MM-DD)
   prereleaseDate: string;   // calculated prerelease weekend date
-  imageUrl: string;         // local path e.g. /images/uploads/tarkir-pr.png
+  imageUrl: string;         // selected image (local path or remote URL)
+  imageOptions: string[];   // all candidate images discovered during import
   imageSourceUrl: string;   // original URL the image came from
   tagline: string;
   status: "pending" | "approved" | "rejected";

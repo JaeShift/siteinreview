@@ -88,37 +88,43 @@ interface WpnProduct {
 
 /**
  * Parse the WPN products listing HTML to extract product cards.
- * Products use Nuxt SSR so the data is in the initial HTML.
+ * Pairs product page URLs with release dates by extracting them in document order.
  */
 function parseWpnProductCards(html: string): WpnProduct[] {
   const products: WpnProduct[] = [];
 
-  // Each card: <a href="…">…name…</a> … <em class="…">Release Date Mon DD, YYYY</em>
-  // Walk through href + name + release date together via card boundaries
-  const cardRe = /<div class="[^"]*_card_[^"]*">([\s\S]*?)<\/div>\s*<\/div>\s*<\/div>/g;
-  let cardMatch: RegExpExecArray | null;
+  // Find all product card blocks — each contains an anchor and a release date em
+  // Split on card boundaries using the card class as delimiter
+  const cardSections = html.split(/_card_/);
 
-  while ((cardMatch = cardRe.exec(html)) !== null) {
-    const card = cardMatch[1];
+  for (const section of cardSections) {
+    // Extract the first href pointing to a /products/ page
+    const hrefMatch = section.match(/href="((?:https:\/\/wpn\.wizards\.com)?\/(?:en\/)?products\/[^"]+)"/);
+    // Extract release date like "Release Date Oct 2, 2026"
+    const dateMatch = section.match(/Release Date\s+(\w+\s+\d+,?\s+\d{4})/i);
 
-    // Extract href and link text (set name)
-    const hrefMatch = card.match(/href="([^"]+)"/);
-    const nameMatch = card.match(/<a[^>]+>([^<]+)<\/a>/);
-    // Release date like "Release Date Oct 2, 2026"
-    const dateMatch = card.match(/Release Date\s+(\w+ \d+,\s+\d{4})/i);
-
-    if (!hrefMatch || !nameMatch || !dateMatch) continue;
+    if (!hrefMatch || !dateMatch) continue;
 
     const rawUrl = hrefMatch[1];
     const url = rawUrl.startsWith("http") ? rawUrl : `https://wpn.wizards.com${rawUrl}`;
-    const name = nameMatch[1].replace(/®|™/g, "").replace(/Magic: The Gathering\s*\|\s*/i, "").trim();
 
-    // Parse "Oct 2, 2026" → "2026-10-02"
-    const d = new Date(dateMatch[1]);
+    // Skip non-product pages (like the /products filter pages)
+    if (url.includes("?type=")) continue;
+
+    // Parse "Oct 2, 2026" or "Oct 2 2026" → "2026-10-02"
+    const d = new Date(dateMatch[1].replace(",", ""));
     if (isNaN(d.getTime())) continue;
     const releaseDate = d.toISOString().split("T")[0];
 
-    products.push({ url, name, releaseDate });
+    // Extract set name from anchor text inside this section
+    const nameMatch = section.match(/<a[^>]+\/products\/[^"]+[^>]*>([^<]+)<\/a>/);
+    const name = nameMatch
+      ? nameMatch[1].replace(/[®™]/g, "").replace(/^Magic:\s*The\s*Gathering\s*[|·]\s*/i, "").trim()
+      : "";
+
+    if (!products.find((p) => p.url === url)) {
+      products.push({ url, name, releaseDate });
+    }
   }
 
   return products;
@@ -138,24 +144,46 @@ async function findWpnProductPage(releaseDate: string): Promise<string | null> {
 }
 
 /**
- * Fetch a WPN product page and extract the og:image URL.
- * The og:image is the official set banner art served from Contentful CDN.
+ * Fetch a WPN product page and extract:
+ * - og:image (primary banner)
+ * - all unique Contentful CDN image URLs found in the HTML
+ * Returns { ogImage, allImages } where allImages is deduplicated and sorted
+ * with the og:image first.
  */
-async function fetchWpnOgImage(productUrl: string): Promise<string | null> {
+async function fetchWpnImages(productUrl: string): Promise<{ ogImage: string | null; allImages: string[] }> {
   const res = await fetch(productUrl, {
     cache: "no-store",
     headers: { "User-Agent": "Mozilla/5.0 (compatible; KitsuneBrewingBot/1.0)" },
   });
-  if (!res.ok) return null;
+  if (!res.ok) return { ogImage: null, allImages: [] };
   const html = await res.text();
 
-  // og:image content — may start with // (protocol-relative)
+  // Extract og:image
   const ogMatch = html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i)
     ?? html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:image"/i);
-  if (!ogMatch) return null;
+  const ogImage = ogMatch
+    ? (ogMatch[1].startsWith("//") ? `https:${ogMatch[1]}` : ogMatch[1])
+    : null;
 
-  const raw = ogMatch[1];
-  return raw.startsWith("//") ? `https:${raw}` : raw;
+  // Extract ALL Contentful CDN image URLs (images.ctfassets.net/...)
+  const seen = new Set<string>();
+  const allImages: string[] = [];
+
+  // Add og:image first
+  if (ogImage) { seen.add(ogImage); allImages.push(ogImage); }
+
+  const srcRe = /(?:src|srcset|content)="((?:https:)?\/\/images\.ctfassets\.net\/[^"?]+)(?:\?[^"]*)?"/g;
+  let m: RegExpExecArray | null;
+  while ((m = srcRe.exec(html)) !== null) {
+    const raw = m[1];
+    const url = raw.startsWith("//") ? `https:${raw}` : raw;
+    // Skip tiny icons/logos (contain "logo", "icon", or are very small by path hint)
+    if (/logo|icon|WPN_Full|WPN_wizard|hasbro|esrb/i.test(url)) continue;
+    // Strip query params for dedup, then store clean URL
+    if (!seen.has(url)) { seen.add(url); allImages.push(url); }
+  }
+
+  return { ogImage, allImages };
 }
 
 // ── Download image and save locally ──────────────────────────────────────────
@@ -204,11 +232,15 @@ async function fetchScryfallArtCrop(code: string): Promise<string> {
 // ── Main handler ──────────────────────────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret) {
-    const auth = request.headers.get("authorization") ?? "";
-    if (auth !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // In production, Vercel automatically sends Authorization: Bearer <CRON_SECRET>
+  // with cron job requests. Only enforce this check in production.
+  if (process.env.NODE_ENV === "production") {
+    const cronSecret = (process.env.CRON_SECRET ?? "").trim();
+    if (cronSecret) {
+      const auth = request.headers.get("authorization") ?? "";
+      if (auth !== `Bearer ${cronSecret}`) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
     }
   }
 
@@ -232,25 +264,23 @@ export async function POST(request: NextRequest) {
 
       let imageUrl = "";
       let imageSourceUrl = "";
+      let imageOptions: string[] = [];
       let source: PrereleaseDraft["source"] = "scryfall";
 
-      // 1. Try WPN official banner (public, no login needed)
+      // 1. Try WPN official images (public, no login needed)
       try {
         const productPageUrl = await findWpnProductPage(set.released_at);
         if (productPageUrl) {
           log.push(`  WPN product page: ${productPageUrl}`);
-          const ogImage = await fetchWpnOgImage(productPageUrl);
-          if (ogImage) {
-            log.push(`  WPN og:image: ${ogImage}`);
-            imageSourceUrl = ogImage;
-            const local = await downloadAndSaveImage(ogImage, set.name);
-            if (local) {
-              imageUrl = local;
-              source = "wpn";
-              log.push(`  Saved WPN image → ${local}`);
-            }
+          const { ogImage, allImages } = await fetchWpnImages(productPageUrl);
+          if (allImages.length > 0) {
+            imageOptions = allImages;
+            imageUrl = ogImage ?? allImages[0];
+            imageSourceUrl = imageUrl;
+            source = "wpn";
+            log.push(`  WPN images found: ${allImages.length} (og:image = ${ogImage ?? "none"})`);
           } else {
-            log.push(`  WPN: no og:image found on product page`);
+            log.push(`  WPN: no images found on product page`);
           }
         } else {
           log.push(`  WPN: no product page found for release date ${set.released_at}`);
@@ -259,11 +289,12 @@ export async function POST(request: NextRequest) {
         log.push(`  WPN error: ${err instanceof Error ? err.message : String(err)}`);
       }
 
-      // 2. Fallback: Scryfall art crop (remote URL, not downloaded)
+      // 2. Fallback: Scryfall art crop (remote URL)
       if (!imageUrl) {
         const artCrop = await fetchScryfallArtCrop(set.code);
         imageUrl = artCrop;
         imageSourceUrl = artCrop;
+        imageOptions = artCrop ? [artCrop] : [];
         source = "scryfall";
         log.push(`  Fallback: Scryfall art crop ${artCrop ? "found" : "not found"}`);
       }
@@ -277,6 +308,7 @@ export async function POST(request: NextRequest) {
         releaseDate: set.released_at,
         prereleaseDate: subtractDays(set.released_at, 7),
         imageUrl,
+        imageOptions,
         imageSourceUrl,
         tagline: "",
         status: "pending",
