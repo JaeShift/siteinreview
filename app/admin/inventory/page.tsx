@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import type { SingleCard, Condition, CardColor, CardType, Rarity, Availability } from "@/lib/singles-data";
 import { formatCondition, formatSetDisplay, normalizeRarity, rarityBadgeLabel } from "@/lib/singles-data";
+import StatsCard from "@/components/admin/StatsCard";
 import BulkImportModal from "./BulkImportModal";
 import styles from "./admin-inventory.module.css";
 
@@ -990,44 +991,52 @@ export default function AdminInventoryPage() {
         <div className={styles.hubGrid}>
           {/* Card Inventory */}
           <button className={styles.hubCard} onClick={() => setInventoryView("cards")}>
-            <div className={styles.hubCardIcon}>
-              <svg width="28" height="28" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-                <rect x="5" y="6" width="22" height="30" rx="2" stroke="currentColor" strokeWidth="2" />
-                <rect x="13" y="4" width="22" height="30" rx="2" stroke="currentColor" strokeWidth="2" fill="var(--color-white,#fff)" />
-                <line x1="18" y1="13" x2="30" y2="13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                <line x1="18" y1="18" x2="30" y2="18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                <line x1="18" y1="23" x2="26" y2="23" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
+            <div className={styles.hubCardTop}>
+              <div className={styles.hubCardIcon}>
+                <svg width="24" height="24" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                  <rect x="5" y="6" width="22" height="30" rx="2" stroke="currentColor" strokeWidth="2" />
+                  <rect x="13" y="4" width="22" height="30" rx="2" stroke="currentColor" strokeWidth="2" fill="var(--color-white,#fff)" />
+                  <line x1="18" y1="13" x2="30" y2="13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <line x1="18" y1="18" x2="30" y2="18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <line x1="18" y1="23" x2="26" y2="23" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              </div>
             </div>
             <div className={styles.hubCardBody}>
               <span className={styles.hubCardLabel}>Card Inventory</span>
-              <span className={styles.hubCardDesc}>Add singles via Scryfall, manage prices, conditions, and quantities.</span>
+              <span className={styles.hubCardDesc}>Add singles via Scryfall search, manage prices, conditions, and stock quantities for the online shop.</span>
             </div>
-            <div className={styles.hubCardMeta}>
-              <span className={styles.hubCardStatNum}>{totalQty > 0 ? totalQty.toLocaleString() : cards.length > 0 ? cards.length : "—"}</span>
-              <span className={styles.hubCardStatLabel}>{totalQty > 0 ? "copies in stock" : "unique cards"}</span>
+            <div className={styles.hubCardFooter}>
+              <div className={styles.hubCardMeta}>
+                <span className={styles.hubCardStatNum}>{totalQty > 0 ? totalQty.toLocaleString() : cards.length > 0 ? cards.length : "0"}</span>
+                <span className={styles.hubCardStatLabel}>{totalQty > 0 ? "copies in stock" : "cards listed"}</span>
+              </div>
+              <span className={styles.hubCardCta}>Open →</span>
             </div>
-            <span className={styles.hubCardCta}>Open →</span>
           </button>
 
           {/* Merchandise — coming soon */}
           <div className={styles.hubCardDisabled}>
-            <div className={styles.hubCardIcon}>
-              <svg width="28" height="28" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-                <rect x="4" y="18" width="32" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
-                <path d="M12 18v-4a8 8 0 0 1 16 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                <line x1="4" y1="26" x2="36" y2="26" stroke="currentColor" strokeWidth="1.8" />
-              </svg>
+            <div className={styles.hubCardTop}>
+              <div className={styles.hubCardIcon}>
+                <svg width="24" height="24" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                  <rect x="4" y="18" width="32" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
+                  <path d="M12 18v-4a8 8 0 0 1 16 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <line x1="4" y1="26" x2="36" y2="26" stroke="currentColor" strokeWidth="1.8" />
+                </svg>
+              </div>
             </div>
             <div className={styles.hubCardBody}>
               <span className={styles.hubCardLabel}>Merchandise</span>
-              <span className={styles.hubCardDesc}>List apparel, accessories, and store goods for sale on the site.</span>
+              <span className={styles.hubCardDesc}>List apparel, accessories, and other store goods for sale on the site.</span>
             </div>
-            <div className={styles.hubCardMeta}>
-              <span className={styles.hubCardStatNum}>—</span>
-              <span className={styles.hubCardStatLabel}>items listed</span>
+            <div className={styles.hubCardFooter}>
+              <div className={styles.hubCardMeta}>
+                <span className={styles.hubCardStatNum}>—</span>
+                <span className={styles.hubCardStatLabel}>items listed</span>
+              </div>
+              <span className={styles.hubComingSoonBadge}>Coming Soon</span>
             </div>
-            <span className={styles.hubComingSoonBadge}>Coming Soon</span>
           </div>
         </div>
       </div>
@@ -1105,118 +1114,107 @@ export default function AdminInventoryPage() {
       </div>
 
       {/* Stats */}
-      <div className={styles.statsRow}>
-        <div className={styles.statBox}>
-          <span className={styles.statLabel}>Total Cards</span>
-          <span className={styles.statValue}>{cards.length}</span>
-        </div>
-        <div className={styles.statBox}>
-          <span className={styles.statLabel}>Total Copies</span>
-          <span className={styles.statValue}>{totalQty}</span>
-        </div>
-        <div className={styles.statBox}>
-          <span className={styles.statLabel}>Estimated Value</span>
-          <span className={styles.statValue}>${totalValue.toFixed(2)}</span>
-        </div>
-        <div className={styles.statBox}>
-          <span className={styles.statLabel}>Sets Represented</span>
-          <span className={styles.statValue}>{setsCount}</span>
-        </div>
+      <div className={styles.statsGrid}>
+        <StatsCard label="Unique Cards" value={cards.length} subtext="individual listings" accent />
+        <StatsCard label="Total Copies" value={totalQty} subtext="cards in stock" />
+        <StatsCard label="Estimated Value" value={`$${totalValue.toFixed(2)}`} subtext="at listed prices" />
+        <StatsCard label="Sets Represented" value={setsCount} subtext="across inventory" />
       </div>
 
-      {/* Bulk action bar */}
-      {selected.size > 0 && (
-        <div className={styles.bulkBar}>
-          <span className={styles.bulkCount}>{selected.size} card{selected.size !== 1 ? "s" : ""} selected</span>
-          <div className={styles.bulkActions}>
-            <button className={`btn btn-outline ${styles.bulkDeselectBtn}`} onClick={() => setSelected(new Set())} disabled={bulkDeleting || bulkUpdating}>
-              Deselect All
-            </button>
-            {selected.size === 1 && (
-              <button
-                className={`btn btn-outline ${styles.editBtn}`}
-                disabled={bulkDeleting || bulkUpdating}
-                onClick={() => {
-                  const id = Array.from(selected)[0];
-                  const card = cards.find((c) => c.id === id);
-                  if (card) startEdit(card);
-                }}
-              >
-                Edit
+      <section className={styles.inventoryPanel}>
+        {/* Bulk action bar */}
+        {selected.size > 0 && (
+          <div className={styles.bulkBar}>
+            <span className={styles.bulkCount}>{selected.size} card{selected.size !== 1 ? "s" : ""} selected</span>
+            <div className={styles.bulkActions}>
+              <button className={`btn btn-outline ${styles.bulkDeselectBtn}`} onClick={() => setSelected(new Set())} disabled={bulkDeleting || bulkUpdating}>
+                Deselect All
               </button>
-            )}
-            <button
-              className={`btn btn-outline ${styles.bulkVisBtn}`}
-              disabled={bulkDeleting || bulkUpdating}
-              onClick={() => bulkSetVisibility(false)}
-            >
-              {bulkUpdating ? "…" : "Mark Live"}
-            </button>
-            <button
-              className={`btn btn-outline ${styles.bulkVisBtn}`}
-              disabled={bulkDeleting || bulkUpdating}
-              onClick={() => bulkSetVisibility(true)}
-            >
-              {bulkUpdating ? "…" : "Mark Hidden"}
-            </button>
-            <button
-              className={`btn btn-outline ${styles.bulkVisBtn}`}
-              disabled={bulkDeleting || bulkUpdating}
-              onClick={openBulkPriceModal}
-            >
-              Edit Prices
-            </button>
-            <button className={`btn btn-primary ${styles.dangerBtn}`} onClick={bulkDelete} disabled={bulkDeleting || bulkUpdating}>
-              {bulkDeleting ? "Deleting…" : `Delete ${selected.size}`}
-            </button>
+              {selected.size === 1 && (
+                <button
+                  className={`btn btn-outline ${styles.editBtn}`}
+                  disabled={bulkDeleting || bulkUpdating}
+                  onClick={() => {
+                    const id = Array.from(selected)[0];
+                    const card = cards.find((c) => c.id === id);
+                    if (card) startEdit(card);
+                  }}
+                >
+                  Edit
+                </button>
+              )}
+              <button
+                className={`btn btn-outline ${styles.bulkVisBtn}`}
+                disabled={bulkDeleting || bulkUpdating}
+                onClick={() => bulkSetVisibility(false)}
+              >
+                {bulkUpdating ? "…" : "Mark Live"}
+              </button>
+              <button
+                className={`btn btn-outline ${styles.bulkVisBtn}`}
+                disabled={bulkDeleting || bulkUpdating}
+                onClick={() => bulkSetVisibility(true)}
+              >
+                {bulkUpdating ? "…" : "Mark Hidden"}
+              </button>
+              <button
+                className={`btn btn-outline ${styles.bulkVisBtn}`}
+                disabled={bulkDeleting || bulkUpdating}
+                onClick={openBulkPriceModal}
+              >
+                Edit Prices
+              </button>
+              <button className={`btn btn-primary ${styles.dangerBtn}`} onClick={bulkDelete} disabled={bulkDeleting || bulkUpdating}>
+                {bulkDeleting ? "Deleting…" : `Delete ${selected.size}`}
+              </button>
+            </div>
           </div>
+        )}
+
+        {/* Filter / Sort Bar */}
+        <div className={styles.invFilterBar}>
+          <input
+            className={styles.invSearch}
+            placeholder="Search cards by name or set…"
+            value={invSearch}
+            onChange={(e) => setInvSearch(e.target.value)}
+          />
+          <select className={styles.invSelect} value={invCondition} onChange={(e) => setInvCondition(e.target.value)}>
+            <option value="">All Conditions</option>
+            {CONDITIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <select className={styles.invSelect} value={invFoil} onChange={(e) => setInvFoil(e.target.value as "" | "foil" | "nonfoil")}>
+            <option value="">Foil + Non-foil</option>
+            <option value="foil">Foil Only</option>
+            <option value="nonfoil">Non-foil Only</option>
+          </select>
+          <select className={styles.invSelect} value={invVisibility} onChange={(e) => setInvVisibility(e.target.value as "" | "live" | "hidden")}>
+            <option value="">All Visibility</option>
+            <option value="live">Live</option>
+            <option value="hidden">Hidden</option>
+          </select>
+          <select className={styles.invSelect} value={invSort} onChange={(e) => setInvSort(e.target.value as typeof invSort)}>
+            <option value="name-asc">Name A–Z</option>
+            <option value="name-desc">Name Z–A</option>
+            <option value="price-asc">Price ↑</option>
+            <option value="price-desc">Price ↓</option>
+            <option value="market-asc">Market ↑</option>
+            <option value="market-desc">Market ↓</option>
+            <option value="qty-asc">Qty ↑</option>
+            <option value="qty-desc">Qty ↓</option>
+            <option value="rarity">Rarity</option>
+          </select>
+          <button
+            className={`btn btn-outline ${styles.invClearBtn}`}
+            onClick={() => { setInvSearch(""); setInvRarity(""); setInvCondition(""); setInvFoil(""); setInvVisibility(""); setInvSort("name-asc"); }}
+          >
+            Clear
+          </button>
+          <span className={styles.invCount}>Showing {displayCards.length} of {cards.length}</span>
         </div>
-      )}
 
-      {/* Filter / Sort Bar */}
-      <div className={styles.invFilterBar}>
-        <input
-          className={styles.invSearch}
-          placeholder="Search name, set…"
-          value={invSearch}
-          onChange={(e) => setInvSearch(e.target.value)}
-        />
-        <select className={styles.invSelect} value={invCondition} onChange={(e) => setInvCondition(e.target.value)}>
-          <option value="">All Conditions</option>
-          {CONDITIONS.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
-        <select className={styles.invSelect} value={invFoil} onChange={(e) => setInvFoil(e.target.value as "" | "foil" | "nonfoil")}>
-          <option value="">Foil + Non-foil</option>
-          <option value="foil">Foil Only</option>
-          <option value="nonfoil">Non-foil Only</option>
-        </select>
-        <select className={styles.invSelect} value={invVisibility} onChange={(e) => setInvVisibility(e.target.value as "" | "live" | "hidden")}>
-          <option value="">All Visibility</option>
-          <option value="live">Live</option>
-          <option value="hidden">Hidden</option>
-        </select>
-        <select className={styles.invSelect} value={invSort} onChange={(e) => setInvSort(e.target.value as typeof invSort)}>
-          <option value="name-asc">Name A–Z</option>
-          <option value="name-desc">Name Z–A</option>
-          <option value="price-asc">Price ↑</option>
-          <option value="price-desc">Price ↓</option>
-          <option value="market-asc">Market ↑</option>
-          <option value="market-desc">Market ↓</option>
-          <option value="qty-asc">Qty ↑</option>
-          <option value="qty-desc">Qty ↓</option>
-          <option value="rarity">Rarity</option>
-        </select>
-        <button
-          className={styles.invClearBtn}
-          onClick={() => { setInvSearch(""); setInvRarity(""); setInvCondition(""); setInvFoil(""); setInvVisibility(""); setInvSort("name-asc"); }}
-        >
-          Clear Filters
-        </button>
-        <span className={styles.invCount}>{displayCards.length} of {cards.length}</span>
-      </div>
-
-      {/* Table */}
-      <div className={styles.tableWrap}>
+        {/* Table */}
+        <div className={styles.tableWrap}>
         <div className={styles.tableHeader}>
           <span className={styles.checkCell}>
             <input
@@ -1230,15 +1228,15 @@ export default function AdminInventoryPage() {
           </span>
           <span></span>{/* thumbnail */}
           <span>Card Name</span>
-          <span style={{ textAlign: "center", display: "block" }}>Set</span>
-          <span style={{ textAlign: "center", display: "block" }}>Condition</span>
-          <span style={{ textAlign: "center", display: "block" }}>Foil</span>
-          <span style={{ textAlign: "center", display: "block" }}>Rarity</span>
-          <span style={{ textAlign: "center", display: "block" }}>Listed Price</span>
-          <span style={{ textAlign: "center", display: "block" }}>−15% Below Market</span>
-          <span style={{ textAlign: "center", display: "block" }}>Scryfall Price</span>
-          <span style={{ textAlign: "center", display: "block" }}>Qty</span>
-          <span style={{ textAlign: "center", display: "block" }}>Visibility</span>
+          <span className={styles.colCenter}>Set</span>
+          <span className={styles.colCenter}>Condition</span>
+          <span className={styles.colCenter}>Foil</span>
+          <span className={styles.colCenter}>Rarity</span>
+          <span className={styles.colCenter}>Listed</span>
+          <span className={styles.colCenter}>−15% Market</span>
+          <span className={styles.colCenter}>Market</span>
+          <span className={styles.colCenter}>Qty</span>
+          <span className={styles.colCenter}>Visibility</span>
         </div>
         {loading ? (
           <div className={styles.emptyState}>Loading…</div>
@@ -1267,15 +1265,15 @@ export default function AdminInventoryPage() {
                   <span className={styles.thumbEmpty}>?</span>
                 )}
               </span>
-              <span className={styles.cardName}>{card.name}</span>
-              <span className={styles.setCode}>
+              <span className={styles.cardName} data-label="Card">{card.name}</span>
+              <span className={styles.setCode} data-label="Set">
                 {formatSetDisplay(card.set, card.setCode, card.collectorNumber)}
               </span>
-              <span className={styles.condition}>{card.condition}</span>
-              <span className={styles.foil}>
+              <span className={styles.condition} data-label="Condition">{card.condition}</span>
+              <span className={styles.foil} data-label="Finish">
                 {card.foil && <span className={styles.foilYes}>Foil</span>}
               </span>
-              <span className={styles.rarityCell}>
+              <span className={styles.rarityCell} data-label="Rarity">
                 <span
                   className={`${styles.rarityBadge} ${styles[`rarity_${normalizeRarity(card.rarity).replace(/\s+/g, "")}`] ?? ""}`}
                   title={normalizeRarity(card.rarity)}
@@ -1283,16 +1281,17 @@ export default function AdminInventoryPage() {
                   {rarityBadgeLabel(card.rarity)}
                 </span>
               </span>
-              <span className={styles.price}>{formatAmount(card.price)}</span>
-              <span className={styles.total} title="15% below Scryfall market price" style={{ textAlign: "center" }}>
+              <span className={styles.price} data-label="Listed Price">{formatAmount(card.price)}</span>
+              <span className={styles.total} data-label="15% Below Market" title="15% below Scryfall market price">
                 {card.marketPrice !== undefined ? formatAmount(card.marketPrice * 0.85) : "—"}
               </span>
-              <span className={styles.total} title="Scryfall market price">
+              <span className={styles.total} data-label="Market Price" title="Scryfall market price">
                 {card.marketPrice !== undefined ? formatAmount(card.marketPrice) : "—"}
               </span>
-              <span className={`${styles.qty} ${card.quantity <= 2 ? styles.qtyLow : ""}`}>{card.quantity}</span>
+              <span className={`${styles.qty} ${card.quantity <= 2 ? styles.qtyLow : ""}`} data-label="Quantity">{card.quantity}</span>
               <button
                 className={`${styles.visibilityBtn} ${card.hidden ? styles.visibilityHidden : styles.visibilityLive}`}
+                data-label="Visibility"
                 onClick={async () => {
                   const res = await fetch(`/api/admin/inventory/${card.id}`, {
                     method: "PATCH",
@@ -1311,7 +1310,8 @@ export default function AdminInventoryPage() {
             </div>
           ))
         )}
-      </div>
+        </div>
+      </section>
 
       {/* ── Delete Confirm ─────────────────────────────────────────────────── */}
       {deleteTarget && (

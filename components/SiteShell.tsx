@@ -19,7 +19,7 @@ const MTG_PATHS = [
   "/commander-nights",
 ];
 
-const NO_FOOTER_PATHS = ["/casino-night", "/contact", "/calendar", "/mtg-and-more", "/card-shop", "/card-shop-singles", "/pre-release", "/private-events", "/commander-nights", "/checkout"];
+const NO_FOOTER_PATHS = ["/contact", "/calendar", "/mtg-and-more", "/card-shop", "/card-shop-singles", "/pre-release", "/private-events", "/commander-nights", "/checkout"];
 
 function isMtgPage(pathname: string) {
   return MTG_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));

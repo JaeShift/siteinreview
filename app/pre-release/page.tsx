@@ -25,13 +25,33 @@ export default function PreReleasePage() {
     .filter((e) => e.format === "Prerelease" && e.date >= today)
     .sort((a, b) => a.date.localeCompare(b.date))[0];
 
-  // Fallback values if no upcoming prerelease exists
-  const title = event?.title ?? "MTG Prerelease";
-  const imageUrl = event?.imageUrl ?? "/images/hobbitprerelease.webp";
-  const price = event?.entryFee ?? 44.99;
-  const dateLabel = event ? formatDate(event.date) : "";
-  const description = event?.shortDescription ?? "Be the first to play the latest Magic set! Sealed prerelease packs, prizes, and more.";
-  const eventSlug = event?.slug;
+  // Show the holding page when no upcoming prerelease is scheduled
+  if (!event) {
+    return (
+      <div className={styles.holdingPage}>
+        <span className={styles.holdingEyebrow}>Kitsune Brewing Co. · Magic: The Gathering</span>
+        <h1 className={styles.holdingTitle}>
+          The Next Pre-Release<br />
+          <em>Is Brewing.</em>
+        </h1>
+        <div className={styles.holdingDivider} />
+        <p className={styles.holdingBody}>
+          New Magic: The Gathering sets—and the events to celebrate them—are on the way.
+          Check back soon for upcoming prerelease dates, details, and registration.
+        </p>
+        <Link href="/mtg-and-more" className={styles.holdingBtn}>
+          Explore MTG &amp; More
+        </Link>
+      </div>
+    );
+  }
+
+  const title = event.title;
+  const imageUrl = event.imageUrl;
+  const price = event.entryFee;
+  const dateLabel = formatDate(event.date);
+  const description = event.shortDescription;
+  const eventSlug = event.slug;
 
   return (
     <>

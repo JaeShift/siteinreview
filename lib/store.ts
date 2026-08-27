@@ -292,7 +292,20 @@ const PRERELEASE_DEFAULT: PrereleaseConfig = {
 };
 
 export function getPrereleaseConfig(): PrereleaseConfig {
-  return readJson<PrereleaseConfig>("prerelease.json", PRERELEASE_DEFAULT);
+  const config = readJson<PrereleaseConfig>("prerelease.json", PRERELEASE_DEFAULT);
+
+  // Auto-expire to holding 72 hours after the event date
+  if (config.active && config.date) {
+    const eventMs = new Date(config.date + "T00:00:00").getTime();
+    const expiresMs = eventMs + 72 * 60 * 60 * 1000;
+    if (Date.now() > expiresMs) {
+      const expired = { ...config, active: false };
+      writeJson("prerelease.json", expired);
+      return expired;
+    }
+  }
+
+  return config;
 }
 
 export function savePrereleaseConfig(config: PrereleaseConfig): PrereleaseConfig {

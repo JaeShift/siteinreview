@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { getPrereleaseConfig } from "@/lib/store";
 import styles from "./holding.module.css";
@@ -25,20 +24,17 @@ export default function PrereleasePageServer() {
     return (
       <div className={styles.holdingPage}>
         <div className={styles.holdingContent}>
-          <Image
-            src="/images/logo.png"
-            alt="Kitsune Brewing Co."
-            width={120}
-            height={120}
-            className={styles.holdingLogo}
-          />
-          <h1 className={styles.holdingTitle}>We Will Be Back!</h1>
+          <span className={styles.holdingEyebrow}>Kitsune Brewing Co. · Magic: The Gathering</span>
+          <h1 className={styles.holdingTitle}>
+            The Next Pre-Release Event<br />
+            <em>Is Brewing.</em>
+          </h1>
+          <div className={styles.holdingDivider} />
           <p className={styles.holdingText}>
-            {cfg.setName
-              ? `The ${cfg.setName} Pre-Release page is coming soon. Check back for upcoming event details.`
-              : "The Pre-Release page is coming soon. Check back for upcoming event details."}
+            New Magic: The Gathering sets—and the events to celebrate them—are on the way.
+            Check back soon for upcoming prerelease dates, details, and registration.
           </p>
-          <Link href="/" className="btn btn-primary">Back to Home</Link>
+          <Link href="/mtg-and-more" className={styles.holdingBtn}>Explore MTG &amp; More</Link>
         </div>
       </div>
     );

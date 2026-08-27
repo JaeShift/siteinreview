@@ -11,7 +11,6 @@ type NavItem = { label: string; href: string };
 
 const navLinks: NavItem[] = [
   { label: "Home", href: "/" },
-  { label: "Casino Night", href: "/casino-night" },
   { label: "MTG AND MORE", href: "/mtg-and-more" },
   { label: "Magic Mamas Pre-Release", href: "/magic-mamas-pre-release" },
   { label: "Contact Us", href: "/contact" },
@@ -40,8 +39,10 @@ export default function Header() {
     };
   }, [menuOpen]);
 
+  const isHolding = pathname === "/magic-mamas-pre-release";
+
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${isHolding ? styles.headerHolding : ""}`}>
       <div className={styles.headerInner}>
         <Link href="/" className={styles.headerLogo} aria-label="Kitsune Brewing Co — Home">
           <Image src="/images/logo.png" alt="Kitsune" width={160} height={100} priority />

@@ -68,7 +68,6 @@ export default function Footer() {
           <h3 className={styles.footerHeading}>Navigate</h3>
           <nav className={styles.footerNav} aria-label="Footer navigation">
             <Link href="/" className={styles.footerNavLink}>Home</Link>
-            <Link href="/casino-night" className={styles.footerNavLink}>Casino Night</Link>
             <Link href="/card-shop" className={styles.footerNavLink}>Card Shop</Link>
             <Link href="/pre-release" className={styles.footerNavLink}>Pre-Release</Link>
             <Link href="/events" className={styles.footerNavLink}>Events</Link>

@@ -75,8 +75,8 @@ a {
   text-decoration: none;
 }
 
-a:link   { color: var(--color-accent);  }   /* matches custom.css: a:link{color:red}     */
-a:visited{ color: var(--color-visited); }   /* matches custom.css: a:visited{color:green} */
+a:link   { color: var(--color-accent);  }
+a:visited{ color: inherit; }
 
 /* ─────────────────────────────────────────────────────────────────────────────
    BODY — proxima-nova

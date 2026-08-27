@@ -75,6 +75,86 @@
   color: #333333;
 }
 
+/* ── Holding page variant — removes excess bottom padding ── */
+.headerHolding {
+  padding-bottom: 24px;
+}
+
+/* ── Dark header variant (e.g. magic-mamas-pre-release) ── */
+.headerDark {
+  background-color: #000000;
+  position: relative;
+}
+
+.headerDark .headerLogo img {
+  filter: brightness(0) invert(1);
+}
+
+.headerDark .navLink,
+.headerDark .navLink:link,
+.headerDark .navLink:visited {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.headerDark .navLink:hover,
+.headerDark .navLink:hover:link,
+.headerDark .navLink:hover:visited {
+  color: #ffffff;
+}
+
+.headerDark .navLinkActive,
+.headerDark .navLinkActive:link,
+.headerDark .navLinkActive:visited {
+  color: #ffffff;
+}
+
+.headerDark .cartLink {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.headerDark .cartLink:hover {
+  color: #ffffff;
+}
+
+.headerDark .hamburgerBar {
+  background-color: #ffffff;
+}
+
+.headerDark .mobileNav {
+  background-color: #111111;
+  border-top-color: #222222;
+}
+
+.headerDark .mobileNavLink,
+.headerDark .mobileNavLink:link,
+.headerDark .mobileNavLink:visited {
+  color: rgba(255, 255, 255, 0.75);
+  border-bottom-color: #222222;
+}
+
+.headerDark .mobileNavLink:hover,
+.headerDark .mobileNavLinkActive,
+.headerDark .mobileNavLink:hover:link,
+.headerDark .mobileNavLink:hover:visited,
+.headerDark .mobileNavLinkActive:link,
+.headerDark .mobileNavLinkActive:visited {
+  color: var(--color-accent);
+}
+
+/* Soft glow fade into the holding page below */
+.headerDark::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: -40px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, #000000, transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+
 /* Hamburger */
 .hamburger {
   display: none;

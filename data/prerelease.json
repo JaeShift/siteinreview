@@ -1,10 +1,10 @@
 {
-  "active": false,
-  "setName": "",
-  "tagline": "",
-  "date": "",
-  "time": "",
-  "description": "",
+  "active": true,
+  "setName": "Avatar",
+  "tagline": "avatar the last airbender",
+  "date": "2026-09-30",
+  "time": "3:00PM",
+  "description": "THIS IS A TEST PARAGARAPH FOR THE SITE TO SEE THE DISPLAY FOR ANY OF THE NEW PRE RELAESE EVENTS",
   "imageUrl": "",
   "eventSlug": ""
 }

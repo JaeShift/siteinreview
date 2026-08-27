@@ -1,10 +1,10 @@
 .holdingPage {
-  min-height: 70vh;
+  min-height: calc(100vh - 210px); /* viewport minus slimmed header height */
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-bg);
-  padding: 48px 24px;
+  background: var(--color-white);
+  padding: 60px 24px;
 }
 
 .holdingContent {
@@ -12,27 +12,88 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  max-width: 480px;
+  max-width: 600px;
+  animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.holdingLogo {
-  opacity: 0.85;
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.holdingEyebrow {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 28px;
+  display: block;
+  animation: fadeUp 0.9s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .holdingTitle {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(28px, 4.8vw, 64px);
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
   color: var(--color-black);
+  margin-bottom: 32px;
+  white-space: nowrap;
+  animation: fadeUp 0.9s 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.holdingTitle em {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.holdingDivider {
+  width: 48px;
+  height: 2px;
+  background: var(--color-accent);
+  margin-bottom: 32px;
+  animation: fadeUp 0.9s 0.36s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .holdingText {
   font-size: 16px;
-  color: var(--color-gray-mid);
-  line-height: 1.6;
+  color: var(--color-text-light);
+  line-height: 1.7;
+  margin-bottom: 48px;
+  animation: fadeUp 0.9s 0.46s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.holdingBtn,
+.holdingBtn:link,
+.holdingBtn:visited {
+  display: inline-block;
+  padding: 16px 40px;
+  background: var(--color-black);
+  border: 1px solid var(--color-black);
+  color: var(--color-white) !important;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+  animation: fadeUp 0.9s 0.58s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.holdingBtn:hover {
+  background: #333;
+  border-color: #333;
 }
 
 /* ─── Active pre-release page ────────────────────────────────────────────── */
@@ -150,23 +211,23 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 900px) {
   .holdingPage {
-    min-height: 60vh;
-    padding: 40px 18px;
+    min-height: calc(100vh - 120px);
   }
+}
 
-  .holdingContent {
-    gap: 16px;
+@media (max-width: 600px) {
+  .holdingPage {
+    min-height: calc(100vh - 90px);
+    padding: 40px 20px;
   }
+}
 
-  .holdingLogo img {
-    width: 140px;
-    height: auto;
-  }
-
+@media (max-width: 480px) {
   .holdingTitle {
-    font-size: clamp(2rem, 12vw, 2.8rem);
+    font-size: clamp(24px, 8vw, 40px);
+    white-space: normal;
   }
 
   .prereleaseHero {

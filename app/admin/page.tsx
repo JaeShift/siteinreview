@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import StatsCard from "@/components/admin/StatsCard";
 import LiveClock from "@/components/admin/LiveClock";
-import { getEventsStore, getOrdersStore } from "@/lib/store";
+import { getEventsStore, getOrdersStore, getRegistrationsStore, getPrereleaseConfig } from "@/lib/store";
 import styles from "./dashboard.module.css";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -15,6 +15,7 @@ function formatAmount(cents: number) {
 export default function AdminDashboardPage() {
   const events = getEventsStore();
   const orders = getOrdersStore();
+  const registrations = getRegistrationsStore();
 
   const today = new Date().toISOString().split("T")[0];
   const endOfWeek = new Date();
@@ -33,6 +34,13 @@ export default function AdminDashboardPage() {
   const recentOrders = orders.slice(0, 5);
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const ordersLast30 = orders.filter((o) => o.createdAt >= thirtyDaysAgo);
+  const prereleaseConfig = getPrereleaseConfig();
+  const pendingOrders = orders.filter((order) => order.status === "pending").length;
+  const waitlistedPlayers = registrations.filter((registration) => registration.status === "waitlisted").length;
+  const nearlyFullEvents = eventsNext30.filter((event) => {
+    const seatsRemaining = event.playerLimit - event.registeredCount;
+    return seatsRemaining > 0 && seatsRemaining <= Math.max(3, Math.ceil(event.playerLimit * 0.2));
+  }).length;
 
   return (
     <div className={styles.page}>
@@ -135,20 +143,72 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className={styles.panel}>
-        <div className={styles.panelHeader}>
-          <h2 className={styles.panelTitle}>Quick Actions</h2>
+      <div className={styles.attentionPanel}>
+        <div className={styles.attentionHeader}>
+          <div>
+            <p className={styles.attentionEyebrow}>Operations</p>
+            <h2 className={styles.attentionTitle}>Needs Attention</h2>
+          </div>
+          <p className={styles.attentionNote}>Items that may need a follow-up.</p>
         </div>
-        <div className={styles.quickActions}>
-          <Link href="/admin/events" className={`btn btn-outline ${styles.actionBtn}`}>Manage Events</Link>
-          <Link href="/admin/orders" className={`btn btn-outline ${styles.actionBtn}`}>View Orders</Link>
-          <Link href="/admin/inventory" className={`btn btn-outline ${styles.actionBtn}`}>Singles Inventory</Link>
-          <Link href="/admin/settings" className={`btn btn-outline ${styles.actionBtn}`}>Settings</Link>
-          <Link href="/" className={`btn btn-outline ${styles.actionBtn}`} target="_blank">View Site ↗</Link>
+        <div className={styles.attentionGrid}>
+          <AttentionItem
+            count={pendingOrders}
+            label="Pending Orders"
+            detail={pendingOrders === 0 ? "All orders are settled" : "Review payment status"}
+            href="/admin/orders"
+          />
+          <AttentionItem
+            count={waitlistedPlayers}
+            label="Waitlisted Players"
+            detail={waitlistedPlayers === 0 ? "No players are waiting" : "Check for available seats"}
+            href="/admin/registrations"
+          />
+          <AttentionItem
+            count={nearlyFullEvents}
+            label="Nearly Full Events"
+            detail={nearlyFullEvents === 0 ? "Event capacity looks good" : "20% or fewer seats remain"}
+            href="/admin/events"
+          />
+          <AttentionItem
+            count={0}
+            label="Pre-Release Page"
+            detail={
+              prereleaseConfig.active
+                ? `Live — ${prereleaseConfig.setName || "event active"}`
+                : prereleaseConfig.setName
+                  ? `Holding — New event coming soon`
+                  : `Holding — Page shows coming soon`
+            }
+            href="/admin/events"
+            status={prereleaseConfig.active ? "live" : "holding"}
+          />
         </div>
       </div>
     </div>
+  );
+}
+
+function AttentionItem({ count, label, detail, href, status }: { count: number; label: string; detail: string; href: string; status?: "live" | "holding" }) {
+  const badgeClass = status === "live"
+    ? styles.attentionCountLive
+    : status === "holding"
+      ? styles.attentionCountHolding
+      : count > 0
+        ? styles.attentionCountActive
+        : "";
+
+  const badge = status === "live" ? "●" : status === "holding" ? "⏸" : count;
+
+  return (
+    <Link href={href} className={styles.attentionItem}>
+      <span className={`${styles.attentionCount} ${badgeClass}`}>{badge}</span>
+      <span className={styles.attentionCopy}>
+        <strong>{label}</strong>
+        <small>{detail}</small>
+      </span>
+      <span className={styles.attentionArrow} aria-hidden="true">→</span>
+    </Link>
   );
 }
 

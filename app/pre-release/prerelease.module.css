@@ -1,3 +1,81 @@
+/* ── Holding / Coming-soon state ── */
+.holdingPage {
+  background: var(--color-black);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.holdingEyebrow {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 28px;
+  display: block;
+}
+
+.holdingTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(40px, 7vw, 80px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  color: var(--color-white);
+  margin-bottom: 32px;
+  max-width: 760px;
+}
+
+.holdingTitle em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+.holdingBody {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 520px;
+  margin-bottom: 48px;
+}
+
+.holdingDivider {
+  width: 48px;
+  height: 2px;
+  background: var(--color-accent);
+  margin: 0 auto 48px;
+}
+
+.holdingBtn,
+.holdingBtn:link,
+.holdingBtn:visited {
+  display: inline-block;
+  padding: 16px 40px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-white) !important;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.holdingBtn:hover {
+  border-color: var(--color-white);
+  background: rgba(255, 255, 255, 0.06);
+}
+
 /* ── Hero ── */
 .hero {
   background: var(--color-black);

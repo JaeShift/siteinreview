@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { MtgEvent, EventFormat, CustomQuestion, EventAddOn } from "@/lib/events-data";
 import type { PrereleaseConfig } from "@/lib/store";
+import type { PrereleaseDraft } from "@/lib/prerelease-drafts";
 import styles from "./admin-events.module.css";
 
 const BLANK_PRERELEASE: PrereleaseConfig = {
@@ -66,6 +67,156 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
   const [showPRModal, setShowPRModal] = useState(false);
   const [prConfig, setPrConfig] = useState<PrereleaseConfig>(initialPrerelease);
   const [prSaving, setPrSaving] = useState(false);
+  const [prImageUploading, setPrImageUploading] = useState(false);
+
+  // Drafts from the importer
+  const [drafts, setDrafts] = useState<PrereleaseDraft[]>([]);
+  const [showDraftPanel, setShowDraftPanel] = useState(false);
+  const [runningImport, setRunningImport] = useState(false);
+  const [approvingId, setApprovingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/admin/prerelease/drafts")
+      .then((r) => r.json())
+      .then((d: PrereleaseDraft[]) => setDrafts(d))
+      .catch(() => {/* ignore */});
+  }, []);
+
+  const pendingDrafts = drafts.filter((d) => d.status === "pending");
+
+  async function runImport() {
+    setRunningImport(true);
+    try {
+      const res = await fetch("/api/admin/prerelease/import", { method: "POST",
+        headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET ?? ""}` } });
+      const data = await res.json();
+      showFlash(`Import done — ${data.created} new draft(s) created.`);
+      const updated = await fetch("/api/admin/prerelease/drafts").then((r) => r.json());
+      setDrafts(updated);
+    } catch {
+      showFlash("Import failed — check the server logs.", "error");
+    } finally {
+      setRunningImport(false);
+    }
+  }
+
+  async function approveDraft(draft: PrereleaseDraft) {
+    setApprovingId(draft.id);
+    try {
+      const res = await fetch("/api/admin/prerelease/drafts", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: draft.id, status: "approved" }),
+      });
+      if (!res.ok) throw new Error();
+      const updated: PrereleaseDraft = await res.json();
+      setDrafts((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
+      // Sync local prConfig so the modal reflects the approved draft
+      setPrConfig((c) => ({
+        ...c,
+        active: true,
+        setName: draft.setName,
+        date: draft.prereleaseDate,
+        imageUrl: draft.imageUrl,
+        tagline: draft.tagline,
+      }));
+      showFlash(`"${draft.setName}" approved and set as live pre-release page.`);
+    } catch {
+      showFlash("Failed to approve draft.", "error");
+    } finally {
+      setApprovingId(null);
+    }
+  }
+
+  async function rejectDraft(draft: PrereleaseDraft) {
+    try {
+      const res = await fetch("/api/admin/prerelease/drafts", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: draft.id, status: "rejected" }),
+      });
+      if (!res.ok) throw new Error();
+      const updated: PrereleaseDraft = await res.json();
+      setDrafts((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
+      showFlash(`"${draft.setName}" draft rejected.`);
+    } catch {
+      showFlash("Failed to reject draft.", "error");
+    }
+  }
+
+  async function deleteDraft(id: string) {
+    if (!confirm("Delete this draft? This cannot be undone.")) return;
+    try {
+      await fetch(`/api/admin/prerelease/drafts?id=${id}`, { method: "DELETE" });
+      setDrafts((prev) => prev.filter((d) => d.id !== id));
+    } catch {
+      showFlash("Failed to delete draft.", "error");
+    }
+  }
+
+  // Scryfall auto-fill
+  const [scryfallSets, setScryfallSets] = useState<{ code: string; name: string; released_at: string }[]>([]);
+  const [scryfallLoading, setScryfallLoading] = useState(false);
+  const [scryfallError, setScryfallError] = useState<string | null>(null);
+  const [selectedScryfallCode, setSelectedScryfallCode] = useState("");
+
+  async function fetchScryfallSets() {
+    setScryfallLoading(true);
+    setScryfallError(null);
+    try {
+      const res = await fetch("https://api.scryfall.com/sets");
+      if (!res.ok) throw new Error("Failed");
+      const data = await res.json();
+      const todayStr = new Date().toISOString().split("T")[0];
+      const upcoming = (data.data as Array<{ code: string; name: string; released_at: string; set_type: string }>)
+        .filter((s) => ["expansion", "core"].includes(s.set_type) && s.released_at >= todayStr)
+        .sort((a, b) => a.released_at.localeCompare(b.released_at));
+      setScryfallSets(upcoming);
+      if (upcoming.length > 0) setSelectedScryfallCode(upcoming[0].code);
+    } catch {
+      setScryfallError("Could not reach Scryfall — check your connection and try again.");
+    } finally {
+      setScryfallLoading(false);
+    }
+  }
+
+  async function applyScryfallSet() {
+    const set = scryfallSets.find((s) => s.code === selectedScryfallCode);
+    if (!set) return;
+    // Pre-release weekend is the Friday 7 days before official release
+    const release = new Date(set.released_at + "T12:00:00Z");
+    release.setUTCDate(release.getUTCDate() - 7);
+    const prereleaseDate = release.toISOString().split("T")[0];
+
+    // Try to fetch art crop from the first mythic (fallback: rare) in the set
+    let imageUrl = "";
+    try {
+      for (const rarity of ["m", "r"]) {
+        const res = await fetch(
+          `https://api.scryfall.com/cards/search?q=set:${set.code}+rarity:${rarity}&order=released&dir=asc&page=1`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          const card = data.data?.[0];
+          const artCrop = card?.image_uris?.art_crop ?? card?.card_faces?.[0]?.image_uris?.art_crop;
+          if (artCrop) { imageUrl = artCrop; break; }
+        }
+      }
+    } catch { /* image stays blank if fetch fails */ }
+
+    setPrConfig((c) => ({
+      active: c.active,
+      setName: set.name,
+      tagline: "",
+      date: prereleaseDate,
+      time: "",
+      description: "",
+      imageUrl,
+      eventSlug: "",
+    }));
+    setScryfallSets([]);
+    setSelectedScryfallCode("");
+  }
 
   const today = new Date().toISOString().split("T")[0];
   const upcoming = [...events].filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
@@ -191,12 +342,25 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
         </div>
         <div className={styles.headerActions}>
           <button
-            className={`btn btn-outline ${styles.prereleaseBtn}`}
-            onClick={() => { setPrConfig(initialPrerelease); setShowPRModal(true); }}
+            className={`btn btn-primary ${styles.prereleaseBtn}`}
+            onClick={() => setShowPRModal(true)}
           >
-            ⚡ Pre-Release Page
-            {prConfig.active && <span className={styles.prereleaseLiveDot} title="Page is live" />}
+            Pre-Release Page
+            {prConfig.active
+              ? <span className={styles.prereleaseLiveDot} title="Page is live" />
+              : <span className={`${styles.prereleaseLiveDot} ${styles.prereleaseLiveDotHolding}`} title="Page is holding" />
+            }
           </button>
+          {pendingDrafts.length > 0 && (
+            <button
+              className={`btn btn-outline ${styles.draftsBadgeBtn}`}
+              onClick={() => setShowDraftPanel(true)}
+              title={`${pendingDrafts.length} auto-imported draft(s) awaiting review`}
+            >
+              Drafts
+              <span className={styles.draftsBadge}>{pendingDrafts.length}</span>
+            </button>
+          )}
           <button className="btn btn-primary" onClick={openAdd}>+ New Event</button>
         </div>
       </div>
@@ -292,9 +456,51 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
                     <span className={styles.prToggleThumb} />
                   </button>
                   <span style={{ fontSize: 13, fontWeight: 600, color: prConfig.active ? "var(--color-green, #1a7a3a)" : "var(--color-text-light)" }}>
-                    {prConfig.active ? "Live — page shows event content" : "Holding — page shows coming soon"}
+                    {prConfig.active ? "Live — page shows event content" : "Holding — page shows new event coming soon"}
                   </span>
                 </div>
+              </div>
+
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label className="form-label">Auto-fill from Scryfall</label>
+                {scryfallSets.length === 0 ? (
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <button
+                      type="button"
+                      className="btn btn-outline"
+                      style={{ fontSize: 12 }}
+                      onClick={fetchScryfallSets}
+                      disabled={scryfallLoading}
+                    >
+                      {scryfallLoading ? "Fetching…" : "Fetch Upcoming Sets"}
+                    </button>
+                    {scryfallError && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{scryfallError}</span>}
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                    <select
+                      className="form-input"
+                      style={{ flex: 1, minWidth: 200 }}
+                      value={selectedScryfallCode}
+                      onChange={(e) => setSelectedScryfallCode(e.target.value)}
+                    >
+                      {scryfallSets.map((s) => (
+                        <option key={s.code} value={s.code}>
+                          {s.name} — {s.released_at}
+                        </option>
+                      ))}
+                    </select>
+                    <button type="button" className="btn btn-primary" style={{ fontSize: 12 }} onClick={applyScryfallSet}>
+                      Apply
+                    </button>
+                    <button type="button" className="btn btn-outline" style={{ fontSize: 12 }} onClick={() => { setScryfallSets([]); setSelectedScryfallCode(""); }}>
+                      Cancel
+                    </button>
+                  </div>
+                )}
+                <span style={{ fontSize: 11, color: "var(--color-text-light)", marginTop: 4, display: "block" }}>
+                  Fills Set Name, pre-release Date, and Hero Image (first mythic art from the set). All other fields are cleared. Page status is preserved.
+                </span>
               </div>
 
               <div className={styles.formGroup}>
@@ -350,12 +556,56 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
 
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                 <label className="form-label">Hero Image URL</label>
-                <input
-                  className="form-input"
-                  value={prConfig.imageUrl}
-                  onChange={(e) => setPrConfig((c) => ({ ...c, imageUrl: e.target.value }))}
-                  placeholder="https://… (set key art or banner)"
-                />
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <input
+                    className="form-input"
+                    style={{ flex: 1 }}
+                    value={prConfig.imageUrl}
+                    onChange={(e) => setPrConfig((c) => ({ ...c, imageUrl: e.target.value }))}
+                    placeholder="https://… (set key art or banner)"
+                  />
+                  <span style={{ fontSize: 12, color: "var(--color-text-light)", flexShrink: 0 }}>or</span>
+                  <label className={`btn btn-outline ${styles.uploadBtn}`} style={{ fontSize: 12, whiteSpace: "nowrap", cursor: prImageUploading ? "not-allowed" : "pointer" }}>
+                    {prImageUploading ? "Uploading…" : "Upload ↑"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      disabled={prImageUploading}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setPrImageUploading(true);
+                        try {
+                          const fd = new FormData();
+                          fd.append("file", file);
+                          const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+                          const data = await res.json();
+                          const url = data.uploaded?.[0]?.url;
+                          if (url) setPrConfig((c) => ({ ...c, imageUrl: url }));
+                          else showFlash(data.errors?.[0]?.error ?? "Upload failed", "error");
+                        } catch {
+                          showFlash("Upload failed", "error");
+                        } finally {
+                          setPrImageUploading(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+                {prConfig.imageUrl && (
+                  <div style={{ marginTop: 10 }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={prConfig.imageUrl}
+                      alt="Hero image preview"
+                      className={styles.prImagePreview}
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                      onLoad={(e) => { (e.currentTarget as HTMLImageElement).style.display = "block"; }}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
@@ -426,6 +676,94 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Drafts Panel ── */}
+      {showDraftPanel && (
+        <div className={styles.modalOverlay}>
+          <div className={`${styles.modal} ${styles.draftsModal}`}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>
+                Auto-Imported Drafts
+                {pendingDrafts.length > 0 && (
+                  <span className={styles.draftsBadge} style={{ marginLeft: 8 }}>{pendingDrafts.length} pending</span>
+                )}
+              </h2>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  style={{ fontSize: 12 }}
+                  onClick={runImport}
+                  disabled={runningImport}
+                >
+                  {runningImport ? "Running…" : "Run Import Now"}
+                </button>
+                <button className={styles.closeBtn} onClick={() => setShowDraftPanel(false)}>✕</button>
+              </div>
+            </div>
+
+            {drafts.length === 0 ? (
+              <p style={{ padding: "24px 0", color: "var(--color-text-light)", textAlign: "center", fontSize: 14 }}>
+                No drafts yet. Click &ldquo;Run Import Now&rdquo; to check for new sets.
+              </p>
+            ) : (
+              <div className={styles.draftsList}>
+                {drafts.map((draft) => (
+                  <div key={draft.id} className={`${styles.draftCard} ${draft.status !== "pending" ? styles.draftCardDim : ""}`}>
+                    {draft.imageUrl && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={draft.imageUrl} alt={draft.setName} className={styles.draftThumb} />
+                    )}
+                    <div className={styles.draftInfo}>
+                      <div className={styles.draftSetName}>{draft.setName}</div>
+                      <div className={styles.draftMeta}>
+                        Pre-release: <strong>{draft.prereleaseDate}</strong>
+                        &nbsp;·&nbsp;Release: {draft.releaseDate}
+                        &nbsp;·&nbsp;Source: {draft.source.toUpperCase()}
+                      </div>
+                      <div className={styles.draftMeta} style={{ marginTop: 2 }}>
+                        Imported: {new Date(draft.createdAt).toLocaleDateString()}
+                        &nbsp;·&nbsp;
+                        <span className={`${styles.draftStatusBadge} ${styles[`draftStatus_${draft.status}`]}`}>
+                          {draft.status}
+                        </span>
+                      </div>
+                    </div>
+                    <div className={styles.draftActions}>
+                      {draft.status === "pending" && (
+                        <>
+                          <button
+                            className="btn btn-primary"
+                            style={{ fontSize: 12 }}
+                            disabled={approvingId === draft.id}
+                            onClick={() => approveDraft(draft)}
+                          >
+                            {approvingId === draft.id ? "Approving…" : "Approve & Go Live"}
+                          </button>
+                          <button
+                            className="btn btn-outline"
+                            style={{ fontSize: 12 }}
+                            onClick={() => rejectDraft(draft)}
+                          >
+                            Reject
+                          </button>
+                        </>
+                      )}
+                      <button
+                        className="btn btn-outline"
+                        style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}
+                        onClick={() => deleteDraft(draft.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -45,6 +45,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Allow the prerelease import cron route — verified by CRON_SECRET bearer token
+  if (pathname === "/api/admin/prerelease/import") {
+    const cronSecret = process.env.CRON_SECRET;
+    const auth = request.headers.get("authorization") ?? "";
+    // If no CRON_SECRET is set, allow through (dev/local); otherwise validate
+    if (!cronSecret || auth === `Bearer ${cronSecret}`) {
+      return NextResponse.next();
+    }
+  }
+
   const token = request.cookies.get("admin_token")?.value;
   const valid = await verifyToken(token);
 
