@@ -72,6 +72,7 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
   // Drafts from the importer
   const [drafts, setDrafts] = useState<PrereleaseDraft[]>([]);
   const [showDraftPanel, setShowDraftPanel] = useState(false);
+  const [prTab, setPrTab] = useState<"edit" | "drafts">("edit");
   const [runningImport, setRunningImport] = useState(false);
   const [approvingId, setApprovingId] = useState<string | null>(null);
 
@@ -343,24 +344,19 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
         <div className={styles.headerActions}>
           <button
             className={`btn btn-primary ${styles.prereleaseBtn}`}
-            onClick={() => setShowPRModal(true)}
+            onClick={() => { setPrTab("edit"); setShowPRModal(true); }}
           >
             Pre-Release Page
             {prConfig.active
               ? <span className={styles.prereleaseLiveDot} title="Page is live" />
               : <span className={`${styles.prereleaseLiveDot} ${styles.prereleaseLiveDotHolding}`} title="Page is holding" />
             }
+            {pendingDrafts.length > 0 && (
+              <span className={styles.draftsBadge} title={`${pendingDrafts.length} draft(s) awaiting review`}>
+                {pendingDrafts.length}
+              </span>
+            )}
           </button>
-          {pendingDrafts.length > 0 && (
-            <button
-              className={`btn btn-outline ${styles.draftsBadgeBtn}`}
-              onClick={() => setShowDraftPanel(true)}
-              title={`${pendingDrafts.length} auto-imported draft(s) awaiting review`}
-            >
-              Drafts
-              <span className={styles.draftsBadge}>{pendingDrafts.length}</span>
-            </button>
-          )}
           <button className="btn btn-primary" onClick={openAdd}>+ New Event</button>
         </div>
       </div>
@@ -435,14 +431,34 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
       {/* ── Pre-Release Page Modal ── */}
       {showPRModal && (
         <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
+          <div className={`${styles.modal} ${styles.draftsModal}`}>
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle}>Pre-Release Page</h2>
               <button className={styles.closeBtn} onClick={() => setShowPRModal(false)}>✕</button>
             </div>
 
-            <form onSubmit={(e) => e.preventDefault()} className={styles.formGrid}>
-              {/* Live toggle */}
+            {/* Tabs */}
+            <div className={styles.prTabs}>
+              <button
+                className={`${styles.prTab} ${prTab === "edit" ? styles.prTabActive : ""}`}
+                onClick={() => setPrTab("edit")}
+              >
+                Edit Page
+              </button>
+              <button
+                className={`${styles.prTab} ${prTab === "drafts" ? styles.prTabActive : ""}`}
+                onClick={() => setPrTab("drafts")}
+              >
+                Auto-Imported Drafts
+                {pendingDrafts.length > 0 && (
+                  <span className={styles.draftsBadge} style={{ marginLeft: 6 }}>{pendingDrafts.length}</span>
+                )}
+              </button>
+            </div>
+
+            {prTab === "edit" && (
+              <>
+              <form onSubmit={(e) => e.preventDefault()} className={styles.formGrid}>
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                 <label className="form-label">Page Status</label>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -609,7 +625,7 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
               </div>
 
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Linked Event Slug</label>
+                <label className="form-label">Linked Event Slug <span style={{ fontWeight: 400, color: "var(--color-text-light)", fontSize: 12 }}>(optional)</span></label>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                   <input
                     className="form-input"
@@ -668,101 +684,90 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
                 >
                   Reset
                 </button>
-              </div>
-              <div style={{ display: "flex", gap: 8 }}>
+              </div>              <div style={{ display: "flex", gap: 8 }}>
                 <button className="btn btn-outline" onClick={() => setShowPRModal(false)} disabled={prSaving}>Cancel</button>
                 <button className="btn btn-primary" onClick={savePrereleaseConfig} disabled={prSaving || !prConfig.setName}>
                   {prSaving ? "Saving…" : "Save Page"}
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+              </>
+            )}
 
-      {/* ── Drafts Panel ── */}
-      {showDraftPanel && (
-        <div className={styles.modalOverlay}>
-          <div className={`${styles.modal} ${styles.draftsModal}`}>
-            <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>
-                Auto-Imported Drafts
-                {pendingDrafts.length > 0 && (
-                  <span className={styles.draftsBadge} style={{ marginLeft: 8 }}>{pendingDrafts.length} pending</span>
-                )}
-              </h2>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  style={{ fontSize: 12 }}
-                  onClick={runImport}
-                  disabled={runningImport}
-                >
-                  {runningImport ? "Running…" : "Run Import Now"}
-                </button>
-                <button className={styles.closeBtn} onClick={() => setShowDraftPanel(false)}>✕</button>
-              </div>
-            </div>
+            {prTab === "drafts" && (
+              <>
+                <div style={{ display: "flex", justifyContent: "flex-end", padding: "12px 0 4px" }}>
+                  <button
+                    type="button"
+                    className="btn btn-outline"
+                    style={{ fontSize: 12 }}
+                    onClick={runImport}
+                    disabled={runningImport}
+                  >
+                    {runningImport ? "Running…" : "Run Import Now"}
+                  </button>
+                </div>
 
-            {drafts.length === 0 ? (
-              <p style={{ padding: "24px 0", color: "var(--color-text-light)", textAlign: "center", fontSize: 14 }}>
-                No drafts yet. Click &ldquo;Run Import Now&rdquo; to check for new sets.
-              </p>
-            ) : (
-              <div className={styles.draftsList}>
-                {drafts.map((draft) => (
-                  <div key={draft.id} className={`${styles.draftCard} ${draft.status !== "pending" ? styles.draftCardDim : ""}`}>
-                    {draft.imageUrl && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={draft.imageUrl} alt={draft.setName} className={styles.draftThumb} />
-                    )}
-                    <div className={styles.draftInfo}>
-                      <div className={styles.draftSetName}>{draft.setName}</div>
-                      <div className={styles.draftMeta}>
-                        Pre-release: <strong>{draft.prereleaseDate}</strong>
-                        &nbsp;·&nbsp;Release: {draft.releaseDate}
-                        &nbsp;·&nbsp;Source: {draft.source.toUpperCase()}
-                      </div>
-                      <div className={styles.draftMeta} style={{ marginTop: 2 }}>
-                        Imported: {new Date(draft.createdAt).toLocaleDateString()}
-                        &nbsp;·&nbsp;
-                        <span className={`${styles.draftStatusBadge} ${styles[`draftStatus_${draft.status}`]}`}>
-                          {draft.status}
-                        </span>
-                      </div>
-                    </div>
-                    <div className={styles.draftActions}>
-                      {draft.status === "pending" && (
-                        <>
-                          <button
-                            className="btn btn-primary"
-                            style={{ fontSize: 12 }}
-                            disabled={approvingId === draft.id}
-                            onClick={() => approveDraft(draft)}
-                          >
-                            {approvingId === draft.id ? "Approving…" : "Approve & Go Live"}
-                          </button>
+                {drafts.length === 0 ? (
+                  <p style={{ padding: "24px 0", color: "var(--color-text-light)", textAlign: "center", fontSize: 14 }}>
+                    No drafts yet. Click &ldquo;Run Import Now&rdquo; to check for new sets.
+                  </p>
+                ) : (
+                  <div className={styles.draftsList}>
+                    {drafts.map((draft) => (
+                      <div key={draft.id} className={`${styles.draftCard} ${draft.status !== "pending" ? styles.draftCardDim : ""}`}>
+                        {draft.imageUrl && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={draft.imageUrl} alt={draft.setName} className={styles.draftThumb} />
+                        )}
+                        <div className={styles.draftInfo}>
+                          <div className={styles.draftSetName}>{draft.setName}</div>
+                          <div className={styles.draftMeta}>
+                            Pre-release: <strong>{draft.prereleaseDate}</strong>
+                            &nbsp;·&nbsp;Release: {draft.releaseDate}
+                            &nbsp;·&nbsp;Source: {draft.source.toUpperCase()}
+                          </div>
+                          <div className={styles.draftMeta} style={{ marginTop: 2 }}>
+                            Imported: {new Date(draft.createdAt).toLocaleDateString()}
+                            &nbsp;·&nbsp;
+                            <span className={`${styles.draftStatusBadge} ${styles[`draftStatus_${draft.status}`]}`}>
+                              {draft.status}
+                            </span>
+                          </div>
+                        </div>
+                        <div className={styles.draftActions}>
+                          {draft.status === "pending" && (
+                            <>
+                              <button
+                                className="btn btn-primary"
+                                style={{ fontSize: 12 }}
+                                disabled={approvingId === draft.id}
+                                onClick={() => approveDraft(draft)}
+                              >
+                                {approvingId === draft.id ? "Approving…" : "Approve & Go Live"}
+                              </button>
+                              <button
+                                className="btn btn-outline"
+                                style={{ fontSize: 12 }}
+                                onClick={() => rejectDraft(draft)}
+                              >
+                                Reject
+                              </button>
+                            </>
+                          )}
                           <button
                             className="btn btn-outline"
-                            style={{ fontSize: 12 }}
-                            onClick={() => rejectDraft(draft)}
+                            style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}
+                            onClick={() => deleteDraft(draft.id)}
                           >
-                            Reject
+                            Delete
                           </button>
-                        </>
-                      )}
-                      <button
-                        className="btn btn-outline"
-                        style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}
-                        onClick={() => deleteDraft(draft.id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             )}
           </div>
         </div>

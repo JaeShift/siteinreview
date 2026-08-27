@@ -5,13 +5,12 @@
  * Pipeline:
  *   1. Fetch upcoming MTG sets from Scryfall.
  *   2. Cross-reference against drafts already created so we skip known sets.
- *   3. For each new set, scrape the WPN product page to find the media-kit ZIP.
- *   4. Download + extract the ZIP; locate the best prerelease image.
- *   5. Save the image to /public/images/uploads/.
+ *   3. Scrape the public WPN products listing to find each set's product page.
+ *   4. Fetch the product page og:image (official Contentful CDN banner art).
+ *   5. Download and save the image to /public/images/uploads/.
  *   6. Create a "pending" draft for admin review.
  *
- * WPN credentials (optional but needed to reach authenticated pages):
- *   WPN_EMAIL / WPN_PASSWORD  — set in .env.local / Vercel env vars
+ * No WPN credentials required — the products listing and product pages are public.
  *
  * The cron secret header guards the route:
  *   CRON_SECRET — must match Authorization: Bearer <secret>
@@ -20,14 +19,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
-import AdmZip from "adm-zip";
 import { getDrafts, upsertDraft, type PrereleaseDraft } from "@/lib/prerelease-drafts";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 60; // seconds — Vercel Pro / Hobby limit
+export const maxDuration = 60;
 
 const IMAGES_DIR = path.join(process.cwd(), "public", "images", "uploads");
 const WPN_PRODUCTS_URL = "https://wpn.wizards.com/en/products";
+const SCRYFALL_UA = "KitsuneBrewingCo/1.0 (prerelease-importer; contact@kitsunebeerco.com)";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -35,7 +34,6 @@ function todayStr() {
   return new Date().toISOString().split("T")[0];
 }
 
-/** Returns YYYY-MM-DD that is `days` before the given ISO date string */
 function subtractDays(dateStr: string, days: number): string {
   const d = new Date(dateStr + "T12:00:00Z");
   d.setUTCDate(d.getUTCDate() - days);
@@ -46,13 +44,11 @@ function slugId(code: string) {
   return `wpn-${code}-${todayStr()}`;
 }
 
-/** Sanitise a filename for local storage */
 function safeFilename(name: string, ext: string): string {
   const base = name.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
   return `${base}-prerelease.${ext}`;
 }
 
-/** Ensure /public/images/uploads/ exists */
 function ensureUploadsDir() {
   if (!fs.existsSync(IMAGES_DIR)) fs.mkdirSync(IMAGES_DIR, { recursive: true });
 }
@@ -64,13 +60,12 @@ interface ScryfallSet {
   name: string;
   released_at: string;
   set_type: string;
-  scryfall_uri: string;
 }
 
 async function fetchUpcomingSets(): Promise<ScryfallSet[]> {
   const res = await fetch("https://api.scryfall.com/sets", {
     cache: "no-store",
-    headers: { "User-Agent": "KitsuneBrewingCo/1.0 (prerelease-importer; contact@kitsunebeerco.com)" },
+    headers: { "User-Agent": SCRYFALL_UA },
   });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
@@ -78,151 +73,118 @@ async function fetchUpcomingSets(): Promise<ScryfallSet[]> {
   }
   const { data } = (await res.json()) as { data: ScryfallSet[] };
   const today = todayStr();
-  return data.filter(
-    (s) => ["expansion", "core"].includes(s.set_type) && s.released_at >= today
-  ).sort((a, b) => a.released_at.localeCompare(b.released_at));
+  return data
+    .filter((s) => ["expansion", "core"].includes(s.set_type) && s.released_at >= today)
+    .sort((a, b) => a.released_at.localeCompare(b.released_at));
 }
 
-// ── WPN scraper ───────────────────────────────────────────────────────────────
+// ── WPN product scraper ───────────────────────────────────────────────────────
 
-/**
- * Logs in to WPN and returns a cookie string if credentials are configured.
- * Returns null when no credentials are set (falls back to Scryfall art).
- */
-async function wpnLogin(): Promise<string | null> {
-  const email = process.env.WPN_EMAIL;
-  const password = process.env.WPN_PASSWORD;
-  if (!email || !password) return null;
-
-  // WPN uses an OAuth / form-based login; we POST to their auth endpoint
-  // and capture the session cookie from the response headers.
-  const loginRes = await fetch("https://wpn.wizards.com/api/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-    redirect: "manual",
-  });
-
-  const setCookie = loginRes.headers.get("set-cookie");
-  return setCookie ?? null;
+interface WpnProduct {
+  url: string;
+  name: string;
+  releaseDate: string; // YYYY-MM-DD
 }
 
 /**
- * Scrapes WPN product pages looking for a download link that matches
- * "Product Shots" or "Prerelease Social Media Assets".
- * Returns the first matching ZIP URL, or null if not found.
+ * Parse the WPN products listing HTML to extract product cards.
+ * Products use Nuxt SSR so the data is in the initial HTML.
  */
-async function findWpnMediaZipUrl(
-  setName: string,
-  cookie: string | null
-): Promise<string | null> {
-  const headers: HeadersInit = {
-    "User-Agent": "Mozilla/5.0 (compatible; KitsuneBrewingBot/1.0)",
-    Accept: "text/html,application/xhtml+xml",
-  };
-  if (cookie) headers["Cookie"] = cookie;
+function parseWpnProductCards(html: string): WpnProduct[] {
+  const products: WpnProduct[] = [];
 
-  // Fetch the main products listing
-  const listRes = await fetch(WPN_PRODUCTS_URL, { headers });
-  if (!listRes.ok) return null;
-  const listHtml = await listRes.text();
+  // Each card: <a href="…">…name…</a> … <em class="…">Release Date Mon DD, YYYY</em>
+  // Walk through href + name + release date together via card boundaries
+  const cardRe = /<div class="[^"]*_card_[^"]*">([\s\S]*?)<\/div>\s*<\/div>\s*<\/div>/g;
+  let cardMatch: RegExpExecArray | null;
 
-  // Find a product page link whose text roughly matches the set name
-  // WPN product slugs tend to be kebab-case set names
-  const slugGuess = setName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-  const productLinkRe = new RegExp(
-    `href="([^"]*(?:${escapeRegex(slugGuess)}|${escapeRegex(setName.toLowerCase())})[^"]*)"`,
-    "i"
-  );
-  const productMatch = listHtml.match(productLinkRe);
-  if (!productMatch) return null;
+  while ((cardMatch = cardRe.exec(html)) !== null) {
+    const card = cardMatch[1];
 
-  const productUrl = productMatch[1].startsWith("http")
-    ? productMatch[1]
-    : `https://wpn.wizards.com${productMatch[1]}`;
+    // Extract href and link text (set name)
+    const hrefMatch = card.match(/href="([^"]+)"/);
+    const nameMatch = card.match(/<a[^>]+>([^<]+)<\/a>/);
+    // Release date like "Release Date Oct 2, 2026"
+    const dateMatch = card.match(/Release Date\s+(\w+ \d+,\s+\d{4})/i);
 
-  // Fetch the individual product page
-  const productRes = await fetch(productUrl, { headers });
-  if (!productRes.ok) return null;
-  const productHtml = await productRes.text();
+    if (!hrefMatch || !nameMatch || !dateMatch) continue;
 
-  // Look for ZIP links labelled "Product Shots" or "Prerelease Social Media"
-  const zipRe = /href="([^"]+\.zip)"/gi;
-  const labelRe = /(?:product\s*shots?|prerelease\s*social\s*media|media\s*kit)/i;
+    const rawUrl = hrefMatch[1];
+    const url = rawUrl.startsWith("http") ? rawUrl : `https://wpn.wizards.com${rawUrl}`;
+    const name = nameMatch[1].replace(/®|™/g, "").replace(/Magic: The Gathering\s*\|\s*/i, "").trim();
 
-  // Walk through the HTML looking for a ZIP link near a matching label
-  let match: RegExpExecArray | null;
-  const candidates: string[] = [];
-  while ((match = zipRe.exec(productHtml)) !== null) {
-    const surroundingText = productHtml.slice(
-      Math.max(0, match.index - 300),
-      match.index + match[0].length + 300
-    );
-    if (labelRe.test(surroundingText)) {
-      const url = match[1].startsWith("http") ? match[1] : `https://wpn.wizards.com${match[1]}`;
-      candidates.push(url);
-    }
+    // Parse "Oct 2, 2026" → "2026-10-02"
+    const d = new Date(dateMatch[1]);
+    if (isNaN(d.getTime())) continue;
+    const releaseDate = d.toISOString().split("T")[0];
+
+    products.push({ url, name, releaseDate });
   }
 
-  return candidates[0] ?? null;
+  return products;
 }
 
-function escapeRegex(s: string) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+/** Fetch the WPN products listing and find the card matching a given release date. */
+async function findWpnProductPage(releaseDate: string): Promise<string | null> {
+  const res = await fetch(WPN_PRODUCTS_URL, {
+    cache: "no-store",
+    headers: { "User-Agent": "Mozilla/5.0 (compatible; KitsuneBrewingBot/1.0)" },
+  });
+  if (!res.ok) return null;
+  const html = await res.text();
+  const products = parseWpnProductCards(html);
+  const match = products.find((p) => p.releaseDate === releaseDate);
+  return match?.url ?? null;
 }
-
-// ── ZIP → image ───────────────────────────────────────────────────────────────
-
-const IMAGE_EXTS = new Set([".png", ".jpg", ".jpeg", ".webp"]);
-// Prefer filenames that mention "prerelease", "key art", "banner", "hero"
-const PREFERRED_RE = /prerelease|keyart|key.art|banner|hero/i;
 
 /**
- * Downloads a ZIP from `url`, extracts it in memory, finds the best image,
- * saves it to /public/images/uploads/, and returns the public URL.
+ * Fetch a WPN product page and extract the og:image URL.
+ * The og:image is the official set banner art served from Contentful CDN.
  */
-async function downloadZipAndExtractImage(
-  zipUrl: string,
-  setName: string,
-  cookie: string | null
-): Promise<string | null> {
+async function fetchWpnOgImage(productUrl: string): Promise<string | null> {
+  const res = await fetch(productUrl, {
+    cache: "no-store",
+    headers: { "User-Agent": "Mozilla/5.0 (compatible; KitsuneBrewingBot/1.0)" },
+  });
+  if (!res.ok) return null;
+  const html = await res.text();
+
+  // og:image content — may start with // (protocol-relative)
+  const ogMatch = html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i)
+    ?? html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:image"/i);
+  if (!ogMatch) return null;
+
+  const raw = ogMatch[1];
+  return raw.startsWith("//") ? `https:${raw}` : raw;
+}
+
+// ── Download image and save locally ──────────────────────────────────────────
+
+async function downloadAndSaveImage(imageUrl: string, setName: string): Promise<string | null> {
   ensureUploadsDir();
 
-  const headers: HeadersInit = { "User-Agent": "Mozilla/5.0" };
-  if (cookie) headers["Cookie"] = cookie;
-
-  const res = await fetch(zipUrl, { headers });
+  const res = await fetch(imageUrl, {
+    headers: { "User-Agent": "Mozilla/5.0 (compatible; KitsuneBrewingBot/1.0)" },
+  });
   if (!res.ok) return null;
 
-  const buffer = Buffer.from(await res.arrayBuffer());
-  const zip = new AdmZip(buffer);
-  const entries = zip.getEntries();
+  const contentType = res.headers.get("content-type") ?? "image/png";
+  const ext = contentType.includes("jpeg") || contentType.includes("jpg") ? "jpg"
+    : contentType.includes("webp") ? "webp"
+    : "png";
 
-  // Score each entry: prefer prerelease/keyart names, larger files win ties
-  let best: { entry: AdmZip.IZipEntry; score: number } | null = null;
-  for (const entry of entries) {
-    if (entry.isDirectory) continue;
-    const ext = path.extname(entry.name).toLowerCase();
-    if (!IMAGE_EXTS.has(ext)) continue;
-    const score =
-      (PREFERRED_RE.test(entry.name) ? 1000 : 0) + entry.header.size;
-    if (!best || score > best.score) best = { entry, score };
-  }
-
-  if (!best) return null;
-
-  const ext = path.extname(best.entry.name).toLowerCase().slice(1);
   const filename = safeFilename(setName, ext);
   const dest = path.join(IMAGES_DIR, filename);
-  fs.writeFileSync(dest, best.entry.getData());
+  const buffer = Buffer.from(await res.arrayBuffer());
+  fs.writeFileSync(dest, buffer);
 
   return `/images/uploads/${filename}`;
 }
 
-// ── Fallback: Scryfall art crop ────────────────────────────────────────────
+// ── Fallback: Scryfall art crop ───────────────────────────────────────────────
 
 async function fetchScryfallArtCrop(code: string): Promise<string> {
-  const headers = { "User-Agent": "KitsuneBrewingCo/1.0 (prerelease-importer; contact@kitsunebeerco.com)" };
+  const headers = { "User-Agent": SCRYFALL_UA };
   for (const rarity of ["m", "r"]) {
     try {
       const res = await fetch(
@@ -232,9 +194,7 @@ async function fetchScryfallArtCrop(code: string): Promise<string> {
       if (!res.ok) continue;
       const data = await res.json();
       const card = data.data?.[0];
-      const url =
-        card?.image_uris?.art_crop ??
-        card?.card_faces?.[0]?.image_uris?.art_crop;
+      const url = card?.image_uris?.art_crop ?? card?.card_faces?.[0]?.image_uris?.art_crop;
       if (url) return url;
     } catch { /* try next rarity */ }
   }
@@ -244,7 +204,6 @@ async function fetchScryfallArtCrop(code: string): Promise<string> {
 // ── Main handler ──────────────────────────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
-  // Verify cron secret (or allow admin cookie — checked via header)
   const cronSecret = process.env.CRON_SECRET;
   if (cronSecret) {
     const auth = request.headers.get("authorization") ?? "";
@@ -258,60 +217,61 @@ export async function POST(request: NextRequest) {
   const skipped: string[] = [];
 
   try {
-    // 1. Get upcoming sets from Scryfall
     const sets = await fetchUpcomingSets();
     log.push(`Scryfall: found ${sets.length} upcoming sets`);
 
-    // 2. Get existing drafts so we don't re-import the same set
     const existingCodes = new Set(getDrafts().map((d) => d.scryfallCode));
 
-    // 3. WPN login (no-op if no credentials)
-    const cookie = await wpnLogin();
-    log.push(cookie ? "WPN: logged in" : "WPN: no credentials — will fall back to Scryfall art");
-
-    // 4. Process each new set
     for (const set of sets) {
       if (existingCodes.has(set.code)) {
         skipped.push(set.code);
         continue;
       }
 
-      log.push(`Processing: ${set.name} (${set.code})`);
+      log.push(`Processing: ${set.name} (${set.code}) — release ${set.released_at}`);
 
-      // Try WPN media ZIP
       let imageUrl = "";
       let imageSourceUrl = "";
+      let source: PrereleaseDraft["source"] = "scryfall";
 
-      if (cookie) {
-        try {
-          const zipUrl = await findWpnMediaZipUrl(set.name, cookie);
-          if (zipUrl) {
-            log.push(`  WPN ZIP found: ${zipUrl}`);
-            imageSourceUrl = zipUrl;
-            const local = await downloadZipAndExtractImage(zipUrl, set.name, cookie);
+      // 1. Try WPN official banner (public, no login needed)
+      try {
+        const productPageUrl = await findWpnProductPage(set.released_at);
+        if (productPageUrl) {
+          log.push(`  WPN product page: ${productPageUrl}`);
+          const ogImage = await fetchWpnOgImage(productPageUrl);
+          if (ogImage) {
+            log.push(`  WPN og:image: ${ogImage}`);
+            imageSourceUrl = ogImage;
+            const local = await downloadAndSaveImage(ogImage, set.name);
             if (local) {
               imageUrl = local;
-              log.push(`  Extracted image → ${local}`);
+              source = "wpn";
+              log.push(`  Saved WPN image → ${local}`);
             }
           } else {
-            log.push(`  WPN: no media ZIP found for this set`);
+            log.push(`  WPN: no og:image found on product page`);
           }
-        } catch (err) {
-          log.push(`  WPN error: ${err instanceof Error ? err.message : String(err)}`);
+        } else {
+          log.push(`  WPN: no product page found for release date ${set.released_at}`);
         }
+      } catch (err) {
+        log.push(`  WPN error: ${err instanceof Error ? err.message : String(err)}`);
       }
 
-      // Fallback to Scryfall art crop
+      // 2. Fallback: Scryfall art crop (remote URL, not downloaded)
       if (!imageUrl) {
-        imageUrl = await fetchScryfallArtCrop(set.code);
-        imageSourceUrl = imageUrl;
-        log.push(`  Fallback: Scryfall art crop ${imageUrl ? "found" : "not found"}`);
+        const artCrop = await fetchScryfallArtCrop(set.code);
+        imageUrl = artCrop;
+        imageSourceUrl = artCrop;
+        source = "scryfall";
+        log.push(`  Fallback: Scryfall art crop ${artCrop ? "found" : "not found"}`);
       }
 
       const draft: PrereleaseDraft = {
         id: slugId(set.code),
         createdAt: new Date().toISOString(),
-        source: cookie && imageUrl.startsWith("/images") ? "wpn" : "scryfall",
+        source,
         scryfallCode: set.code,
         setName: set.name,
         releaseDate: set.released_at,
@@ -336,7 +296,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Allow GET for manual "run now" from admin
 export async function GET(request: NextRequest) {
   return POST(request);
 }
