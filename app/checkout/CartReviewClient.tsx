@@ -21,11 +21,12 @@ export default function CartReviewClient() {
   return (
     <>
     <div className={styles.page}>
+      <div className={styles.pageHeader}>
+        <h1 className={styles.pageTitle}>Your Cart</h1>
+      </div>
       <div className={styles.container}>
         {/* ── Left column ── */}
         <div className={styles.leftCol}>
-          <h1 className={styles.pageTitle}>Your Cart</h1>
-
           <div className={styles.itemList}>
             {items.map(({ card, quantity }) => (
               <div key={card.id} className={styles.item}>
@@ -103,7 +104,7 @@ export default function CartReviewClient() {
             </div>
             <div className={styles.summaryRow}>
               <span className={styles.summaryLabel}>Shipping</span>
-              <span className={styles.summaryNote}>Calculated at checkout</span>
+              <span className={styles.summaryNote}>Coming Soon</span>
             </div>
             <div className={styles.summaryRow}>
               <span className={styles.summaryLabel}>Taxes</span>
@@ -116,6 +117,16 @@ export default function CartReviewClient() {
           <div className={`${styles.summaryRow} ${styles.summaryTotal}`}>
             <span className={styles.totalLabel}>Estimated Total</span>
             <span className={styles.totalValue}>${totalPrice.toFixed(2)}</span>
+          </div>
+
+          <div className={styles.pickupNotice}>
+            <svg className={styles.pickupIcon} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <div>
+              <p className={styles.pickupTitle}>In-Store Pickup Only</p>
+              <p className={styles.pickupAddress}>Kitsune Brewing Co. · 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032</p>
+            </div>
           </div>
 
           <button

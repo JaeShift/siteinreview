@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Stripe from "stripe";
-import { addOrder, getOrdersStore, getEventsStore, saveEventsStore } from "@/lib/store";
+import { addOrder, getOrdersStore, getEventsStore, saveEventsStore, decrementInventory } from "@/lib/store";
+import { sendOrderConfirmationEmail, sendAdminOrderNotification } from "@/lib/email";
 import styles from "../success/success.module.css";
 import ClearCartOnSuccess from "./ClearCartOnSuccess";
 
@@ -55,16 +56,16 @@ export default async function CheckoutReturnPage({ searchParams }: Props) {
       if (isPaid) {
         const alreadyExists = getOrdersStore().some((o) => o.stripeSessionId === session.id);
 
+        const shippingRateObj = session.shipping_cost?.shipping_rate;
+        const shippingMethod  = typeof shippingRateObj === "object" && shippingRateObj
+          ? (shippingRateObj as Stripe.ShippingRate).display_name ?? ""
+          : "";
+
+        const customerName = isCart
+          ? session.customer_details?.name ?? "Customer"
+          : meta.firstName && meta.lastName ? `${meta.firstName} ${meta.lastName}` : session.customer_details?.name ?? "Unknown";
+
         if (!alreadyExists) {
-          const shippingRateObj = session.shipping_cost?.shipping_rate;
-          const shippingMethod  = typeof shippingRateObj === "object" && shippingRateObj
-            ? (shippingRateObj as Stripe.ShippingRate).display_name ?? ""
-            : "";
-
-          const customerName = isCart
-            ? session.customer_details?.name ?? "Customer"
-            : meta.firstName && meta.lastName ? `${meta.firstName} ${meta.lastName}` : session.customer_details?.name ?? "Unknown";
-
           addOrder({
             id: session.id, stripeSessionId: session.id,
             customerName, customerEmail: email,
@@ -82,6 +83,31 @@ export default async function CheckoutReturnPage({ searchParams }: Props) {
               e.slug === meta.eventSlug ? { ...e, registeredCount: e.registeredCount + 1 } : e
             ));
           }
+
+          // Decrement inventory for card purchases
+          if (isCart && meta.cartItems) {
+            try {
+              const cartItems = JSON.parse(meta.cartItems) as { id: string; qty: number }[];
+              decrementInventory(cartItems);
+            } catch { /* non-fatal */ }
+          }
+        }
+
+        // Send order emails for cart purchases (idempotent — safe to call even if webhook already sent)
+        if (isCart) {
+          const orderEmail = {
+            sessionId: session.id,
+            customerName,
+            email,
+            amountTotal: session.amount_total ?? 0,
+            currency: session.currency ?? "usd",
+            itemSummary: meta.itemSummary ?? subline,
+            itemCount: meta.itemCount ?? "1",
+          };
+          await Promise.allSettled([
+            sendOrderConfirmationEmail(orderEmail),
+            sendAdminOrderNotification(orderEmail),
+          ]);
         }
       }
     } catch {

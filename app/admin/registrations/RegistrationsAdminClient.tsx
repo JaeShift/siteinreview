@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { MtgEvent } from "@/lib/events-data";
 import type { Registration } from "@/lib/store";
 import styles from "./admin-registrations.module.css";
 
-type StatusFilter = "all" | "confirmed" | "waitlisted" | "cancelled";
+type StatusFilter = "all" | "confirmed" | "waitlisted" | "cancelled" | "refunded";
 
 interface Props {
   initialRegistrations: Registration[];
@@ -44,7 +45,7 @@ function exportCsv(registrations: Registration[]) {
     r.lastName,
     r.email,
     r.phone,
-    r.status,
+    r.status === "confirmed" && (r.amountPaid ?? 0) > 0 ? "paid" : r.status,
     r.checkedIn ? "Yes" : "No",
     r.checkedInAt ?? "",
     r.tableAssignment ?? "",
@@ -92,10 +93,32 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
     tableAssignment: "",
   });
   const [addSaving, setAddSaving] = useState(false);
+  const [deletedRegistration, setDeletedRegistration] = useState<Registration | null>(null);
+  const [printedAt, setPrintedAt] = useState("");
+  const undoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    };
+  }, []);
 
   function showFlash(msg: string, type: "success" | "error" = "success") {
     setFlash({ msg, type });
     setTimeout(() => setFlash(null), 3500);
+  }
+
+  function handlePrint() {
+    setPrintedAt(
+      new Date().toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      })
+    );
+    setTimeout(() => window.print(), 0);
   }
 
   const filtered = useMemo(() => {
@@ -123,9 +146,15 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
       total: base.length,
       confirmed: base.filter((r) => r.status === "confirmed").length,
       waitlisted: base.filter((r) => r.status === "waitlisted").length,
+      refunded: base.filter((r) => r.status === "refunded").length,
       checkedIn: base.filter((r) => r.checkedIn).length,
     };
   }, [registrations, selectedEvent]);
+
+  const printEvent =
+    selectedEvent === "all"
+      ? null
+      : events.find((event) => event.slug === selectedEvent) ?? null;
 
   async function toggleCheckIn(reg: Registration) {
     const newVal = !reg.checkedIn;
@@ -175,14 +204,76 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
   }
 
   async function handleDelete(reg: Registration) {
-    if (!confirm(`Delete registration for ${reg.firstName} ${reg.lastName}? This cannot be undone.`)) return;
+    if (!confirm(`Delete registration for ${reg.firstName} ${reg.lastName}?`)) return;
     try {
       const res = await fetch(`/api/admin/registrations/${reg.id}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
       setRegistrations((prev) => prev.filter((r) => r.id !== reg.id));
-      showFlash("Registration deleted.");
+      setDeletedRegistration(reg);
+      if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+      undoTimerRef.current = setTimeout(() => {
+        setDeletedRegistration(null);
+        undoTimerRef.current = null;
+      }, 10000);
     } catch {
       showFlash("Failed to delete.", "error");
+    }
+  }
+
+  async function refundAndDelete(reg: Registration) {
+    const amount = ((reg.amountPaid ?? 0) / 100).toFixed(2);
+    const approved = confirm(
+      `REFUND DISCLAIMER\n\nYou are about to refund $${amount} to ${reg.firstName} ${reg.lastName} and mark their registration as refunded.\n\nThis action cannot be undone. The refund will be returned to the original payment method and may take 5–10 business days to appear.\n\nAre you sure you want to issue this refund?`
+    );
+    if (!approved) return;
+
+    try {
+      const res = await fetch(`/api/admin/registrations/${reg.id}/refund`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to issue refund");
+
+      const updated: Registration = data.registration;
+      setRegistrations((prev) =>
+        prev.map((item) => (item.id === updated.id ? updated : item))
+      );
+      if (data.emailSent === false) {
+        showFlash(data.warning, "error");
+        return;
+      }
+      showFlash(
+        data.refundStatus === "pending"
+          ? "Refund submitted and registration marked refunded."
+          : "Refund issued and registration marked refunded."
+      );
+    } catch (err) {
+      showFlash(err instanceof Error ? err.message : "Failed to issue refund.", "error");
+    }
+  }
+
+  async function undoDelete() {
+    if (!deletedRegistration) return;
+    const registration = deletedRegistration;
+
+    try {
+      const res = await fetch("/api/admin/registrations/restore", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(registration),
+      });
+      if (!res.ok) throw new Error((await res.json()).error ?? "Failed");
+
+      const restored: Registration = await res.json();
+      setRegistrations((prev) =>
+        prev.some((r) => r.id === restored.id) ? prev : [restored, ...prev]
+      );
+      setDeletedRegistration(null);
+      if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+      undoTimerRef.current = null;
+      showFlash("Registration restored.");
+    } catch (err) {
+      showFlash(err instanceof Error ? err.message : "Failed to restore registration.", "error");
     }
   }
 
@@ -231,9 +322,109 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
 
   return (
     <div className={styles.page}>
+      <section className={styles.printSheet}>
+        <header className={styles.printHeader}>
+          <Image
+            src="/images/logo.png"
+            alt="Kitsune Brewing Co."
+            width={88}
+            height={88}
+            className={styles.printLogo}
+          />
+          <div className={styles.printBrand}>
+            <span>Kitsune Brewing Co.</span>
+            <h1>Event Check-In</h1>
+          </div>
+        </header>
+
+        <div className={styles.printEvent}>
+          <div>
+            <span className={styles.printEyebrow}>Event</span>
+            <h2>{printEvent?.title ?? "All Event Registrations"}</h2>
+          </div>
+          <div className={styles.printMeta}>
+            <div>
+              <span>Date</span>
+              <strong>
+                {printEvent
+                  ? new Date(`${printEvent.date}T00:00:00`).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })
+                  : "Multiple dates"}
+              </strong>
+            </div>
+            <div>
+              <span>Start Time</span>
+              <strong>{printEvent?.time ?? "Multiple times"}</strong>
+            </div>
+            <div>
+              <span>Location</span>
+              <strong>{printEvent?.location ?? "Kitsune Brewing Co."}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.printListHeader}>
+          <span>Attendee List</span>
+          <span>{filtered.length} attendee{filtered.length === 1 ? "" : "s"}</span>
+        </div>
+
+        <div className={styles.printTable}>
+          <div className={styles.printTableHeader}>
+            <span>In</span>
+            <span>Attendee</span>
+            <span>Event</span>
+            <span>Contact</span>
+            <span>Status</span>
+          </div>
+          {filtered.map((registration) => (
+            <div key={registration.id} className={styles.printTableRow}>
+              <span className={styles.printCheckbox} aria-hidden="true" />
+              <div className={styles.printAttendee}>
+                <strong>{registration.firstName} {registration.lastName}</strong>
+                {registration.tableAssignment && (
+                  <span>Table {registration.tableAssignment}</span>
+                )}
+              </div>
+              <span>{getEventLabel(registration.eventSlug)}</span>
+              <div className={styles.printContact}>
+                <span>{registration.email}</span>
+                <span>{registration.phone}</span>
+              </div>
+              <strong className={styles.printStatus}>
+                {registration.status === "confirmed" && (registration.amountPaid ?? 0) > 0
+                  ? "Paid"
+                  : registration.status}
+              </strong>
+            </div>
+          ))}
+          {filtered.length === 0 && (
+            <div className={styles.printEmpty}>No registrations match the current filters.</div>
+          )}
+        </div>
+
+        <footer className={styles.printFooter}>
+          <span>3321 E Bell Rd Suite B-5 · Phoenix, AZ 85032</span>
+          <span>{printedAt ? `Printed ${printedAt}` : ""}</span>
+        </footer>
+      </section>
+
       {flash && (
         <div className={`${styles.flash} ${flash.type === "error" ? styles.flashError : styles.flashSuccess}`}>
           {flash.msg}
+        </div>
+      )}
+      {deletedRegistration && (
+        <div className={styles.undoToast} role="status">
+          <span>
+            {deletedRegistration.firstName} {deletedRegistration.lastName} deleted
+          </span>
+          <button type="button" className={styles.undoBtn} onClick={undoDelete}>
+            Undo
+          </button>
         </div>
       )}
 
@@ -243,7 +434,7 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
           <p className={styles.subtitle}>{registrations.length} total registrations</p>
         </div>
         <div className={styles.headerActions}>
-          <button className="btn btn-outline" onClick={() => window.print()}>Print</button>
+          <button className="btn btn-outline" onClick={handlePrint}>Print</button>
           <button className="btn btn-outline" onClick={() => exportCsv(filtered)}>Export CSV</button>
           <button className="btn btn-primary" onClick={() => setAddOpen(true)}>+ Add Registration</button>
         </div>
@@ -262,6 +453,10 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
         <div className={styles.stat}>
           <span className={styles.statNum}>{stats.waitlisted}</span>
           <span className={styles.statLabel}>Waitlisted</span>
+        </div>
+        <div className={styles.stat}>
+          <span className={styles.statNum}>{stats.refunded}</span>
+          <span className={styles.statLabel}>Refunded</span>
         </div>
         <div className={styles.stat}>
           <span className={styles.statNum}>{stats.checkedIn}</span>
@@ -292,7 +487,7 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
         />
 
         <div className={styles.filterTabs}>
-          {(["all", "confirmed", "waitlisted", "cancelled"] as StatusFilter[]).map((s) => (
+          {(["all", "confirmed", "waitlisted", "cancelled", "refunded"] as StatusFilter[]).map((s) => (
             <button
               key={s}
               className={`${styles.filterTab} ${statusFilter === s ? styles.filterTabActive : ""}`}
@@ -329,10 +524,14 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
                   ? styles.statusConfirmed
                   : reg.status === "waitlisted"
                   ? styles.statusWaitlisted
+                  : reg.status === "refunded"
+                  ? styles.statusRefunded
                   : styles.statusCancelled
               }`}
             >
-              {reg.status}
+              {reg.status === "confirmed" && (reg.amountPaid ?? 0) > 0
+                ? "paid"
+                : reg.status}
             </span>
             <div className={styles.checkinCell}>
               <button
@@ -349,6 +548,15 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
               )}
             </div>
             <div className={styles.actionsCell}>
+              {reg.status !== "refunded" && reg.stripeSessionId && (reg.amountPaid ?? 0) > 0 && (
+                <button
+                  className={`${styles.actionBtn} ${styles.refundBtn}`}
+                  onClick={() => refundAndDelete(reg)}
+                  title={`Issue $${((reg.amountPaid ?? 0) / 100).toFixed(2)} refund and remove registration`}
+                >
+                  Refund
+                </button>
+              )}
               {reg.status === "waitlisted" && (
                 <button
                   className={`${styles.actionBtn} ${styles.promoteBtn}`}

@@ -6,6 +6,11 @@
   padding: 60px 24px 80px;
 }
 
+.pageHeader {
+  max-width: 1100px;
+  margin: 0 auto 32px;
+}
+
 .container {
   max-width: 1100px;
   margin: 0 auto;
@@ -245,6 +250,40 @@
 
 .summaryTotal {
   margin-bottom: 24px;
+}
+
+.pickupNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #f9f6f1;
+  border: 1px solid #e8dfc9;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.pickupIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-accent);
+}
+
+.pickupTitle {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  margin: 0 0 3px;
+}
+
+.pickupAddress {
+  font-size: 11px;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
 }
 
 .totalLabel {

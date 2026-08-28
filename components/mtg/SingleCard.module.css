@@ -250,14 +250,13 @@
   color: var(--color-accent);
 }
 
-.quickAddBtnAdded {
-  color: #22c55e !important;
-}
-
-.quickAddBtnMax {
-  color: #ccc !important;
-  cursor: not-allowed !important;
-  opacity: 0.5 !important;
+.quickViewLabel {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .quickAddInner {
@@ -303,8 +302,22 @@
   min-height: 44px;
 }
 
-.viewBtn:hover {
+.viewBtn:hover:not(:disabled) {
   background: var(--color-accent);
+}
+
+.viewBtnAdded {
+  background: #22c55e !important;
+}
+
+.viewBtnMax {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+}
+
+.viewBtnSoldOut {
+  opacity: 0.45;
+  cursor: not-allowed !important;
 }
 
 .addBtn {

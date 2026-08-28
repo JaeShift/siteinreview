@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default function SinglesPage() {
-  const cards = getSinglesStore();
+  const cards = getSinglesStore().filter((c) => c.quantity > 0);
   return (
     <>
       <section className={styles.banner}>

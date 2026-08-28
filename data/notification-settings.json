@@ -1,0 +1,17 @@
+{
+  "email": "ryleejaenichols@gmail.com",
+  "triggers": {
+    "order_new": true,
+    "order_cancelled": false,
+    "order_refund": false,
+    "reg_new": true,
+    "reg_waitlist": false,
+    "reg_cancelled": false,
+    "event_soldout": false,
+    "event_upcoming": true,
+    "inv_low": false,
+    "inv_outofstock": false,
+    "promo_used": false,
+    "promo_maxed": false
+  }
+}

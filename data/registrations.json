@@ -1,27 +1,31 @@
 [
   {
-    "id": "120313e3-0568-433a-8aee-183395c686d0",
+    "id": "4a33c74c-e4b7-4936-b520-0df63d9f8cc3",
     "eventSlug": "star-trek-prerelease",
-    "firstName": "Rylee",
-    "lastName": "N",
+    "firstName": "rylet",
+    "lastName": "stars",
     "email": "ryleejae1009@gmail.com",
     "phone": "(614) 955-1111",
     "notes": "",
-    "status": "confirmed",
+    "status": "refunded",
+    "stripeSessionId": "cs_test_a1g26r2cR3sXWHzTrIp3KkNlojqMyi40fYGFsYRmkmMfeOiFZzQe30gyvE",
+    "amountPaid": 5000,
     "checkedIn": false,
-    "createdAt": "2026-08-28T04:46:45.419Z"
+    "createdAt": "2026-08-28T16:50:07.850Z"
   },
   {
-    "id": "34b7cca0-81b7-4799-8005-65d45bc11fe0",
+    "id": "86909938-9404-4c58-bf97-3626b491835b",
     "eventSlug": "star-trek-prerelease",
-    "firstName": "Rylee",
+    "firstName": "Riley",
     "lastName": "Nichols",
     "email": "ryleejae1009@gmail.com",
     "phone": "(614) 955-1111",
     "notes": "",
-    "status": "confirmed",
+    "status": "refunded",
+    "stripeSessionId": "cs_test_a162CWVDLnh1G16zeIwv6uOT5EJcEbDkTzA3McWPFMnQ0UFRH5jq1iFvif",
+    "amountPaid": 5000,
     "checkedIn": false,
-    "createdAt": "2026-08-28T04:19:59.686Z"
+    "createdAt": "2026-08-28T16:42:20.161Z"
   },
   {
     "id": "b16d87d0-75cf-4171-b808-a560d5ab4f30",
@@ -36,6 +40,18 @@
     "createdAt": "2026-08-27T20:57:48.024Z"
   },
   {
+    "id": "34b7cca0-81b7-4799-8005-65d45bc11fe0",
+    "eventSlug": "star-trek-prerelease",
+    "firstName": "Rylee",
+    "lastName": "Nichols",
+    "email": "ryleejae1009@gmail.com",
+    "phone": "(614) 955-1111",
+    "notes": "",
+    "status": "confirmed",
+    "checkedIn": false,
+    "createdAt": "2026-08-28T04:19:59.686Z"
+  },
+  {
     "id": "2522b9e0-270b-4368-8aa5-4d2c523a1973",
     "eventSlug": "star-trek-prerelease",
     "firstName": "Rylee",
@@ -44,9 +60,8 @@
     "phone": "(614) 955-1111",
     "notes": "",
     "status": "confirmed",
-    "checkedIn": true,
-    "createdAt": "2026-08-27T19:56:14.961Z",
-    "checkedInAt": "2026-08-27T20:02:28.660Z"
+    "checkedIn": false,
+    "createdAt": "2026-08-27T19:56:14.961Z"
   },
   {
     "id": "fff43b8e-500d-4e26-93e2-48f27f795d2f",

@@ -10,6 +10,10 @@ import {
   saveEventsStore,
   type Registration,
 } from "@/lib/store";
+import {
+  sendAdminRegistrationNotification,
+  sendEventConfirmationEmail,
+} from "@/lib/email";
 import styles from "./success.module.css";
 
 export const metadata: Metadata = { title: "Order Confirmed" };
@@ -25,6 +29,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
   let amountPaid = "";
   let email = "";
   let isCart = false;
+  let confirmationSent = false;
 
   if (searchParams.session_id) {
     try {
@@ -100,47 +105,58 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           createdAt: new Date().toISOString(),
         });
 
-        // For event registrations: save registration + sync count
-        if (!isCart && meta.eventSlug) {
-          const eventSlug = meta.eventSlug;
-          const existing = getRegistrationsByEvent(eventSlug);
-          const alreadyRegistered = existing.some(
-            (r) => r.stripeSessionId === session.id
-          );
+      }
 
-          if (!alreadyRegistered) {
-            const confirmedCount = existing.filter((r) => r.status === "confirmed").length;
-            const events = getEventsStore();
-            const mtgEvent = events.find((e) => e.slug === eventSlug);
-            const isFull = mtgEvent && mtgEvent.playerLimit > 0 && confirmedCount >= mtgEvent.playerLimit;
+      // Save paid event registrations independently of order creation, then
+      // send idempotent emails. This also covers local checkout without a
+      // running Stripe webhook listener.
+      if (!isCart && meta.eventSlug && session.payment_status === "paid") {
+        const eventSlug = meta.eventSlug;
+        const existing = getRegistrationsByEvent(eventSlug);
+        let registration = existing.find((r) => r.stripeSessionId === session.id);
+        const events = getEventsStore();
+        const mtgEvent = events.find((event) => event.slug === eventSlug);
 
-            const registration: Registration = {
-              id: crypto.randomUUID(),
-              eventSlug,
-              firstName: meta.firstName ?? "",
-              lastName: meta.lastName ?? "",
-              email,
-              phone: meta.phone ?? "",
-              notes: meta.notes ?? undefined,
-              status: isFull ? "waitlisted" : "confirmed",
-              stripeSessionId: session.id,
-              amountPaid: session.amount_total ?? undefined,
-              checkedIn: false,
-              createdAt: new Date().toISOString(),
-            };
+        if (!registration) {
+          const confirmedCount = existing.filter((r) => r.status === "confirmed").length;
+          const isFull =
+            Boolean(mtgEvent?.playerLimit && mtgEvent.playerLimit > 0) &&
+            confirmedCount >= (mtgEvent?.playerLimit ?? 0);
 
-            addRegistration(registration);
+          registration = {
+            id: crypto.randomUUID(),
+            eventSlug,
+            firstName: meta.firstName ?? "",
+            lastName: meta.lastName ?? "",
+            email,
+            phone: meta.phone ?? "",
+            notes: meta.notes ?? undefined,
+            status: isFull ? "waitlisted" : "confirmed",
+            stripeSessionId: session.id,
+            amountPaid: session.amount_total ?? undefined,
+            checkedIn: false,
+            createdAt: new Date().toISOString(),
+          };
 
-            if (!isFull) {
-              saveEventsStore(
-                events.map((e) =>
-                  e.slug === eventSlug
-                    ? { ...e, registeredCount: confirmedCount + 1 }
-                    : e
-                )
-              );
-            }
+          addRegistration(registration);
+
+          if (!isFull) {
+            saveEventsStore(
+              events.map((event) =>
+                event.slug === eventSlug
+                  ? { ...event, registeredCount: confirmedCount + 1 }
+                  : event
+              )
+            );
           }
+        }
+
+        if (mtgEvent && registration.status !== "refunded") {
+          await sendEventConfirmationEmail(registration, mtgEvent);
+          confirmationSent = true;
+          await sendAdminRegistrationNotification(registration, mtgEvent).catch((error) =>
+            console.error("Admin registration email failed:", error)
+          );
         }
       }
     } catch {
@@ -170,7 +186,11 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
 
         {email && (
           <p className={styles.email}>
-            A confirmation receipt has been sent to <strong>{email}</strong>.
+            {isCart
+              ? <>Your payment was completed using <strong>{email}</strong>.</>
+              : confirmationSent
+                ? <>A confirmation has been sent to <strong>{email}</strong>.</>
+                : <>Your registration is recorded for <strong>{email}</strong>.</>}
           </p>
         )}
 

@@ -6,11 +6,14 @@ import {
   addOrder,
   addRegistration,
   getRegistrationsByEvent,
+  decrementInventory,
   type Registration,
 } from "@/lib/store";
 import {
   sendEventConfirmationEmail,
   sendAdminRegistrationNotification,
+  sendOrderConfirmationEmail,
+  sendAdminOrderNotification,
 } from "@/lib/email";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET ?? "";
@@ -49,16 +52,14 @@ export async function POST(request: NextRequest) {
 
       // Guard against double-fire: check if stripeSessionId already recorded
       const existing = getRegistrationsByEvent(eventSlug);
-      const alreadyRegistered = existing.some(
-        (r) => r.stripeSessionId === session.id
-      );
+      let registration = existing.find((r) => r.stripeSessionId === session.id);
 
-      if (!alreadyRegistered) {
+      if (!registration) {
         const confirmedCount = existing.filter((r) => r.status === "confirmed").length;
         const isFull =
           mtgEvent && mtgEvent.playerLimit > 0 && confirmedCount >= mtgEvent.playerLimit;
 
-        const registration: Registration = {
+        registration = {
           id: crypto.randomUUID(),
           eventSlug,
           firstName: firstName ?? "",
@@ -85,17 +86,18 @@ export async function POST(request: NextRequest) {
           saveEventsStore(updatedEvents);
         }
 
-        // Send confirmation emails
-        if (mtgEvent) {
-          Promise.all([
-            sendEventConfirmationEmail(registration, mtgEvent),
-            sendAdminRegistrationNotification(registration, mtgEvent),
-          ]).catch((err) => console.error("Webhook email error:", err));
-        }
-
         console.log(
           `✓ Registration saved — ${registration.firstName} ${registration.lastName} | ${eventTitle} | ${registration.status}`
         );
+      }
+
+      // Always attempt the idempotent sends. If delivery fails, return an
+      // error so Stripe retries the webhook without creating duplicate mail.
+      if (mtgEvent && registration) {
+        await Promise.all([
+          sendEventConfirmationEmail(registration, mtgEvent),
+          sendAdminRegistrationNotification(registration, mtgEvent),
+        ]);
       }
     }
 
@@ -135,6 +137,34 @@ export async function POST(request: NextRequest) {
     console.log(
       `✓ Order saved — ${customerName} | ${description} | $${((session.amount_total ?? 0) / 100).toFixed(2)}`
     );
+
+    // ── 4. Decrement inventory for cart purchases (guarded by order existence) ─
+    if (meta.orderType === "singles" && meta.cartItems) {
+      try {
+        const cartItems = JSON.parse(meta.cartItems) as { id: string; qty: number }[];
+        decrementInventory(cartItems);
+        console.log(`✓ Inventory decremented for session ${session.id}`);
+      } catch (e) {
+        console.error("Failed to decrement inventory:", e);
+      }
+    }
+
+    // ── 5. Send order confirmation & admin notification for cart purchases ───
+    if (meta.orderType === "singles") {
+      const orderEmail = {
+        sessionId: session.id,
+        customerName,
+        email: session.customer_email ?? session.customer_details?.email ?? meta.email ?? "",
+        amountTotal: session.amount_total ?? 0,
+        currency: session.currency ?? "usd",
+        itemSummary: meta.itemSummary ?? "",
+        itemCount: meta.itemCount ?? "1",
+      };
+      await Promise.allSettled([
+        sendOrderConfirmationEmail(orderEmail),
+        sendAdminOrderNotification(orderEmail),
+      ]);
+    }
   }
 
   return NextResponse.json({ received: true });

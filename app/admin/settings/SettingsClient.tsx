@@ -324,25 +324,63 @@ function NotificationsSection() {
 
   useEffect(() => {
     setMounted(true);
-    setEmail(localStorage.getItem("kitsune_notif_email") ?? "");
-    const loaded: Record<string, boolean> = {};
+    const localEmail = localStorage.getItem("kitsune_notif_email") ?? "";
+    const localTriggers: Record<string, boolean> = {};
     for (const t of NOTIF_TRIGGERS) {
-      loaded[t.key] = localStorage.getItem(`kitsune_notif_${t.key}`) === "1";
+      localTriggers[t.key] = localStorage.getItem(`kitsune_notif_${t.key}`) === "1";
     }
-    setTriggers(loaded as Record<TriggerKey, boolean>);
+    setEmail(localEmail);
+    setTriggers(localTriggers as Record<TriggerKey, boolean>);
+
+    async function loadServerSettings() {
+      try {
+        const res = await fetch("/api/admin/settings/notifications");
+        if (!res.ok) return;
+        const serverSettings = await res.json();
+
+        if (serverSettings) {
+          setEmail(serverSettings.email ?? "");
+          setTriggers(serverSettings.triggers as Record<TriggerKey, boolean>);
+          return;
+        }
+
+        // Migrate preferences that were previously stored only in this browser.
+        if (localEmail || Object.values(localTriggers).some(Boolean)) {
+          await fetch("/api/admin/settings/notifications", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: localEmail, triggers: localTriggers }),
+          });
+        }
+      } catch {
+        // Keep the local settings visible if the server is temporarily unavailable.
+      }
+    }
+
+    void loadServerSettings();
   }, []);
 
   function toggle(key: TriggerKey) {
     setTriggers((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
-  function save() {
+  async function save() {
     localStorage.setItem("kitsune_notif_email", email);
     for (const t of NOTIF_TRIGGERS) {
       localStorage.setItem(`kitsune_notif_${t.key}`, triggers[t.key] ? "1" : "0");
     }
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    try {
+      const res = await fetch("/api/admin/settings/notifications", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, triggers }),
+      });
+      if (!res.ok) throw new Error();
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch {
+      alert("Notification preferences could not be saved. Please try again.");
+    }
   }
 
   if (!mounted) return null;

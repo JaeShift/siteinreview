@@ -53,14 +53,27 @@ export async function POST(request: NextRequest) {
     const duplicate = existingRegistrations.find(
       (r) =>
         r.status !== "cancelled" &&
+        r.status !== "refunded" &&
         (r.email.toLowerCase() === email.toLowerCase() ||
           r.phone.replace(/\D/g, "") === normalizedPhone)
     );
     if (duplicate) {
-      return NextResponse.json(
-        { error: "duplicate", message: "It looks like you're already registered for this event using that email or phone number." },
-        { status: 409 }
-      );
+      try {
+        await sendEventConfirmationEmail(duplicate, event);
+        await sendAdminRegistrationNotification(duplicate, event).catch((error) =>
+          console.error("Admin notification email retry failed:", error)
+        );
+        return NextResponse.json({
+          status: duplicate.status,
+          message: "Registration confirmed!",
+        });
+      } catch (error) {
+        console.error("Confirmation email retry failed:", error);
+        return NextResponse.json(
+          { error: "Registration exists, but the confirmation email could not be sent. Please try again." },
+          { status: 502 }
+        );
+      }
     }
   }
 
@@ -99,14 +112,21 @@ export async function POST(request: NextRequest) {
     saveEventsStore(updatedEvents);
   }
 
-  // Send emails (non-blocking, don't fail the request if email fails)
-  Promise.all([
-    sendEventConfirmationEmail(registration, event)
-      .then(() => console.log(`Confirmation email sent to ${registration.email}`))
-      .catch((err) => console.error("Confirmation email failed:", err)),
-    sendAdminRegistrationNotification(registration, event)
-      .catch((err) => console.error("Admin notification email failed:", err)),
-  ]);
+  // Wait for the customer confirmation so serverless runtimes cannot stop
+  // before the message is accepted. Idempotency keys prevent duplicate sends.
+  try {
+    await sendEventConfirmationEmail(registration, event);
+    await sendAdminRegistrationNotification(registration, event).catch((error) =>
+      console.error("Admin notification email failed:", error)
+    );
+    console.log(`Confirmation email sent to ${registration.email}`);
+  } catch (error) {
+    console.error("Registration email failed:", error);
+    return NextResponse.json(
+      { error: "Registration was saved, but the confirmation email could not be sent. Please try again." },
+      { status: 502 }
+    );
+  }
 
   const confirmationNumber = Math.random().toString(36).slice(2, 8).toUpperCase();
 

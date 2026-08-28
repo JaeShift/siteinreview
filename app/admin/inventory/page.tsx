@@ -596,6 +596,9 @@ export default function AdminInventoryPage() {
     setLoading(false);
   }, []);
 
+  // Load full inventory when entering the cards view; also load once on mount
+  // so the hub card can show the correct count without opening the section.
+  useEffect(() => { load(); }, [load]);
   useEffect(() => { if (inventoryView === "cards") load(); }, [load, inventoryView]);
 
   // ── Inventory filter/sort state ──────────────────────────────────────────────
@@ -603,7 +606,7 @@ export default function AdminInventoryPage() {
   const [invRarity, setInvRarity] = useState("");
   const [invCondition, setInvCondition] = useState("");
   const [invFoil, setInvFoil] = useState<"" | "foil" | "nonfoil">("");
-  const [invVisibility, setInvVisibility] = useState<"" | "live" | "hidden" | "overpriced" | "underpriced">("");
+  const [invVisibility, setInvVisibility] = useState<"" | "live" | "hidden" | "out-of-stock" | "overpriced" | "underpriced">("");
   const [invSort, setInvSort] = useState<"name-asc" | "name-desc" | "price-asc" | "price-desc" | "market-asc" | "market-desc" | "qty-asc" | "qty-desc" | "rarity">("name-asc");
 
   const displayCards = useMemo(() => {
@@ -616,8 +619,9 @@ export default function AdminInventoryPage() {
     if (invCondition) list = list.filter((c) => c.condition === invCondition);
     if (invFoil === "foil") list = list.filter((c) => c.foil);
     if (invFoil === "nonfoil") list = list.filter((c) => !c.foil);
-    if (invVisibility === "live") list = list.filter((c) => !c.hidden);
+    if (invVisibility === "live") list = list.filter((c) => !c.hidden && c.quantity > 0);
     if (invVisibility === "hidden") list = list.filter((c) => !!c.hidden);
+    if (invVisibility === "out-of-stock") list = list.filter((c) => c.quantity === 0);
     if (invVisibility === "overpriced") list = list.filter((c) => c.marketPrice !== undefined && c.marketPrice < c.price);
     if (invVisibility === "underpriced") list = list.filter((c) => c.marketPrice !== undefined && c.marketPrice > c.price);
     if (invSort === "market-desc") list = list.filter((c) => c.marketPrice !== undefined && c.marketPrice < c.price);
@@ -921,6 +925,25 @@ export default function AdminInventoryPage() {
 
   function updateDetailForm(index: number, key: keyof typeof BLANK_FORM, value: (typeof BLANK_FORM)[keyof typeof BLANK_FORM]) {
     setDetailForms((prev) => prev.map((f, i) => i === index ? { ...f, [key]: value } : f));
+    if (key === "price") setError(null);
+  }
+
+  function removeDetailForm(index: number) {
+    const removed = detailForms[index];
+    if (!removed) return;
+
+    setDetailForms((prev) => prev.filter((_, i) => i !== index));
+    setPickQueue((prev) => prev.filter((card) => card.id !== removed._sfCard.id));
+    setPickQueueQty((prev) => {
+      const next = { ...prev };
+      delete next[removed._sfCard.id];
+      return next;
+    });
+    setError(null);
+
+    if (detailForms.length === 1) {
+      setAddMode("pick");
+    }
   }
 
   function setDetailFinish(index: number, foil: boolean) {
@@ -940,8 +963,20 @@ export default function AdminInventoryPage() {
   }
 
   async function saveAllDetails() {
-    setSavingAll(true);
     setError(null);
+    const missingPrice = detailForms.find(
+      (entry) =>
+        entry.price.trim() === "" ||
+        !Number.isFinite(Number(entry.price)) ||
+        Number(entry.price) < 0
+    );
+    if (missingPrice) {
+      setError(`Price is required for ${missingPrice.name}.`);
+      return;
+    }
+    if (detailForms.length === 0) return;
+
+    setSavingAll(true);
     try {
       const results = await Promise.all(
         detailForms.map((entry) => {
@@ -1009,7 +1044,7 @@ export default function AdminInventoryPage() {
             <div className={styles.hubCardFooter}>
               <div className={styles.hubCardMeta}>
                 <span className={styles.hubCardStatNum}>{totalQty > 0 ? totalQty.toLocaleString() : cards.length > 0 ? cards.length : "0"}</span>
-                <span className={styles.hubCardStatLabel}>{totalQty > 0 ? "copies in stock" : "cards listed"}</span>
+                <span className={styles.hubCardStatLabel}>cards in stock</span>
               </div>
               <span className={styles.hubCardCta}>Open →</span>
             </div>
@@ -1188,10 +1223,11 @@ export default function AdminInventoryPage() {
             <option value="foil">Foil Only</option>
             <option value="nonfoil">Non-foil Only</option>
           </select>
-          <select className={styles.invSelect} value={invVisibility} onChange={(e) => setInvVisibility(e.target.value as "" | "live" | "hidden")}>
+          <select className={styles.invSelect} value={invVisibility} onChange={(e) => setInvVisibility(e.target.value as "" | "live" | "hidden" | "out-of-stock" | "overpriced" | "underpriced")}>
             <option value="">All Visibility</option>
             <option value="live">Live</option>
             <option value="hidden">Hidden</option>
+            <option value="out-of-stock">Out of Stock</option>
           </select>
           <select className={styles.invSelect} value={invSort} onChange={(e) => setInvSort(e.target.value as typeof invSort)}>
             <option value="name-asc">Name A–Z</option>
@@ -1289,24 +1325,35 @@ export default function AdminInventoryPage() {
                 {card.marketPrice !== undefined ? formatAmount(card.marketPrice) : "—"}
               </span>
               <span className={`${styles.qty} ${card.quantity <= 2 ? styles.qtyLow : ""}`} data-label="Quantity">{card.quantity}</span>
-              <button
-                className={`${styles.visibilityBtn} ${card.hidden ? styles.visibilityHidden : styles.visibilityLive}`}
-                data-label="Visibility"
-                onClick={async () => {
-                  const res = await fetch(`/api/admin/inventory/${card.id}`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ hidden: !card.hidden }),
-                  });
-                  if (res.ok) {
-                    const updated = await res.json();
-                    setCards((prev) => prev.map((c) => c.id === card.id ? updated : c));
-                  }
-                }}
-                title={card.hidden ? "Hidden from shop — click to make live" : "Live in shop — click to hide"}
-              >
-                {card.hidden ? "Hidden" : "Live"}
-              </button>
+              {card.quantity === 0 ? (
+                <button
+                  className={`${styles.visibilityBtn} ${styles.visibilityOutOfStock}`}
+                  data-label="Visibility"
+                  title="Out of stock — hidden from shop automatically"
+                  disabled
+                >
+                  Out of Stock
+                </button>
+              ) : (
+                <button
+                  className={`${styles.visibilityBtn} ${card.hidden ? styles.visibilityHidden : styles.visibilityLive}`}
+                  data-label="Visibility"
+                  onClick={async () => {
+                    const res = await fetch(`/api/admin/inventory/${card.id}`, {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ hidden: !card.hidden }),
+                    });
+                    if (res.ok) {
+                      const updated = await res.json();
+                      setCards((prev) => prev.map((c) => c.id === card.id ? updated : c));
+                    }
+                  }}
+                  title={card.hidden ? "Hidden from shop — click to make live" : "Live in shop — click to hide"}
+                >
+                  {card.hidden ? "Hidden" : "Live"}
+                </button>
+              )}
             </div>
           ))
         )}
@@ -1814,8 +1861,14 @@ export default function AdminInventoryPage() {
             <div className={styles.modalBody}>
               {error && <div className={styles.formError}>{error}</div>}
               <div className={styles.detailFormsList}>
-                {detailForms.map((entry, i) => (
-                  <div key={i} className={styles.detailFormsRow}>
+                {detailForms.map((entry, i) => {
+                  const priceIsMissing =
+                    entry.price.trim() === "" ||
+                    !Number.isFinite(Number(entry.price)) ||
+                    Number(entry.price) < 0;
+
+                  return (
+                  <div key={entry._sfCard.id} className={styles.detailFormsRow}>
                     {entry.imageUrl
                       ? <img src={entry.imageUrl} alt={entry.name} className={styles.detailFormsThumb} />
                       : <div className={styles.detailFormsThumbEmpty} />
@@ -1854,8 +1907,8 @@ export default function AdminInventoryPage() {
                         />
                       </div>
                       <div className={styles.detailFormsField}>
-                        <span className={styles.detailFormsLabel}>Price</span>
-                        <div className={styles.detailFormsInputWrap}>
+                        <span className={styles.detailFormsLabel}>Price *</span>
+                        <div className={`${styles.detailFormsInputWrap} ${priceIsMissing ? styles.detailFormsInputError : ""}`}>
                           <span className={styles.bulkPriceDollarSign}>$</span>
                           <input
                             className={styles.bulkPriceFieldInput}
@@ -1864,15 +1917,30 @@ export default function AdminInventoryPage() {
                             step="0.01"
                             value={entry.price}
                             onChange={(e) => updateDetailForm(i, "price", e.target.value)}
+                            required
+                            aria-invalid={priceIsMissing}
                           />
                         </div>
+                        {priceIsMissing && (
+                          <span className={styles.detailFormsRequired}>Required</span>
+                        )}
                         {entry.marketPrice && (
                           <span className={styles.detailFormsMkt}>Mkt ${parseFloat(entry.marketPrice).toFixed(2)}</span>
                         )}
                       </div>
                     </div>
+                    <button
+                      type="button"
+                      className={styles.detailFormsDelete}
+                      onClick={() => removeDetailForm(i)}
+                      aria-label={`Delete ${entry.name} from selection`}
+                      title="Delete"
+                    >
+                      ×
+                    </button>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
             <div className={styles.modalFooter}>

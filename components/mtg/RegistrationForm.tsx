@@ -308,7 +308,7 @@ export default function RegistrationForm({ event, onSuccess }: Props) {
       >
         {status === "loading"
           ? (event.entryFee > 0 ? "Redirecting to payment…" : "Registering…")
-          : (event.entryFee > 0 ? `Register & Pay $${event.entryFee}` : "Complete Registration")}
+          : "Register"}
       </button>
 
       <p className={styles.privacyNote}>

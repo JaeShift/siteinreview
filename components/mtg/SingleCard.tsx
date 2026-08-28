@@ -7,17 +7,32 @@ import { useCart } from "@/lib/cart-context";
 import styles from "./SingleCard.module.css";
 
 const MANA_CLASS: Record<string, string> = {
+  // Basic colors
   W: "ms-w", U: "ms-u", B: "ms-b", R: "ms-r", G: "ms-g", C: "ms-c",
-  X: "ms-x", Y: "ms-y", Z: "ms-z", S: "ms-s", E: "ms-e",
-  T: "ms-tap", Q: "ms-untap",
+  // Numbers
   "0": "ms-0","1": "ms-1","2": "ms-2","3": "ms-3","4": "ms-4","5": "ms-5",
   "6": "ms-6","7": "ms-7","8": "ms-8","9": "ms-9","10": "ms-10",
   "11": "ms-11","12": "ms-12","13": "ms-13","14": "ms-14","15": "ms-15",
   "16": "ms-16","20": "ms-20",
+  // Variable / special
+  X: "ms-x", Y: "ms-y", Z: "ms-z", S: "ms-s", E: "ms-e",
+  T: "ms-tap", Q: "ms-untap",
+  // Hybrid (two-color guild pairs, canonical Scryfall order)
+  "W/U": "ms-wu", "U/B": "ms-ub", "B/R": "ms-br", "R/G": "ms-rg", "G/W": "ms-gw",
+  "W/B": "ms-wb", "U/R": "ms-ur", "B/G": "ms-bg", "R/W": "ms-rw", "G/U": "ms-gu",
+  // 2-hybrid
+  "2/W": "ms-2w", "2/U": "ms-2u", "2/B": "ms-2b", "2/R": "ms-2r", "2/G": "ms-2g",
+  // Phyrexian
+  "W/P": "ms-wp", "U/P": "ms-up", "B/P": "ms-bp", "R/P": "ms-rp", "G/P": "ms-gp",
+  P: "ms-p",
 };
 
-function ManaCost({ cost }: { cost: string }) {
-  const symbols = Array.from(cost.matchAll(/\{([^}]+)\}/g)).map((m) => m[1]);
+function ManaCost({ cost }: { cost?: string | null }) {
+  if (!cost) return null;
+  // For double-faced cards Scryfall returns "FRONT // BACK" — show front face only
+  const frontCost = cost.split(" // ")[0];
+  const symbols = Array.from(frontCost.matchAll(/\{([^}]+)\}/g)).map((m) => m[1]);
+  if (!symbols.length) return null;
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
       {symbols.map((sym, i) => {
@@ -74,8 +89,7 @@ export default function SingleCard({ card }: Props) {
 
   const inCart = items.find((i) => i.card.id === card.id);
 
-  function handleAdd(e: React.MouseEvent) {
-    e.stopPropagation();
+  function handleAdd() {
     addToCart(card);
     setAdded(true);
     setTimeout(() => setAdded(false), 1200);
@@ -122,39 +136,33 @@ export default function SingleCard({ card }: Props) {
           </div>
           <div className={styles.cardFooter}>
             <span className={styles.price}>${card.price.toFixed(2)}</span>
-            {card.quantity > 0 ? (
-              <button
-                className={`${styles.quickAddBtn} ${added ? styles.quickAddBtnAdded : ""} ${inCart && inCart.quantity >= card.quantity ? styles.quickAddBtnMax : ""}`}
-                onClick={handleAdd}
-                disabled={!!(inCart && inCart.quantity >= card.quantity)}
-                aria-label={`Add ${card.name} to cart`}
-                title={inCart ? `${inCart.quantity} in cart` : "Add to cart"}
-              >
-                {added ? (
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                ) : (
-                  <span className={styles.quickAddInner}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                    </svg>
-                    <span className={styles.quickAddPlus}>+</span>
-                  </span>
-                )}
-              </button>
-            ) : (
-              <span className={styles.soldOutBadge}>Sold Out</span>
-            )}
+            <button
+              className={styles.quickAddBtn}
+              onClick={(e) => { e.stopPropagation(); setModalOpen(true); }}
+              aria-label={`View ${card.name}`}
+              title="View card"
+            >
+              <span className={styles.quickViewLabel}>VIEW →</span>
+            </button>
           </div>
-          <button
-            className={styles.viewBtn}
-            onClick={(e) => { e.stopPropagation(); setModalOpen(true); }}
-            aria-label={`View ${card.name}`}
-          >
-            VIEW CARD →
-          </button>
+          {card.quantity > 0 ? (
+            <button
+              className={`${styles.viewBtn} ${added ? styles.viewBtnAdded : ""} ${inCart && inCart.quantity >= card.quantity ? styles.viewBtnMax : ""}`}
+              onClick={(e) => { e.stopPropagation(); handleAdd(); }}
+              disabled={!!(inCart && inCart.quantity >= card.quantity)}
+              aria-label={`Add ${card.name} to cart`}
+            >
+              {added
+                ? "✓ ADDED"
+                : inCart && inCart.quantity >= card.quantity
+                  ? "MAX IN CART"
+                  : "ADD TO CART"}
+            </button>
+          ) : (
+            <button className={`${styles.viewBtn} ${styles.viewBtnSoldOut}`} disabled aria-label={`${card.name} is sold out`}>
+              SOLD OUT
+            </button>
+          )}
         </div>
       </article>
 

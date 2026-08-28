@@ -6,6 +6,10 @@ import {
   saveEventsStore,
   type Registration,
 } from "@/lib/store";
+import {
+  sendAdminRegistrationNotification,
+  sendEventConfirmationEmail,
+} from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +61,11 @@ export async function POST(request: NextRequest) {
       )
     );
   }
+
+  await Promise.allSettled([
+    sendEventConfirmationEmail(registration, event),
+    sendAdminRegistrationNotification(registration, event),
+  ]);
 
   return NextResponse.json(registration, { status: 201 });
 }

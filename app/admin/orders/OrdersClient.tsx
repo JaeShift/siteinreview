@@ -31,6 +31,7 @@ export default function OrdersClient({ orders }: { orders: Order[] }) {
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
   const [bulkMoving, setBulkMoving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [refundingId, setRefundingId] = useState<string | null>(null);
   const [lastVisited, setLastVisited] = useState<Date | null>(null);
 
   // On mount: capture the previous last-visited time so we can highlight new rows,
@@ -97,6 +98,32 @@ export default function OrdersClient({ orders }: { orders: Order[] }) {
       alert("Failed to delete order. Please try again.");
     } finally {
       setDeletingId(null);
+    }
+  }
+
+  async function handleRefund(order: Order) {
+    const amount = formatAmount(order.amountTotal, order.currency);
+    const approved = confirm(
+      `REFUND DISCLAIMER\n\nYou are about to refund ${amount} to ${order.customerName} for:\n${order.description}\n\nThis action cannot be undone. The refund will be returned to the original payment method and may take 5–10 business days to appear.\n\nAre you sure you want to issue this refund?`
+    );
+    if (!approved) return;
+
+    setRefundingId(order.id);
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}/refund`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to issue refund");
+
+      if (data.emailSent === false) {
+        alert(data.warning);
+      }
+      router.refresh();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Failed to issue refund. Please try again.");
+    } finally {
+      setRefundingId(null);
     }
   }
 
@@ -239,8 +266,11 @@ export default function OrdersClient({ orders }: { orders: Order[] }) {
                     onChange={() => toggleCheck(order.id)}
                   />
                 </span>
-                <span className={styles.orderId} title={order.stripeSessionId}>
-                  {order.metadata?.squarespaceOrderId ?? order.id.replace("sq_", "")}
+                <span className={styles.orderId} title={order.stripeSessionId ?? order.id}>
+                  {order.metadata?.squarespaceOrderId
+                    ?? (order.id.startsWith("sq_")
+                      ? order.id.replace("sq_", "")
+                      : `#${order.id.slice(-8).toUpperCase()}`)}
                   {isNewOrder(order) && <span className={styles.newPill}>NEW</span>}
                 </span>
                 <span className={styles.customerName}>{order.customerName}</span>
@@ -261,10 +291,19 @@ export default function OrdersClient({ orders }: { orders: Order[] }) {
                   })}
                 </span>
                 <span className={styles.deleteCell}>
+                  {order.status === "paid" && order.stripeSessionId?.startsWith("cs_") && (
+                    <button
+                      className={styles.refundBtn}
+                      onClick={() => handleRefund(order)}
+                      disabled={refundingId === order.id || deletingId === order.id}
+                    >
+                      {refundingId === order.id ? "Refunding…" : "Refund"}
+                    </button>
+                  )}
                   <button
                     className={styles.deleteBtn}
                     onClick={() => handleDelete(order.id)}
-                    disabled={deletingId === order.id}
+                    disabled={deletingId === order.id || refundingId === order.id}
                     aria-label="Delete order"
                   >
                     {deletingId === order.id ? "…" : "Delete"}

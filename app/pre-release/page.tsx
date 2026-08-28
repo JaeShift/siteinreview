@@ -106,7 +106,7 @@ export default function PreReleasePage() {
 
             {dateLabel && (
               <p style={{ color: "rgba(255,255,255,0.7)", fontFamily: "var(--font-heading)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
-                {dateLabel} · Kitsune Brewing Co.
+                {dateLabel} · {event.time}{event.endTime ? ` – ${event.endTime}` : ""} · Kitsune Brewing Co.
               </p>
             )}
 

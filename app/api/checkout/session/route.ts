@@ -47,42 +47,17 @@ export async function POST(request: NextRequest) {
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
-      automatic_tax: { enabled: true },
       billing_address_collection: "required",
-      shipping_address_collection: { allowed_countries: ["US"] },
-      shipping_options: [
-        {
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: { amount: 0, currency: "usd" },
-            display_name: "In-Store Pickup",
-            delivery_estimate: { minimum: { unit: "business_day", value: 1 }, maximum: { unit: "business_day", value: 3 } },
-          },
-        },
-        {
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: { amount: 599, currency: "usd" },
-            display_name: "Standard Shipping (USPS)",
-            delivery_estimate: { minimum: { unit: "business_day", value: 3 }, maximum: { unit: "business_day", value: 7 } },
-          },
-        },
-        {
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: { amount: 1299, currency: "usd" },
-            display_name: "Priority Shipping (USPS)",
-            delivery_estimate: { minimum: { unit: "business_day", value: 1 }, maximum: { unit: "business_day", value: 3 } },
-          },
-        },
-      ],
       custom_text: {
-        submit: { message: "Your order will be confirmed via email. In-store pickup available at Kitsune Brewing Co." },
+        submit: { message: "You'll receive an order confirmation email. Cards are available for in-store pickup at Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032." },
       },
       metadata: {
         orderType: "singles",
+        category: "cards",
         itemCount: String(items.reduce((s, i) => s + i.quantity, 0)),
         itemSummary: items.map((i) => `${i.card.name} (${i.card.condition})${i.card.foil ? " Foil" : ""} x${i.quantity}`).join(", ").slice(0, 490),
+        // compact array of {id, qty} for inventory decrement on fulfillment
+        cartItems: JSON.stringify(items.map((i) => ({ id: i.card.id, qty: i.quantity }))).slice(0, 490),
       },
       return_url: returnUrl,
     });

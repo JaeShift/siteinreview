@@ -106,6 +106,21 @@ export function deleteOrder(id: string): Order[] {
   return orders;
 }
 
+// ─── Notification settings ───────────────────────────────────────────────────
+
+export interface NotificationSettings {
+  email: string;
+  triggers: Record<string, boolean>;
+}
+
+export function getNotificationSettingsStore(): NotificationSettings | null {
+  return readJson<NotificationSettings | null>("notification-settings.json", null);
+}
+
+export function saveNotificationSettingsStore(settings: NotificationSettings): void {
+  writeJson("notification-settings.json", settings);
+}
+
 // ─── Food Trucks ─────────────────────────────────────────────────────────────
 
 export function getFoodTrucksStore(): FoodTruck[] {
@@ -163,6 +178,17 @@ export function updateSingle(id: string, patch: Partial<SingleCard>): SingleCard
   return cards;
 }
 
+/** Decrement quantity for purchased items. Sets quantity to 0 (not negative) when exhausted. */
+export function decrementInventory(cartItems: { id: string; qty: number }[]): void {
+  const cards = getSinglesStore();
+  const updated = cards.map((c) => {
+    const purchased = cartItems.find((i) => i.id === c.id);
+    if (!purchased) return c;
+    return { ...c, quantity: Math.max(0, c.quantity - purchased.qty) };
+  });
+  saveSinglesStore(updated);
+}
+
 export { type SingleCard };
 
 // ─── Registrations ────────────────────────────────────────────────────────────
@@ -175,7 +201,7 @@ export interface Registration {
   email: string;
   phone: string;
   notes?: string;
-  status: "confirmed" | "waitlisted" | "cancelled";
+  status: "confirmed" | "waitlisted" | "cancelled" | "refunded";
   stripeSessionId?: string;
   amountPaid?: number;
   checkedIn: boolean;
