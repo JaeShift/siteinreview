@@ -44,7 +44,8 @@
 
 .navLink,
 .navLink:link,
-.navLink:visited {
+.navLink:visited,
+.navLink:any-link {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -67,10 +68,12 @@
 
 .navLinkActive,
 .navLinkActive:link,
-.navLinkActive:visited {
-  color: var(--color-white);
-  background: rgba(255, 255, 255, 0.08);
-  border-left-color: var(--color-accent);
+.navLinkActive:visited,
+.navLinkActive:any-link,
+.navLinkActive:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-left-color: var(--color-accent) !important;
 }
 
 .icon {
