@@ -1,1 +1,25 @@
-[]
+[
+  {
+    "slug": "star-trek-prerelease",
+    "title": "Star Trek",
+    "format": "Prerelease",
+    "date": "2026-11-06",
+    "time": "2:00 PM",
+    "endTime": "10:00 PM",
+    "entryFee": 0,
+    "playerLimit": 4,
+    "registeredCount": 4,
+    "imageUrl": "https://images.ctfassets.net/0piqveu8x9oj/4cKBGlTlMKRy9MwLa6S0sM/75a0dc8a957bf182f38c9d90c497ed0d/MTGTRK_EN_Prrls_OtrBx_01_01.png",
+    "description": "Magic: The Gathering | Star Trek is a 2026 Universes Beyond set that brings the world of Star Trek to your Magic game. Draft powerful decks, engage in interstellar battles, and explore the vastness of deep space with cards inspired by 60 years of Star Trek history. Take command on your own Star Trek odyssey, fueled by boldness, bravery, and the power of warp-drive tech.",
+    "shortDescription": "Be among the first to experience <em>Magic: The Gathering® | Star Trek</em> at Kitsune Brewing Co. Explore new cards, build your sealed deck, and play the set before its official release.",
+    "location": "Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032",
+    "prizeSupport": "",
+    "tags": [],
+    "faq": [],
+    "featured": false,
+    "hidden": false,
+    "registrationOpen": true,
+    "bannerImageUrl": "https://images.ctfassets.net/0piqveu8x9oj/4CC234j6CKjuOS5wVoOZGu/c4d4a6865c1f1a4d41470165ed5105c8/img_wpn_trk_header_2.jpg",
+    "autoHoldAfter72Hours": true
+  }
+]

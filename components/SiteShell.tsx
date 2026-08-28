@@ -14,7 +14,6 @@ const MTG_PATHS = [
   "/card-shop",
   "/card-shop-singles",
   "/events",
-  "/magic-mamas-pre-release",
   "/private-events",
   "/commander-nights",
 ];

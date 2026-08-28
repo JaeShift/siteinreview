@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import StatsCard from "@/components/admin/StatsCard";
 import LiveClock from "@/components/admin/LiveClock";
-import { getEventsStore, getOrdersStore, getRegistrationsStore, getPrereleaseConfig } from "@/lib/store";
+import { getEventsStore, getOrdersStore, getRegistrationsStore } from "@/lib/store";
 import styles from "./dashboard.module.css";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -34,7 +34,6 @@ export default function AdminDashboardPage() {
   const recentOrders = orders.slice(0, 5);
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const ordersLast30 = orders.filter((o) => o.createdAt >= thirtyDaysAgo);
-  const prereleaseConfig = getPrereleaseConfig();
   const pendingOrders = orders.filter((order) => order.status === "pending").length;
   const waitlistedPlayers = registrations.filter((registration) => registration.status === "waitlisted").length;
   const nearlyFullEvents = eventsNext30.filter((event) => {
@@ -169,19 +168,6 @@ export default function AdminDashboardPage() {
             label="Nearly Full Events"
             detail={nearlyFullEvents === 0 ? "Event capacity looks good" : "20% or fewer seats remain"}
             href="/admin/events"
-          />
-          <AttentionItem
-            count={0}
-            label="Pre-Release Page"
-            detail={
-              prereleaseConfig.active
-                ? `Live — ${prereleaseConfig.setName || "event active"}`
-                : prereleaseConfig.setName
-                  ? `Holding — New event coming soon`
-                  : `Holding — Page shows coming soon`
-            }
-            href="/admin/events"
-            status={prereleaseConfig.active ? "live" : "holding"}
           />
         </div>
       </div>

@@ -5,20 +5,20 @@ import styles from "./prerelease.module.css";
 
 const FAQS = [
   {
-    q: "What do I need to bring?",
-    a: "Just yourself! All materials including your Prerelease Kit and basic lands are provided. You may bring your own dice or sleeves if you prefer.",
+    q: "Do I need to bring a deck?",
+    a: "No. You'll build your deck at the event using the cards from your Prerelease Kit.",
   },
   {
-    q: "Is there an age limit?",
-    a: "Prerelease events are open to all ages. Players under 18 are welcome — Kitsune Brewing Co. is a family-friendly environment during our gaming events.",
+    q: "What comes in a Prerelease Kit?",
+    a: "Your Prerelease Kit includes the sealed product you'll use to build your deck for the event. Contents vary by set.",
   },
   {
-    q: "How long do events last?",
-    a: "Typically 3–4 hours. We run three rounds of Swiss-style pairings, so plan for around four hours from start to finish.",
+    q: "Where is the event located?",
+    a: "Kitsune Brewing Co. is located at 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032.",
   },
   {
-    q: "Can I buy cards there?",
-    a: "Yes! Our singles inventory and sealed product are available in-store before and after events. Check our card shop online to browse current stock.",
+    q: "How long does a Prerelease event last?",
+    a: "Plan for a few hours, including deck building and gameplay. Exact event length may vary based on attendance and number of rounds.",
   },
 ];
 

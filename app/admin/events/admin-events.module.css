@@ -472,6 +472,36 @@
   border-color: var(--color-accent);
 }
 
+/* ─── Toggle switch ──────────────────────────────────────────────────────── */
+.toggleTrack {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--color-border);
+  padding: 3px;
+  transition: background 0.2s;
+}
+
+.toggleTrackOn {
+  background: #1a7a3a;
+}
+
+.toggleThumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+.toggleTrackOn .toggleThumb {
+  transform: translateX(20px);
+}
+
 /* ─── Pre-Release button & toggle ──────────────────────────────────────────── */
 .prereleaseBtn {
   position: relative;
@@ -539,37 +569,46 @@
   transform: translateX(20px);
 }
 
-/* ─── PR modal tabs ─────────────────────────────────────────────────────────── */
-.prTabs {
-  display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--color-border);
+/* ─── Inline drafts section (inside PR modal) ───────────────────────────────── */
+.inlineDraftsSection {
   margin: 0 -24px;
   padding: 0 24px;
+  background: var(--color-bg-subtle, #f8f8f8);
+  border-bottom: 1px solid var(--color-border);
 }
 
-.prTab {
-  display: inline-flex;
+.inlineDraftsSectionHeader {
+  display: flex;
   align-items: center;
-  padding: 10px 16px;
-  font-size: 13px;
-  font-weight: 600;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.inlineDraftsToggle {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0;
   background: none;
   border: none;
-  border-bottom: 2px solid transparent;
   cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  padding: 0;
+  text-align: left;
+}
+
+.inlineDraftsEmpty {
+  padding: 12px 0 16px;
   color: var(--color-text-light);
-  transition: color 0.15s, border-color 0.15s;
-  margin-bottom: -1px;
+  font-size: 13px;
+  text-align: center;
 }
 
-.prTab:hover {
-  color: var(--color-text);
-}
-
-.prTabActive {
-  color: var(--color-text);
-  border-bottom-color: var(--color-primary, #1a1a2e);
+.inlineDraftsDivider {
+  margin: 0 -24px 16px;
+  border: none;
 }
 
 /* ─── Drafts badge ───────────────────────────────────────────────────────────── */
@@ -596,6 +635,14 @@
 /* ─── Drafts modal & cards ───────────────────────────────────────────────────── */
 .draftsModal {
   max-width: 780px;
+  height: min(700px, 90vh);
+  overflow-y: hidden;
+}
+
+.draftsModalBody {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .draftsList {
@@ -637,44 +684,6 @@
   height: auto;
   max-height: 360px;
   object-fit: contain;
-  display: block;
-}
-
-/* Image picker strip */
-.draftImageStrip {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 2px;
-}
-
-.draftImageOption {
-  flex-shrink: 0;
-  width: 72px;
-  height: 48px;
-  padding: 0;
-  border: 2px solid transparent;
-  border-radius: 5px;
-  overflow: hidden;
-  cursor: pointer;
-  background: none;
-  opacity: 0.65;
-  transition: opacity 0.15s, border-color 0.15s;
-}
-
-.draftImageOption:hover {
-  opacity: 1;
-}
-
-.draftImageOptionActive {
-  border-color: var(--color-primary, #1a1a2e);
-  opacity: 1;
-}
-
-.draftImageOptionImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   display: block;
 }
 

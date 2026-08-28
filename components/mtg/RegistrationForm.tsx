@@ -155,18 +155,13 @@ export default function RegistrationForm({ event, onSuccess }: Props) {
         <p className={styles.successText}>
           Your spot at <strong>{event.title}</strong> is confirmed.
         </p>
-        <div className={styles.confirmationBox}>
-          <span className={styles.confirmationLabel}>Confirmation Number</span>
-          <span className={styles.confirmationNumber}>{confirmationNumber}</span>
-        </div>
         <div className={styles.successDetails}>
           <p><strong>Date:</strong> {formatEventDate(event.date)}</p>
           <p><strong>Time:</strong> {event.time} – {event.endTime}</p>
           <p><strong>Location:</strong> 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032</p>
         </div>
         <p className={styles.successNote}>
-          A confirmation will be sent to <strong>{form.email}</strong>. Please bring this
-          confirmation number to the event.
+          A confirmation will be sent to <strong>{form.email}</strong>. We&apos;ll see you at the event!
         </p>
       </div>
     );

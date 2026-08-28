@@ -12,7 +12,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
   const config = savePrereleaseConfig(body);
-  revalidatePath("/magic-mamas-pre-release");
+  revalidatePath("/pre-release");
   revalidatePath("/admin/events");
   return NextResponse.json(config);
 }

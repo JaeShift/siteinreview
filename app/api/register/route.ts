@@ -101,9 +101,12 @@ export async function POST(request: NextRequest) {
 
   // Send emails (non-blocking, don't fail the request if email fails)
   Promise.all([
-    sendEventConfirmationEmail(registration, event),
-    sendAdminRegistrationNotification(registration, event),
-  ]).catch((err) => console.error("Registration email error:", err));
+    sendEventConfirmationEmail(registration, event)
+      .then(() => console.log(`Confirmation email sent to ${registration.email}`))
+      .catch((err) => console.error("Confirmation email failed:", err)),
+    sendAdminRegistrationNotification(registration, event)
+      .catch((err) => console.error("Admin notification email failed:", err)),
+  ]);
 
   const confirmationNumber = Math.random().toString(36).slice(2, 8).toUpperCase();
 

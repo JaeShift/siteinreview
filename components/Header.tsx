@@ -12,7 +12,7 @@ type NavItem = { label: string; href: string };
 const navLinks: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "MTG AND MORE", href: "/mtg-and-more" },
-  { label: "Magic Mamas Pre-Release", href: "/magic-mamas-pre-release" },
+  { label: "Magic Mamas Pre-Release", href: "/pre-release" },
   { label: "Contact Us", href: "/contact" },
 ];
 
@@ -39,7 +39,7 @@ export default function Header() {
     };
   }, [menuOpen]);
 
-  const isHolding = pathname === "/magic-mamas-pre-release";
+  const isHolding = pathname === "/pre-release";
 
   return (
     <header className={`${styles.header} ${isHolding ? styles.headerHolding : ""}`}>

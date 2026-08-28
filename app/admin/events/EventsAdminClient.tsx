@@ -1,30 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import type { MtgEvent, EventFormat, CustomQuestion, EventAddOn } from "@/lib/events-data";
-import type { PrereleaseConfig } from "@/lib/store";
-import type { PrereleaseDraft } from "@/lib/prerelease-drafts";
 import styles from "./admin-events.module.css";
 
-const BLANK_PRERELEASE: PrereleaseConfig = {
-  active: false,
-  setName: "",
-  tagline: "",
-  date: "",
-  time: "",
-  description: "",
-  imageUrl: "",
-  eventSlug: "",
-};
-
 const FORMAT_OPTIONS: EventFormat[] = [
-  "Commander", "Draft", "Standard", "Modern", "Pioneer",
-  "Legacy", "Sealed", "RCQ", "Casual",
+  "Commander", "Draft", "Standard", "Casual",
 ];
 
 function slugify(str: string) {
   return str.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+}
+
+function hasAutoHoldingExpired(date: string, time: string): boolean {
+  const match = time.trim().match(/^(\d{1,2}):(\d{2})(?:\s*([ap]m))?$/i);
+  if (!date || !match) return false;
+
+  let hour = Number(match[1]);
+  const minute = Number(match[2]);
+  const period = match[3]?.toLowerCase();
+  if (period === "pm" && hour !== 12) hour += 12;
+  if (period === "am" && hour === 12) hour = 0;
+  if (hour > 23 || minute > 59) return false;
+
+  const eventTime = new Date(`${date}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00-07:00`);
+  return Date.now() >= eventTime.getTime() + 72 * 60 * 60 * 1000;
 }
 
 function makeEmpty(): MtgEvent {
@@ -47,119 +48,46 @@ function makeEmpty(): MtgEvent {
     faq: [],
     recurring: undefined,
     featured: false,
+    autoHoldAfter72Hours: true,
   };
 }
 
 interface Props {
   initialEvents: MtgEvent[];
-  initialPrerelease: PrereleaseConfig;
 }
 
-export default function EventsAdminClient({ initialEvents, initialPrerelease }: Props) {
+export default function EventsAdminClient({ initialEvents }: Props) {
   const [events, setEvents] = useState<MtgEvent[]>(initialEvents);
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function refreshEvents() {
+    setRefreshing(true);
+    try {
+      const res = await fetch("/api/admin/events");
+      if (res.ok) setEvents(await res.json());
+    } finally {
+      setRefreshing(false);
+    }
+  }
   const [editing, setEditing] = useState<MtgEvent | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
   const [flash, setFlash] = useState<{ msg: string; type: "success" | "error" } | null>(null);
 
-  // Pre-release page modal
+  // Pre-release event modal (edits the actual Prerelease-format event)
   const [showPRModal, setShowPRModal] = useState(false);
-  const [prConfig, setPrConfig] = useState<PrereleaseConfig>(initialPrerelease);
+  const [prEvent, setPrEvent] = useState<MtgEvent | null>(null);
+  const [prIsNew, setPrIsNew] = useState(false);
   const [prSaving, setPrSaving] = useState(false);
+  const [prError, setPrError] = useState<string | null>(null);
   const [prImageUploading, setPrImageUploading] = useState(false);
-
-  // Drafts from the importer
-  const [drafts, setDrafts] = useState<PrereleaseDraft[]>([]);
-  const [showDraftPanel, setShowDraftPanel] = useState(false);
-  const [prTab, setPrTab] = useState<"edit" | "drafts">("edit");
-  const [runningImport, setRunningImport] = useState(false);
-  const [approvingId, setApprovingId] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/api/admin/prerelease/drafts")
-      .then((r) => r.json())
-      .then((d: PrereleaseDraft[]) => setDrafts(d))
-      .catch(() => {/* ignore */});
-  }, []);
-
-  const pendingDrafts = drafts.filter((d) => d.status === "pending");
-
-  async function runImport() {
-    setRunningImport(true);
-    try {
-      const res = await fetch("/api/cron/prerelease-import", { method: "POST" });
-      const data = await res.json();
-      showFlash(`Import done — ${data.created} new draft(s) created.`);
-      const updated = await fetch("/api/admin/prerelease/drafts").then((r) => r.json());
-      setDrafts(updated);
-    } catch {
-      showFlash("Import failed — check the server logs.", "error");
-    } finally {
-      setRunningImport(false);
-    }
-  }
-
-  async function approveDraft(draft: PrereleaseDraft) {
-    setApprovingId(draft.id);
-    try {
-      const res = await fetch("/api/admin/prerelease/drafts", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: draft.id, status: "approved" }),
-      });
-      if (!res.ok) throw new Error();
-      const updated: PrereleaseDraft = await res.json();
-      setDrafts((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
-      // Sync local prConfig so the modal reflects the approved draft
-      setPrConfig((c) => ({
-        ...c,
-        active: true,
-        setName: draft.setName,
-        date: draft.prereleaseDate,
-        imageUrl: draft.imageUrl,
-        tagline: draft.tagline,
-      }));
-      showFlash(`"${draft.setName}" approved and set as live pre-release page.`);
-    } catch {
-      showFlash("Failed to approve draft.", "error");
-    } finally {
-      setApprovingId(null);
-    }
-  }
-
-  async function rejectDraft(draft: PrereleaseDraft) {
-    try {
-      const res = await fetch("/api/admin/prerelease/drafts", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: draft.id, status: "rejected" }),
-      });
-      if (!res.ok) throw new Error();
-      const updated: PrereleaseDraft = await res.json();
-      setDrafts((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
-      showFlash(`"${draft.setName}" draft rejected.`);
-    } catch {
-      showFlash("Failed to reject draft.", "error");
-    }
-  }
-
-  async function deleteDraft(id: string) {
-    if (!confirm("Delete this draft? This cannot be undone.")) return;
-    try {
-      await fetch(`/api/admin/prerelease/drafts?id=${id}`, { method: "DELETE" });
-      setDrafts((prev) => prev.filter((d) => d.id !== id));
-    } catch {
-      showFlash("Failed to delete draft.", "error");
-    }
-  }
 
   // Scryfall set picker + WPN image auto-fill
   const [scryfallSets, setScryfallSets] = useState<{ code: string; name: string; released_at: string }[]>([]);
   const [scryfallLoading, setScryfallLoading] = useState(false);
   const [scryfallError, setScryfallError] = useState<string | null>(null);
   const [selectedScryfallCode, setSelectedScryfallCode] = useState("");
-  const [prImageOptions, setPrImageOptions] = useState<string[]>([]);
   const [prImagesLoading, setPrImagesLoading] = useState(false);
 
   async function fetchScryfallSets() {
@@ -190,36 +118,41 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
     release.setUTCDate(release.getUTCDate() - 7);
     const prereleaseDate = release.toISOString().split("T")[0];
 
-    // Reset form with set name + date; images loaded separately below
-    setPrConfig((c) => ({
-      active: c.active,
-      setName: set.name,
-      tagline: "",
+    const existing = events.find(e => e.format === "Prerelease");
+    setPrEvent((e) => ({
+      ...(e ?? existing ?? makeEmpty()),
+      format: "Prerelease",
+      title: set.name,
       date: prereleaseDate,
-      time: "",
-      description: "",
+      time: existing?.time || "",
+      entryFee: NaN,
       imageUrl: "",
-      eventSlug: "",
+      shortDescription: "",
+      description: "",
+      slug: existing?.slug || slugify(set.name + "-prerelease"),
     }));
-    setPrImageOptions([]);
+    setPrIsNew(!existing);
     setScryfallSets([]);
     setSelectedScryfallCode("");
 
-    // Fetch WPN images + description for this set
     setPrImagesLoading(true);
     try {
-      const res = await fetch(`/api/admin/prerelease/wpn-images?releaseDate=${set.released_at}`);
+      const res = await fetch(
+        `/api/admin/prerelease/wpn-images?releaseDate=${set.released_at}&setName=${encodeURIComponent(set.name)}`
+      );
       if (res.ok) {
         const data = await res.json() as { images: string[]; description: string };
-        if (data.images.length > 0) {
-          setPrImageOptions(data.images);
-          setPrConfig((c) => ({ ...c, imageUrl: data.images[0] }));
-        }
-        if (data.description) {
-          setPrConfig((c) => ({ ...c, description: data.description }));
-        }
+        const imgs = data.images ?? [];
+        // Index 3 is consistently the prerelease pack photo; fall back down the list if fewer images
+        const heroImage = imgs[3] ?? imgs[2] ?? imgs[1] ?? imgs[0] ?? "";
+        const bannerImage = imgs[2] ?? imgs[1] ?? imgs[0] ?? "";
+        if (heroImage) setPrEvent((e) => e ? { ...e, imageUrl: heroImage, bannerImageUrl: bannerImage } : e);
+        const shortDesc = `Be among the first to experience <em>Magic: The Gathering® | ${set.name}</em> at Kitsune Brewing\u00a0Co. Explore new cards, build your sealed deck, and play the set before its official release.`;
+        const fullDesc = data.description?.trim()
+          || `Experience the ${set.name} Prerelease at Kitsune Brewing Co.! Be among the first players in Phoenix to crack open the newest Magic: The Gathering set.`;
+        setPrEvent((e) => e ? { ...e, shortDescription: shortDesc, description: fullDesc } : e);
       }
-    } catch { /* silently skip — user can fill in manually */ }
+    } catch { /* silently skip */ }
     finally { setPrImagesLoading(false); }
   }
 
@@ -239,25 +172,62 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
   }
 
   function openEdit(event: MtgEvent) {
+    if (event.format === "Prerelease") {
+      openPrerelease();
+      return;
+    }
     setIsNew(false);
     setEditing({ ...event });
   }
 
-  async function savePrereleaseConfig() {
+  function openPrerelease() {
+    const existing = events.find(e => e.format === "Prerelease");
+    if (existing) {
+      setPrEvent({ ...existing });
+      setPrIsNew(false);
+    } else {
+      setPrEvent({ ...makeEmpty(), format: "Prerelease", title: "", date: "", time: "", entryFee: NaN, hidden: true });
+      setPrIsNew(true);
+    }
+    setScryfallSets([]);
+    setSelectedScryfallCode("");
+    setPrError(null);
+    setShowPRModal(true);
+  }
+
+  async function savePrereleaseEvent() {
+    if (!prEvent) return;
+    if (prEvent.hidden && prIsNew) {
+      setShowPRModal(false);
+      return;
+    }
+    if (!prEvent.hidden) {
+      if (!prEvent.title.trim())            { setPrError("Set name / title is required."); return; }
+      if (!prEvent.date)                    { setPrError("Date is required."); return; }
+      if (!prEvent.time.trim())             { setPrError("Time is required."); return; }
+      if (isNaN(prEvent.entryFee))          { setPrError("Entry fee is required."); return; }
+      if (!prEvent.shortDescription.trim()) { setPrError("Short description is required."); return; }
+      if (!prEvent.imageUrl.trim())         { setPrError("Hero image is required."); return; }
+    }
+    setPrError(null);
     setPrSaving(true);
     try {
-      const res = await fetch("/api/admin/prerelease", {
-        method: "PUT",
+      const url = prIsNew ? "/api/admin/events" : `/api/admin/events/${prEvent.slug}`;
+      const method = prIsNew ? "POST" : "PUT";
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(prConfig),
+        body: JSON.stringify(prEvent),
       });
-      if (!res.ok) throw new Error("Request failed");
-      const saved = await res.json();
-      setPrConfig(saved);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error((err as { error?: string }).error ?? "Request failed");
+      }
+      setEvents(await res.json());
       setShowPRModal(false);
-      showFlash("Pre-release page updated.");
-    } catch {
-      showFlash("Failed to save pre-release config.", "error");
+      showFlash(prEvent.hidden ? "Pre-release page set to holding." : prIsNew ? "Pre-release event created — page is now live." : "Pre-release event updated.");
+    } catch (err) {
+      showFlash(err instanceof Error ? err.message : "Failed to save.", "error");
     } finally {
       setPrSaving(false);
     }
@@ -347,21 +317,28 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
         </div>
         <div className={styles.headerActions}>
           <button
-            className={`btn btn-primary ${styles.prereleaseBtn}`}
-            onClick={() => { setPrTab("edit"); setShowPRModal(true); }}
+            onClick={refreshEvents}
+            disabled={refreshing}
+            title="Refresh registration counts"
+            style={{ background: "none", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 6, color: "inherit", fontSize: 22, padding: "0 16px", cursor: "pointer", opacity: refreshing ? 0.5 : 1, height: 52, minWidth: 52 }}
           >
-            Pre-Release Page
-            {prConfig.active
-              ? <span className={styles.prereleaseLiveDot} title="Page is live" />
-              : <span className={`${styles.prereleaseLiveDot} ${styles.prereleaseLiveDotHolding}`} title="Page is holding" />
-            }
-            {pendingDrafts.length > 0 && (
-              <span className={styles.draftsBadge} title={`${pendingDrafts.length} draft(s) awaiting review`}>
-                {pendingDrafts.length}
-              </span>
-            )}
+            ↻
           </button>
           <button className="btn btn-primary" onClick={openAdd}>+ New Event</button>
+          <button
+            className={`btn btn-primary ${styles.prereleaseBtn}`}
+            onClick={openPrerelease}
+          >
+            Pre-Release Event
+            {events.some(e =>
+              e.format === "Prerelease" &&
+              !e.hidden &&
+              (e.autoHoldAfter72Hours === false || !hasAutoHoldingExpired(e.date, e.time))
+            )
+              ? <span className={styles.prereleaseLiveDot} title="Page is live" />
+              : <span className={`${styles.prereleaseLiveDot} ${styles.prereleaseLiveDotHolding}`} title="No upcoming prerelease — page shows holding" />
+            }
+          </button>
         </div>
       </div>
 
@@ -412,7 +389,7 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
                 </button>
               </div>
               <div className={styles.actionsCell}>
-                <Link href={`/events/${event.slug}`} target="_blank" className={styles.actionLink} title="View public page">↗</Link>
+                <Link href={event.format === "Prerelease" ? "/pre-release" : `/events/${event.slug}`} target="_blank" className={styles.actionLink} title="View public page">↗</Link>
                 <button className={styles.actionLink} onClick={() => openEdit(event)} title="Edit event">✎</button>
                 <button
                   className={`${styles.actionLink} ${styles.deleteLink}`}
@@ -432,417 +409,216 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
         )}
       </div>
 
-      {/* ── Pre-Release Page Modal ── */}
-      {showPRModal && (
+      {/* ── Pre-Release Event Modal ── */}
+      {showPRModal && prEvent && (
         <div className={styles.modalOverlay}>
           <div className={`${styles.modal} ${styles.draftsModal}`}>
             <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>Pre-Release Page</h2>
+              <h2 className={styles.modalTitle}>
+                {prIsNew ? "New Pre-Release Event" : `Edit: ${prEvent.title || "Pre-Release Event"}`}
+              </h2>
               <button className={styles.closeBtn} onClick={() => setShowPRModal(false)}>✕</button>
             </div>
 
-            {/* Tabs */}
-            <div className={styles.prTabs}>
-              <button
-                className={`${styles.prTab} ${prTab === "edit" ? styles.prTabActive : ""}`}
-                onClick={() => setPrTab("edit")}
-              >
-                Edit Page
-              </button>
-              <button
-                className={`${styles.prTab} ${prTab === "drafts" ? styles.prTabActive : ""}`}
-                onClick={() => setPrTab("drafts")}
-              >
-                Auto-Imported Drafts
-                {pendingDrafts.length > 0 && (
-                  <span className={styles.draftsBadge} style={{ marginLeft: 6 }}>{pendingDrafts.length}</span>
-                )}
-              </button>
-            </div>
 
-            {prTab === "edit" && (
-              <>
-              <form onSubmit={(e) => e.preventDefault()} className={styles.formGrid}>
+            <div className={styles.draftsModalBody}>
+            <form onSubmit={(e) => e.preventDefault()} className={styles.formGrid}>
+
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                 <label className="form-label">Page Status</label>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
                   <button
                     type="button"
-                    role="switch"
-                    aria-checked={prConfig.active}
-                    className={`${styles.prToggle} ${prConfig.active ? styles.prToggleOn : ""}`}
-                    onClick={() => setPrConfig((c) => ({ ...c, active: !c.active }))}
-                  >
-                    <span className={styles.prToggleThumb} />
-                  </button>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: prConfig.active ? "var(--color-green, #1a7a3a)" : "var(--color-text-light)" }}>
-                    {prConfig.active ? "Live — page shows event content" : "Holding — page shows new event coming soon"}
-                  </span>
+                    onClick={() => setPrEvent((ev) => ev ? { ...ev, hidden: false } : ev)}
+                    style={{
+                      flex: 1, padding: "8px 0", borderRadius: 6, border: "1.5px solid",
+                      fontWeight: 600, fontSize: 13, cursor: "pointer",
+                      background: !prEvent.hidden ? "#16a34a" : "transparent",
+                      color: !prEvent.hidden ? "#fff" : "var(--color-text-light)",
+                      borderColor: !prEvent.hidden ? "#16a34a" : "var(--color-border)",
+                    }}
+                  >Live</button>
+                  <button
+                    type="button"
+                    onClick={() => setPrEvent((ev) => ev ? { ...ev, hidden: true } : ev)}
+                    style={{
+                      flex: 1, padding: "8px 0", borderRadius: 6, border: "1.5px solid",
+                      fontWeight: 600, fontSize: 13, cursor: "pointer",
+                      background: prEvent.hidden ? "#d97706" : "transparent",
+                      color: prEvent.hidden ? "#fff" : "var(--color-text-light)",
+                      borderColor: prEvent.hidden ? "#d97706" : "var(--color-border)",
+                    }}
+                  >No Current Event</button>
                 </div>
               </div>
 
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Auto-fill from Scryfall</label>
-                {scryfallSets.length === 0 ? (
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <button
-                      type="button"
-                      className="btn btn-outline"
-                      style={{ fontSize: 12 }}
-                      onClick={fetchScryfallSets}
-                      disabled={scryfallLoading}
+              {!prEvent.hidden && (
+                <>
+                  <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                    <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}
+                      onClick={() => setPrEvent((ev) => ev ? { ...ev, autoHoldAfter72Hours: ev.autoHoldAfter72Hours !== false ? false : true } : ev)}
                     >
-                      {scryfallLoading ? "Fetching…" : "Fetch Upcoming Sets"}
-                    </button>
-                    {scryfallError && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{scryfallError}</span>}
+                      <span className={`${styles.toggleTrack} ${prEvent.autoHoldAfter72Hours !== false ? styles.toggleTrackOn : ""}`}>
+                        <span className={styles.toggleThumb} />
+                      </span>
+                      <span style={{ fontSize: 13 }}>
+                        <span className="form-label" style={{ display: "inline", marginRight: 6 }}>Auto-Hold</span>
+                        <span style={{ color: "var(--color-text-light)", fontWeight: 400 }}>— automatically returns page to &ldquo;No Current Event&rdquo; 72 hours after event time</span>
+                      </span>
+                    </label>
                   </div>
-                ) : (
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-                    <select
-                      className="form-input"
-                      style={{ flex: 1, minWidth: 200 }}
-                      value={selectedScryfallCode}
-                      onChange={(e) => setSelectedScryfallCode(e.target.value)}
-                    >
-                      {scryfallSets.map((s) => (
-                        <option key={s.code} value={s.code}>
-                          {s.name} — {s.released_at}
-                        </option>
-                      ))}
-                    </select>
-                    <button type="button" className="btn btn-primary" style={{ fontSize: 12 }} onClick={applyScryfallSet}>
-                      Apply
-                    </button>
-                    <button type="button" className="btn btn-outline" style={{ fontSize: 12 }} onClick={() => { setScryfallSets([]); setSelectedScryfallCode(""); }}>
-                      Cancel
-                    </button>
-                  </div>
-                )}
-                <span style={{ fontSize: 11, color: "var(--color-text-light)", marginTop: 4, display: "block" }}>
-                  Fills Set Name, pre-release Date, and Hero Image (first mythic art from the set). All other fields are cleared. Page status is preserved.
-                </span>
-              </div>
 
-              <div className={styles.formGroup}>
-                <label className="form-label">Set Name *</label>
-                <input
-                  className="form-input"
-                  value={prConfig.setName}
-                  onChange={(e) => setPrConfig((c) => ({ ...c, setName: e.target.value }))}
-                  placeholder="e.g. Aetherdrift, Bloomburrow…"
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className="form-label">Tagline</label>
-                <input
-                  className="form-input"
-                  value={prConfig.tagline}
-                  onChange={(e) => setPrConfig((c) => ({ ...c, tagline: e.target.value }))}
-                  placeholder="Short teaser line shown under the set name"
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className="form-label">Date</label>
-                <input
-                  type="date"
-                  className="form-input"
-                  value={prConfig.date}
-                  onChange={(e) => setPrConfig((c) => ({ ...c, date: e.target.value }))}
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className="form-label">Time</label>
-                <input
-                  className="form-input"
-                  value={prConfig.time}
-                  onChange={(e) => setPrConfig((c) => ({ ...c, time: e.target.value }))}
-                  placeholder="e.g. 2:00 PM"
-                />
-              </div>
-
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Description</label>
-                <textarea
-                  className="form-input"
-                  rows={4}
-                  value={prConfig.description}
-                  onChange={(e) => setPrConfig((c) => ({ ...c, description: e.target.value }))}
-                  placeholder="Event details shown on the pre-release page…"
-                />
-              </div>
-
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Hero Image</label>
-
-                {/* WPN image picker — shown after Scryfall Apply or when options exist */}
-                {prImagesLoading && (
-                  <p style={{ fontSize: 13, color: "var(--color-text-light)", margin: "6px 0" }}>Fetching WPN images…</p>
-                )}
-                {prImageOptions.length > 0 && (
-                  <>
-                    {/* Large preview of selected image */}
-                    {prConfig.imageUrl && (
-                      <div className={styles.draftPreviewWrap} style={{ marginBottom: 8 }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={prConfig.imageUrl} alt="Selected hero" className={styles.draftPreview} />
+                  <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                    <label className="form-label">Auto-fill</label>
+                    {scryfallSets.length === 0 ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <button type="button" className="btn btn-outline" style={{ fontSize: 12 }} onClick={fetchScryfallSets} disabled={scryfallLoading}>
+                          {scryfallLoading ? "Fetching…" : "Fetch Upcoming Sets"}
+                        </button>
+                        {scryfallError && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{scryfallError}</span>}
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                        <select className="form-input" style={{ flex: 1, minWidth: 200 }} value={selectedScryfallCode} onChange={(e) => setSelectedScryfallCode(e.target.value)}>
+                          {scryfallSets.map((s) => (
+                            <option key={s.code} value={s.code}>{s.name} — {s.released_at}</option>
+                          ))}
+                        </select>
+                        <button type="button" className="btn btn-primary" style={{ fontSize: 12 }} onClick={applyScryfallSet}>Apply</button>
+                        <button type="button" className="btn btn-outline" style={{ fontSize: 12 }} onClick={() => { setScryfallSets([]); setSelectedScryfallCode(""); }}>Cancel</button>
                       </div>
                     )}
-                    {/* Scrollable thumbnail strip */}
-                    <div className={styles.draftImageStrip} style={{ marginBottom: 10 }}>
-                      {prImageOptions.map((opt, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          className={`${styles.draftImageOption} ${opt === prConfig.imageUrl ? styles.draftImageOptionActive : ""}`}
-                          onClick={() => setPrConfig((c) => ({ ...c, imageUrl: opt }))}
-                          title={`Image ${i + 1}`}
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={opt} alt="" className={styles.draftImageOptionImg} />
-                        </button>
-                      ))}
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <label className="form-label" style={{ margin: 0 }}>Set Name / Title *</label>
+                      {prError === "Set name / title is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
                     </div>
-                  </>
-                )}
-
-                {/* URL input + upload (always visible for manual override) */}
-                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <input
-                    className="form-input"
-                    style={{ flex: 1 }}
-                    value={prConfig.imageUrl}
-                    onChange={(e) => {
-                      setPrConfig((c) => ({ ...c, imageUrl: e.target.value }));
-                      setPrImageOptions([]);
-                    }}
-                    placeholder="https://… (set key art or banner)"
-                  />
-                  <span style={{ fontSize: 12, color: "var(--color-text-light)", flexShrink: 0 }}>or</span>
-                  <label className={`btn btn-outline ${styles.uploadBtn}`} style={{ fontSize: 12, whiteSpace: "nowrap", cursor: prImageUploading ? "not-allowed" : "pointer" }}>
-                    {prImageUploading ? "Uploading…" : "Upload ↑"}
                     <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      disabled={prImageUploading}
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        setPrImageUploading(true);
-                        try {
-                          const fd = new FormData();
-                          fd.append("file", file);
-                          const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-                          const data = await res.json();
-                          const url = data.uploaded?.[0]?.url;
-                          if (url) { setPrConfig((c) => ({ ...c, imageUrl: url })); setPrImageOptions([]); }
-                          else showFlash(data.errors?.[0]?.error ?? "Upload failed", "error");
-                        } catch {
-                          showFlash("Upload failed", "error");
-                        } finally {
-                          setPrImageUploading(false);
-                          e.target.value = "";
-                        }
-                      }}
-                    />
-                  </label>
-                </div>
-
-                {/* Fallback preview when no picker options (manual URL/upload) */}
-                {prConfig.imageUrl && prImageOptions.length === 0 && (
-                  <div style={{ marginTop: 10 }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={prConfig.imageUrl}
-                      alt="Hero image preview"
-                      className={styles.prImagePreview}
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                      onLoad={(e) => { (e.currentTarget as HTMLImageElement).style.display = "block"; }}
+                      className="form-input"
+                      value={prEvent.title}
+                      onChange={(e) => { setPrError(null); setPrEvent((ev) => ev ? { ...ev, title: e.target.value, slug: prIsNew ? slugify(e.target.value + "-prerelease") : ev.slug } : ev); }}
+                      placeholder="e.g. Aetherdrift, Bloomburrow…"
                     />
                   </div>
-                )}
-              </div>
+                  <div />
 
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Linked Event Slug <span style={{ fontWeight: 400, color: "var(--color-text-light)", fontSize: 12 }}>(optional)</span></label>
-                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <input
-                    className="form-input"
-                    style={{ flex: 1 }}
-                    value={prConfig.eventSlug}
-                    onChange={(e) => setPrConfig((c) => ({ ...c, eventSlug: e.target.value }))}
-                    placeholder="Event slug for the Register Now button (leave blank to hide button)"
-                  />
-                  {prConfig.eventSlug && (
-                    <Link
-                      href={`/events/${prConfig.eventSlug}`}
-                      target="_blank"
-                      className="btn btn-outline"
-                      style={{ fontSize: 12, whiteSpace: "nowrap" }}
-                    >
-                      Preview ↗
-                    </Link>
-                  )}
-                </div>
-                <span style={{ fontSize: 11, color: "var(--color-text-light)", marginTop: 4, display: "block" }}>
-                  Select from an existing event slug to link registration. Leave blank to show no register button.
-                </span>
-                {events.filter((e) => e.date >= today).length > 0 && (
-                  <div style={{ marginTop: 6, display: "flex", flexWrap: "wrap", gap: 6 }}>
-                    {events.filter((e) => e.date >= today).map((e) => (
-                      <button
-                        key={e.slug}
-                        type="button"
-                        className="btn btn-outline"
-                        style={{ fontSize: 11, padding: "3px 10px" }}
-                        onClick={() => setPrConfig((c) => ({ ...c, eventSlug: e.slug }))}
-                      >
-                        {e.title}
-                      </button>
-                    ))}
+                  <div className={styles.formGroup}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <label className="form-label" style={{ margin: 0 }}>Entry Fee ($) *</label>
+                      {prError === "Entry fee is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                    </div>
+                    <input
+                      type="number" min={0} step={0.01} className="form-input"
+                      value={isNaN(prEvent.entryFee) ? "" : prEvent.entryFee}
+                      placeholder="e.g. 30"
+                      onChange={(e) => { setPrError(null); setPrEvent((ev) => ev ? { ...ev, entryFee: parseFloat(e.target.value) } : ev); }}
+                    />
                   </div>
-                )}
-              </div>
+
+                  <div className={styles.formGroup}>
+                    <label className="form-label">Player Limit</label>
+                    <input type="number" min={1} className="form-input" value={prEvent.playerLimit}
+                      onChange={(e) => setPrEvent((ev) => ev ? { ...ev, playerLimit: parseInt(e.target.value) || 32 } : ev)} />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <label className="form-label" style={{ margin: 0 }}>Date *</label>
+                      {prError === "Date is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                    </div>
+                    <input type="date" className="form-input" value={prEvent.date}
+                      onChange={(e) => { setPrError(null); setPrEvent((ev) => ev ? { ...ev, date: e.target.value } : ev); }} />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <label className="form-label" style={{ margin: 0 }}>Time *</label>
+                      {prError === "Time is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                    </div>
+                    <input className="form-input" value={prEvent.time}
+                      onChange={(e) => { setPrError(null); setPrEvent((ev) => ev ? { ...ev, time: e.target.value } : ev); }}
+                      placeholder="e.g. 2:00 PM" />
+                  </div>
+
+                  <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <label className="form-label" style={{ margin: 0 }}>Short Event Description *</label>
+                      <span style={{ fontSize: 11, color: "var(--color-muted, #888)", whiteSpace: "nowrap", textTransform: "none", fontFamily: "var(--font-body, sans-serif)", fontWeight: 400 }}>&lt;em&gt; will italicize text</span>
+                      {prError === "Short description is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)", whiteSpace: "nowrap" }}>{prError}</span>}
+                    </div>
+                    <textarea className="form-input" rows={3}
+                      value={prEvent.shortDescription}
+                      onChange={(e) => { setPrError(null); setPrEvent((ev) => ev ? { ...ev, shortDescription: e.target.value } : ev); }}
+                      placeholder="Brief description shown on the pre-release page…" />
+                  </div>
+
+                  <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                    <label className="form-label">Full Set Description *</label>
+                    <textarea className="form-input" rows={5}
+                      value={prEvent.description}
+                      onChange={(e) => setPrEvent((ev) => ev ? { ...ev, description: e.target.value } : ev)}
+                      placeholder="Full event details pulled from WPN, or write your own…" />
+                  </div>
+
+                  <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <label className="form-label" style={{ margin: 0 }}>Pre-Release Image *</label>
+                      {prError === "Hero image is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                    </div>
+                    {prImagesLoading && <p style={{ fontSize: 13, color: "var(--color-text-light)", margin: "6px 0" }}>Fetching WPN images…</p>}
+
+                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                      <input className="form-input" style={{ flex: 1 }} value={prEvent.imageUrl}
+                        onChange={(e) => { setPrError(null); setPrEvent((ev) => ev ? { ...ev, imageUrl: e.target.value } : ev); }}
+                        placeholder="https://… (set key art or banner)" />
+                      <span style={{ fontSize: 12, color: "var(--color-text-light)", flexShrink: 0 }}>or</span>
+                      <label className={`btn btn-outline ${styles.uploadBtn}`} style={{ fontSize: 12, whiteSpace: "nowrap", cursor: prImageUploading ? "not-allowed" : "pointer" }}>
+                        {prImageUploading ? "Uploading…" : "Upload ↑"}
+                        <input type="file" accept="image/*" style={{ display: "none" }} disabled={prImageUploading}
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            setPrImageUploading(true);
+                            try {
+                              const fd = new FormData();
+                              fd.append("file", file);
+                              const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+                              const data = await res.json();
+                              const url = data.uploaded?.[0]?.url;
+                              if (url) setPrEvent((ev) => ev ? { ...ev, imageUrl: url } : ev);
+                              else showFlash(data.errors?.[0]?.error ?? "Upload failed", "error");
+                            } catch { showFlash("Upload failed", "error"); }
+                            finally { setPrImageUploading(false); e.target.value = ""; }
+                          }} />
+                      </label>
+                    </div>
+                    {prEvent.imageUrl && (
+                      <div style={{ marginTop: 10 }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={prEvent.imageUrl} alt="Preview" className={styles.prImagePreview}
+                          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                          onLoad={(e) => { (e.currentTarget as HTMLImageElement).style.display = "block"; }} />
+                      </div>
+                    )}
+                  </div>
+
+                </>
+              )}
+
             </form>
+            </div>
 
             <div className={styles.modalFooter}>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <Link
-                  href="/magic-mamas-pre-release"
-                  target="_blank"
-                  className="btn btn-outline"
-                  style={{ fontSize: 12 }}
-                >
-                  View Page ↗
-                </Link>
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={() => setPrConfig(BLANK_PRERELEASE)}
-                  style={{ fontSize: 12 }}
-                >
-                  Reset
-                </button>
-              </div>              <div style={{ display: "flex", gap: 8 }}>
+
+              <div style={{ display: "flex", gap: 8 }}>
                 <button className="btn btn-outline" onClick={() => setShowPRModal(false)} disabled={prSaving}>Cancel</button>
-                <button className="btn btn-primary" onClick={savePrereleaseConfig} disabled={prSaving || !prConfig.setName}>
-                  {prSaving ? "Saving…" : "Save Page"}
+                <button className="btn btn-primary" onClick={savePrereleaseEvent} disabled={prSaving}>
+                  {prSaving ? "Saving…" : "Save"}
                 </button>
               </div>
             </div>
-              </>
-            )}
-
-            {prTab === "drafts" && (
-              <>
-                <div style={{ display: "flex", justifyContent: "flex-end", padding: "12px 0 4px" }}>
-                  <button
-                    type="button"
-                    className="btn btn-outline"
-                    style={{ fontSize: 12 }}
-                    onClick={runImport}
-                    disabled={runningImport}
-                  >
-                    {runningImport ? "Running…" : "Run Import Now"}
-                  </button>
-                </div>
-
-                {drafts.length === 0 ? (
-                  <p style={{ padding: "24px 0", color: "var(--color-text-light)", textAlign: "center", fontSize: 14 }}>
-                    No drafts yet. Click &ldquo;Run Import Now&rdquo; to check for new sets.
-                  </p>
-                ) : (
-                  <div className={styles.draftsList}>
-                    {drafts.map((draft) => (
-                      <div key={draft.id} className={`${styles.draftCard} ${draft.status !== "pending" ? styles.draftCardDim : ""}`}>
-                        {/* Selected image preview */}
-                        {draft.imageUrl && (
-                          <div className={styles.draftPreviewWrap}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={draft.imageUrl} alt={draft.setName} className={styles.draftPreview} />
-                          </div>
-                        )}
-
-                        {/* Image picker strip */}
-                        {(draft.imageOptions?.length ?? 0) > 1 && (
-                          <div className={styles.draftImageStrip}>
-                            {draft.imageOptions.map((opt, i) => (
-                              <button
-                                key={i}
-                                type="button"
-                                className={`${styles.draftImageOption} ${opt === draft.imageUrl ? styles.draftImageOptionActive : ""}`}
-                                onClick={async () => {
-                                  const res = await fetch("/api/admin/prerelease/drafts", {
-                                    method: "PATCH",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ id: draft.id, imageUrl: opt }),
-                                  });
-                                  if (res.ok) {
-                                    const updated = await res.json();
-                                    setDrafts((prev) => prev.map((d) => d.id === updated.id ? updated : d));
-                                  }
-                                }}
-                                title={`Image ${i + 1}`}
-                              >
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src={opt} alt={`Option ${i + 1}`} className={styles.draftImageOptionImg} />
-                              </button>
-                            ))}
-                          </div>
-                        )}
-
-                        <div className={styles.draftInfo}>
-                          <div className={styles.draftSetName}>{draft.setName}</div>
-                          <div className={styles.draftMeta}>
-                            Pre-release: <strong>{draft.prereleaseDate}</strong>
-                            &nbsp;·&nbsp;Release: {draft.releaseDate}
-                            &nbsp;·&nbsp;Source: {draft.source.toUpperCase()}
-                          </div>
-                          <div className={styles.draftMeta} style={{ marginTop: 2 }}>
-                            Imported: {new Date(draft.createdAt).toLocaleDateString()}
-                            &nbsp;·&nbsp;
-                            <span className={`${styles.draftStatusBadge} ${styles[`draftStatus_${draft.status}`]}`}>
-                              {draft.status}
-                            </span>
-                          </div>
-                        </div>
-                        <div className={styles.draftActions}>
-                          {draft.status === "pending" && (
-                            <>
-                              <button
-                                className="btn btn-primary"
-                                style={{ fontSize: 12 }}
-                                disabled={approvingId === draft.id}
-                                onClick={() => approveDraft(draft)}
-                              >
-                                {approvingId === draft.id ? "Approving…" : "Approve & Go Live"}
-                              </button>
-                              <button
-                                className="btn btn-outline"
-                                style={{ fontSize: 12 }}
-                                onClick={() => rejectDraft(draft)}
-                              >
-                                Reject
-                              </button>
-                            </>
-                          )}
-                          <button
-                            className="btn btn-outline"
-                            style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}
-                            onClick={() => deleteDraft(draft.id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
           </div>
         </div>
       )}
@@ -857,37 +633,11 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
             </div>
 
             <form onSubmit={(e) => e.preventDefault()} className={styles.formGrid}>
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+              <div className={styles.formGroup}>
                 <label className="form-label">Title *</label>
                 <input className="form-input" value={editing.title} onChange={(e) => changeField("title", e.target.value)} placeholder="e.g. Friday Night Commander" />
               </div>
-
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Slug (URL key)</label>
-                <input className="form-input" value={editing.slug} onChange={(e) => changeField("slug", e.target.value)} placeholder="auto-generated from title" />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className="form-label">Format *</label>
-                <select className="form-input" value={editing.format} onChange={(e) => changeField("format", e.target.value as EventFormat)}>
-                  {FORMAT_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
-                </select>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className="form-label">Date *</label>
-                <input type="date" className="form-input" value={editing.date} onChange={(e) => changeField("date", e.target.value)} />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className="form-label">Start Time</label>
-                <input className="form-input" value={editing.time} onChange={(e) => changeField("time", e.target.value)} placeholder="6:00 PM" />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className="form-label">End Time</label>
-                <input className="form-input" value={editing.endTime} onChange={(e) => changeField("endTime", e.target.value)} placeholder="10:00 PM" />
-              </div>
+              <div />
 
               <div className={styles.formGroup}>
                 <label className="form-label">Entry Fee ($)</label>
@@ -898,6 +648,39 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
                 <label className="form-label">Player Limit</label>
                 <input type="number" min={1} className="form-input" value={editing.playerLimit} onChange={(e) => changeField("playerLimit", parseInt(e.target.value) || 32)} />
               </div>
+
+              <div className={styles.formGroup}>
+                <label className="form-label">Date *</label>
+                <input type="date" className="form-input" value={editing.date} onChange={(e) => changeField("date", e.target.value)} />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className="form-label">Time</label>
+                <input className="form-input" value={editing.time} onChange={(e) => changeField("time", e.target.value)} placeholder="6:00 PM" />
+              </div>
+
+              {editing.format !== "Prerelease" && (
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label className="form-label">Slug (URL key)</label>
+                  <input className="form-input" value={editing.slug} onChange={(e) => changeField("slug", e.target.value)} placeholder="auto-generated from title" />
+                </div>
+              )}
+
+              {editing.format !== "Prerelease" && (
+                <div className={styles.formGroup}>
+                  <label className="form-label">Format *</label>
+                  <select className="form-input" value={editing.format} onChange={(e) => changeField("format", e.target.value as EventFormat)}>
+                    {FORMAT_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
+                  </select>
+                </div>
+              )}
+
+              {editing.format !== "Prerelease" && (
+                <div className={styles.formGroup}>
+                  <label className="form-label">End Time</label>
+                  <input className="form-input" value={editing.endTime} onChange={(e) => changeField("endTime", e.target.value)} placeholder="10:00 PM" />
+                </div>
+              )}
 
 
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
@@ -915,15 +698,17 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
                 <input className="form-input" value={editing.imageUrl} onChange={(e) => changeField("imageUrl", e.target.value)} placeholder="https://…" />
               </div>
 
-              <div className={styles.formGroup}>
-                <label className="form-label">Recurring</label>
-                <select className="form-input" value={editing.recurring ?? ""} onChange={(e) => changeField("recurring", e.target.value || undefined)}>
-                  <option value="">None</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="biweekly">Biweekly</option>
-                  <option value="monthly">Monthly</option>
-                </select>
-              </div>
+              {editing.format !== "Prerelease" && (
+                <div className={styles.formGroup}>
+                  <label className="form-label">Recurring</label>
+                  <select className="form-input" value={editing.recurring ?? ""} onChange={(e) => changeField("recurring", e.target.value || undefined)}>
+                    <option value="">None</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="biweekly">Biweekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </div>
+              )}
 
 
               <div className={styles.formGroup}>
@@ -935,120 +720,124 @@ export default function EventsAdminClient({ initialEvents, initialPrerelease }: 
               </div>
 
               {/* ── Custom Questions Editor ── */}
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Custom Registration Questions</label>
-                {(editing.customQuestions ?? []).map((q, idx) => (
-                  <div key={q.id} className={styles.faqItem}>
-                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                      <input
-                        className="form-input"
-                        style={{ flex: 1 }}
-                        value={q.label}
-                        placeholder="Question text"
-                        onChange={(e) => {
-                          const qs = (editing.customQuestions ?? []).map((item, i) =>
-                            i === idx ? { ...item, label: e.target.value } : item
-                          );
-                          changeField("customQuestions", qs);
-                        }}
-                      />
-                      <label style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, whiteSpace: "nowrap" }}>
+              {editing.format !== "Prerelease" && (
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label className="form-label">Custom Registration Questions</label>
+                  {(editing.customQuestions ?? []).map((q, idx) => (
+                    <div key={q.id} className={styles.faqItem}>
+                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                         <input
-                          type="checkbox"
-                          checked={q.required}
+                          className="form-input"
+                          style={{ flex: 1 }}
+                          value={q.label}
+                          placeholder="Question text"
                           onChange={(e) => {
                             const qs = (editing.customQuestions ?? []).map((item, i) =>
-                              i === idx ? { ...item, required: e.target.checked } : item
+                              i === idx ? { ...item, label: e.target.value } : item
                             );
                             changeField("customQuestions", qs);
                           }}
                         />
-                        Required
-                      </label>
-                      <button
-                        type="button"
-                        className={styles.faqRemoveBtn}
-                        onClick={() => {
-                          const qs = (editing.customQuestions ?? []).filter((_, i) => i !== idx);
-                          changeField("customQuestions", qs);
-                        }}
-                      >
-                        ✕
-                      </button>
+                        <label style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, whiteSpace: "nowrap" }}>
+                          <input
+                            type="checkbox"
+                            checked={q.required}
+                            onChange={(e) => {
+                              const qs = (editing.customQuestions ?? []).map((item, i) =>
+                                i === idx ? { ...item, required: e.target.checked } : item
+                              );
+                              changeField("customQuestions", qs);
+                            }}
+                          />
+                          Required
+                        </label>
+                        <button
+                          type="button"
+                          className={styles.faqRemoveBtn}
+                          onClick={() => {
+                            const qs = (editing.customQuestions ?? []).filter((_, i) => i !== idx);
+                            changeField("customQuestions", qs);
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  style={{ marginTop: 8, fontSize: 12 }}
-                  onClick={() => {
-                    const newQ: CustomQuestion = { id: crypto.randomUUID(), label: "", required: false };
-                    changeField("customQuestions", [...(editing.customQuestions ?? []), newQ]);
-                  }}
-                >
-                  + Add Question
-                </button>
-              </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="btn btn-outline"
+                    style={{ marginTop: 8, fontSize: 12 }}
+                    onClick={() => {
+                      const newQ: CustomQuestion = { id: crypto.randomUUID(), label: "", required: false };
+                      changeField("customQuestions", [...(editing.customQuestions ?? []), newQ]);
+                    }}
+                  >
+                    + Add Question
+                  </button>
+                </div>
+              )}
 
               {/* ── Add-Ons Editor ── */}
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Add-Ons (optional paid extras)</label>
-                {(editing.addOns ?? []).map((addon, idx) => (
-                  <div key={addon.id} className={styles.faqItem}>
-                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                      <input
-                        className="form-input"
-                        style={{ flex: 1 }}
-                        value={addon.label}
-                        placeholder="Add-on label (e.g. Extra Pack)"
-                        onChange={(e) => {
-                          const addons = (editing.addOns ?? []).map((a, i) =>
-                            i === idx ? { ...a, label: e.target.value } : a
-                          );
-                          changeField("addOns", addons);
-                        }}
-                      />
-                      <input
-                        className="form-input"
-                        style={{ width: 90 }}
-                        type="number"
-                        min={0}
-                        step={0.01}
-                        placeholder="Price"
-                        value={addon.price}
-                        onChange={(e) => {
-                          const addons = (editing.addOns ?? []).map((a, i) =>
-                            i === idx ? { ...a, price: parseFloat(e.target.value) || 0 } : a
-                          );
-                          changeField("addOns", addons);
-                        }}
-                      />
-                      <button
-                        type="button"
-                        className={styles.faqRemoveBtn}
-                        onClick={() => {
-                          const addons = (editing.addOns ?? []).filter((_, i) => i !== idx);
-                          changeField("addOns", addons);
-                        }}
-                      >
-                        ✕
-                      </button>
+              {editing.format !== "Prerelease" && (
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label className="form-label">Add-Ons (optional paid extras)</label>
+                  {(editing.addOns ?? []).map((addon, idx) => (
+                    <div key={addon.id} className={styles.faqItem}>
+                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                        <input
+                          className="form-input"
+                          style={{ flex: 1 }}
+                          value={addon.label}
+                          placeholder="Add-on label (e.g. Extra Pack)"
+                          onChange={(e) => {
+                            const addons = (editing.addOns ?? []).map((a, i) =>
+                              i === idx ? { ...a, label: e.target.value } : a
+                            );
+                            changeField("addOns", addons);
+                          }}
+                        />
+                        <input
+                          className="form-input"
+                          style={{ width: 90 }}
+                          type="number"
+                          min={0}
+                          step={0.01}
+                          placeholder="Price"
+                          value={addon.price}
+                          onChange={(e) => {
+                            const addons = (editing.addOns ?? []).map((a, i) =>
+                              i === idx ? { ...a, price: parseFloat(e.target.value) || 0 } : a
+                            );
+                            changeField("addOns", addons);
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className={styles.faqRemoveBtn}
+                          onClick={() => {
+                            const addons = (editing.addOns ?? []).filter((_, i) => i !== idx);
+                            changeField("addOns", addons);
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  style={{ marginTop: 8, fontSize: 12 }}
-                  onClick={() => {
-                    const newAddon: EventAddOn = { id: crypto.randomUUID(), label: "", price: 0 };
-                    changeField("addOns", [...(editing.addOns ?? []), newAddon]);
-                  }}
-                >
-                  + Add Add-On
-                </button>
-              </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="btn btn-outline"
+                    style={{ marginTop: 8, fontSize: 12 }}
+                    onClick={() => {
+                      const newAddon: EventAddOn = { id: crypto.randomUUID(), label: "", price: 0 };
+                      changeField("addOns", [...(editing.addOns ?? []), newAddon]);
+                    }}
+                  >
+                    + Add Add-On
+                  </button>
+                </div>
+              )}
 
               {!isNew && (
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>

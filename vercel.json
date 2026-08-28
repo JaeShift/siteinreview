@@ -1,8 +1,1 @@
-{
-  "crons": [
-    {
-      "path": "/api/cron/prerelease-import",
-      "schedule": "0 9 * * 1"
-    }
-  ]
-}
+{}

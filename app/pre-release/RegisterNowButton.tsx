@@ -40,7 +40,7 @@ export default function RegisterNowButton({ event, fallbackHref }: Props) {
       </button>
 
       <Modal isOpen={open} onClose={() => setOpen(false)}>
-        <RegistrationForm event={event} onSuccess={() => setOpen(false)} />
+        <RegistrationForm event={event} />
       </Modal>
     </>
   );

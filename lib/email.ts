@@ -92,47 +92,98 @@ export async function sendEventConfirmationEmail(
       ? `Waitlist Confirmation — ${event.title}`
       : `Registration Confirmed — ${event.title}`;
 
+  const isWaitlisted = registration.status === "waitlisted";
+  const eventUrl = event.format === "Prerelease"
+    ? `${SITE_URL}/pre-release`
+    : `${SITE_URL}/events/${event.slug}`;
+
   const { error } = await resend.emails.send({
     from: `Kitsune Brewing Co. <${fromEmail}>`,
     to: [registration.email],
     subject,
     html: `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-        <div style="background: #0d0d0d; padding: 24px 32px; margin-bottom: 0;">
-          <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: 0.05em;">KITSUNE BREWING CO.</h1>
-          <p style="color: ${BRAND_COLOR}; margin: 4px 0 0; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;">Event Registration</p>
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /></head>
+<body style="margin:0;padding:0;background:#f2f2f0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f2f2f0;padding:40px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+      <!-- Header -->
+      <tr><td style="background:#0d0d0d;padding:32px 40px 28px;">
+        <p style="margin:0 0 14px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:${BRAND_COLOR};">Kitsune Brewing Co.</p>
+        <h1 style="margin:0;font-size:26px;font-weight:700;color:#ffffff;letter-spacing:0.02em;line-height:1.2;">
+          ${isWaitlisted ? "You're on the waitlist." : "You're registered."}
+        </h1>
+        <p style="margin:10px 0 0;font-size:15px;color:rgba(255,255,255,0.55);line-height:1.5;">
+          Hi ${registration.firstName} — ${isWaitlisted ? "your waitlist spot has been recorded for" : "your spot is confirmed for"} <strong style="color:rgba(255,255,255,0.85);">${event.title}</strong>.
+        </p>
+      </td></tr>
+
+      <!-- Orange rule -->
+      <tr><td style="background:${BRAND_COLOR};height:3px;font-size:0;line-height:0;">&nbsp;</td></tr>
+
+      <!-- Body -->
+      <tr><td style="background:#ffffff;padding:36px 40px 32px;">
+
+        <!-- Event detail rows -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+          <tr>
+            <td style="padding:11px 0;border-bottom:1px solid #efefef;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#aaa;width:130px;vertical-align:top;">Event</td>
+            <td style="padding:11px 0;border-bottom:1px solid #efefef;font-size:15px;color:#111;font-weight:600;">${event.title}</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 0;border-bottom:1px solid #efefef;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#aaa;vertical-align:top;">Date</td>
+            <td style="padding:11px 0;border-bottom:1px solid #efefef;font-size:15px;color:#111;">${formatDate(event.date)}</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 0;border-bottom:1px solid #efefef;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#aaa;vertical-align:top;">Time</td>
+            <td style="padding:11px 0;border-bottom:1px solid #efefef;font-size:15px;color:#111;">${event.time}${event.endTime ? ` – ${event.endTime}` : ""}</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 0;border-bottom:1px solid #efefef;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#aaa;vertical-align:top;">Location</td>
+            <td style="padding:11px 0;border-bottom:1px solid #efefef;font-size:15px;color:#111;line-height:1.5;">${event.location}</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 0;border-bottom:1px solid #efefef;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#aaa;vertical-align:top;">Entry</td>
+            <td style="padding:11px 0;border-bottom:1px solid #efefef;font-size:15px;color:#111;">${event.entryFee === 0 ? "Free" : `$${event.entryFee}`}</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#aaa;vertical-align:top;">Status</td>
+            <td style="padding:11px 0;font-size:15px;color:${isWaitlisted ? "#b45309" : "#15803d"};font-weight:600;">${isWaitlisted ? "Waitlisted" : "Confirmed"}</td>
+          </tr>
+        </table>
+
+        <!-- Note -->
+        <p style="margin:28px 0 0;font-size:14px;color:#777;line-height:1.6;">
+          ${isWaitlisted
+            ? "You're on the waitlist. We'll reach out directly if a spot opens up."
+            : "We look forward to seeing you. No need to bring anything — just show up ready to play."}
+        </p>
+
+        <!-- CTA -->
+        <div style="margin-top:28px;">
+          <a href="${eventUrl}" style="display:inline-block;background:#0d0d0d;color:#ffffff;padding:13px 28px;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;">View Event Details</a>
         </div>
 
-        <div style="background: #fff; padding: 32px; border: 1px solid #e5e5e5; border-top: none;">
-          <h2 style="font-size: 20px; margin: 0 0 8px;">${statusLabel}: ${event.title}</h2>
-          <p style="color: #666; margin: 0 0 24px;">Hi ${registration.firstName}, your ${registration.status === "waitlisted" ? "waitlist spot has been recorded" : "registration is confirmed"}.</p>
+      </td></tr>
 
-          <div style="background: #f9f9f9; border-left: 4px solid ${BRAND_COLOR}; padding: 16px 20px; margin-bottom: 24px;">
-            <p style="margin: 0 0 8px;"><strong>Confirmation #:</strong> ${registration.id.toUpperCase()}</p>
-            <p style="margin: 0 0 8px;"><strong>Event:</strong> ${event.title}</p>
-            <p style="margin: 0 0 8px;"><strong>Date:</strong> ${formatDate(event.date)}</p>
-            <p style="margin: 0 0 8px;"><strong>Time:</strong> ${event.time} – ${event.endTime}</p>
-            <p style="margin: 0 0 8px;"><strong>Format:</strong> ${event.format}</p>
-            <p style="margin: 0 0 8px;"><strong>Location:</strong> ${event.location}</p>
-            <p style="margin: 0;"><strong>Entry:</strong> ${event.entryFee === 0 ? "FREE" : `$${event.entryFee}`}</p>
-          </div>
+      <!-- Footer -->
+      <tr><td style="background:#0d0d0d;padding:24px 40px;">
+        <p style="margin:0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);">Kitsune Brewing Co. &nbsp;·&nbsp; 3321 E Bell Rd Suite B-5 &nbsp;·&nbsp; Phoenix, AZ 85032</p>
+        <p style="margin:8px 0 0;font-size:12px;color:rgba(255,255,255,0.3);">
+          <a href="mailto:Tyler@KitsuneBeerCo.com" style="color:rgba(255,255,255,0.35);text-decoration:none;">Tyler@KitsuneBeerCo.com</a>
+          &nbsp;·&nbsp;
+          <a href="tel:+16022458593" style="color:rgba(255,255,255,0.35);text-decoration:none;">(602) 245-8593</a>
+        </p>
+      </td></tr>
 
-          ${
-            registration.status === "waitlisted"
-              ? `<p style="color: #666; font-size: 14px;">You are on the waitlist. We will notify you if a spot opens up.</p>`
-              : `<p style="color: #666; font-size: 14px;">Please bring this confirmation number to the event. See you there!</p>`
-          }
-
-          <div style="margin-top: 24px; text-align: center;">
-            <a href="${SITE_URL}/events/${event.slug}" style="display: inline-block; background: ${BRAND_COLOR}; color: #fff; padding: 12px 28px; text-decoration: none; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; font-size: 13px;">View Event Details</a>
-          </div>
-        </div>
-
-        <div style="padding: 16px 32px; background: #f5f5f5; font-size: 12px; color: #999; text-align: center;">
-          <p style="margin: 0;">Kitsune Brewing Co. · 3321 E Bell Rd Suite B-5 · Phoenix, AZ 85032</p>
-          <p style="margin: 4px 0 0;"><a href="mailto:Tyler@KitsuneBeerCo.com" style="color: #999;">Tyler@KitsuneBeerCo.com</a> · <a href="tel:+16022458593" style="color: #999;">(602) 245-8593</a></p>
-        </div>
-      </div>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
     `,
   });
 

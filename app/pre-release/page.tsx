@@ -4,6 +4,7 @@ import { getEventsStore } from "@/lib/store";
 import FaqAccordion from "./FaqAccordion";
 import RegisterNowButton from "./RegisterNowButton";
 import styles from "./prerelease.module.css";
+import holdingStyles from "./holding.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -16,33 +17,62 @@ function formatDate(dateStr: string) {
   });
 }
 
+function hasAutoHoldingExpired(date: string, time: string): boolean {
+  const match = time.trim().match(/^(\d{1,2}):(\d{2})(?:\s*([ap]m))?$/i);
+  if (!date || !match) return false;
+
+  let hour = Number(match[1]);
+  const minute = Number(match[2]);
+  const period = match[3]?.toLowerCase();
+  if (period === "pm" && hour !== 12) hour += 12;
+  if (period === "am" && hour === 12) hour = 0;
+  if (hour > 23 || minute > 59) return false;
+
+  // Phoenix stays on Mountain Standard Time (UTC-7) year-round.
+  const eventTime = new Date(`${date}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00-07:00`);
+  return Date.now() >= eventTime.getTime() + 72 * 60 * 60 * 1000;
+}
+
 export default function PreReleasePage() {
-  const today = new Date().toISOString().split("T")[0];
   const events = getEventsStore();
 
-  // Find the next upcoming Prerelease event
+  // Show the active prerelease unless its optional 72-hour holding timer has elapsed.
   const event = events
-    .filter((e) => e.format === "Prerelease" && e.date >= today)
-    .sort((a, b) => a.date.localeCompare(b.date))[0];
+    .filter((e) => e.format === "Prerelease" && !e.hidden)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .find((e) => e.autoHoldAfter72Hours === false || !hasAutoHoldingExpired(e.date, e.time));
 
-  // Show the holding page when no upcoming prerelease is scheduled
+  // No active prerelease — show holding page
   if (!event) {
     return (
-      <div className={styles.holdingPage}>
-        <span className={styles.holdingEyebrow}>Kitsune Brewing Co. · Magic: The Gathering</span>
-        <h1 className={styles.holdingTitle}>
-          The Next Pre-Release<br />
-          <em>Is Brewing.</em>
-        </h1>
-        <div className={styles.holdingDivider} />
-        <p className={styles.holdingBody}>
-          New Magic: The Gathering sets—and the events to celebrate them—are on the way.
-          Check back soon for upcoming prerelease dates, details, and registration.
-        </p>
-        <Link href="/mtg-and-more" className={styles.holdingBtn}>
-          Explore MTG &amp; More
-        </Link>
-      </div>
+      <>
+        <div className={holdingStyles.holdingPage}>
+          <div className={holdingStyles.holdingContent}>
+            <span className={holdingStyles.holdingEyebrow}>Kitsune Brewing Co. · Magic: The Gathering</span>
+            <h1 className={holdingStyles.holdingTitle}>
+              The Next Pre-Release Event<br />
+              <em>Is Brewing.</em>
+            </h1>
+            <div className={holdingStyles.holdingDivider} />
+            <p className={holdingStyles.holdingText}>
+              New Magic: The Gathering sets—and the events to celebrate them—are on the way.
+              Check back soon for upcoming prerelease dates, details, and registration.
+            </p>
+            <Link href="/mtg-and-more" className={holdingStyles.holdingBtn}>Explore MTG &amp; More</Link>
+          </div>
+        </div>
+        <footer className={styles.footer}>
+          <p className={styles.footerName}>KITSUNE BREWING COMPANY</p>
+          <div className={styles.footerLinks}>
+            <a href="tel:+16022458593" className={styles.footerLink}>(602) 245-8593</a>
+            <a href="https://instagram.com/kitsunebrewingco" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>INSTAGRAM</a>
+            <a href="https://www.facebook.com/KitsuneBrewCo" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>FACEBOOK</a>
+          </div>
+          <p className={styles.footerCopy}>
+            &copy; {new Date().getFullYear()} KITSUNE BREWING COMPANY. 3321 E BELL RD SUITE B-5 PHOENIX, AZ 85032
+          </p>
+        </footer>
+      </>
     );
   }
 
@@ -50,7 +80,7 @@ export default function PreReleasePage() {
   const imageUrl = event.imageUrl;
   const price = event.entryFee;
   const dateLabel = formatDate(event.date);
-  const description = event.shortDescription;
+  const description = event.shortDescription ?? "";
   const eventSlug = event.slug;
 
   return (
@@ -71,7 +101,7 @@ export default function PreReleasePage() {
           </div>
 
           <div className={styles.heroText}>
-            <span className={styles.featuredLabel}>FEATURED EVENT</span>
+            <span className={styles.featuredLabel}>PRERELEASE EVENT</span>
             <h1 className={styles.heroTitle}>{title.toUpperCase()}</h1>
 
             {dateLabel && (
@@ -84,18 +114,18 @@ export default function PreReleasePage() {
               <div className={styles.priceRow}>
                 <div>
                   <span className={styles.admissionLabel}>ADMISSION</span>
-                  <span className={styles.price}>${price % 1 === 0 ? price : price.toFixed(2)}</span>
+                  <span className={styles.price}>{price === 0 ? "FREE" : `$${price % 1 === 0 ? price : price.toFixed(2)}`}</span>
                 </div>
                 <span className={styles.perPlayer}>PER PLAYER</span>
               </div>
               <ul className={styles.includes}>
                 <li className={styles.includesItem}>
                   <span className={styles.check}>✓</span>
-                  1x {title} Kit
+                  1x {title} Prerelease Kit
                 </li>
                 <li className={styles.includesItem}>
                   <span className={styles.check}>✓</span>
-                  Entry into Prerelease Event
+                  Entry into Event
                 </li>
               </ul>
             </div>
@@ -111,14 +141,14 @@ export default function PreReleasePage() {
       {/* ── What is a Prerelease ── */}
       <section className={styles.explainSection}>
         <div className={styles.explainInner}>
-          <span className={styles.sectionLabel}>01 / THE EXPERIENCE</span>
+          <span className={styles.sectionLabel}>01 / PRE-RELEASE</span>
           <h2 className={styles.explainTitle}>{title.toUpperCase()}</h2>
-          <p className={styles.explainBody}>{description}</p>
+          <p className={styles.explainBody} dangerouslySetInnerHTML={{ __html: description }} />
 
           <div className={styles.explainImage}>
             <Image
-              src="/images/singles-cards.png"
-              alt="Magic cards spread across a gaming table"
+              src={event.bannerImageUrl || "/images/singles-cards.png"}
+              alt={`${title} banner`}
               fill
               className={styles.explainImg}
               sizes="100vw"
@@ -127,21 +157,21 @@ export default function PreReleasePage() {
 
           <div className={styles.stepsGrid}>
             <div className={styles.stepCard}>
-              <h3 className={styles.stepTitle}>1. BUILD</h3>
+              <h3 className={styles.stepTitle}>1. OPEN</h3>
               <p className={styles.stepBody}>
-                Open your kit and build a 40-card deck. Basic lands are provided by the shop.
+                Receive your Pre-release Kit and discover the newest set before its official release.
               </p>
             </div>
             <div className={styles.stepCard}>
-              <h3 className={styles.stepTitle}>2. BATTLE</h3>
+              <h3 className={styles.stepTitle}>2. BUILD</h3>
               <p className={styles.stepBody}>
-                Play rounds of Swiss-style pairings. Win or lose, you keep everything you open.
+                Build a 40-card sealed deck using the cards from your Pre-release Kit.
               </p>
             </div>
             <div className={styles.stepCard}>
-              <h3 className={styles.stepTitle}>3. WIN</h3>
+              <h3 className={styles.stepTitle}>3. PLAY</h3>
               <p className={styles.stepBody}>
-                Prizes are awarded based on match wins. Everyone walks away with extra value.
+                Try out new cards and strategies against other players before the set officially releases.
               </p>
             </div>
           </div>
@@ -154,7 +184,7 @@ export default function PreReleasePage() {
           <div className={styles.faqLeft}>
             <h2 className={styles.faqTitle}>FREQUENTLY ASKED QUESTIONS</h2>
             <p className={styles.faqSub}>
-              Everything you need to know before your first event at Kitsune.
+              Everything you need to know before your Prerelease event at Kitsune.
             </p>
             <div className={styles.faqAccent} />
           </div>

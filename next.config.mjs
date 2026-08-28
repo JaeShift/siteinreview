@@ -26,6 +26,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "api.scryfall.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.ctfassets.net",
+      },
     ],
   },
 };

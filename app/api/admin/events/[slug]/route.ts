@@ -12,6 +12,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
   revalidatePath("/events");
   revalidatePath(`/events/${params.slug}`);
   revalidatePath("/calendar");
+  revalidatePath("/pre-release");
   return NextResponse.json(events);
 }
 

@@ -23,5 +23,6 @@ export async function POST(request: NextRequest) {
   revalidatePath("/events");
   revalidatePath("/calendar");
   revalidatePath("/admin/events");
+  revalidatePath("/pre-release");
   return NextResponse.json(events, { status: 201 });
 }

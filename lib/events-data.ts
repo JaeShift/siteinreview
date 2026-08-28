@@ -38,6 +38,7 @@ export interface MtgEvent {
   playerLimit: number;
   registeredCount: number;
   imageUrl: string;
+  bannerImageUrl?: string;
   description: string;
   shortDescription: string;
   location: string;
@@ -49,6 +50,8 @@ export interface MtgEvent {
   registrationOpen?: boolean;
   customQuestions?: CustomQuestion[];
   addOns?: EventAddOn[];
+  hidden?: boolean;
+  autoHoldAfter72Hours?: boolean;
 }
 
 export interface EventRegistration {
