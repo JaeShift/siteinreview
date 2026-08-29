@@ -106,6 +106,60 @@
   border-left: 1px solid rgba(24, 26, 27, 0.18);
 }
 
+.headerArcane {
+  background:
+    radial-gradient(circle at 14% 0, rgba(23, 111, 159, 0.2), transparent 25%),
+    radial-gradient(circle at 88% 100%, rgba(99, 59, 120, 0.22), transparent 28%),
+    #0d1115;
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(90deg, #b88a36, #176f9f, #633b78, #9e3422, #28714d) 1;
+}
+
+.headerArcane .headerLogo,
+.headerArcane .headerLogo:link,
+.headerArcane .headerLogo:visited,
+.headerArcane .navLink,
+.headerArcane .navLink:link,
+.headerArcane .navLink:visited {
+  color: #f3ede3;
+}
+
+.headerArcane .navLink:hover,
+.headerArcane .navLinkActive,
+.headerArcane .navLinkActive:link,
+.headerArcane .navLinkActive:visited {
+  color: #8db9cf;
+}
+
+.headerArcane .navLink::after {
+  background: #bfa263;
+}
+
+.headerArcane .cartLink {
+  border-left-color: rgba(243, 237, 227, 0.18);
+}
+
+.headerArcane .hamburgerBar {
+  background: #f3ede3;
+}
+
+.headerArcane .mobileNav {
+  background: #111519;
+  border-top-color: rgba(243, 237, 227, 0.14);
+}
+
+.headerArcane .mobileNavLink,
+.headerArcane .mobileNavLink:link,
+.headerArcane .mobileNavLink:visited {
+  color: #f3ede3;
+  border-bottom-color: rgba(243, 237, 227, 0.12);
+}
+
+.headerArcane .mobileNavLink:hover,
+.headerArcane .mobileNavLinkActive {
+  color: #8db9cf;
+}
+
 .headerInner {
   display: flex;
   align-items: center;

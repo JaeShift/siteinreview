@@ -52,3 +52,24 @@
 .clearBtn:hover {
   color: #c84d1d;
 }
+
+:global([data-route^="/card-shop"]) .searchBar {
+  background: rgba(243, 237, 227, 0.06);
+  border-bottom-color: rgba(184, 138, 54, 0.72);
+}
+
+:global([data-route^="/card-shop"]) .searchInput {
+  color: #f3ede3;
+}
+
+:global([data-route^="/card-shop"]) .searchInput::placeholder {
+  color: rgba(243, 237, 227, 0.48);
+}
+
+:global([data-route^="/card-shop"]) .searchIcon {
+  color: #bfa263;
+}
+
+:global([data-route^="/card-shop"]) .clearBtn {
+  color: rgba(243, 237, 227, 0.6);
+}

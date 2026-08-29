@@ -48,6 +48,13 @@ export default function PreReleasePage() {
       <>
         <div className={holdingStyles.holdingPage}>
           <div className={holdingStyles.holdingContent}>
+            <div className={holdingStyles.manaConstellation} aria-hidden="true">
+              <i className="ms ms-w ms-cost" />
+              <i className="ms ms-u ms-cost" />
+              <i className="ms ms-b ms-cost" />
+              <i className="ms ms-r ms-cost" />
+              <i className="ms ms-g ms-cost" />
+            </div>
             <span className={holdingStyles.holdingEyebrow}>Kitsune Brewing Co. · Magic: The Gathering</span>
             <h1 className={holdingStyles.holdingTitle}>
               The Next Pre-Release Event<br />

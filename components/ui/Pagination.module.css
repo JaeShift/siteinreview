@@ -64,6 +64,28 @@
   font-size: 14px;
 }
 
+:global([data-route^="/card-shop"]) .btn,
+:global([data-route^="/card-shop"]) .ellipsis {
+  color: #f3ede3;
+  background: rgba(243, 237, 227, 0.05);
+  border-color: rgba(243, 237, 227, 0.3);
+}
+
+:global([data-route^="/card-shop"]) .btn:hover:not(:disabled):not(.active) {
+  background: #176f9f;
+  border-color: #176f9f;
+}
+
+:global([data-route^="/card-shop"]) .active {
+  color: #fbf8f2;
+  background: #633b78;
+  border-color: #76508a;
+}
+
+:global([data-route^="/card-shop"]) .btn:last-child {
+  border-right-color: rgba(243, 237, 227, 0.3);
+}
+
 @media (max-width: 480px) {
   .pagination {
     gap: 0;

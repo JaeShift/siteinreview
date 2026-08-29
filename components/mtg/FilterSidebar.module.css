@@ -362,3 +362,57 @@
 .clearBtn:hover {
   background: #c84d1d;
 }
+
+/* Arcane catalog treatment — scoped to both card-shop routes. */
+:global([data-route^="/card-shop"]) .sidebar {
+  color: #f3ede3;
+}
+
+:global([data-route^="/card-shop"]) .sidebarHeader {
+  border-bottom-color: rgba(184, 138, 54, 0.65);
+}
+
+:global([data-route^="/card-shop"]) .sidebarTitle,
+:global([data-route^="/card-shop"]) .groupTitle,
+:global([data-route^="/card-shop"]) .checkboxText {
+  color: #f3ede3;
+}
+
+:global([data-route^="/card-shop"]) .resultCount,
+:global([data-route^="/card-shop"]) .groupChevron {
+  color: #bfa263;
+}
+
+:global([data-route^="/card-shop"]) .group {
+  border-bottom-color: rgba(243, 237, 227, 0.14);
+}
+
+:global([data-route^="/card-shop"]) .textInput,
+:global([data-route^="/card-shop"]) .select,
+:global([data-route^="/card-shop"]) .ptInput {
+  color: #f3ede3;
+  background: rgba(243, 237, 227, 0.06);
+  border-color: rgba(243, 237, 227, 0.3);
+}
+
+:global([data-route^="/card-shop"]) .select option {
+  color: #f3ede3;
+  background: #111519;
+}
+
+:global([data-route^="/card-shop"]) .rarityBtn {
+  color: #f3ede3;
+  background: rgba(243, 237, 227, 0.05);
+  border-color: rgba(243, 237, 227, 0.24);
+}
+
+:global([data-route^="/card-shop"]) .rarityBtnActive {
+  color: #fbf8f2;
+  background: #633b78;
+  border-color: #9b72ae;
+}
+
+:global([data-route^="/card-shop"]) .clearBtn {
+  color: #f3ede3;
+  background: #633b78;
+}

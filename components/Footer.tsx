@@ -16,12 +16,14 @@ const hours = [
 export default function Footer({
   showHours = true,
   editorial = true,
+  arcane = false,
 }: {
   showHours?: boolean;
   editorial?: boolean;
+  arcane?: boolean;
 }) {
   return (
-    <footer className={`${styles.footer} ${editorial ? styles.footerHome : ""}`}>
+    <footer className={`${styles.footer} ${editorial ? styles.footerHome : ""} ${arcane ? styles.footerArcane : ""}`}>
       <div className={`${styles.footerInner} ${!showHours ? styles.footerInnerCompact : ""} container`}>
         <div className={styles.footerLogoCol}>
           <Link href="/" aria-label="Kitsune Brewing Co — Home">

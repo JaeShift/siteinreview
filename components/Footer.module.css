@@ -268,6 +268,78 @@
   color: #c84d1d;
 }
 
+.footerArcane {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(23, 111, 159, 0.2), transparent 28%),
+    radial-gradient(circle at 88% 76%, rgba(99, 59, 120, 0.24), transparent 30%),
+    #0d1115;
+  color: #f3ede3;
+  border-top: 0;
+}
+
+.footerArcane::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #b88a36, #176f9f, #633b78, #9e3422, #28714d);
+}
+
+.footerArcane .footerWordmark {
+  color: #f3ede3;
+  text-shadow: 0 0 28px rgba(23, 111, 159, 0.2);
+}
+
+.footerArcane .footerTagline,
+.footerArcane .footerAddress,
+.footerArcane .footerLink,
+.footerArcane .footerLink:link,
+.footerArcane .footerLink:visited,
+.footerArcane .footerNavLink,
+.footerArcane .footerNavLink:link,
+.footerArcane .footerNavLink:visited,
+.footerArcane .footerHoursDay {
+  color: rgba(243, 237, 227, 0.7);
+}
+
+.footerArcane .footerHeading {
+  color: #bfa263;
+  border-bottom-color: rgba(191, 162, 99, 0.55);
+}
+
+.footerArcane .footerHoursTime {
+  color: #f3ede3;
+}
+
+.footerArcane .footerHoursTimeClosed {
+  color: rgba(243, 237, 227, 0.38);
+}
+
+.footerArcane .footerSocial {
+  color: #f3ede3;
+}
+
+.footerArcane .footerLink:hover,
+.footerArcane .footerNavLink:hover,
+.footerArcane .adminLink:hover {
+  color: #6ca7c4;
+}
+
+.footerArcane .footerBottom {
+  border-top-color: rgba(243, 237, 227, 0.14);
+}
+
+.footerArcane .footerBottomInner,
+.footerArcane .adminLink,
+.footerArcane .adminLink:link,
+.footerArcane .adminLink:visited {
+  color: rgba(243, 237, 227, 0.42);
+}
+
 @media (max-width: 900px) {
   .footerInner {
     grid-template-columns: 1fr 1fr;

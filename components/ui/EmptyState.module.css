@@ -36,3 +36,22 @@
 .action {
   margin-top: 8px;
 }
+
+:global([data-route^="/card-shop"]) .emptyState {
+  background: rgba(243, 237, 227, 0.05);
+  border-color: rgba(243, 237, 227, 0.24);
+  box-shadow: 8px 8px 0 #633b78;
+}
+
+:global([data-route^="/card-shop"]) .title {
+  color: #f3ede3;
+}
+
+:global([data-route^="/card-shop"]) .message {
+  color: rgba(243, 237, 227, 0.65);
+}
+
+:global([data-route^="/card-shop"]) .icon,
+:global([data-route^="/card-shop"]) .defaultIcon {
+  color: #bfa263;
+}

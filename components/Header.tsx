@@ -39,9 +39,18 @@ export default function Header() {
   }, [menuOpen]);
 
   const isHolding = pathname === "/pre-release";
+  const isArcane =
+    pathname === "/mtg-and-more" ||
+    pathname.startsWith("/mtg-and-more/") ||
+    pathname === "/card-shop" ||
+    pathname.startsWith("/card-shop/") ||
+    pathname === "/card-shop-singles" ||
+    pathname.startsWith("/card-shop-singles/") ||
+    pathname === "/pre-release" ||
+    pathname.startsWith("/pre-release/");
 
   return (
-    <header className={`${styles.header} ${styles.headerHome} ${isHolding ? styles.headerHolding : ""}`}>
+    <header className={`${styles.header} ${styles.headerHome} ${isHolding ? styles.headerHolding : ""} ${isArcane ? styles.headerArcane : ""}`}>
       <div className={styles.headerInner}>
         <Link href="/" className={styles.headerLogo} aria-label="Kitsune Brewing Co — Home">
           <span className={styles.homeWordmark}>Kitsune Brewing Co.</span>

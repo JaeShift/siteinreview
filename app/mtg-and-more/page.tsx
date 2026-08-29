@@ -25,6 +25,7 @@ const bentoCards = [
     img: "/images/uploads/beer and magic.png",
     bgPosition: "70% center",
     bgSize: "110%",
+    tone: "Blue",
   },
   {
     title: "PRERELEASE",
@@ -35,6 +36,7 @@ const bentoCards = [
     colSpan: 4,
     height: 400,
     img: "/images/prerelease%20test.jpg",
+    tone: "Red",
   },
   {
     title: "MTG EVENTS",
@@ -46,6 +48,7 @@ const bentoCards = [
     height: 350,
     img: "/images/uploads/upclose die.png",
     bgSize: "95%",
+    tone: "Black",
   },
   {
     title: "COMMANDER NIGHTS",
@@ -56,6 +59,7 @@ const bentoCards = [
     colSpan: 4,
     height: 350,
     img: "/images/commander.jpg",
+    tone: "Green",
   },
   {
     title: "SINGLES",
@@ -66,8 +70,11 @@ const bentoCards = [
     colSpan: 4,
     height: 350,
     img: "/images/singles-cards.png",
+    tone: "White",
   },
 ];
+
+const manaSymbols = ["w", "u", "b", "r", "g"];
 
 const PRIVATE_EVENTS_IMG =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuD2S4cZWOhUY7thXa8sfFOpf_xXQsMa3JSBpwqevlwcsN0ihIdO-MmCGbD-SbjKIDzqrNIQMYjS5jW4oDByWJFUWhDGjRd-FC66uEH6zAAz5jDm8eTmuZ-hjZ63A71EjLMy3eYHjdWpG5YymT7AOpo41iH7zglY1bqKt_6mHsyiYMLFvqahvfBFBo9JvqACtZvUDyver6BP5twg1snECkltllWmmgG_NlvsRR8MxzrMZOXmfb7nDEc";
@@ -94,6 +101,11 @@ export default function MtgPage() {
         <div className={styles.heroBg} style={{ backgroundImage: `url('${HERO_IMG}')` }} />
         <div className={styles.heroVignette} />
         <div className={styles.heroContent}>
+          <div className={styles.manaConstellation} aria-hidden="true">
+            {manaSymbols.map((symbol) => (
+              <i key={symbol} className={`ms ms-${symbol} ms-cost ${styles.manaGlyph}`} />
+            ))}
+          </div>
           <h1 className={styles.heroTitle}>MTG &amp; MORE</h1>
           <p className={styles.heroSubtitle}>
             Magic events, sealed product, singles, prereleases, Commander nights, and private play at Kitsune.
@@ -104,6 +116,11 @@ export default function MtgPage() {
       {/* ── Intro ── */}
       <section className={styles.intro}>
         <div className={styles.introInner}>
+          <div className={styles.arcaneMark} aria-hidden="true">
+            <span className={styles.arcaneRing}>
+              <i className="ms ms-planeswalker" />
+            </span>
+          </div>
           <span className={styles.introLabel}>Phoenix&apos;s Premier MTG Hub</span>
           <h2 className={styles.introHeading}>Where Craft Beer Meets the Multiverse</h2>
           <p className={styles.introBody}>
@@ -123,7 +140,7 @@ export default function MtgPage() {
               <Link
                 key={card.title}
                 href={card.href}
-                className={styles.bentoCard}
+                className={`${styles.bentoCard} ${styles[`tone${card.tone}`]}`}
                 style={{
                   gridColumn: `span ${card.colSpan}`,
                   height: `${card.height}px`,
@@ -180,8 +197,12 @@ export default function MtgPage() {
               <p style={{ color: "var(--color-muted)", padding: "24px 0", fontSize: 14 }}>
                 No upcoming events scheduled. Check back soon!
               </p>
-            ) : schedule.map((row) => (
+            ) : schedule.map((row, index) => (
               <Link key={`${row.day}-${row.title}`} href={`/events/${row.slug}`} className={styles.scheduleRow}>
+                <i
+                  className={`ms ms-${manaSymbols[index % manaSymbols.length]} ms-cost ${styles.scheduleMana}`}
+                  aria-hidden="true"
+                />
                 <span className={styles.scheduleDay}>{row.day}</span>
                 <div className={styles.scheduleInfo}>
                   <h4 className={styles.scheduleEventTitle}>{row.title}</h4>

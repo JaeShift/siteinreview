@@ -17,6 +17,15 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
 
   const isHome = pathname === "/";
   const isCheckout = pathname === CHECKOUT_PATH || pathname.startsWith(`${CHECKOUT_PATH}/`);
+  const isArcane =
+    pathname === "/mtg-and-more" ||
+    pathname.startsWith("/mtg-and-more/") ||
+    pathname === "/card-shop" ||
+    pathname.startsWith("/card-shop/") ||
+    pathname === "/card-shop-singles" ||
+    pathname.startsWith("/card-shop-singles/") ||
+    pathname === "/pre-release" ||
+    pathname.startsWith("/pre-release/");
   const showAddressBar = pathname === "/food-trucks";
 
   return (
@@ -25,7 +34,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
         <Header />
         <main>{children}</main>
         {showAddressBar && <AddressBar />}
-        {!isCheckout && <Footer showHours={!isHome} editorial />}
+        {!isCheckout && <Footer showHours={!isHome} editorial arcane={isArcane} />}
         <CartDrawer />
       </CartProvider>
     </div>

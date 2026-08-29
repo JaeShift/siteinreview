@@ -22,6 +22,13 @@ export default function CardShopSinglesPage() {
         />
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>
+          <div className={styles.bannerMana} aria-hidden="true">
+            <i className="ms ms-w ms-cost" />
+            <i className="ms ms-u ms-cost" />
+            <i className="ms ms-b ms-cost" />
+            <i className="ms ms-r ms-cost" />
+            <i className="ms ms-g ms-cost" />
+          </div>
           <h1 className={styles.bannerTitle}>SINGLES</h1>
           <div className={styles.bannerAccent} />
         </div>
