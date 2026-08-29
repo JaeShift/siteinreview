@@ -17,14 +17,14 @@ const FORMAT_COLORS: Record<string, string> = {
   Legacy:     "#4a1a00",
   Sealed:     "#006633",
   Prerelease: "#cc6600",
-  RCQ:        "#000000",
+  RCQ:        "#181a1b",
   Casual:     "#555555",
 };
 
 export default function MtgEventCard({ event }: Props) {
   const soldOut = isEventSoldOut(event);
   const seatsLeft = getSeatsRemaining(event);
-  const formatColor = FORMAT_COLORS[event.format] ?? "#333";
+  const formatColor = FORMAT_COLORS[event.format] ?? "#181a1b";
 
   return (
     <article className={styles.card}>

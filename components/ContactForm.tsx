@@ -82,15 +82,16 @@ export default function ContactForm() {
           .success-message {
             text-align: center;
             padding: 48px 24px;
-            background-color: var(--color-bg);
-            border: 2px solid var(--color-visited);
+            background-color: #fbf8f2;
+            border: 1px solid rgba(24, 26, 27, 0.24);
+            border-top: 3px solid #c84d1d;
           }
           .success-icon {
             width: 56px;
             height: 56px;
-            background-color: var(--color-visited);
-            color: white;
-            border-radius: 50%;
+            background-color: #181a1b;
+            color: #fbf8f2;
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -102,9 +103,11 @@ export default function ContactForm() {
             font-family: var(--font-heading);
             font-size: 24px;
             font-weight: 700;
-            letter-spacing: -0.01em;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
             line-height: 1em;
             margin-bottom: 12px;
+            color: #181a1b;
           }
           p {
             font-family: var(--font-body);
@@ -113,6 +116,9 @@ export default function ContactForm() {
             letter-spacing: 0.01em;
             line-height: 1.8em;
             color: var(--color-text-light);
+          }
+          .success-message :global(.btn) {
+            border-radius: 0;
           }
         `}</style>
       </div>
@@ -247,12 +253,42 @@ export default function ContactForm() {
           gap: 6px;
         }
 
+        .form-label {
+          font-family: futura-pt, var(--font-heading);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: #181a1b;
+        }
+
+        .form-input {
+          min-height: 48px;
+          padding: 12px 14px;
+          color: #181a1b;
+          background: #fbf8f2;
+          border: 1px solid rgba(24, 26, 27, 0.32);
+          border-radius: 0;
+          box-shadow: none;
+        }
+
+        .form-input:focus {
+          outline: 2px solid rgba(200, 77, 29, 0.26);
+          outline-offset: 1px;
+          border-color: #c84d1d;
+        }
+
+        .form-input:disabled {
+          background: #f3ede3;
+          cursor: not-allowed;
+        }
+
         .required {
-          color: var(--color-accent);
+          color: #c84d1d;
         }
 
         .has-error {
-          border-color: #c0392b !important;
+          border-color: #8f3414 !important;
         }
 
         /* field-error — small futura-pt label style */
@@ -262,13 +298,13 @@ export default function ContactForm() {
           font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: #c0392b;
+          color: #8f3414;
         }
 
         .form-error-banner {
-          background-color: #fdf2f2;
-          border: 1px solid #e74c3c;
-          color: #c0392b;
+          background-color: #f3ede3;
+          border: 1px solid #8f3414;
+          color: #8f3414;
           padding: 12px 16px;
           font-family: var(--font-body);
           font-size: 14px;
@@ -280,7 +316,7 @@ export default function ContactForm() {
         .submit-btn {
           align-self: flex-start;
           min-width: 140px;
-          border-radius: 8px;
+          border-radius: 0;
         }
 
         textarea.form-input {

@@ -3,6 +3,8 @@
   width: 100%;
   display: flex;
   align-items: flex-end;
+  background: #181a1b;
+  border-bottom: 5px solid #c84d1d;
 }
 
 .sm  { height: 260px; }
@@ -12,7 +14,9 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.2) 60%, transparent 100%);
+  background:
+    linear-gradient(to top, rgba(24, 26, 27, 0.9) 0%, rgba(24, 26, 27, 0.28) 64%, transparent 100%),
+    linear-gradient(to right, rgba(200, 77, 29, 0.2), transparent 45%);
 }
 
 .content {
@@ -27,7 +31,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--color-accent);
+  color: #f0a17c;
   margin-bottom: 8px;
 }
 
@@ -38,7 +42,9 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   line-height: 1.1;
-  color: var(--color-white);
+  color: #fbf8f2;
+  text-shadow: 3px 3px 0 rgba(24, 26, 27, 0.5);
+  max-width: 900px;
 }
 
 @media (max-width: 640px) {

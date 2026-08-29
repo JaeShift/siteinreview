@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  color: #181a1b;
 }
 
 @media (max-width: 900px) {
@@ -41,7 +42,7 @@
   align-items: baseline;
   justify-content: space-between;
   padding-bottom: 14px;
-  border-bottom: 2px solid var(--color-black);
+  border-bottom: 3px solid #181a1b;
   margin-bottom: 4px;
 }
 
@@ -51,18 +52,20 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-black);
+  color: #181a1b;
 }
 
 .resultCount {
-  font-family: var(--font-body);
+  font-family: var(--font-heading);
   font-size: 12px;
-  color: var(--color-muted);
+  color: #c84d1d;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 /* ── Collapsible group ── */
 .group {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(24, 26, 27, 0.22);
 }
 
 .groupHeader {
@@ -83,13 +86,13 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--color-accent);
+  color: #181a1b;
 }
 
 .groupChevron {
   font-size: 16px;
   font-weight: 300;
-  color: var(--color-black);
+  color: #c84d1d;
   line-height: 1;
   flex-shrink: 0;
 }
@@ -102,8 +105,8 @@
 .textInput {
   width: 100%;
   padding: 8px 10px;
-  border: 1px solid var(--color-border);
-  background: var(--color-white);
+  border: 1px solid #181a1b;
+  background: #f3ede3;
   font-family: var(--font-body);
   font-size: 13px;
   color: var(--color-text);
@@ -113,15 +116,16 @@
 }
 
 .textInput:focus {
-  border-color: var(--color-accent);
+  border-color: #c84d1d;
+  box-shadow: inset 3px 0 0 #c84d1d;
 }
 
 /* ── Select ── */
 .select {
   width: 100%;
   padding: 8px 10px;
-  border: 1px solid var(--color-border);
-  background: var(--color-white);
+  border: 1px solid #181a1b;
+  background: #f3ede3;
   font-family: var(--font-body);
   font-size: 13px;
   color: var(--color-text);
@@ -133,7 +137,7 @@
 }
 
 .select:focus {
-  border-color: var(--color-accent);
+  border-color: #c84d1d;
 }
 
 /* ── Checkboxes ── */
@@ -153,7 +157,8 @@
 .checkbox {
   width: 14px;
   height: 14px;
-  accent-color: var(--color-black);
+  accent-color: #c84d1d;
+  border-radius: 0;
   cursor: pointer;
   flex-shrink: 0;
   margin-top: 1px;
@@ -162,7 +167,7 @@
 .checkboxText {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--color-text);
+  color: #181a1b;
   line-height: 1.4;
   transition: color 0.15s;
 }
@@ -179,8 +184,8 @@
 }
 
 .rarityBtn {
-  border: 1px solid var(--color-border);
-  background: none;
+  border: 1px solid rgba(24, 26, 27, 0.35);
+  background: #f3ede3;
   padding: 8px;
   text-align: center;
   font-family: var(--font-heading);
@@ -189,17 +194,17 @@
   letter-spacing: 0.1em;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
-  color: var(--color-text);
+  color: #181a1b;
 }
 
 .rarityBtn:hover {
-  border-color: var(--color-black);
+  border-color: #181a1b;
 }
 
 .rarityBtnActive {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-  background: rgba(255, 0, 0, 0.04);
+  border-color: #c84d1d;
+  color: #fbf8f2;
+  background: #c84d1d;
 }
 
 /* ── Mana symbol pips ── */
@@ -212,7 +217,7 @@
 .manaPip {
   width: 30px;
   height: 30px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid transparent;
   background: none;
   display: flex;
@@ -240,8 +245,8 @@
 }
 
 .manaPipActive {
-  border-color: var(--color-black);
-  box-shadow: 0 0 0 1px var(--color-black);
+  border-color: #c84d1d;
+  box-shadow: 0 0 0 1px #c84d1d;
 }
 
 /* ── Power / Toughness ── */
@@ -270,8 +275,8 @@
 .ptInput {
   width: 100%;
   padding: 8px 6px;
-  border: 1px solid var(--color-border);
-  background: var(--color-white);
+  border: 1px solid #181a1b;
+  background: #f3ede3;
   font-family: var(--font-body);
   font-size: 13px;
   color: var(--color-text);
@@ -282,7 +287,7 @@
 }
 
 .ptInput:focus {
-  border-color: var(--color-accent);
+  border-color: #c84d1d;
 }
 
 .ptSep {
@@ -301,7 +306,7 @@
 
 .priceSlider {
   width: 100%;
-  accent-color: var(--color-black);
+  accent-color: #c84d1d;
   cursor: pointer;
   height: 4px;
 }
@@ -317,7 +322,7 @@
 /* ── Action buttons ── */
 .filterBtns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 8px;
   margin-top: 12px;
 }
@@ -342,8 +347,8 @@
 
 .clearBtn {
   padding: 12px 8px;
-  background: var(--color-black);
-  color: var(--color-white);
+  background: #181a1b;
+  color: #fbf8f2;
   font-family: var(--font-heading);
   font-size: 10px;
   font-weight: 700;
@@ -355,5 +360,5 @@
 }
 
 .clearBtn:hover {
-  background: #333;
+  background: #c84d1d;
 }

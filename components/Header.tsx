@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import styles from "./Header.module.css";
@@ -42,10 +41,10 @@ export default function Header() {
   const isHolding = pathname === "/pre-release";
 
   return (
-    <header className={`${styles.header} ${isHolding ? styles.headerHolding : ""}`}>
+    <header className={`${styles.header} ${styles.headerHome} ${isHolding ? styles.headerHolding : ""}`}>
       <div className={styles.headerInner}>
         <Link href="/" className={styles.headerLogo} aria-label="Kitsune Brewing Co — Home">
-          <Image src="/images/logo.png" alt="Kitsune" width={160} height={100} priority />
+          <span className={styles.homeWordmark}>Kitsune Brewing Co.</span>
         </Link>
 
         {/* Desktop Nav */}

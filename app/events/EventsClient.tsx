@@ -44,11 +44,11 @@ export default function EventsClient({ events }: Props) {
 
   return (
     <>
-      <div className="page-banner">
+      <div className={`page-banner ${styles.pageBanner}`}>
         <h1>MTG Events</h1>
       </div>
 
-      <PageSection background="white">
+      <PageSection background="white" className={styles.eventsSection}>
         <div className={styles.controls}>
           <div className={styles.filterBar}>
             <button

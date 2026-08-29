@@ -1,5 +1,7 @@
 .cta {
-  padding: 80px 24px;
+  padding: clamp(72px, 9vw, 128px) var(--site-gutter, 24px);
+  border-top: 1px solid rgba(251, 248, 242, 0.18);
+  border-bottom: 6px solid var(--site-copper, #c84d1d);
 }
 
 .black {
@@ -7,7 +9,7 @@
 }
 
 .red {
-  background-color: var(--color-accent);
+  background-color: var(--site-copper, var(--color-accent));
 }
 
 .inner {
@@ -20,17 +22,17 @@
 
 .headline {
   font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-size: clamp(2.5rem, 6vw, 5.75rem);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  line-height: 1.1;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
   color: var(--color-white);
 }
 
 .subtext {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(251, 248, 242, 0.72);
   max-width: 540px;
   line-height: 1.6;
 }
@@ -46,7 +48,7 @@
 
 .primaryBtn {
   background-color: var(--color-white);
-  color: var(--color-black);
+  color: var(--site-ink, var(--color-black));
   border-color: var(--color-white);
 }
 
@@ -57,7 +59,7 @@
 }
 
 .secondaryBtn {
-  border-color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(251, 248, 242, 0.52);
   color: var(--color-white);
 }
 

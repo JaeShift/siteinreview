@@ -1,10 +1,28 @@
+.pageBanner {
+  background: #181a1b;
+  border-bottom: 5px solid #c84d1d;
+}
+
+.pageBanner h1 {
+  color: #fbf8f2;
+  letter-spacing: 0.08em;
+}
+
+.eventsSection {
+  background-color: #fbf8f2 !important;
+}
+
 .controls {
+  --editorial-cream: #f3ede3;
+  --editorial-paper: #fbf8f2;
+  --editorial-ink: #181a1b;
+  --editorial-copper: #c84d1d;
   display: flex;
   flex-direction: column;
   gap: 16px;
   margin-bottom: 32px;
   padding-bottom: 24px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(24, 26, 27, 0.18);
 }
 
 .filterBar {
@@ -20,22 +38,23 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
+  background: var(--editorial-paper);
+  border: 1px solid rgba(24, 26, 27, 0.22);
   cursor: pointer;
   color: var(--color-text-light);
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .filterPill:hover {
-  border-color: var(--color-black);
-  color: var(--color-black);
+  border-color: var(--editorial-copper);
+  color: var(--editorial-copper);
 }
 
 .filterPillActive {
-  background: var(--color-black);
-  color: var(--color-white);
-  border-color: var(--color-black);
+  background: var(--editorial-ink);
+  color: var(--editorial-paper);
+  border-color: var(--editorial-ink);
+  box-shadow: inset 0 -3px 0 var(--editorial-copper);
 }
 
 .searchWrap {
@@ -52,7 +71,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-muted);
+  color: #71685f;
   margin-bottom: 20px;
 }
 
@@ -64,9 +83,9 @@
 
 /* ── Info banner ── */
 .infoBanner {
-  background: var(--color-gray-light);
+  background: #f3ede3;
   padding: 48px 24px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(24, 26, 27, 0.18);
 }
 
 .infoGrid {
@@ -81,14 +100,25 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--color-black);
+  color: #181a1b;
   margin-bottom: 8px;
 }
 
 .infoItem p {
   font-size: 14px;
-  color: var(--color-text-light);
+  color: #625b54;
   line-height: 1.6;
+}
+
+.infoItem {
+  padding-left: 18px;
+  border-left: 2px solid #c84d1d;
+}
+
+.infoItem a {
+  color: #9f3d18;
+  text-decoration-color: rgba(200, 77, 29, 0.45);
+  text-underline-offset: 3px;
 }
 
 @media (max-width: 640px) {

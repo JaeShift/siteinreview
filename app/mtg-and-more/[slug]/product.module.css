@@ -1,5 +1,17 @@
+.pageBanner {
+  background: #181a1b;
+  border-bottom: 5px solid #c84d1d;
+}
+
+.pageBanner h1 {
+  color: #fbf8f2;
+  letter-spacing: 0.08em;
+}
+
 .productSection {
   padding: 56px 0 80px;
+  background: #f3ede3;
+  color: #181a1b;
 }
 
 .breadcrumb {
@@ -19,11 +31,11 @@
 }
 
 .breadcrumbLink:hover {
-  color: var(--color-orange);
+  color: #c84d1d;
 }
 
 .breadcrumbSep {
-  color: #ccc;
+  color: #a69b90;
 }
 
 .breadcrumbCurrent {
@@ -47,14 +59,18 @@
   width: 100%;
   padding-bottom: 100%;
   overflow: hidden;
-  background-color: var(--color-gray-light);
-  border: 1px solid #e8e8e8;
+  background-color: #fbf8f2;
+  border: 1px solid rgba(24, 26, 27, 0.22);
+  box-shadow: 8px 8px 0 rgba(200, 77, 29, 0.14);
 }
 
 .productDetailsCol {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  background: #fbf8f2;
+  border: 1px solid rgba(24, 26, 27, 0.18);
+  padding: clamp(24px, 4vw, 42px);
 }
 
 .productTitle {
@@ -62,13 +78,16 @@
   font-size: clamp(1.5rem, 3vw, 2.25rem);
   font-weight: 700;
   line-height: 1.2;
+  color: #181a1b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .productPrice {
   font-family: var(--font-heading);
   font-size: 28px;
   font-weight: 700;
-  color: var(--color-orange);
+  color: #c84d1d;
 }
 
 .productDesc {
@@ -101,7 +120,7 @@
   align-items: center;
   gap: 12px;
   padding-top: 16px;
-  border-top: 1px solid #e8e8e8;
+  border-top: 1px solid rgba(24, 26, 27, 0.18);
   font-size: 13px;
 }
 
@@ -123,7 +142,7 @@
 }
 
 .shareLink:hover {
-  color: var(--color-orange);
+  color: #c84d1d;
 }
 
 .soldOut {

@@ -31,7 +31,7 @@ export default function MtgProductPage({ params }: Props) {
 
   return (
     <>
-      <div className="page-banner">
+      <div className={`page-banner ${styles.pageBanner}`}>
         <h1>MTG and More</h1>
       </div>
 

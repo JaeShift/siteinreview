@@ -31,7 +31,7 @@ export default function PreReleaseProductPage({ params }: Props) {
 
   return (
     <>
-      <div className="page-banner">
+      <div className={`page-banner ${styles.pageBanner}`}>
         <h1>Pre-Release</h1>
       </div>
 

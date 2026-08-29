@@ -6,7 +6,8 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  background-color: #fafafa;
+  background-color: var(--site-paper, #fafafa);
+  border-top: 1px solid var(--site-line, #e0e0e0);
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-top: 64px;
@@ -20,7 +21,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-black);
+  color: var(--site-ink, var(--color-black));
 }
 
 .phoneLink {
@@ -32,13 +33,13 @@
   color: var(--color-accent);
   transition: color 0.2s;
   text-decoration: underline;
-  text-decoration-color: var(--color-green);
+  text-decoration-color: var(--site-copper, var(--color-accent));
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
 }
 
 .phoneLink:hover {
-  color: var(--color-green);
+  color: var(--site-ink, var(--color-black));
 }
 
 .socialLinks {

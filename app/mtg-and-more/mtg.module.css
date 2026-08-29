@@ -8,7 +8,8 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-color: var(--color-black);
+  background-color: #181a1b;
+  border-bottom: 5px solid #c84d1d;
 }
 
 .heroBg {
@@ -24,9 +25,8 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to top,    rgba(255,255,255,0.35) 0%,   transparent 22%),
-    linear-gradient(to right,  rgba(255,255,255,0.25) 0%,   transparent 18%),
-    linear-gradient(to left,   rgba(255,255,255,0.25) 0%,   transparent 18%);
+    linear-gradient(to top, rgba(24,26,27,0.72) 0%, transparent 48%),
+    linear-gradient(to right, rgba(200,77,29,0.18) 0%, transparent 44%);
   z-index: 1;
 }
 
@@ -45,7 +45,8 @@
   letter-spacing: -0.02em;
   line-height: 1.1;
   text-transform: uppercase;
-  color: var(--color-white);
+  color: #fbf8f2;
+  text-shadow: 4px 4px 0 rgba(24, 26, 27, 0.55);
   margin-bottom: 20px;
 }
 
@@ -62,7 +63,7 @@
 
 /* ─── Intro ─────────────────────────────────────────────────────────────────── */
 .intro {
-  background: var(--color-white);
+  background: #f3ede3;
   padding: 80px 24px;
 }
 
@@ -82,7 +83,7 @@
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: #c84d1d;
 }
 
 .introHeading {
@@ -91,7 +92,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1.2;
-  color: var(--color-black);
+  color: #181a1b;
   text-transform: uppercase;
   margin: 0;
 }
@@ -107,7 +108,7 @@
 
 /* ─── Bento Grid ─────────────────────────────────────────────────────────────── */
 .bentoSection {
-  background: var(--color-white);
+  background: #f3ede3;
   padding: 0 0 80px;
 }
 
@@ -126,7 +127,8 @@
 .bentoCard {
   position: relative;
   overflow: hidden;
-  border: 1px solid #e2e2e2;
+  border: 1px solid rgba(24, 26, 27, 0.22);
+  box-shadow: 4px 4px 0 rgba(24, 26, 27, 0.08);
   display: block;
   text-decoration: none;
   cursor: pointer;
@@ -139,7 +141,7 @@
 }
 
 .bentoCard:hover {
-  border-color: var(--color-accent);
+  border-color: #c84d1d;
 }
 
 .bentoImg {
@@ -158,14 +160,14 @@
 .bentoGradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+  background: linear-gradient(to top, rgba(24,26,27,0.88) 0%, transparent 68%);
   z-index: 1;
 }
 
 .bentoGradientSide {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(0,0,0,0.9) 0%, transparent 70%);
+  background: linear-gradient(to right, rgba(24,26,27,0.94) 0%, transparent 74%);
   z-index: 1;
 }
 
@@ -233,7 +235,7 @@
 
 .bentoBtnPrimary {
   display: inline-block;
-  background: var(--color-accent);
+  background: #c84d1d;
   color: var(--color-white);
   font-family: var(--font-heading);
   font-size: 11px;
@@ -248,7 +250,7 @@
 
 .bentoBtnPrimary:hover,
 .bentoCard:hover .bentoBtnPrimary {
-  background: #cc0000;
+  background: #a83d17;
 }
 
 .bentoBtnOutline {
@@ -279,7 +281,7 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-white);
-  border-bottom: 2px solid var(--color-accent);
+  border-bottom: 2px solid #c84d1d;
   padding-bottom: 4px;
   transition: color 0.2s;
   cursor: pointer;
@@ -291,7 +293,7 @@
 
 /* ─── Weekly Play ────────────────────────────────────────────────────────────── */
 .scheduleSection {
-  background: var(--color-white);
+  background: #fbf8f2;
   padding: 80px 0;
   border-top: 1px solid var(--color-border);
 }
@@ -316,7 +318,7 @@
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: #c84d1d;
   margin-bottom: 6px;
 }
 
@@ -326,7 +328,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-black);
+  color: #181a1b;
   margin: 0;
   line-height: 1;
 }
@@ -365,7 +367,8 @@
   display: flex;
   align-items: center;
   padding: 24px;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(24, 26, 27, 0.18);
+  background: #fbf8f2;
   margin-bottom: -1px;
   transition: border-color 0.2s;
   gap: 32px;
@@ -375,7 +378,7 @@
 }
 
 .scheduleRow:hover {
-  border-color: var(--color-accent);
+  border-color: #c84d1d;
   z-index: 1;
   position: relative;
 }
@@ -385,7 +388,7 @@
   font-size: clamp(1.4rem, 3vw, 2rem);
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--color-accent);
+  color: #c84d1d;
   width: 110px;
   min-width: 110px;
   flex-shrink: 0;
@@ -421,8 +424,9 @@
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  background: var(--color-black);
-  color: var(--color-white);
+  background: #181a1b;
+  color: #fbf8f2;
+  border-bottom: 3px solid #c84d1d;
   padding: 8px 16px;
   white-space: nowrap;
   flex-shrink: 0;
@@ -431,7 +435,7 @@
 /* ─── CTA ────────────────────────────────────────────────────────────────────── */
 .cta {
   position: relative;
-  background: var(--color-black);
+  background: #181a1b;
   padding: 80px 24px;
   overflow: hidden;
 }
@@ -480,7 +484,7 @@
 }
 
 .ctaBtnPrimary {
-  background: var(--color-accent);
+  background: #c84d1d;
   color: var(--color-white);
   font-family: var(--font-heading);
   font-size: 12px;
@@ -500,7 +504,7 @@
 
 .ctaBtnPrimary:hover {
   transform: scale(1.05);
-  background: #cc0000;
+  background: #a83d17;
 }
 
 .ctaBtnOutline {
@@ -529,7 +533,8 @@
 
 /* ─── MTG Footer ─────────────────────────────────────────────────────────────── */
 .mtgFooter {
-  background: var(--color-black);
+  background: #181a1b;
+  border-top: 1px solid rgba(243, 237, 227, 0.16);
   color: var(--color-white);
   padding: 48px 24px 32px;
   text-align: center;

@@ -20,6 +20,10 @@
   padding-bottom: 48px;
 }
 
+.footerInnerCompact {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 .footerLogoCol {
   display: flex;
   flex-direction: column;
@@ -175,10 +179,104 @@
 }
 .adminLink:hover { color: #999999; }
 
+.footerHome {
+  background: #f3ede3;
+  color: #181a1b;
+  border-top: 1px solid rgba(24, 26, 27, 0.16);
+}
+
+.footerHome .footerInner {
+  grid-template-columns: minmax(220px, 1.25fr) minmax(190px, 1fr) minmax(230px, 1.1fr) minmax(150px, 0.7fr);
+  gap: clamp(32px, 4vw, 72px);
+  padding-top: 64px;
+  padding-bottom: 56px;
+}
+
+.footerHome .footerInnerCompact {
+  grid-template-columns: minmax(240px, 1.25fr) minmax(220px, 1fr) minmax(170px, 0.7fr);
+}
+
+.footerWordmark {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 3vw, 3.35rem);
+  font-weight: 700;
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  color: #181a1b;
+}
+
+.footerHome .footerTagline {
+  max-width: 220px;
+  margin-top: 4px;
+  color: rgba(24, 26, 27, 0.52);
+}
+
+.footerHome .footerHeading {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #c84d1d;
+  color: #c84d1d;
+}
+
+.footerHome .footerAddress,
+.footerHome .footerLink,
+.footerHome .footerLink:link,
+.footerHome .footerLink:visited,
+.footerHome .footerNavLink,
+.footerHome .footerNavLink:link,
+.footerHome .footerNavLink:visited {
+  color: rgba(24, 26, 27, 0.76);
+}
+
+.footerHome .footerHoursDay {
+  color: rgba(24, 26, 27, 0.7);
+}
+
+.footerHome .footerHoursTime {
+  color: #181a1b;
+}
+
+.footerHome .footerHoursTimeClosed {
+  color: rgba(24, 26, 27, 0.45);
+}
+
+.footerHome .footerLink:hover,
+.footerHome .footerNavLink:hover {
+  color: #c84d1d;
+}
+
+.footerHome .footerSocial {
+  color: #181a1b;
+}
+
+.footerHome .footerBottom {
+  border-top-color: rgba(24, 26, 27, 0.14);
+}
+
+.footerHome .footerBottomInner {
+  color: rgba(24, 26, 27, 0.52);
+}
+
+.footerHome .adminLink,
+.footerHome .adminLink:link,
+.footerHome .adminLink:visited {
+  color: rgba(24, 26, 27, 0.5);
+}
+
+.footerHome .adminLink:hover {
+  color: #c84d1d;
+}
+
 @media (max-width: 900px) {
   .footerInner {
     grid-template-columns: 1fr 1fr;
     gap: 40px;
+  }
+
+  .footerHome .footerInner {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px 40px;
   }
 }
 
@@ -194,5 +292,12 @@
     flex-direction: column;
     gap:        4px;
     text-align: center;
+  }
+
+  .footerHome .footerInner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding-top: 64px;
+    padding-bottom: 48px;
   }
 }

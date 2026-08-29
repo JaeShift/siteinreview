@@ -13,20 +13,32 @@ const hours = [
   { day: "Sunday", hours: "Closed" },
 ];
 
-export default function Footer() {
+export default function Footer({
+  showHours = true,
+  editorial = true,
+}: {
+  showHours?: boolean;
+  editorial?: boolean;
+}) {
   return (
-    <footer className={styles.footer}>
-      <div className={`${styles.footerInner} container`}>
+    <footer className={`${styles.footer} ${editorial ? styles.footerHome : ""}`}>
+      <div className={`${styles.footerInner} ${!showHours ? styles.footerInnerCompact : ""} container`}>
         <div className={styles.footerLogoCol}>
           <Link href="/" aria-label="Kitsune Brewing Co — Home">
-            <Image
-              src="/images/logo.png"
-              alt="Kitsune Brewing Co"
-              width={80}
-              height={80}
-            />
+            {editorial ? (
+              <span className={styles.footerWordmark}>Kitsune<br />Brewing Co.</span>
+            ) : (
+              <Image
+                src="/images/logo.png"
+                alt="Kitsune Brewing Co"
+                width={80}
+                height={80}
+              />
+            )}
           </Link>
-          <p className={styles.footerTagline}>Kitsune Brewing Company</p>
+          <p className={styles.footerTagline}>
+            Independent craft brewery · North Phoenix
+          </p>
         </div>
 
         <div className={styles.footerCol}>
@@ -44,25 +56,27 @@ export default function Footer() {
           <SocialLinks className={styles.footerSocial} iconSize={22} />
         </div>
 
-        <div className={styles.footerCol}>
-          <h3 className={styles.footerHeading}>Hours</h3>
-          <ul className={styles.footerHours}>
-            {hours.map(({ day, hours: h }) => (
-              <li key={day} className={styles.footerHoursRow}>
-                <span className={styles.footerHoursDay}>{day}</span>
-                <span
-                  className={
-                    h === "Closed"
-                      ? styles.footerHoursTimeClosed
-                      : styles.footerHoursTime
-                  }
-                >
-                  {h}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {showHours && (
+          <div className={styles.footerCol}>
+            <h3 className={styles.footerHeading}>Hours</h3>
+            <ul className={styles.footerHours}>
+              {hours.map(({ day, hours: h }) => (
+                <li key={day} className={styles.footerHoursRow}>
+                  <span className={styles.footerHoursDay}>{day}</span>
+                  <span
+                    className={
+                      h === "Closed"
+                        ? styles.footerHoursTimeClosed
+                        : styles.footerHoursTime
+                    }
+                  >
+                    {h}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className={styles.footerCol}>
           <h3 className={styles.footerHeading}>Navigate</h3>

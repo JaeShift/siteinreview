@@ -27,7 +27,7 @@ export default function FoodTrucksPage() {
 
   return (
     <>
-      <div className="page-banner">
+      <div className={`page-banner ${styles.pageBanner}`}>
         <h1>Food Trucks</h1>
       </div>
 

@@ -1,13 +1,13 @@
 .calendarWrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
 .toggleBar {
   display: flex;
   gap: 0;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(24, 26, 27, 0.28);
   align-self: flex-start;
 }
 
@@ -18,11 +18,11 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: var(--color-white);
+  background: #fbf8f2;
   border: none;
   border-right: 1px solid var(--color-border);
   cursor: pointer;
-  color: var(--color-text-light);
+  color: rgba(24, 26, 27, 0.68);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
@@ -31,8 +31,8 @@
 }
 
 .toggleBtnActive {
-  background: var(--color-black);
-  color: var(--color-white);
+  background: #181a1b;
+  color: #fbf8f2;
 }
 
 .legend {
@@ -50,19 +50,21 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-text-light);
+  color: rgba(24, 26, 27, 0.68);
 }
 
 .legendDot {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: 0;
+  background: #c84d1d !important;
   flex-shrink: 0;
 }
 
 .calendar {
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(24, 26, 27, 0.28);
   overflow: hidden;
+  background: #fbf8f2;
 }
 
 .calHeader {
@@ -70,13 +72,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  background: var(--color-black);
+  background: #181a1b;
+  border-bottom: 1px solid #181a1b;
 }
 
 .navBtn {
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  color: var(--color-white);
+  color: #fbf8f2;
   cursor: pointer;
   width: 44px;
   height: 44px;
@@ -88,8 +91,8 @@
 }
 
 .navBtn:hover {
-  border-color: var(--color-white);
-  background: rgba(255, 255, 255, 0.1);
+  border-color: #fbf8f2;
+  background: rgba(251, 248, 242, 0.1);
 }
 
 .monthLabel {
@@ -98,14 +101,14 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-white);
+  color: #fbf8f2;
 }
 
 .dayNames {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background: var(--color-gray-light);
-  border-bottom: 1px solid var(--color-border);
+  background: #f3ede3;
+  border-bottom: 1px solid rgba(24, 26, 27, 0.22);
 }
 
 .dayName {
@@ -116,7 +119,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-text-light);
+  color: rgba(24, 26, 27, 0.68);
 }
 
 .grid {
@@ -127,12 +130,12 @@
 .cell {
   min-height: 96px;
   padding: 6px 4px 4px;
-  border-right: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
+  border-right: 1px solid rgba(24, 26, 27, 0.18);
+  border-bottom: 1px solid rgba(24, 26, 27, 0.18);
   display: flex;
   flex-direction: column;
   gap: 3px;
-  background: var(--color-white);
+  background: #fbf8f2;
   transition: background-color 0.1s ease;
 }
 
@@ -141,17 +144,17 @@
 }
 
 .cell:hover:not(.cellEmpty) {
-  background: #fafafa;
+  background: #f3ede3;
 }
 
 .cellEmpty {
-  background: var(--color-gray-light);
+  background: rgba(243, 237, 227, 0.72);
 }
 
 .cellToday .dayNum {
-  background: var(--color-accent);
-  color: var(--color-white);
-  border-radius: 50%;
+  background: #c84d1d;
+  color: #fbf8f2;
+  border-radius: 0;
   width: 22px;
   height: 22px;
   display: flex;
@@ -163,7 +166,7 @@
   font-family: var(--font-heading);
   font-size: 12px;
   font-weight: 700;
-  color: var(--color-text-light);
+  color: rgba(24, 26, 27, 0.68);
   line-height: 1;
   align-self: flex-start;
 }
@@ -183,6 +186,8 @@
   text-align: left;
   overflow: hidden;
   width: 100%;
+  background: #c84d1d !important;
+  border-left: 2px solid #181a1b;
   transition: opacity 0.15s ease;
 }
 
@@ -195,7 +200,7 @@
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.03em;
-  color: #ffffff;
+  color: #fbf8f2;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -205,7 +210,7 @@
 
 .moreEvents {
   font-size: 9px;
-  color: var(--color-muted);
+  color: rgba(24, 26, 27, 0.6);
   font-family: var(--font-heading);
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -225,7 +230,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--color-muted);
+  color: #c84d1d;
 }
 
 .modalMeta {
@@ -236,21 +241,22 @@
 
 .modalMeta p {
   font-size: 14px;
-  color: var(--color-text);
+  color: #181a1b;
 }
 
 .modalDesc {
   font-size: 14px;
-  color: var(--color-text-light);
+  color: rgba(24, 26, 27, 0.7);
   line-height: 1.6;
   padding-top: 4px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(24, 26, 27, 0.2);
 }
 
 .modalBtn {
   align-self: flex-start;
   font-size: 11px;
   padding: 10px 20px;
+  border-radius: 0;
 }
 
 @media (max-width: 640px) {

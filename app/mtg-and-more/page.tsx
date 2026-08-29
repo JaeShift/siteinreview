@@ -65,7 +65,7 @@ const bentoCards = [
     btnStyle: "outline" as const,
     colSpan: 4,
     height: 350,
-    img: "/images/singles-bento.png",
+    img: "/images/singles-cards.png",
   },
 ];
 

@@ -1,31 +1,52 @@
+.pageBanner {
+  background: #f3ede3;
+  border-top: 1px solid rgba(24, 26, 27, 0.18);
+  border-bottom: 1px solid rgba(24, 26, 27, 0.22);
+}
+
+.pageBanner h1 {
+  font-family: futura-pt, var(--font-heading);
+  color: #181a1b;
+  letter-spacing: 0.04em;
+}
+
 .intro {
   font-size: 16px;
-  color: var(--color-text-light);
+  color: rgba(24, 26, 27, 0.72);
   line-height: 1.7;
   max-width: 640px;
   margin-bottom: 32px;
+  padding-left: 18px;
+  border-left: 2px solid #c84d1d;
 }
 
 .quickSection {
-  background: var(--color-gray-light);
+  background: #f3ede3;
   padding: 40px 24px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(24, 26, 27, 0.22);
+  border-bottom: 1px solid rgba(24, 26, 27, 0.22);
 }
 
 .quickHeading {
-  font-family: var(--font-heading);
-  font-size: 14px;
+  font-family: futura-pt, var(--font-heading);
+  font-size: 18px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--color-black);
+  color: #181a1b;
   margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(24, 26, 27, 0.22);
 }
 
 .quickLinks {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+.quickLinks :global(.btn) {
+  border-radius: 0;
 }
 
 @media (max-width: 640px) {

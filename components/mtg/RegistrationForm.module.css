@@ -1,4 +1,8 @@
 .form {
+  --editorial-paper: #fbf8f2;
+  --editorial-cream: #f3ede3;
+  --editorial-ink: #181a1b;
+  --editorial-copper: #c84d1d;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -9,8 +13,9 @@
   flex-direction: column;
   gap: 4px;
   padding: 16px;
-  background: var(--color-gray-light);
-  border-left: 3px solid var(--color-accent);
+  background: var(--editorial-cream);
+  border: 1px solid rgba(24, 26, 27, 0.16);
+  border-left: 4px solid var(--editorial-copper);
   margin-bottom: 4px;
 }
 
@@ -27,7 +32,7 @@
   font-family: var(--font-heading);
   font-size: 15px;
   font-weight: 700;
-  color: var(--color-black);
+  color: var(--editorial-ink);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -41,7 +46,7 @@
 .summaryFee {
   font-family: var(--font-heading);
   font-weight: 700;
-  color: var(--color-orange);
+  color: var(--editorial-copper);
   font-size: 14px;
 }
 
@@ -73,10 +78,10 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  background: #fff3f3;
-  border: 1.5px solid #e53e3e;
-  border-radius: 8px;
-  color: #c53030;
+  background: #f8e7dd;
+  border: 1px solid var(--editorial-copper);
+  border-radius: 0;
+  color: #8f3515;
   font-size: 14px;
   line-height: 1.5;
   padding: 12px 16px;
@@ -92,6 +97,9 @@
   width: 100%;
   justify-content: center;
   margin-top: 4px;
+  background: var(--editorial-copper);
+  border-color: var(--editorial-copper);
+  color: var(--editorial-paper);
 }
 
 .privacyNote {
@@ -112,7 +120,7 @@
 }
 
 .successIcon {
-  color: var(--color-green);
+  color: var(--editorial-copper, #c84d1d);
 }
 
 .successTitle {
@@ -121,7 +129,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-black);
+  color: #181a1b;
 }
 
 .successText {
@@ -156,7 +164,8 @@
 }
 
 .successDetails {
-  background: var(--color-gray-light);
+  background: #f3ede3;
+  border-left: 4px solid #c84d1d;
   padding: 16px;
   text-align: left;
   width: 100%;

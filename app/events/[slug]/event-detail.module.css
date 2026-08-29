@@ -1,4 +1,7 @@
 .layout {
+  --editorial-paper: #fbf8f2;
+  --editorial-ink: #181a1b;
+  --editorial-copper: #c84d1d;
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 48px;
@@ -32,7 +35,7 @@
 }
 
 .breadcrumb a:hover {
-  color: var(--color-black);
+  color: var(--editorial-copper);
 }
 
 .formatBadge {
@@ -43,13 +46,14 @@
 
 .formatTag {
   padding: 4px 12px;
-  background: var(--color-black);
+  background: var(--editorial-ink);
   font-family: var(--font-heading);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--color-white);
+  color: var(--editorial-paper);
+  border-bottom: 3px solid var(--editorial-copper);
 }
 
 .featuredTag {
@@ -69,7 +73,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: var(--color-black);
+  color: var(--editorial-ink);
   line-height: 1.1;
   margin-top: -8px;
 }
@@ -96,7 +100,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-border);
-  background: none;
+  background: var(--editorial-paper);
   font-size: 13px;
   color: var(--color-text-light);
   cursor: pointer;
@@ -110,8 +114,8 @@
 }
 
 .shareBtn:hover {
-  border-color: var(--color-black);
-  color: var(--color-black);
+  border-color: var(--editorial-copper);
+  color: var(--editorial-copper);
 }
 
 .description p {
@@ -126,10 +130,10 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--color-black);
+  color: var(--editorial-ink);
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(24, 26, 27, 0.2);
 }
 
 .prizeSection p,
@@ -141,7 +145,8 @@
 
 .mapPlaceholder {
   margin-top: 12px;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(24, 26, 27, 0.22);
+  box-shadow: 6px 6px 0 rgba(200, 77, 29, 0.12);
   overflow: hidden;
   height: 280px;
 }
@@ -207,7 +212,9 @@
 }
 
 .sidebarCard {
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(24, 26, 27, 0.22);
+  background: var(--editorial-paper);
+  box-shadow: 7px 7px 0 rgba(24, 26, 27, 0.08);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -254,23 +261,23 @@
   font-family: var(--font-heading);
   font-size: 18px;
   font-weight: 700;
-  color: var(--color-black);
+  color: var(--editorial-copper);
 }
 
 .seatsLow {
-  color: #c05000;
+  color: var(--editorial-copper);
   font-weight: 700;
 }
 
 .progressWrap {
   height: 4px;
-  background: var(--color-gray-light);
+  background: #e6ddd1;
   overflow: hidden;
 }
 
 .progressBar {
   height: 100%;
-  background: var(--color-accent);
+  background: var(--editorial-copper);
   transition: width 0.3s ease;
 }
 
@@ -295,7 +302,7 @@
 
 .tag {
   padding: 3px 8px;
-  background: var(--color-gray-light);
+  background: #f3ede3;
   border: 1px solid var(--color-border);
   font-family: var(--font-heading);
   font-size: 9px;
@@ -306,7 +313,9 @@
 }
 
 .venueCard {
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(24, 26, 27, 0.2);
+  border-left: 3px solid var(--editorial-copper);
+  background: var(--editorial-paper);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -319,7 +328,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-black);
+  color: var(--editorial-ink);
 }
 
 .venueAddress {

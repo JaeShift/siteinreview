@@ -1,7 +1,8 @@
 .calendarWrapper {
   width: calc(100vw - 300px);
   margin-left: calc(50% - 50vw + 150px);
-  border: 1px solid #e8e8e8;
+  border: 1px solid var(--site-line, #e8e8e8);
+  background: var(--site-paper, #ffffff);
   overflow: hidden;
 }
 

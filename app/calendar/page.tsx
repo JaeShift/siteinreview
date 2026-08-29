@@ -36,7 +36,7 @@ export default async function CalendarPage() {
 
   return (
     <>
-      <div className="page-banner">
+      <div className={`page-banner ${styles.pageBanner}`}>
         <h1>Events &amp; Schedule</h1>
       </div>
 

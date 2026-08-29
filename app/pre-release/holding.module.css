@@ -3,7 +3,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-white);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(200, 77, 29, 0.1), transparent 34%),
+    #f3ede3;
   padding: 60px 24px;
 }
 
@@ -46,7 +48,7 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   line-height: 1.1;
-  color: var(--color-black);
+  color: #181a1b;
   margin-bottom: 32px;
   white-space: nowrap;
   animation: fadeUp 0.9s 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -60,7 +62,7 @@
 .holdingDivider {
   width: 48px;
   height: 2px;
-  background: var(--color-accent);
+  background: #c84d1d;
   margin-bottom: 32px;
   animation: fadeUp 0.9s 0.36s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -78,9 +80,10 @@
 .holdingBtn:visited {
   display: inline-block;
   padding: 16px 40px;
-  background: var(--color-black);
-  border: 1px solid var(--color-black);
-  color: var(--color-white) !important;
+  background: #181a1b;
+  border: 1px solid #181a1b;
+  border-bottom: 4px solid #c84d1d;
+  color: #fbf8f2 !important;
   font-family: var(--font-heading);
   font-size: 11px;
   font-weight: 700;
@@ -92,14 +95,14 @@
 }
 
 .holdingBtn:hover {
-  background: #333;
-  border-color: #333;
+  background: #c84d1d;
+  border-color: #c84d1d;
 }
 
 /* ─── Active pre-release page ────────────────────────────────────────────── */
 .prereleasePage {
   min-height: 100vh;
-  background: var(--color-bg);
+  background: #f3ede3;
 }
 
 .prereleaseHero {
@@ -171,7 +174,8 @@
   flex-wrap: wrap;
   padding: 24px 28px;
   border: 1px solid var(--color-border);
-  background: var(--color-white);
+  background: #fbf8f2;
+  border-left: 4px solid #c84d1d;
 }
 
 .prereleaseInfoItem {

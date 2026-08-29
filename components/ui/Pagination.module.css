@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 0;
   padding: 32px 0;
 }
 
@@ -18,15 +18,17 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   cursor: pointer;
-  border: 1px solid var(--color-border);
-  background: var(--color-white);
-  color: var(--color-text);
+  border: 1px solid #181a1b;
+  border-right: 0;
+  border-radius: 0;
+  background: #fbf8f2;
+  color: #181a1b;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .btn:hover:not(:disabled):not(.active) {
-  background: var(--color-gray-light);
-  border-color: #ccc;
+  background: #eee4d5;
+  border-color: #181a1b;
 }
 
 .btn:disabled {
@@ -35,14 +37,18 @@
 }
 
 .active {
-  background: var(--color-black);
-  color: var(--color-white);
-  border-color: var(--color-black);
+  background: #c84d1d;
+  color: #fbf8f2;
+  border-color: #c84d1d;
   cursor: default;
 }
 
 .nav {
   font-size: 14px;
+}
+
+.btn:last-child {
+  border-right: 1px solid #181a1b;
 }
 
 .ellipsis {
@@ -51,13 +57,16 @@
   justify-content: center;
   min-width: 32px;
   height: 44px;
-  color: var(--color-muted);
+  color: rgba(24, 26, 27, 0.55);
+  border-bottom: 1px solid #181a1b;
+  border-top: 1px solid #181a1b;
+  background: #fbf8f2;
   font-size: 14px;
 }
 
 @media (max-width: 480px) {
   .pagination {
-    gap: 2px;
+    gap: 0;
     padding: 24px 0;
   }
 
