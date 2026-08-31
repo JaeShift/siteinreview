@@ -1,0 +1,352 @@
+@property --iris-r {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  pointer-events: none;
+  overflow: hidden;
+  --s: 1;
+  --ox: 50%;
+  --oy: 40px;
+}
+
+.stage[data-state="clear"] {
+  animation: fadeOut calc(320ms * var(--s)) ease forwards;
+}
+
+/* ── Dusk wipe ── */
+.duskWipe {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 280%;
+  background: linear-gradient(
+    to bottom,
+    #0d1115 0%,
+    #0d1115 36%,
+    #161c24 44%,
+    #2a241c 50%,
+    #b88a36 54%,
+    #e4d3b0 60%,
+    #f3ede3 68%,
+    #f3ede3 100%
+  );
+}
+
+.stage[data-to="ink"] .duskWipe {
+  transform: translateY(-64.5%);
+}
+
+.stage[data-to="cream"] .duskWipe {
+  transform: translateY(0);
+}
+
+.stage[data-effect="dusk"][data-state="cover"][data-to="ink"] .duskWipe {
+  animation: duskFall calc(680ms * var(--s)) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.stage[data-effect="dusk"][data-state="cover"][data-to="cream"] .duskWipe {
+  animation: dawnRise calc(680ms * var(--s)) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.stage[data-effect="dusk"][data-state="reveal"] {
+  animation: fadeOut calc(380ms * var(--s)) ease forwards;
+}
+
+@keyframes duskFall {
+  from { transform: translateY(-64.5%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes dawnRise {
+  from { transform: translateY(0); }
+  to { transform: translateY(-64.5%); }
+}
+
+/* ── Iris ── */
+.iris {
+  position: absolute;
+  inset: 0;
+  --iris-r: 0px;
+  -webkit-mask-image: radial-gradient(
+    circle at var(--ox) var(--oy),
+    transparent 0,
+    transparent max(0px, calc(var(--iris-r) - 36px)),
+    rgba(0, 0, 0, 0.55) var(--iris-r),
+    #000 calc(var(--iris-r) + 52px)
+  );
+  mask-image: radial-gradient(
+    circle at var(--ox) var(--oy),
+    transparent 0,
+    transparent max(0px, calc(var(--iris-r) - 36px)),
+    rgba(0, 0, 0, 0.55) var(--iris-r),
+    #000 calc(var(--iris-r) + 52px)
+  );
+}
+
+.stage[data-from="cream"] .iris {
+  background:
+    radial-gradient(circle at var(--ox) var(--oy), rgba(184, 138, 54, 0.28), transparent 28%),
+    #f3ede3;
+}
+
+.stage[data-from="ink"] .iris {
+  background:
+    radial-gradient(circle at var(--ox) var(--oy), rgba(184, 138, 54, 0.22), transparent 28%),
+    #0d1115;
+}
+
+.stage[data-effect="iris"][data-state="open"] .iris {
+  animation: irisOpen calc(780ms * var(--s)) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes irisOpen {
+  from { --iris-r: 0px; }
+  to { --iris-r: 160vmax; }
+}
+
+/* ── Card flip ── */
+.stage[data-effect="card-flip"] {
+  display: grid;
+  place-items: center;
+  perspective: 1800px;
+}
+
+.stage[data-effect="card-flip"][data-to="ink"] {
+  background: radial-gradient(circle at 50% 40%, #243044 0%, #0d1115 62%);
+}
+
+.stage[data-effect="card-flip"][data-to="cream"] {
+  background: radial-gradient(circle at 50% 40%, #fff8ee 0%, #f3ede3 62%);
+}
+
+.card {
+  position: relative;
+  width: min(58vh, 78vw);
+  height: min(81vh, calc(78vw * 1.396));
+  transform-style: preserve-3d;
+  border-radius: 3.6% / 2.6%;
+  box-shadow:
+    0 0 0 3px #b88a36,
+    0 0 0 6px rgba(13, 17, 21, 0.85),
+    0 28px 70px rgba(0, 0, 0, 0.45);
+}
+
+.stage[data-state="turn"] .card {
+  animation: cardFlip calc(820ms * var(--s)) cubic-bezier(0.22, 0.8, 0.28, 1) forwards;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.front {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.28), transparent 42%),
+    linear-gradient(#f3ede3, #e7dfd2);
+}
+
+.stage[data-to="cream"] .front {
+  background:
+    linear-gradient(160deg, rgba(184, 138, 54, 0.16), transparent 46%),
+    linear-gradient(#161c24, #0d1115);
+}
+
+.back {
+  transform: rotateY(180deg);
+  background:
+    linear-gradient(160deg, rgba(184, 138, 54, 0.2), transparent 42%),
+    linear-gradient(#161c24, #0d1115);
+}
+
+.stage[data-to="cream"] .back {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.28), transparent 42%),
+    linear-gradient(#f3ede3, #e7dfd2);
+}
+
+.front::after,
+.back::after {
+  content: "KITSUNE";
+  position: absolute;
+  inset: 10% 12%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(184, 138, 54, 0.45);
+  font-family: var(--font-heading);
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: rgba(184, 138, 54, 0.62);
+}
+
+.foil {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 244, 214, 0) 40%,
+    rgba(255, 244, 214, 0.55) 50%,
+    rgba(184, 138, 54, 0.18) 58%,
+    transparent 68%
+  );
+  opacity: 0;
+  mix-blend-mode: screen;
+  transform: translateZ(1px);
+}
+
+.stage[data-state="turn"] .foil {
+  animation: foilFlash calc(820ms * var(--s)) ease forwards;
+}
+
+@keyframes cardFlip {
+  0% { transform: rotateY(0deg) rotateX(0deg) translateZ(0); }
+  22% { transform: rotateY(18deg) rotateX(-8deg) translateZ(28px); }
+  50% { transform: rotateY(90deg) rotateX(-5deg) translateZ(90px); }
+  100% { transform: rotateY(180deg) rotateX(0deg) translateZ(0); }
+}
+
+@keyframes foilFlash {
+  0%, 100% { opacity: 0; }
+  48%, 58% { opacity: 1; }
+}
+
+/* ── Ink bloom ── */
+.filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.blot {
+  position: absolute;
+  left: var(--ox);
+  top: var(--oy);
+  width: 42vmax;
+  height: 42vmax;
+  border-radius: 42% 58% 47% 53% / 48% 44% 56% 52%;
+  transform: translate(-50%, -50%) scale(0.04);
+  filter: url("#kitsune-ink");
+}
+
+.stage[data-to="ink"] .blot {
+  background: radial-gradient(circle at 35% 30%, #243044, #0d1115 58%);
+}
+
+.stage[data-to="cream"] .blot {
+  background: radial-gradient(circle at 35% 30%, #fff8ee, #f3ede3 58%);
+}
+
+.blotMain { width: 54vmax; height: 50vmax; }
+.blotTwo { width: 36vmax; height: 40vmax; margin-left: -4vmax; margin-top: 2vmax; }
+.blotThree { width: 28vmax; height: 32vmax; margin-left: 5vmax; margin-top: -3vmax; }
+
+.stage[data-state="spread"] .blotMain {
+  animation: inkSpread calc(780ms * var(--s)) cubic-bezier(0.18, 0.84, 0.28, 1) forwards;
+}
+
+.stage[data-state="spread"] .blotTwo {
+  animation: inkSpread calc(780ms * var(--s)) calc(40ms * var(--s)) cubic-bezier(0.18, 0.84, 0.28, 1) forwards;
+}
+
+.stage[data-state="spread"] .blotThree {
+  animation: inkSpread calc(780ms * var(--s)) calc(70ms * var(--s)) cubic-bezier(0.18, 0.84, 0.28, 1) forwards;
+}
+
+@keyframes inkSpread {
+  0% { transform: translate(-50%, -50%) scale(0.04); opacity: 0.92; }
+  18% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(4.4); opacity: 1; }
+}
+
+/* ── Mana seam ── */
+.panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+}
+
+.stage[data-from="cream"] .panel { background: #f3ede3; }
+.stage[data-from="ink"] .panel { background: #0d1115; }
+
+.panelLeft { left: 0; }
+.panelRight { right: 0; }
+
+.seam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  transform: translateX(-50%) scaleY(0);
+  transform-origin: center top;
+  background: linear-gradient(180deg, #b88a36 0%, #176f9f 42%, #c84d1d 78%, #b88a36 100%);
+  box-shadow: 0 0 18px rgba(184, 138, 54, 0.7), 0 0 32px rgba(23, 111, 159, 0.35);
+}
+
+.stage[data-state="draw"] .seam {
+  animation: seamDraw calc(380ms * var(--s)) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.stage[data-state="part"] .seam,
+.stage[data-state="clear"] .seam {
+  transform: translateX(-50%) scaleY(1);
+}
+
+.stage[data-state="part"] .panelLeft {
+  animation: panelLeft calc(520ms * var(--s)) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.stage[data-state="part"] .panelRight {
+  animation: panelRight calc(520ms * var(--s)) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.stage[data-state="part"] .seam {
+  animation: seamHold calc(520ms * var(--s)) ease forwards;
+}
+
+@keyframes seamDraw {
+  from { transform: translateX(-50%) scaleY(0); opacity: 0.2; }
+  to { transform: translateX(-50%) scaleY(1); opacity: 1; }
+}
+
+@keyframes panelLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-102%); }
+}
+
+@keyframes panelRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(102%); }
+}
+
+@keyframes seamHold {
+  0% { opacity: 1; transform: translateX(-50%) scaleY(1); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) scaleY(1); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    display: none;
+  }
+}

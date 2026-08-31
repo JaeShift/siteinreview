@@ -3,6 +3,12 @@
 import { useState, useEffect } from "react";
 import type { PromoCode, EventCredit } from "@/lib/store";
 import MediaLibrary from "@/components/admin/MediaLibrary";
+import {
+  THEME_SPEEDS,
+  THEME_TRANSITIONS,
+  type ThemeTransitionId,
+  type ThemeTransitionSpeed,
+} from "@/lib/site-appearance";
 import styles from "./admin-settings.module.css";
 
 function PromoCodesSection() {
@@ -463,9 +469,112 @@ function MediaLibrarySection() {
   );
 }
 
+function AppearanceSection() {
+  const [transition, setTransition] = useState<ThemeTransitionId>("none");
+  const [speed, setSpeed] = useState<ThemeTransitionSpeed>("medium");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/admin/settings/appearance")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.transition) setTransition(data.transition);
+        if (data?.speed) setSpeed(data.speed);
+      })
+      .catch(() => undefined);
+  }, []);
+
+  async function persist(next: { transition: ThemeTransitionId; speed: ThemeTransitionSpeed }) {
+    setSaving(true);
+    try {
+      const res = await fetch("/api/admin/settings/appearance", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(next),
+      });
+      if (!res.ok) throw new Error();
+      setSaved(true);
+      window.setTimeout(() => setSaved(false), 2200);
+    } catch {
+      alert("Appearance settings could not be saved. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function chooseTransition(id: ThemeTransitionId) {
+    const next = transition === id ? "none" : id;
+    setTransition(next);
+    void persist({ transition: next, speed });
+  }
+
+  function chooseSpeed(id: ThemeTransitionSpeed) {
+    setSpeed(id);
+    void persist({ transition, speed: id });
+  }
+
+  return (
+    <section className={styles.section}>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>Page Transitions</h2>
+      </div>
+      <p className={styles.sectionDesc}>
+        Choose how the public site moves between cream taproom pages and dark MTG pages. Only one effect is active at a time.
+      </p>
+
+      <div className={styles.notifBlock}>
+        <div className={styles.notifBlockLabel}>Effect</div>
+        <div className={styles.notifToggles}>
+          {THEME_TRANSITIONS.map((item) => (
+            <label key={item.id} className={styles.notifToggle}>
+              <div className={styles.notifToggleInfo}>
+                <span className={styles.notifToggleName}>{item.label}</span>
+                <span className={styles.notifToggleDesc}>{item.desc}</span>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={transition === item.id}
+                className={`${styles.toggleSwitch} ${transition === item.id ? styles.toggleSwitchOn : ""}`}
+                onClick={() => chooseTransition(item.id)}
+                disabled={saving}
+              >
+                <span className={styles.toggleThumb} />
+              </button>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className={styles.notifBlock}>
+        <div className={styles.notifBlockLabel}>Speed</div>
+        <div className={styles.speedRow}>
+          {THEME_SPEEDS.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className={`${styles.speedBtn} ${speed === item.id ? styles.speedBtnOn : ""}`}
+              onClick={() => chooseSpeed(item.id)}
+              disabled={saving || transition === "none"}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {saved && (
+        <span style={{ fontSize: 13, color: "var(--color-green)", fontWeight: 600 }}>Saved!</span>
+      )}
+    </section>
+  );
+}
+
 export default function SettingsClient() {
   return (
     <>
+      <AppearanceSection />
       <NotificationsSection />
       <PromoCodesSection />
       <EventCreditsSection />

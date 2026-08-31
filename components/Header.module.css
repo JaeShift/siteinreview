@@ -11,6 +11,7 @@
   padding: 9px 0;
   background-color: #f3ede3;
   border-bottom: 1px solid rgba(24, 26, 27, 0.14);
+  transition: background-color 560ms ease, border-color 560ms ease, color 560ms ease;
 }
 
 .headerHome .hamburgerBar {

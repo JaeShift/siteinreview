@@ -1,31 +1,5 @@
 [
   {
-    "id": "86909938-9404-4c58-bf97-3626b491835b",
-    "eventSlug": "star-trek-prerelease",
-    "firstName": "Riley",
-    "lastName": "Nichols",
-    "email": "ryleejae1009@gmail.com",
-    "phone": "(614) 955-1111",
-    "notes": "",
-    "status": "refunded",
-    "stripeSessionId": "cs_test_a162CWVDLnh1G16zeIwv6uOT5EJcEbDkTzA3McWPFMnQ0UFRH5jq1iFvif",
-    "amountPaid": 5000,
-    "checkedIn": false,
-    "createdAt": "2026-08-28T16:42:20.161Z"
-  },
-  {
-    "id": "b16d87d0-75cf-4171-b808-a560d5ab4f30",
-    "eventSlug": "star-trek-prerelease",
-    "firstName": "Kenzie",
-    "lastName": "English",
-    "email": "ryleejae1009@gmail.com",
-    "phone": "(614) 955-1111",
-    "notes": "",
-    "status": "confirmed",
-    "checkedIn": false,
-    "createdAt": "2026-08-27T20:57:48.024Z"
-  },
-  {
     "id": "34b7cca0-81b7-4799-8005-65d45bc11fe0",
     "eventSlug": "star-trek-prerelease",
     "firstName": "Rylee",
@@ -36,66 +10,5 @@
     "status": "confirmed",
     "checkedIn": false,
     "createdAt": "2026-08-28T04:19:59.686Z"
-  },
-  {
-    "id": "2522b9e0-270b-4368-8aa5-4d2c523a1973",
-    "eventSlug": "star-trek-prerelease",
-    "firstName": "Rylee",
-    "lastName": "Nichols",
-    "email": "ryleejaenichols@gmail.com",
-    "phone": "(614) 955-1111",
-    "notes": "",
-    "status": "confirmed",
-    "checkedIn": false,
-    "createdAt": "2026-08-27T19:56:14.961Z"
-  },
-  {
-    "id": "fff43b8e-500d-4e26-93e2-48f27f795d2f",
-    "eventSlug": "commander-night-jul-7",
-    "firstName": "Rylee",
-    "lastName": "Nichols",
-    "email": "ryleejae1009@gmail.com",
-    "phone": "(614) 955-1111",
-    "notes": "",
-    "status": "confirmed",
-    "checkedIn": false,
-    "createdAt": "2026-07-07T21:45:33.214Z"
-  },
-  {
-    "id": "ffeb4b9b-a614-49ce-9243-a0015d7f6a96",
-    "eventSlug": "commander-night-jul-7",
-    "firstName": "Rylee",
-    "lastName": "Nichols",
-    "email": "kitsune@test.com",
-    "phone": "(614) 955-1111",
-    "notes": "",
-    "status": "confirmed",
-    "checkedIn": false,
-    "createdAt": "2026-07-07T21:44:04.907Z"
-  },
-  {
-    "id": "19dd10c6-966f-44da-ae73-14564bb0e2b9",
-    "eventSlug": "commander-night-jul-7",
-    "firstName": "Rylee",
-    "lastName": "Nichols",
-    "email": "ryleejae1009@gmail.com",
-    "phone": "(614) 955-1111",
-    "notes": "",
-    "status": "confirmed",
-    "checkedIn": false,
-    "createdAt": "2026-07-07T21:37:25.280Z"
-  },
-  {
-    "id": "0af8c283-910f-4cd5-9807-9e8c8701a1a8",
-    "eventSlug": "commander-night-jul-7",
-    "firstName": "Rylee",
-    "lastName": "Nichols",
-    "email": "ryleejaenichols@gmail.com",
-    "phone": "6149551111",
-    "notes": "",
-    "status": "confirmed",
-    "checkedIn": false,
-    "tableAssignment": "",
-    "createdAt": "2026-07-07T20:48:38.237Z"
   }
 ]

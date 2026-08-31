@@ -1,0 +1,60 @@
+.band {
+  flex-shrink: 0;
+  height: 88px;
+  width: 100%;
+  pointer-events: none;
+  animation: thresholdIn calc(640ms * var(--s, 1)) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dusk {
+  background: linear-gradient(
+    to bottom,
+    #f3ede3 0%,
+    #e8dcc8 22%,
+    #b88a36 48%,
+    #2a3340 76%,
+    #0d1115 100%
+  );
+}
+
+.dawn {
+  background: linear-gradient(
+    to bottom,
+    #0d1115 0%,
+    #2a3340 24%,
+    #b88a36 52%,
+    #e8dcc8 78%,
+    #f3ede3 100%
+  );
+}
+
+@keyframes thresholdIn {
+  from {
+    opacity: 0;
+    transform: scaleY(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+.dusk {
+  transform-origin: top center;
+}
+
+.dawn {
+  transform-origin: bottom center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .band {
+    animation: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .band {
+    height: 64px;
+  }
+}

@@ -14,6 +14,12 @@ import path from "path";
 import { mtgEvents, type MtgEvent } from "./events-data";
 import { foodTrucks, type FoodTruck } from "./food-trucks-data";
 import { singles, type SingleCard } from "./singles-data";
+import {
+  DEFAULT_SITE_APPEARANCE,
+  isThemeTransitionId,
+  isThemeTransitionSpeed,
+  type SiteAppearance,
+} from "./site-appearance";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 
@@ -119,6 +125,25 @@ export function getNotificationSettingsStore(): NotificationSettings | null {
 
 export function saveNotificationSettingsStore(settings: NotificationSettings): void {
   writeJson("notification-settings.json", settings);
+}
+
+// ─── Site appearance ─────────────────────────────────────────────────────────
+
+export function getSiteAppearanceStore(): SiteAppearance {
+  const stored = readJson<Partial<SiteAppearance>>("site-appearance.json", DEFAULT_SITE_APPEARANCE);
+  return {
+    transition: isThemeTransitionId(stored.transition)
+      ? stored.transition
+      : DEFAULT_SITE_APPEARANCE.transition,
+    speed: isThemeTransitionSpeed(stored.speed)
+      ? stored.speed
+      : DEFAULT_SITE_APPEARANCE.speed,
+  };
+}
+
+export function saveSiteAppearanceStore(settings: SiteAppearance): SiteAppearance {
+  writeJson("site-appearance.json", settings);
+  return settings;
 }
 
 // ─── Food Trucks ─────────────────────────────────────────────────────────────

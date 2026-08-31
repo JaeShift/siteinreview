@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import SiteShell from "@/components/SiteShell";
+import { getSiteAppearanceStore } from "@/lib/store";
 import "@/styles/globals.css";
+
+export const dynamic = "force-dynamic";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -48,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css" />
       </head>
       <body>
-        <SiteShell>{children}</SiteShell>
+        <SiteShell appearance={getSiteAppearanceStore()}>{children}</SiteShell>
       </body>
     </html>
   );

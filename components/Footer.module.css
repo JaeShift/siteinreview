@@ -193,6 +193,7 @@
   background: #f3ede3;
   color: #181a1b;
   border-top: 1px solid rgba(24, 26, 27, 0.16);
+  transition: background-color 560ms ease, color 560ms ease, border-color 560ms ease;
 }
 
 .footerHome .footerInner {

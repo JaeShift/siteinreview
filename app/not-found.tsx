@@ -5,7 +5,7 @@ export default function NotFound() {
   return (
     <section className={styles.state} aria-labelledby="not-found-title">
       <div className={styles.panel}>
-        <p className={styles.eyebrow}>404 / Lost in the den</p>
+        <p className={styles.eyebrow}>404 / Lost</p>
         <h1 id="not-found-title" className={styles.title}>
           This trail went cold.
         </h1>
