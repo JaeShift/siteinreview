@@ -392,17 +392,17 @@ button {
 /* ─────────────────────────────────────────────────────────────────────────────
    PAGE BANNER (inner pages)
 ───────────────────────────────────────────────────────────────────────────── */
-/* Social icon links — override a:link / a:visited accent colours */
+/* Social icon links — inherit the container's colour so they work on any background */
 .social-link,
 .social-link:link,
 .social-link:visited {
-  color: #000000;
-  transition: color 0.2s ease;
+  color: inherit;
+  transition: opacity 0.2s ease;
 }
 
 .social-link:hover,
 .social-link:focus {
-  color: #888888;
+  opacity: 0.6;
 }
 
 .page-banner {

@@ -1329,10 +1329,10 @@ export default function AdminInventoryPage() {
                 <button
                   className={`${styles.visibilityBtn} ${styles.visibilityOutOfStock}`}
                   data-label="Visibility"
-                  title="Out of stock — hidden from shop automatically"
-                  disabled
+                  title="Add inventory quantity"
+                  onClick={() => startEdit(card)}
                 >
-                  Out of Stock
+                  + Add Qty
                 </button>
               ) : (
                 <button

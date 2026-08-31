@@ -6,10 +6,23 @@
 }
 
 .contactSection :global(.container) {
+  position: relative;
   max-width: 1000px;
   padding: clamp(28px, 5vw, 56px);
   background: #fbf8f2;
   border: 1px solid rgba(24, 26, 27, 0.24);
+}
+
+.logoWatermark {
+  position: absolute;
+  top: clamp(16px, 3vw, 32px);
+  right: clamp(48px, 7vw, 80px);
+  width: clamp(80px, 10vw, 116px);
+  height: clamp(80px, 10vw, 116px);
+  filter: brightness(0);
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none;
 }
 
 .contactGrid {

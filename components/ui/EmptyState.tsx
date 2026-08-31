@@ -5,6 +5,7 @@ interface Props {
   message?: string;
   action?: React.ReactNode;
   icon?: React.ReactNode;
+  showIcon?: boolean;
 }
 
 export default function EmptyState({
@@ -12,11 +13,12 @@ export default function EmptyState({
   message = "Check back soon.",
   action,
   icon,
+  showIcon = true,
 }: Props) {
   return (
     <div className={styles.emptyState}>
-      {icon && <div className={styles.icon}>{icon}</div>}
-      {!icon && (
+      {showIcon && icon && <div className={styles.icon}>{icon}</div>}
+      {showIcon && !icon && (
         <div className={styles.defaultIcon} aria-hidden="true">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
             <rect x="8" y="8" width="32" height="32" rx="2" stroke="currentColor" strokeWidth="2" strokeDasharray="4 3" />

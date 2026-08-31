@@ -55,11 +55,28 @@
 
 :global([data-route^="/card-shop"]) .searchBar {
   background: rgba(243, 237, 227, 0.06);
-  border-bottom-color: rgba(184, 138, 54, 0.72);
+  border: 1px solid rgba(243, 237, 227, 0.25);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+  transition: border-color 170ms ease, box-shadow 170ms ease, background 170ms ease;
+}
+
+:global([data-route^="/card-shop"]) .searchBar:focus-within {
+  background: rgba(243, 237, 227, 0.09);
+  border-color: rgba(243, 237, 227, 0.55);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
 }
 
 :global([data-route^="/card-shop"]) .searchInput {
-  color: #f3ede3;
+  min-height: 42px;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #000000;
+}
+
+:global([data-route^="/card-shop"]) .searchInput:focus {
+  box-shadow: none;
 }
 
 :global([data-route^="/card-shop"]) .searchInput::placeholder {
@@ -67,7 +84,7 @@
 }
 
 :global([data-route^="/card-shop"]) .searchIcon {
-  color: #bfa263;
+  color: #9a9a9a;
 }
 
 :global([data-route^="/card-shop"]) .clearBtn {

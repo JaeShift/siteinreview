@@ -30,7 +30,6 @@ export default function SinglesPage() {
             <i className="ms ms-g ms-cost" />
           </div>
           <h1 className={styles.bannerTitle}>SHOP MAGIC</h1>
-          <div className={styles.bannerAccent} />
         </div>
       </section>
 

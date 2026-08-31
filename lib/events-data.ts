@@ -46,6 +46,8 @@ export interface MtgEvent {
   tags: string[];
   faq: EventFaq[];
   recurring?: "weekly" | "biweekly" | "monthly";
+  recurringUntil?: string;
+  recurrenceGroupId?: string;
   featured?: boolean;
   registrationOpen?: boolean;
   customQuestions?: CustomQuestion[];

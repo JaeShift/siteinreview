@@ -101,11 +101,6 @@ export default function MtgPage() {
         <div className={styles.heroBg} style={{ backgroundImage: `url('${HERO_IMG}')` }} />
         <div className={styles.heroVignette} />
         <div className={styles.heroContent}>
-          <div className={styles.manaConstellation} aria-hidden="true">
-            {manaSymbols.map((symbol) => (
-              <i key={symbol} className={`ms ms-${symbol} ms-cost ${styles.manaGlyph}`} />
-            ))}
-          </div>
           <h1 className={styles.heroTitle}>MTG &amp; MORE</h1>
           <p className={styles.heroSubtitle}>
             Magic events, sealed product, singles, prereleases, Commander nights, and private play at Kitsune.
@@ -188,7 +183,7 @@ export default function MtgPage() {
               <span className={styles.scheduleLabel}>Schedule</span>
               <h2 className={styles.scheduleHeading}>MONTHLY PLAY</h2>
             </div>
-            <Link href="/calendar" className={styles.scheduleCalLink}>
+            <Link href="/events" className={styles.scheduleCalLink}>
               FULL CALENDAR →
             </Link>
           </div>

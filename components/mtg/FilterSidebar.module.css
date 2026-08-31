@@ -408,11 +408,15 @@
 
 :global([data-route^="/card-shop"]) .rarityBtnActive {
   color: #fbf8f2;
-  background: #633b78;
-  border-color: #9b72ae;
+  background: #176f9f;
+  border-color: #6ca7c4;
 }
 
 :global([data-route^="/card-shop"]) .clearBtn {
   color: #f3ede3;
-  background: #633b78;
+  background: #176f9f;
+}
+
+:global([data-route^="/card-shop"]) .clearBtn:hover {
+  background: #c84d1d;
 }

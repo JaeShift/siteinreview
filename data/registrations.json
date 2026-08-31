@@ -1,19 +1,5 @@
 [
   {
-    "id": "4a33c74c-e4b7-4936-b520-0df63d9f8cc3",
-    "eventSlug": "star-trek-prerelease",
-    "firstName": "rylet",
-    "lastName": "stars",
-    "email": "ryleejae1009@gmail.com",
-    "phone": "(614) 955-1111",
-    "notes": "",
-    "status": "refunded",
-    "stripeSessionId": "cs_test_a1g26r2cR3sXWHzTrIp3KkNlojqMyi40fYGFsYRmkmMfeOiFZzQe30gyvE",
-    "amountPaid": 5000,
-    "checkedIn": false,
-    "createdAt": "2026-08-28T16:50:07.850Z"
-  },
-  {
     "id": "86909938-9404-4c58-bf97-3626b491835b",
     "eventSlug": "star-trek-prerelease",
     "firstName": "Riley",

@@ -614,10 +614,16 @@
 
 .visibilityOutOfStock {
   background: #f0f0f0;
-  color: #aaa;
+  color: #525252;
   border: 1px solid #e0e0e0;
-  cursor: default;
+  cursor: pointer;
   width: 96px;
+}
+
+.visibilityOutOfStock:hover {
+  color: #ffffff;
+  background: #181a1b;
+  border-color: #181a1b;
 }
 
 .actionsCell {

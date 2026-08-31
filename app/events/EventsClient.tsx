@@ -9,8 +9,7 @@ import type { MtgEvent, EventFormat } from "@/lib/events-data";
 import styles from "./events.module.css";
 
 const FORMATS: EventFormat[] = [
-  "Commander", "Draft", "Standard", "Modern", "Pioneer",
-  "Legacy", "Sealed", "Prerelease", "RCQ", "Casual",
+  "Commander", "Standard", "Sealed", "Prerelease", "Casual",
 ];
 
 interface Props {
@@ -92,6 +91,7 @@ export default function EventsClient({ events }: Props) {
         ) : (
           <EmptyState
             title="No Events Found"
+            showIcon={false}
             message={
               search || activeFormat !== "All"
                 ? "Try adjusting your search or clearing the format filter."

@@ -13,7 +13,7 @@ function getResend() {
 
 export async function sendContactEmail(data: ContactFormData) {
   const resend = getResend();
-  const toEmail = process.env.CONTACT_EMAIL_TO ?? "Tyler@KitsuneBeerCo.com";
+  const toEmail = process.env.CONTACT_EMAIL_TO ?? "ryleejae1009@gmail.com";
   const fromEmail =
     process.env.CONTACT_EMAIL_FROM ?? "onboarding@resend.dev";
 
@@ -52,6 +52,25 @@ ${data.message}
         </p>
       </div>
     `,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function sendNewsletterSignupEmail(email: string) {
+  const resend = getResend();
+  const toEmail = process.env.CONTACT_EMAIL_TO ?? "ryleejae1009@gmail.com";
+  const fromEmail =
+    process.env.CONTACT_EMAIL_FROM ?? "onboarding@resend.dev";
+
+  const { error } = await resend.emails.send({
+    from: `Kitsune Website <${fromEmail}>`,
+    to: [toEmail],
+    replyTo: email,
+    subject: "New Kitsune Inner Circle signup",
+    text: `${email} subscribed to the Kitsune Inner Circle from the card shop.`,
   });
 
   if (error) {

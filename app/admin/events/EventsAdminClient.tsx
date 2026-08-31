@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { MtgEvent, EventFormat, CustomQuestion, EventAddOn } from "@/lib/events-data";
+import type { MtgEvent, EventFormat, CustomQuestion } from "@/lib/events-data";
 import styles from "./admin-events.module.css";
 
 const FORMAT_OPTIONS: EventFormat[] = [
@@ -72,6 +72,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
   const [editing, setEditing] = useState<MtgEvent | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
   const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
   const [flash, setFlash] = useState<{ msg: string; type: "success" | "error" } | null>(null);
 
@@ -197,7 +198,9 @@ export default function EventsAdminClient({ initialEvents }: Props) {
 
   async function savePrereleaseEvent() {
     if (!prEvent) return;
-    if (prEvent.hidden && prIsNew) {
+    const existingPrerelease = events.find((event) => event.format === "Prerelease");
+    const isCreating = !existingPrerelease;
+    if (prEvent.hidden && isCreating) {
       setShowPRModal(false);
       return;
     }
@@ -206,26 +209,42 @@ export default function EventsAdminClient({ initialEvents }: Props) {
       if (!prEvent.date)                    { setPrError("Date is required."); return; }
       if (!prEvent.time.trim())             { setPrError("Time is required."); return; }
       if (isNaN(prEvent.entryFee))          { setPrError("Entry fee is required."); return; }
+      if (!Number.isFinite(prEvent.playerLimit) || prEvent.playerLimit < 1) {
+        setPrError("Player limit is required.");
+        return;
+      }
       if (!prEvent.shortDescription.trim()) { setPrError("Short description is required."); return; }
       if (!prEvent.imageUrl.trim())         { setPrError("Hero image is required."); return; }
     }
     setPrError(null);
     setPrSaving(true);
     try {
-      const url = prIsNew ? "/api/admin/events" : `/api/admin/events/${prEvent.slug}`;
-      const method = prIsNew ? "POST" : "PUT";
-      const res = await fetch(url, {
+      const eventToSave = existingPrerelease
+        ? { ...prEvent, slug: existingPrerelease.slug }
+        : prEvent;
+      const url = isCreating
+        ? "/api/admin/events"
+        : `/api/admin/events/${existingPrerelease.slug}`;
+      const method = isCreating ? "POST" : "PUT";
+      const requestInit: RequestInit = {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(prEvent),
-      });
+        body: JSON.stringify(eventToSave),
+      };
+      let res = await fetch(url, requestInit);
+      if (method === "PUT" && res.status === 400) {
+        const firstError = await res.clone().json().catch(() => ({}));
+        if ((firstError as { error?: string }).error === "Invalid body") {
+          res = await fetch(url, requestInit);
+        }
+      }
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error((err as { error?: string }).error ?? "Request failed");
       }
       setEvents(await res.json());
       setShowPRModal(false);
-      showFlash(prEvent.hidden ? "Pre-release page set to holding." : prIsNew ? "Pre-release event created — page is now live." : "Pre-release event updated.");
+      showFlash(prEvent.hidden ? "Pre-release page set to holding." : isCreating ? "Pre-release event created — page is now live." : "Pre-release event updated.");
     } catch (err) {
       showFlash(err instanceof Error ? err.message : "Failed to save.", "error");
     } finally {
@@ -247,6 +266,22 @@ export default function EventsAdminClient({ initialEvents }: Props) {
 
   async function handleSave() {
     if (!editing) return;
+    if (!Number.isFinite(editing.playerLimit) || editing.playerLimit < 1) {
+      showFlash("Player limit must be at least 1.", "error");
+      return;
+    }
+    if (editing.recurring && !editing.recurringUntil) {
+      showFlash("Choose an end date for the recurring event.", "error");
+      return;
+    }
+    if (
+      editing.recurring &&
+      editing.recurringUntil &&
+      editing.recurringUntil < editing.date
+    ) {
+      showFlash("The recurrence end date cannot be before the first event.", "error");
+      return;
+    }
     setSaving(true);
     try {
       const url = isNew ? "/api/admin/events" : `/api/admin/events/${editing.slug}`;
@@ -518,9 +553,21 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   </div>
 
                   <div className={styles.formGroup}>
-                    <label className="form-label">Player Limit</label>
-                    <input type="number" min={1} className="form-input" value={prEvent.playerLimit}
-                      onChange={(e) => setPrEvent((ev) => ev ? { ...ev, playerLimit: parseInt(e.target.value) || 32 } : ev)} />
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <label className="form-label" style={{ margin: 0 }}>Player Limit</label>
+                      {prError === "Player limit is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                    </div>
+                    <input
+                      type="number"
+                      min={1}
+                      className="form-input"
+                      value={Number.isFinite(prEvent.playerLimit) ? prEvent.playerLimit : ""}
+                      onChange={(e) => {
+                        setPrError(null);
+                        const value = e.target.value === "" ? Number.NaN : Number.parseInt(e.target.value, 10);
+                        setPrEvent((ev) => ev ? { ...ev, playerLimit: value } : ev);
+                      }}
+                    />
                   </div>
 
                   <div className={styles.formGroup}>
@@ -646,7 +693,16 @@ export default function EventsAdminClient({ initialEvents }: Props) {
 
               <div className={styles.formGroup}>
                 <label className="form-label">Player Limit</label>
-                <input type="number" min={1} className="form-input" value={editing.playerLimit} onChange={(e) => changeField("playerLimit", parseInt(e.target.value) || 32)} />
+                <input
+                  type="number"
+                  min={1}
+                  className="form-input"
+                  value={Number.isFinite(editing.playerLimit) ? editing.playerLimit : ""}
+                  onChange={(e) => changeField(
+                    "playerLimit",
+                    e.target.value === "" ? Number.NaN : Number.parseInt(e.target.value, 10)
+                  )}
+                />
               </div>
 
               <div className={styles.formGroup}>
@@ -694,19 +750,109 @@ export default function EventsAdminClient({ initialEvents }: Props) {
               </div>
 
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className="form-label">Image URL</label>
-                <input className="form-input" value={editing.imageUrl} onChange={(e) => changeField("imageUrl", e.target.value)} placeholder="https://…" />
+                <label className="form-label">Event Image</label>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  <label
+                    className={`btn btn-outline ${styles.uploadBtn}`}
+                    style={{
+                      cursor: imageUploading ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    {imageUploading
+                      ? "Uploading…"
+                      : editing.imageUrl
+                        ? "Replace Image ↑"
+                        : "Upload Image ↑"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      disabled={imageUploading}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setImageUploading(true);
+                        try {
+                          const formData = new FormData();
+                          formData.append("file", file);
+                          const response = await fetch("/api/admin/upload", {
+                            method: "POST",
+                            body: formData,
+                          });
+                          const data = await response.json();
+                          const url = data.uploaded?.[0]?.url;
+                          if (response.ok && url) {
+                            changeField("imageUrl", url);
+                          } else {
+                            showFlash(data.errors?.[0]?.error ?? "Upload failed", "error");
+                          }
+                        } catch {
+                          showFlash("Upload failed", "error");
+                        } finally {
+                          setImageUploading(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                  </label>
+                  {editing.imageUrl && (
+                    <button
+                      type="button"
+                      className="btn btn-outline"
+                      onClick={() => changeField("imageUrl", "")}
+                      disabled={imageUploading}
+                    >
+                      Delete Image
+                    </button>
+                  )}
+                </div>
+                {editing.imageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={editing.imageUrl}
+                    alt="Event preview"
+                    className={styles.prImagePreview}
+                  />
+                )}
               </div>
 
               {editing.format !== "Prerelease" && (
                 <div className={styles.formGroup}>
                   <label className="form-label">Recurring</label>
-                  <select className="form-input" value={editing.recurring ?? ""} onChange={(e) => changeField("recurring", e.target.value || undefined)}>
+                  <select
+                    className="form-input"
+                    value={editing.recurring ?? ""}
+                    onChange={(e) => {
+                      const recurring = e.target.value || undefined;
+                      setEditing((current) => current
+                        ? {
+                            ...current,
+                            recurring: recurring as MtgEvent["recurring"],
+                            recurringUntil: recurring ? current.recurringUntil : undefined,
+                          }
+                        : current
+                      );
+                    }}
+                  >
                     <option value="">None</option>
                     <option value="weekly">Weekly</option>
                     <option value="biweekly">Biweekly</option>
                     <option value="monthly">Monthly</option>
                   </select>
+                </div>
+              )}
+
+              {editing.format !== "Prerelease" && editing.recurring && (
+                <div className={styles.formGroup}>
+                  <label className="form-label">Repeat Until</label>
+                  <input
+                    type="date"
+                    min={editing.date}
+                    className="form-input"
+                    value={editing.recurringUntil ?? ""}
+                    onChange={(e) => changeField("recurringUntil", e.target.value)}
+                    required
+                  />
                 </div>
               )}
 
@@ -774,67 +920,6 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                     }}
                   >
                     + Add Question
-                  </button>
-                </div>
-              )}
-
-              {/* ── Add-Ons Editor ── */}
-              {editing.format !== "Prerelease" && (
-                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                  <label className="form-label">Add-Ons (optional paid extras)</label>
-                  {(editing.addOns ?? []).map((addon, idx) => (
-                    <div key={addon.id} className={styles.faqItem}>
-                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                        <input
-                          className="form-input"
-                          style={{ flex: 1 }}
-                          value={addon.label}
-                          placeholder="Add-on label (e.g. Extra Pack)"
-                          onChange={(e) => {
-                            const addons = (editing.addOns ?? []).map((a, i) =>
-                              i === idx ? { ...a, label: e.target.value } : a
-                            );
-                            changeField("addOns", addons);
-                          }}
-                        />
-                        <input
-                          className="form-input"
-                          style={{ width: 90 }}
-                          type="number"
-                          min={0}
-                          step={0.01}
-                          placeholder="Price"
-                          value={addon.price}
-                          onChange={(e) => {
-                            const addons = (editing.addOns ?? []).map((a, i) =>
-                              i === idx ? { ...a, price: parseFloat(e.target.value) || 0 } : a
-                            );
-                            changeField("addOns", addons);
-                          }}
-                        />
-                        <button
-                          type="button"
-                          className={styles.faqRemoveBtn}
-                          onClick={() => {
-                            const addons = (editing.addOns ?? []).filter((_, i) => i !== idx);
-                            changeField("addOns", addons);
-                          }}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    className="btn btn-outline"
-                    style={{ marginTop: 8, fontSize: 12 }}
-                    onClick={() => {
-                      const newAddon: EventAddOn = { id: crypto.randomUUID(), label: "", price: 0 };
-                      changeField("addOns", [...(editing.addOns ?? []), newAddon]);
-                    }}
-                  >
-                    + Add Add-On
                   </button>
                 </div>
               )}

@@ -41,6 +41,12 @@ function SinglesInner({ initialCards }: { initialCards: SingleCardData[] }) {
   const [filters, setFilters] = useState<SinglesFilters>(DEFAULT_FILTERS);
   const [page, setPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [filtersCollapsed, setFiltersCollapsed] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [newsletterMessage, setNewsletterMessage] = useState("");
   const { totalCount, openCart } = useCart();
 
   const filtered = useMemo(() => filterSingles(initialCards, filters), [initialCards, filters]);
@@ -68,6 +74,34 @@ function SinglesInner({ initialCards }: { initialCards: SingleCardData[] }) {
 
   const handleSearch = (value: string) => {
     handleFiltersChange({ ...filters, search: value });
+  };
+
+  const handleNewsletterSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setNewsletterStatus("loading");
+    setNewsletterMessage("");
+
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newsletterEmail }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error ?? "Unable to subscribe right now.");
+      }
+
+      setNewsletterStatus("success");
+      setNewsletterMessage("Thanks! Your signup was sent to Kitsune.");
+      setNewsletterEmail("");
+    } catch (error) {
+      setNewsletterStatus("error");
+      setNewsletterMessage(
+        error instanceof Error ? error.message : "Unable to subscribe right now."
+      );
+    }
   };
 
   return (
@@ -100,30 +134,36 @@ function SinglesInner({ initialCards }: { initialCards: SingleCardData[] }) {
 
         <div className={`container ${styles.layout}`}>
           {/* Sidebar */}
-          <div className={`${styles.sidebarWrap} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
+          <div
+            className={`${styles.sidebarWrap} ${
+              filtersCollapsed ? styles.sidebarCollapsed : ""
+            } ${sidebarOpen ? styles.sidebarOpen : ""}`}
+          >
             <div className={styles.mobileFilterHeader}>
               <strong>Filters</strong>
               <button type="button" onClick={() => setSidebarOpen(false)} aria-label="Close filters">✕</button>
             </div>
-            <FilterSidebar
-              filters={filters}
-              onChange={handleFiltersChange}
-              totalResults={filtered.length}
-            />
+            <button
+              type="button"
+              className={styles.sidebarCollapseBtn}
+              onClick={() => setFiltersCollapsed((collapsed) => !collapsed)}
+              aria-expanded={!filtersCollapsed}
+              aria-label={filtersCollapsed ? "Show filters" : "Hide filters"}
+            >
+              <span>{filtersCollapsed ? "›" : "‹"}</span>
+              <strong>{filtersCollapsed ? "Show filters" : "Hide filters"}</strong>
+            </button>
+            <div className={styles.sidebarContent}>
+              <FilterSidebar
+                filters={filters}
+                onChange={handleFiltersChange}
+                totalResults={filtered.length}
+              />
+            </div>
           </div>
 
           {/* Main */}
           <div className={styles.main}>
-            {/* Desktop search */}
-            <div className={styles.desktopSearch}>
-              <SearchBar
-                value={filters.search}
-                onChange={handleSearch}
-                placeholder="Search by card name, set…"
-                className={styles.searchBar}
-              />
-            </div>
-
             {/* Results count */}
             <div className={styles.resultsInfo}>
               <h2 className={styles.inventoryHeading}>Kitsune Card Inventory</h2>
@@ -150,6 +190,16 @@ function SinglesInner({ initialCards }: { initialCards: SingleCardData[] }) {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Desktop search */}
+            <div className={styles.desktopSearch}>
+              <SearchBar
+                value={filters.search}
+                onChange={handleSearch}
+                placeholder="Search by card name, set…"
+                className={styles.searchBar}
+              />
             </div>
 
             {paginated.length > 0 ? (
@@ -192,15 +242,38 @@ function SinglesInner({ initialCards }: { initialCards: SingleCardData[] }) {
               Join the Kitsune Inner Circle for first access to rare singles, prerelease kits, and exclusive MTG events.
             </p>
           </div>
-          <div className={styles.newsletterForm}>
+          <form className={styles.newsletterForm} onSubmit={handleNewsletterSubmit}>
             <input
               type="email"
               placeholder="EMAIL ADDRESS"
               className={styles.newsletterInput}
               aria-label="Email address"
+              value={newsletterEmail}
+              onChange={(event) => {
+                setNewsletterEmail(event.target.value);
+                if (newsletterStatus !== "idle") setNewsletterStatus("idle");
+              }}
+              required
+              disabled={newsletterStatus === "loading"}
             />
-            <button className={styles.newsletterBtn}>SUBSCRIBE</button>
-          </div>
+            <button
+              type="submit"
+              className={styles.newsletterBtn}
+              disabled={newsletterStatus === "loading"}
+            >
+              {newsletterStatus === "loading" ? "SUBSCRIBING…" : "SUBSCRIBE"}
+            </button>
+            {newsletterMessage && (
+              <p
+                className={`${styles.newsletterMessage} ${
+                  newsletterStatus === "error" ? styles.newsletterError : ""
+                }`}
+                role="status"
+              >
+                {newsletterMessage}
+              </p>
+            )}
+          </form>
         </div>
       </section>
 

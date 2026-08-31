@@ -363,7 +363,7 @@
   position: relative;
   padding: 36px;
   border: 1px solid #181a1b;
-  box-shadow: 10px 10px 0 #c84d1d;
+  box-shadow: 10px 10px 0 #000000;
 }
 
 .modalClose {

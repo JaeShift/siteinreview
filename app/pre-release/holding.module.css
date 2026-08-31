@@ -20,15 +20,6 @@
   animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.manaConstellation {
-  display: flex;
-  justify-content: center;
-  gap: clamp(10px, 2vw, 20px);
-  margin-bottom: 30px;
-  font-size: clamp(22px, 3vw, 34px);
-  filter: saturate(0.72) contrast(1.08);
-}
-
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -73,7 +64,7 @@
 .holdingDivider {
   width: min(320px, 68%);
   height: 2px;
-  background: linear-gradient(90deg, #b88a36, #176f9f, #633b78, #9e3422, #28714d);
+  background: linear-gradient(90deg, transparent, #b88a36, transparent);
   margin-bottom: 32px;
   animation: fadeUp 0.9s 0.36s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -91,9 +82,9 @@
 .holdingBtn:visited {
   display: inline-block;
   padding: 16px 40px;
-  background: #633b78;
-  border: 1px solid #9b72ae;
-  border-bottom: 4px solid #176f9f;
+  background: #176f9f;
+  border: 1px solid #6ca7c4;
+  border-bottom: 4px solid #b88a36;
   color: #fbf8f2 !important;
   font-family: var(--font-heading);
   font-size: 11px;
@@ -106,8 +97,8 @@
 }
 
 .holdingBtn:hover {
-  background: #176f9f;
-  border-color: #8db9cf;
+  background: #125b83;
+  border-color: #6ca7c4;
 }
 
 /* ─── Active pre-release page ────────────────────────────────────────────── */

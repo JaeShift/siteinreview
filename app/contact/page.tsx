@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import ContactForm from "@/components/ContactForm";
 import AddressBar from "@/components/AddressBar";
 import styles from "./contact.module.css";
@@ -14,6 +15,14 @@ export default function ContactPage() {
     <>
       <section className={styles.contactSection}>
         <div className="container">
+          <Image
+            src="/images/logo.png"
+            alt=""
+            width={96}
+            height={96}
+            className={styles.logoWatermark}
+            aria-hidden="true"
+          />
           <h1 className={styles.contactHeading}>Contact Us</h1>
           <p className={styles.contactSubtitle}>Please complete the form below</p>
           <ContactForm />
