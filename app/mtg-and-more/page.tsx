@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 const HERO_IMG = "/images/mtg-more-banner-1920x820-glow-extended.webp";
+const BENTO_IMG = "/images/OIP.jpg";
 
 const bentoCards = [
   {
@@ -22,9 +23,7 @@ const bentoCards = [
     btnStyle: "primary" as const,
     colSpan: 8,
     height: 400,
-    img: "/images/uploads/beer and magic.png",
-    bgPosition: "70% center",
-    bgSize: "110%",
+    img: BENTO_IMG,
     tone: "Blue",
   },
   {
@@ -35,7 +34,7 @@ const bentoCards = [
     btnStyle: "outline" as const,
     colSpan: 4,
     height: 400,
-    img: "/images/prerelease%20test.jpg",
+    img: BENTO_IMG,
     tone: "Red",
   },
   {
@@ -46,8 +45,7 @@ const bentoCards = [
     btnStyle: "outline" as const,
     colSpan: 4,
     height: 350,
-    img: "/images/uploads/upclose die.png",
-    bgSize: "95%",
+    img: BENTO_IMG,
     tone: "Black",
   },
   {
@@ -58,7 +56,7 @@ const bentoCards = [
     btnStyle: "outline" as const,
     colSpan: 4,
     height: 350,
-    img: "/images/commander.jpg",
+    img: BENTO_IMG,
     tone: "Green",
   },
   {
@@ -69,15 +67,12 @@ const bentoCards = [
     btnStyle: "outline" as const,
     colSpan: 4,
     height: 350,
-    img: "/images/singles-cards.png",
+    img: BENTO_IMG,
     tone: "White",
   },
 ];
 
 const manaSymbols = ["w", "u", "b", "r", "g"];
-
-const PRIVATE_EVENTS_IMG =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuD2S4cZWOhUY7thXa8sfFOpf_xXQsMa3JSBpwqevlwcsN0ihIdO-MmCGbD-SbjKIDzqrNIQMYjS5jW4oDByWJFUWhDGjRd-FC66uEH6zAAz5jDm8eTmuZ-hjZ63A71EjLMy3eYHjdWpG5YymT7AOpo41iH7zglY1bqKt_6mHsyiYMLFvqahvfBFBo9JvqACtZvUDyver6BP5twg1snECkltllWmmgG_NlvsRR8MxzrMZOXmfb7nDEc";
 
 const CTA_IMG = "/images/swirl.png";
 
@@ -161,7 +156,7 @@ export default function MtgPage() {
               className={`${styles.bentoCard} ${styles.bentoCardWide}`}
               style={{ gridColumn: "span 12", height: "300px" }}
             >
-              <div className={styles.bentoImg} style={{ backgroundImage: `url('/images/uploads/fox tails tap.png')`, backgroundPosition: "center 70%", backgroundSize: "95%" }} />
+              <div className={styles.bentoImg} style={{ backgroundImage: `url('${BENTO_IMG}')`, backgroundPosition: "center", backgroundSize: "cover" }} />
               <div className={styles.bentoGradientSide} />
               <div className={styles.bentoTextCenter}>
                 <h3 className={styles.bentoTitleLg}>PRIVATE EVENTS</h3>

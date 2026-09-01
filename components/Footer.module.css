@@ -368,7 +368,7 @@
     grid-template-columns: 1fr;
     gap:          32px;
     padding-top:  48px;
-    padding-bottom: 32px;
+    padding-bottom: max(32px, var(--safe-bottom));
   }
 
   .footerBottomInner {
