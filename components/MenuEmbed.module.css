@@ -349,7 +349,9 @@
   }
 }
 
-@media (max-width: 620px) {
+/* Stack the menu before its label rail and pricing columns become cramped.
+   This also keeps the tap list aligned with the site's mobile header. */
+@media (max-width: 900px) {
   .menuToolbar {
     padding: 14px 10px 24px;
   }

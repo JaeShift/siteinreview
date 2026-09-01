@@ -820,7 +820,9 @@
   }
 }
 
-@media (max-width: 800px) {
+/* Match the header's mobile breakpoint so the page never shows a mobile
+   navigation above a compressed desktop layout. */
+@media (max-width: 900px) {
   .hero {
     min-height: 650px;
   }
@@ -848,6 +850,11 @@
 
   .heroContent {
     padding-bottom: 80px;
+  }
+
+  .hero h1 {
+    max-width: 680px;
+    font-size: clamp(3.25rem, 8vw, 4.75rem);
   }
 
   .scrollCue {

@@ -687,17 +687,18 @@
 /* ─── Responsive ─────────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .bentoGrid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
   .bentoCard {
     grid-column: span 1 !important;
-    height: 280px !important;
+    height: clamp(280px, 52vw, 380px) !important;
   }
 
   .bentoTextCenter {
     padding: 24px;
+    max-width: 620px;
   }
 
   .scheduleRow {
@@ -741,7 +742,7 @@
   }
 
   .bentoCard {
-    height: 260px !important;
+    height: 280px !important;
   }
 
   .scheduleHeader {
