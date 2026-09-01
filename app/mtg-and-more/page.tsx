@@ -14,7 +14,21 @@ export const metadata: Metadata = {
 const HERO_IMG = "/images/mtg-more-banner-1920x820-glow-extended.webp";
 const BENTO_IMG = "/images/OIP.jpg";
 
-const bentoCards = [
+type BentoCard = {
+  title: string;
+  desc: string;
+  href: string;
+  btnLabel: string;
+  btnStyle: "primary" | "outline";
+  colSpan: number;
+  height: number;
+  img: string;
+  tone: "White" | "Blue" | "Black" | "Red" | "Green";
+  bgPosition?: string;
+  bgSize?: string;
+};
+
+const bentoCards: BentoCard[] = [
   {
     title: "SHOP MAGIC",
     desc: "Find the latest sets, collector boosters, and commander decks in stock.",
