@@ -37,7 +37,9 @@
   overflow-x: auto;
 }
 
-.navLink {
+.navLink,
+.navLink:link,
+.navLink:visited {
   font-family: var(--font-heading);
   font-size: 11px;
   font-weight: 700;
@@ -53,7 +55,9 @@
   align-items: center;
 }
 .navLink:hover { color: rgba(255,255,255,0.85); }
-.navLinkActive {
+.navLinkActive,
+.navLinkActive:link,
+.navLinkActive:visited {
   color: var(--color-white);
   background: rgba(255,255,255,0.08);
 }
@@ -67,7 +71,9 @@
   border-left: 1px solid rgba(255,255,255,0.12);
 }
 
-.siteLink {
+.siteLink,
+.siteLink:link,
+.siteLink:visited {
   font-family: var(--font-heading);
   font-size: 10px;
   font-weight: 700;
