@@ -43,9 +43,9 @@ export default function HomePage() {
       </section>
 
       <nav className={styles.destinationStrip} aria-label="Explore Kitsune">
-        <Link href="#discover"><span>01</span>Kitsune Brewing Co</Link>
-        <Link href="/events"><span>02</span>Events</Link>
-        <Link href="/card-shop"><span>03</span>Card shop</Link>
+        <Link href="#tap-list"><span>01</span>Beer</Link>
+        <Link href="#calendar"><span>02</span>Events</Link>
+        <Link href="/card-shop-singles"><span>03</span>Card shop</Link>
         <Link href="/mtg-and-more"><span>04</span>MTG &amp; more</Link>
         <Link href="#visit"><span>05</span>Find us</Link>
       </nav>
