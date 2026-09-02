@@ -12,6 +12,7 @@
 import fs from "fs";
 import path from "path";
 import { get, put } from "@vercel/blob";
+import { getVercelOidcToken } from "@vercel/oidc";
 import { mtgEvents, type MtgEvent } from "./events-data";
 import { foodTrucks, type FoodTruck } from "./food-trucks-data";
 import { singles, type SingleCard } from "./singles-data";
@@ -143,19 +144,32 @@ function normalizeSiteAppearance(stored: Partial<SiteAppearance>): SiteAppearanc
   };
 }
 
-function hasBlobStore(): boolean {
-  // @vercel/blob resolves Vercel's injected OIDC credentials automatically.
-  // Plain `next dev` falls back to the local JSON store when the CLI has not
-  // supplied an OIDC token. `vercel dev` and deployed runtimes use Blob.
-  return Boolean(process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN);
+async function getBlobOidcAuth(): Promise<{
+  storeId: string;
+  oidcToken: string;
+} | null> {
+  const storeId = process.env.BLOB_STORE_ID;
+  if (!storeId) return null;
+
+  try {
+    // In Vercel Functions this reads x-vercel-oidc-token from the request
+    // context. Locally it reads or refreshes VERCEL_OIDC_TOKEN from the CLI.
+    const oidcToken = await getVercelOidcToken();
+    return { storeId, oidcToken };
+  } catch (error) {
+    if (process.env.VERCEL) throw error;
+    return null;
+  }
 }
 
 export async function getSiteAppearanceStore(): Promise<SiteAppearance> {
-  if (hasBlobStore()) {
-    try {
+  try {
+    const blobAuth = await getBlobOidcAuth();
+    if (blobAuth) {
       const result = await get(SITE_APPEARANCE_BLOB, {
         access: "private",
         useCache: false,
+        ...blobAuth,
       });
 
       if (result?.statusCode === 200) {
@@ -164,9 +178,9 @@ export async function getSiteAppearanceStore(): Promise<SiteAppearance> {
         ) as Partial<SiteAppearance>;
         return normalizeSiteAppearance(stored);
       }
-    } catch (error) {
-      console.error("Unable to read site appearance from Vercel Blob:", error);
     }
+  } catch (error) {
+    console.error("Unable to read site appearance from Vercel Blob:", error);
   }
 
   const stored = readJson<Partial<SiteAppearance>>("site-appearance.json", DEFAULT_SITE_APPEARANCE);
@@ -176,12 +190,14 @@ export async function getSiteAppearanceStore(): Promise<SiteAppearance> {
 export async function saveSiteAppearanceStore(
   settings: SiteAppearance
 ): Promise<SiteAppearance> {
-  if (hasBlobStore()) {
+  const blobAuth = await getBlobOidcAuth();
+  if (blobAuth) {
     await put(SITE_APPEARANCE_BLOB, JSON.stringify(settings, null, 2), {
       access: "private",
       allowOverwrite: true,
       contentType: "application/json",
       cacheControlMaxAge: 60,
+      ...blobAuth,
     });
     return settings;
   }
