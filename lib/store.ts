@@ -144,10 +144,10 @@ function normalizeSiteAppearance(stored: Partial<SiteAppearance>): SiteAppearanc
 }
 
 function hasBlobStore(): boolean {
-  return Boolean(
-    process.env.BLOB_READ_WRITE_TOKEN ||
-      (process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN)
-  );
+  // @vercel/blob resolves Vercel's injected OIDC credentials automatically.
+  // Only the connected store ID is needed here; no long-lived token is
+  // required or passed by the application.
+  return Boolean(process.env.BLOB_STORE_ID);
 }
 
 export async function getSiteAppearanceStore(): Promise<SiteAppearance> {
@@ -188,7 +188,7 @@ export async function saveSiteAppearanceStore(
 
   if (process.env.VERCEL) {
     throw new Error(
-      "Vercel Blob is not connected. Create a Blob store for this project."
+      "BLOB_STORE_ID is not configured for this Vercel environment."
     );
   }
 
