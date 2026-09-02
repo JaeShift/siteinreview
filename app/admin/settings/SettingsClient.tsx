@@ -493,11 +493,22 @@ function AppearanceSection() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(next),
       });
-      if (!res.ok) throw new Error();
+      const data = await res.json().catch(() => null);
+      if (res.status === 401) {
+        window.location.href = "/admin/login";
+        return;
+      }
+      if (!res.ok) {
+        throw new Error(data?.error ?? "Appearance settings could not be saved.");
+      }
       setSaved(true);
       window.setTimeout(() => setSaved(false), 2200);
-    } catch {
-      alert("Appearance settings could not be saved. Please try again.");
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Appearance settings could not be saved. Please try again."
+      );
     } finally {
       setSaving(false);
     }

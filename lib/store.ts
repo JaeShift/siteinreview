@@ -11,6 +11,7 @@
 
 import fs from "fs";
 import path from "path";
+import { get, put } from "@vercel/blob";
 import { mtgEvents, type MtgEvent } from "./events-data";
 import { foodTrucks, type FoodTruck } from "./food-trucks-data";
 import { singles, type SingleCard } from "./singles-data";
@@ -129,8 +130,9 @@ export function saveNotificationSettingsStore(settings: NotificationSettings): v
 
 // ─── Site appearance ─────────────────────────────────────────────────────────
 
-export function getSiteAppearanceStore(): SiteAppearance {
-  const stored = readJson<Partial<SiteAppearance>>("site-appearance.json", DEFAULT_SITE_APPEARANCE);
+const SITE_APPEARANCE_BLOB = "settings/site-appearance.json";
+
+function normalizeSiteAppearance(stored: Partial<SiteAppearance>): SiteAppearance {
   return {
     transition: isThemeTransitionId(stored.transition)
       ? stored.transition
@@ -141,7 +143,55 @@ export function getSiteAppearanceStore(): SiteAppearance {
   };
 }
 
-export function saveSiteAppearanceStore(settings: SiteAppearance): SiteAppearance {
+function hasBlobStore(): boolean {
+  return Boolean(
+    process.env.BLOB_READ_WRITE_TOKEN ||
+      (process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN)
+  );
+}
+
+export async function getSiteAppearanceStore(): Promise<SiteAppearance> {
+  if (hasBlobStore()) {
+    try {
+      const result = await get(SITE_APPEARANCE_BLOB, {
+        access: "private",
+        useCache: false,
+      });
+
+      if (result?.statusCode === 200) {
+        const stored = JSON.parse(
+          await new Response(result.stream).text()
+        ) as Partial<SiteAppearance>;
+        return normalizeSiteAppearance(stored);
+      }
+    } catch (error) {
+      console.error("Unable to read site appearance from Vercel Blob:", error);
+    }
+  }
+
+  const stored = readJson<Partial<SiteAppearance>>("site-appearance.json", DEFAULT_SITE_APPEARANCE);
+  return normalizeSiteAppearance(stored);
+}
+
+export async function saveSiteAppearanceStore(
+  settings: SiteAppearance
+): Promise<SiteAppearance> {
+  if (hasBlobStore()) {
+    await put(SITE_APPEARANCE_BLOB, JSON.stringify(settings, null, 2), {
+      access: "private",
+      allowOverwrite: true,
+      contentType: "application/json",
+      cacheControlMaxAge: 60,
+    });
+    return settings;
+  }
+
+  if (process.env.VERCEL) {
+    throw new Error(
+      "Vercel Blob is not connected. Create a Blob store for this project."
+    );
+  }
+
   writeJson("site-appearance.json", settings);
   return settings;
 }

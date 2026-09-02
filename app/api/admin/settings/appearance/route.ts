@@ -10,7 +10,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  return NextResponse.json(getSiteAppearanceStore());
+  return NextResponse.json(await getSiteAppearanceStore());
 }
 
 export async function PUT(request: NextRequest) {
@@ -23,11 +23,24 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: "Invalid appearance settings" }, { status: 400 });
   }
 
-  const settings = saveSiteAppearanceStore({
-    transition: body.transition,
-    speed: body.speed,
-  });
+  try {
+    const settings = await saveSiteAppearanceStore({
+      transition: body.transition,
+      speed: body.speed,
+    });
 
-  revalidatePath("/", "layout");
-  return NextResponse.json(settings);
+    revalidatePath("/", "layout");
+    return NextResponse.json(settings);
+  } catch (error) {
+    console.error("Unable to save site appearance:", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unable to save appearance settings",
+      },
+      { status: 500 }
+    );
+  }
 }

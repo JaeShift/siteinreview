@@ -39,7 +39,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const appearance = await getSiteAppearanceStore();
+
   return (
     <html lang="en">
       <head>
@@ -51,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css" />
       </head>
       <body>
-        <SiteShell appearance={getSiteAppearanceStore()}>{children}</SiteShell>
+        <SiteShell appearance={appearance}>{children}</SiteShell>
       </body>
     </html>
   );
