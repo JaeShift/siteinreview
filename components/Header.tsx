@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
@@ -44,6 +45,15 @@ export default function Header({ arcane = false }: { arcane?: boolean }) {
     <header className={`${styles.header} ${styles.headerHome} ${isHolding ? styles.headerHolding : ""} ${arcane ? styles.headerArcane : ""}`}>
       <div className={styles.headerInner}>
         <Link href="/" className={styles.headerLogo} aria-label="Kitsune Brewing Co — Home">
+          <Image
+            src="/images/logo.png"
+            alt=""
+            width={40}
+            height={40}
+            className={styles.homeFoxLogo}
+            aria-hidden="true"
+            priority
+          />
           <span className={styles.homeWordmark} data-site-wordmark>
             Kitsune Brewing Co.
           </span>
