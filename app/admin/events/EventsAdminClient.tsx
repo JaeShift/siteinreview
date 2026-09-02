@@ -394,18 +394,18 @@ export default function EventsAdminClient({ initialEvents }: Props) {
           const regOpen = event.registrationOpen !== false;
           return (
             <div key={event.slug} className={`${styles.tableRow} ${isPast ? styles.pastRow : ""}`}>
-              <div className={styles.eventCell}>
+              <div data-label="Event" className={styles.eventCell}>
                 <span className={styles.eventTitle}>{event.title}</span>
                 {event.featured && <span className={styles.featuredPill}>Featured</span>}
               </div>
-              <span className={styles.dateCell}>
+              <span data-label="Date" className={styles.dateCell}>
                 {new Date(event.date + "T00:00:00").toLocaleDateString("en-US", {
                   month: "short", day: "numeric", year: "numeric",
                 })}
               </span>
-              <span className={styles.formatCell}>{event.format}</span>
-              <span className={styles.feeCell}>{event.entryFee === 0 ? "Free" : `$${event.entryFee}`}</span>
-              <div className={styles.playersCell}>
+              <span data-label="Type" className={styles.formatCell}>{event.format}</span>
+              <span data-label="Entry" className={styles.feeCell}>{event.entryFee === 0 ? "Free" : `$${event.entryFee}`}</span>
+              <div data-label="Players" className={styles.playersCell}>
                 <span>{event.registeredCount}/{event.playerLimit}</span>
                 <div className={styles.miniProgress}>
                   <div
@@ -414,7 +414,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   />
                 </div>
               </div>
-              <div>
+              <div data-label="Registration">
                 <button
                   className={`${styles.regToggleBtn} ${regOpen ? styles.regOpen : styles.regClosed}`}
                   onClick={() => toggleRegistration(event.slug, !regOpen)}
@@ -423,7 +423,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   {regOpen ? "Open" : "Closed"}
                 </button>
               </div>
-              <div className={styles.actionsCell}>
+              <div data-label="Actions" className={styles.actionsCell}>
                 <Link href={event.format === "Prerelease" ? "/pre-release" : `/events/${event.slug}`} target="_blank" className={styles.actionLink} title="View public page">↗</Link>
                 <button className={styles.actionLink} onClick={() => openEdit(event)} title="Edit event">✎</button>
                 <button

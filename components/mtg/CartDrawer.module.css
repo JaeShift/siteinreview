@@ -168,8 +168,10 @@
 }
 
 .qtyBtn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border: 1px solid #181a1b;
   background: #f3ede3;
   cursor: pointer;
@@ -335,7 +337,7 @@
 
 .clearBtn:hover { color: var(--color-accent); }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .drawer {
     width: 100%;
   }

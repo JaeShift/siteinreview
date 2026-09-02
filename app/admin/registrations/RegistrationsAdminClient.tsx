@@ -512,13 +512,14 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
 
         {filtered.map((reg) => (
           <div key={reg.id} className={styles.tableRow}>
-            <div className={styles.nameCell}>
+            <div data-label="Attendee" className={styles.nameCell}>
               <span className={styles.nameMain}>{reg.firstName} {reg.lastName}</span>
               <span className={styles.nameSub}>{reg.email} · {reg.phone}</span>
             </div>
-            <span className={styles.eventCell}>{getEventLabel(reg.eventSlug)}</span>
-            <span className={styles.dateCell}>{formatDate(reg.createdAt)}</span>
+            <span data-label="Event" className={styles.eventCell}>{getEventLabel(reg.eventSlug)}</span>
+            <span data-label="Registered" className={styles.dateCell}>{formatDate(reg.createdAt)}</span>
             <span
+              data-label="Status"
               className={`${styles.statusBadge} ${
                 reg.status === "confirmed"
                   ? styles.statusConfirmed
@@ -533,7 +534,7 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
                 ? "paid"
                 : reg.status}
             </span>
-            <div className={styles.checkinCell}>
+            <div data-label="Check-in" className={styles.checkinCell}>
               <button
                 className={`${styles.checkinBtn} ${reg.checkedIn ? styles.checkinBtnChecked : ""}`}
                 onClick={() => toggleCheckIn(reg)}
@@ -547,7 +548,7 @@ export default function RegistrationsAdminClient({ initialRegistrations, events 
                 </span>
               )}
             </div>
-            <div className={styles.actionsCell}>
+            <div data-label="Actions" className={styles.actionsCell}>
               {reg.status !== "refunded" && reg.stripeSessionId && (reg.amountPaid ?? 0) > 0 && (
                 <button
                   className={`${styles.actionBtn} ${styles.refundBtn}`}

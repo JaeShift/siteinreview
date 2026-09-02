@@ -237,14 +237,14 @@ export default function FoodTrucksAdminClient({ initialTrucks }: Props) {
                 key={`${truck.id}-${entry.date}`}
                 className={`${styles.tableRow} ${isPast ? styles.pastRow : ""} ${isToday ? styles.todayRow : ""}`}
               >
-                <div className={styles.dateCell}>
+                <div data-label="Date" className={styles.dateCell}>
                   <span className={styles.dateStr}>{formatDate(entry.date)}</span>
                   {isToday && <span className={styles.todayBadge}>Today</span>}
                 </div>
-                <span className={styles.truckNameCell}>{truck.name}</span>
-                <span className={styles.cuisineCell}>{truck.cuisine}</span>
-                <span className={styles.hoursCell}>{entry.startTime} – {entry.endTime}</span>
-                <div className={styles.actionsCell}>
+                <span data-label="Truck" className={styles.truckNameCell}>{truck.name}</span>
+                <span data-label="Cuisine" className={styles.cuisineCell}>{truck.cuisine}</span>
+                <span data-label="Hours" className={styles.hoursCell}>{entry.startTime} – {entry.endTime}</span>
+                <div data-label="Actions" className={styles.actionsCell}>
                   <button
                     className={`${styles.actionLink} ${styles.deleteLink}`}
                     onClick={() => handleDeleteScheduleEntry(truck.id, entry.date)}

@@ -824,7 +824,7 @@
    navigation above a compressed desktop layout. */
 @media (max-width: 900px) {
   .hero {
-    min-height: 650px;
+    min-height: min(560px, calc(100svh - 72px));
   }
 
   .heroShade {
@@ -954,7 +954,7 @@
   }
 
   .gatherSection {
-    min-height: 900px;
+    min-height: 0;
     padding-top: 80px;
   }
 
@@ -998,7 +998,7 @@
 
 @media (max-width: 520px) {
   .hero {
-    min-height: 620px;
+    min-height: min(500px, calc(100svh - 60px));
   }
 
   .heroContent {
@@ -1078,7 +1078,7 @@
   }
 
   .gatherSection {
-    min-height: 860px;
+    min-height: 0;
     padding-top: 70px;
   }
 

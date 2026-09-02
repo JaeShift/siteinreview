@@ -210,13 +210,15 @@
 /* ── Mana symbol pips ── */
 .colorRow {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 4px;
 }
 
 .manaPip {
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 0;
   border: 2px solid transparent;
   background: none;

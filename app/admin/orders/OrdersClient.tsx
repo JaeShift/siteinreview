@@ -266,24 +266,24 @@ export default function OrdersClient({ orders }: { orders: Order[] }) {
                     onChange={() => toggleCheck(order.id)}
                   />
                 </span>
-                <span className={styles.orderId} title={order.stripeSessionId ?? order.id}>
+                <span data-label="Order ID" className={styles.orderId} title={order.stripeSessionId ?? order.id}>
                   {order.metadata?.squarespaceOrderId
                     ?? (order.id.startsWith("sq_")
                       ? order.id.replace("sq_", "")
                       : `#${order.id.slice(-8).toUpperCase()}`)}
                   {isNewOrder(order) && <span className={styles.newPill}>NEW</span>}
                 </span>
-                <span className={styles.customerName}>{order.customerName}</span>
-                <span className={styles.email}>{order.customerEmail}</span>
-                <span className={styles.description}>{order.description}</span>
-                <span className={styles.qty}>{order.metadata?.quantity ?? "1"}</span>
-                <span className={styles.amount}>
+                <span data-label="Customer" className={styles.customerName}>{order.customerName}</span>
+                <span data-label="Email" className={styles.email}>{order.customerEmail}</span>
+                <span data-label="Description" className={styles.description}>{order.description}</span>
+                <span data-label="Qty" className={styles.qty}>{order.metadata?.quantity ?? "1"}</span>
+                <span data-label="Amount" className={styles.amount}>
                   {formatAmount(order.amountTotal, order.currency)}
                 </span>
-                <span className={`${styles.status} ${styles[`status_${order.status}`]}`}>
+                <span data-label="Status" className={`${styles.status} ${styles[`status_${order.status}`]}`}>
                   {order.status}
                 </span>
-                <span className={styles.date}>
+                <span data-label="Date" className={styles.date}>
                   {new Date(order.createdAt).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",

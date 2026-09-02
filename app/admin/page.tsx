@@ -97,10 +97,10 @@ export default function AdminDashboardPage() {
               </div>
               {recentOrders.map((order) => (
                 <div key={order.id} className={styles.tableRow}>
-                  <span className={styles.eventName}>{order.customerName}</span>
-                  <span className={styles.orderDesc}>{order.description}</span>
-                  <span className={styles.orderAmount}>{formatAmount(order.amountTotal)}</span>
-                  <span className={styles.eventDate}>
+                  <span data-label="Customer" className={styles.eventName}>{order.customerName}</span>
+                  <span data-label="Description" className={styles.orderDesc}>{order.description}</span>
+                  <span data-label="Amount" className={styles.orderAmount}>{formatAmount(order.amountTotal)}</span>
+                  <span data-label="Date" className={styles.eventDate}>
                     {new Date(order.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                   </span>
                 </div>
@@ -129,12 +129,12 @@ export default function AdminDashboardPage() {
               </div>
               {upcoming.map((event) => (
                 <div key={event.slug} className={styles.tableRow}>
-                  <span className={styles.eventName}>{event.title}</span>
-                  <span className={styles.eventDate}>
+                  <span data-label="Event" className={styles.eventName}>{event.title}</span>
+                  <span data-label="Date" className={styles.eventDate}>
                     {new Date(event.date + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                   </span>
-                  <span className={styles.formatBadge}>{event.format}</span>
-                  <span className={styles.regCount}>{event.registeredCount}/{event.playerLimit}</span>
+                  <span data-label="Format" className={styles.formatBadge}>{event.format}</span>
+                  <span data-label="Reg." className={styles.regCount}>{event.registeredCount}/{event.playerLimit}</span>
                 </div>
               ))}
             </div>

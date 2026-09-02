@@ -165,11 +165,11 @@ function PromoCodesSection() {
           </div>
           {codes.map((c) => (
             <div key={c.code} className={styles.codeRow}>
-              <span className={styles.codeName}>{c.code}</span>
-              <span>{c.discountType === "percent" ? `${c.discountValue}%` : `$${c.discountValue}`} off</span>
-              <span>{c.usedCount}{c.maxUses !== undefined ? ` / ${c.maxUses}` : ""}</span>
-              <span>{c.expiresAt ? new Date(c.expiresAt).toLocaleDateString() : "—"}</span>
-              <span>
+              <span data-label="Code" className={styles.codeName}>{c.code}</span>
+              <span data-label="Discount">{c.discountType === "percent" ? `${c.discountValue}%` : `$${c.discountValue}`} off</span>
+              <span data-label="Uses">{c.usedCount}{c.maxUses !== undefined ? ` / ${c.maxUses}` : ""}</span>
+              <span data-label="Expires">{c.expiresAt ? new Date(c.expiresAt).toLocaleDateString() : "—"}</span>
+              <span data-label="Status">
                 <span className={`${styles.codeBadge} ${c.active ? styles.codeBadgeActive : styles.codeBadgeInactive}`}>
                   {c.active ? "Active" : "Inactive"}
                 </span>
@@ -288,11 +288,11 @@ function EventCreditsSection() {
           </div>
           {credits.map((c) => (
             <div key={c.code} className={styles.codeRow}>
-              <span className={styles.codeName}>{c.code}</span>
-              <span>{c.customerEmail}</span>
-              <span>${c.balance.toFixed(2)}</span>
-              <span>{c.expiresAt ? new Date(c.expiresAt).toLocaleDateString() : "No expiry"}</span>
-              <span>{new Date(c.issuedAt).toLocaleDateString()}</span>
+              <span data-label="Code" className={styles.codeName}>{c.code}</span>
+              <span data-label="Customer">{c.customerEmail}</span>
+              <span data-label="Balance">${c.balance.toFixed(2)}</span>
+              <span data-label="Expires">{c.expiresAt ? new Date(c.expiresAt).toLocaleDateString() : "No expiry"}</span>
+              <span data-label="Issued">{new Date(c.issuedAt).toLocaleDateString()}</span>
             </div>
           ))}
         </div>
