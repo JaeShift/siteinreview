@@ -78,6 +78,16 @@
   margin-bottom: 16px;
 }
 
+.appearanceError {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .fieldGroup {
   display: grid;
   grid-template-columns: 1fr 1fr;

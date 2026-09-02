@@ -28,10 +28,14 @@ export default function AdminDashboardPage() {
 
   const upcoming = events
     .filter((e) => e.date >= today)
-    .sort((a, b) => a.date.localeCompare(b.date))
-    .slice(0, 5);
+    .sort((a, b) => a.date.localeCompare(b.date));
 
-  const recentOrders = orders.slice(0, 5);
+  const recentOrders = [...orders]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+    .slice(0, 5);
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const ordersLast30 = orders.filter((o) => o.createdAt >= thirtyDaysAgo);
   const pendingOrders = orders.filter((order) => order.status === "pending").length;

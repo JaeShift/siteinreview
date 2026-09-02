@@ -145,9 +145,9 @@ function normalizeSiteAppearance(stored: Partial<SiteAppearance>): SiteAppearanc
 
 function hasBlobStore(): boolean {
   // @vercel/blob resolves Vercel's injected OIDC credentials automatically.
-  // Only the connected store ID is needed here; no long-lived token is
-  // required or passed by the application.
-  return Boolean(process.env.BLOB_STORE_ID);
+  // Plain `next dev` falls back to the local JSON store when the CLI has not
+  // supplied an OIDC token. `vercel dev` and deployed runtimes use Blob.
+  return Boolean(process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN);
 }
 
 export async function getSiteAppearanceStore(): Promise<SiteAppearance> {
@@ -188,7 +188,7 @@ export async function saveSiteAppearanceStore(
 
   if (process.env.VERCEL) {
     throw new Error(
-      "BLOB_STORE_ID is not configured for this Vercel environment."
+      "Vercel Blob OIDC credentials are unavailable for this environment."
     );
   }
 

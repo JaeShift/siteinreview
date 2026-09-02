@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import type { PromoCode, EventCredit } from "@/lib/store";
 import MediaLibrary from "@/components/admin/MediaLibrary";
 import {
@@ -470,10 +471,12 @@ function MediaLibrarySection() {
 }
 
 function AppearanceSection() {
+  const router = useRouter();
   const [transition, setTransition] = useState<ThemeTransitionId>("none");
   const [speed, setSpeed] = useState<ThemeTransitionSpeed>("medium");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/settings/appearance")
@@ -487,6 +490,8 @@ function AppearanceSection() {
 
   async function persist(next: { transition: ThemeTransitionId; speed: ThemeTransitionSpeed }) {
     setSaving(true);
+    setSaved(false);
+    setSaveError(null);
     try {
       const res = await fetch("/api/admin/settings/appearance", {
         method: "PUT",
@@ -501,10 +506,27 @@ function AppearanceSection() {
       if (!res.ok) {
         throw new Error(data?.error ?? "Appearance settings could not be saved.");
       }
+
+      const verification = await fetch(
+        `/api/admin/settings/appearance?verify=${Date.now()}`,
+        { cache: "no-store" }
+      );
+      const verified = await verification.json().catch(() => null);
+      if (
+        !verification.ok ||
+        verified?.transition !== next.transition ||
+        verified?.speed !== next.speed
+      ) {
+        throw new Error(
+          "The effect was saved but could not be verified for the live site."
+        );
+      }
+
+      router.refresh();
       setSaved(true);
       window.setTimeout(() => setSaved(false), 2200);
     } catch (error) {
-      alert(
+      setSaveError(
         error instanceof Error
           ? error.message
           : "Appearance settings could not be saved. Please try again."
@@ -577,6 +599,11 @@ function AppearanceSection() {
 
       {saved && (
         <span style={{ fontSize: 13, color: "var(--color-green)", fontWeight: 600 }}>Saved!</span>
+      )}
+      {saveError && (
+        <div className={styles.appearanceError} role="alert">
+          <strong>Effect unavailable:</strong> {saveError}
+        </div>
       )}
     </section>
   );

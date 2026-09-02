@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { deleteOrder, getOrdersStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -15,5 +16,7 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
   }
 
   deleteOrder(id);
+  revalidatePath("/admin");
+  revalidatePath("/admin/orders");
   return NextResponse.json({ success: true });
 }
