@@ -474,16 +474,28 @@ function AppearanceSection() {
   const router = useRouter();
   const [transition, setTransition] = useState<ThemeTransitionId>("none");
   const [speed, setSpeed] = useState<ThemeTransitionSpeed>("medium");
+  const [savedTransition, setSavedTransition] =
+    useState<ThemeTransitionId>("none");
+  const [savedSpeed, setSavedSpeed] =
+    useState<ThemeTransitionSpeed>("medium");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const hasChanges =
+    transition !== savedTransition || speed !== savedSpeed;
 
   useEffect(() => {
     fetch("/api/admin/settings/appearance")
       .then((res) => res.json())
       .then((data) => {
-        if (data?.transition) setTransition(data.transition);
-        if (data?.speed) setSpeed(data.speed);
+        if (data?.transition) {
+          setTransition(data.transition);
+          setSavedTransition(data.transition);
+        }
+        if (data?.speed) {
+          setSpeed(data.speed);
+          setSavedSpeed(data.speed);
+        }
       })
       .catch(() => undefined);
   }, []);
@@ -522,6 +534,8 @@ function AppearanceSection() {
         );
       }
 
+      setSavedTransition(next.transition);
+      setSavedSpeed(next.speed);
       router.refresh();
       setSaved(true);
       window.setTimeout(() => setSaved(false), 2200);
@@ -539,12 +553,14 @@ function AppearanceSection() {
   function chooseTransition(id: ThemeTransitionId) {
     const next = transition === id ? "none" : id;
     setTransition(next);
-    void persist({ transition: next, speed });
+    setSaved(false);
+    setSaveError(null);
   }
 
   function chooseSpeed(id: ThemeTransitionSpeed) {
     setSpeed(id);
-    void persist({ transition, speed: id });
+    setSaved(false);
+    setSaveError(null);
   }
 
   return (
@@ -596,6 +612,20 @@ function AppearanceSection() {
           ))}
         </div>
       </div>
+
+      {hasChanges && (
+        <div className={styles.appearanceActions}>
+          <button
+            type="button"
+            className={styles.appearanceSaveBtn}
+            onClick={() => void persist({ transition, speed })}
+            disabled={saving}
+          >
+            {saving ? "Saving…" : "Save Effect"}
+          </button>
+          <span className={styles.unsavedLabel}>Unsaved changes</span>
+        </div>
+      )}
 
       {saved && (
         <span style={{ fontSize: 13, color: "var(--color-green)", fontWeight: 600 }}>Saved!</span>
