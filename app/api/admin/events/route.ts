@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { getEventsStore, saveEventsStore, updateEvent } from "@/lib/store";
+import {
+  getEventsStore,
+  getPrereleaseEventStore,
+  saveEventsStore,
+  savePrereleaseEventStore,
+} from "@/lib/store";
 import type { MtgEvent } from "@/lib/events-data";
 import { expandRecurringEvent } from "@/lib/event-recurrence";
 
 export async function GET() {
-  return NextResponse.json(getEventsStore());
+  const events = getEventsStore();
+  const prerelease = await getPrereleaseEventStore();
+  return NextResponse.json(
+    prerelease
+      ? [...events.filter((event) => event.format !== "Prerelease"), prerelease]
+      : events
+  );
 }
 
 export async function POST(request: NextRequest) {
@@ -14,25 +25,32 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  // Ensure slug is unique
   const existing = getEventsStore();
-  const existingPrerelease =
-    event.format === "Prerelease"
-      ? existing.find((item) => item.format === "Prerelease")
-      : undefined;
 
-  // Pre-release is a singleton. If stale client state sends POST for the
-  // existing event, update it instead of failing with a duplicate-slug error.
-  if (existingPrerelease) {
-    const events = updateEvent(existingPrerelease.slug, {
-      ...event,
-      slug: existingPrerelease.slug,
-    });
-    revalidatePath("/events");
-    revalidatePath("/calendar");
-    revalidatePath("/admin/events");
-    revalidatePath("/pre-release");
-    return NextResponse.json(events);
+  // Pre-release is a singleton stored persistently outside the serverless filesystem.
+  if (event.format === "Prerelease") {
+    try {
+      const existingPrerelease = await getPrereleaseEventStore();
+      const saved = await savePrereleaseEventStore({
+        ...event,
+        slug: existingPrerelease?.slug ?? event.slug,
+      });
+      const events = [
+        ...existing.filter((item) => item.format !== "Prerelease"),
+        saved,
+      ];
+      revalidatePath("/events");
+      revalidatePath("/calendar");
+      revalidatePath("/admin/events");
+      revalidatePath("/pre-release");
+      return NextResponse.json(events, { status: existingPrerelease ? 200 : 201 });
+    } catch (error) {
+      console.error("[api/admin/events] Failed to persist pre-release event:", error);
+      return NextResponse.json(
+        { error: "Unable to save the pre-release status. Check persistent storage configuration." },
+        { status: 500 }
+      );
+    }
   }
 
   let occurrences: MtgEvent[];

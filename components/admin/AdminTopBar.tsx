@@ -11,7 +11,6 @@ const navItems = [
   { href: "/admin/registrations", label: "Registrations" },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/inventory", label: "Inventory" },
-  { href: "/admin/food-trucks", label: "Food Trucks" },
   { href: "/admin/settings", label: "Settings" },
 ];
 

@@ -78,7 +78,7 @@ export default function HomePage() {
             <p className={styles.kicker}>There&apos;s always something going on</p>
             <h2 id="explore-title">Pick your poison.</h2>
           </div>
-          <p>A new beer to try. A game to play. A food truck pulling up or one of our community events. Whatever brings you in, there&apos;s usually a reason to stay.</p>
+          <p>A new beer to try. A game to play. One of our community events. Whatever brings you in, there&apos;s usually a reason to stay.</p>
         </header>
 
         <div className={styles.editorialGrid}>
@@ -107,24 +107,6 @@ export default function HomePage() {
             </span>
           </Link>
 
-          <Link href="/food-trucks" className={`${styles.featureCard} ${styles.creamCard}`}>
-            <span className={styles.creamCardMark}>
-              <Image
-                src="/images/logo.png"
-                alt="Kitsune Brewing Co."
-                width={240}
-                height={240}
-                className={styles.creamCardLogo}
-              />
-              <span className={styles.manaSymbols} aria-hidden="true">
-                <i className="ms ms-w ms-cost" />
-                <i className="ms ms-u ms-cost" />
-                <i className="ms ms-b ms-cost" />
-                <i className="ms ms-r ms-cost" />
-                <i className="ms ms-g ms-cost" />
-              </span>
-            </span>
-          </Link>
         </div>
       </section>
 

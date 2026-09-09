@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getEventsStore } from "@/lib/store";
+import { getPrereleaseEventStore } from "@/lib/store";
 import FaqAccordion from "./FaqAccordion";
 import RegisterNowButton from "./RegisterNowButton";
 import styles from "./prerelease.module.css";
@@ -33,14 +33,16 @@ function hasAutoHoldingExpired(date: string, time: string): boolean {
   return Date.now() >= eventTime.getTime() + 72 * 60 * 60 * 1000;
 }
 
-export default function PreReleasePage() {
-  const events = getEventsStore();
+export default async function PreReleasePage() {
+  const prerelease = await getPrereleaseEventStore();
 
   // Show the active prerelease unless its optional 72-hour holding timer has elapsed.
-  const event = events
-    .filter((e) => e.format === "Prerelease" && !e.hidden)
-    .sort((a, b) => a.date.localeCompare(b.date))
-    .find((e) => e.autoHoldAfter72Hours === false || !hasAutoHoldingExpired(e.date, e.time));
+  const event = prerelease &&
+    !prerelease.hidden &&
+    (prerelease.autoHoldAfter72Hours === false ||
+      !hasAutoHoldingExpired(prerelease.date, prerelease.time))
+      ? prerelease
+      : null;
 
   // No active prerelease — show holding page
   if (!event) {

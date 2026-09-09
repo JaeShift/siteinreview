@@ -9,9 +9,15 @@ import {
   type ReactNode,
 } from "react";
 import type { SingleCard } from "./singles-data";
+import type { MerchandiseProduct } from "./merchandise-data";
+
+export type CartProduct = (SingleCard | MerchandiseProduct) & {
+  inventoryId?: string;
+  selectedSize?: string;
+};
 
 export interface CartItem {
-  card: SingleCard;
+  card: CartProduct;
   quantity: number;
 }
 
@@ -23,7 +29,7 @@ interface CartContextValue {
   hydrated: boolean;
   openCart: () => void;
   closeCart: () => void;
-  addToCart: (card: SingleCard) => void;
+  addToCart: (card: CartProduct) => void;
   removeFromCart: (cardId: string) => void;
   updateQuantity: (cardId: string, qty: number) => void;
   clearCart: () => void;
@@ -51,7 +57,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const openCart  = useCallback(() => setIsOpen(true), []);
   const closeCart = useCallback(() => setIsOpen(false), []);
 
-  const addToCart = useCallback((card: SingleCard) => {
+  const addToCart = useCallback((card: CartProduct) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.card.id === card.id);
       if (existing) {

@@ -40,7 +40,7 @@ export default function SiteShell({
     pathname.startsWith("/card-shop-singles/") ||
     pathname === "/pre-release" ||
     pathname.startsWith("/pre-release/");
-  const showAddressBar = pathname === "/food-trucks";
+  const showAddressBar = false;
   const useThreshold = appearance.transition === "threshold";
   const useOverlay = isOverlayTransition(appearance.transition);
   const chromeArcane = isArcane && !useThreshold;

@@ -99,7 +99,11 @@ export default function CartDrawer() {
                     )}
                     <div className={styles.itemInfo}>
                       <span className={styles.itemName}>{card.name}</span>
-                      <span className={styles.itemMeta}>{card.set} · {card.condition}{card.foil ? " · Foil" : ""}</span>
+                      <span className={styles.itemMeta}>
+                        {"category" in card
+                          ? [card.category, card.selectedSize ? `Size ${card.selectedSize}` : null].filter(Boolean).join(" · ")
+                          : `${card.set} · ${card.condition}${card.foil ? " · Foil" : ""}`}
+                      </span>
                       <span className={styles.itemPrice}>${(card.price * quantity).toFixed(2)}</span>
                     </div>
                     <div className={styles.itemControls}>

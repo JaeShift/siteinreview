@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { getEventsStore, saveEventsStore, updateEvent, deleteEvent } from "@/lib/store";
+import {
+  deleteEvent,
+  getEventsStore,
+  getPrereleaseEventStore,
+  saveEventsStore,
+  savePrereleaseEventStore,
+  updateEvent,
+} from "@/lib/store";
 import type { MtgEvent } from "@/lib/events-data";
 import { expandRecurringEvent } from "@/lib/event-recurrence";
 
@@ -9,6 +16,32 @@ interface Params { params: { slug: string } }
 export async function PUT(request: NextRequest, { params }: Params) {
   const event = await request.json().catch(() => null) as MtgEvent | null;
   if (!event) return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+
+  if (event.format === "Prerelease") {
+    try {
+      const existingPrerelease = await getPrereleaseEventStore();
+      if (!existingPrerelease || existingPrerelease.slug !== params.slug) {
+        return NextResponse.json({ error: "Event not found" }, { status: 404 });
+      }
+      const saved = await savePrereleaseEventStore({ ...event, slug: params.slug });
+      const events = [
+        ...getEventsStore().filter((item) => item.format !== "Prerelease"),
+        saved,
+      ];
+      revalidatePath("/events");
+      revalidatePath("/calendar");
+      revalidatePath("/admin/events");
+      revalidatePath("/pre-release");
+      return NextResponse.json(events);
+    } catch (error) {
+      console.error("[api/admin/events] Failed to persist pre-release event:", error);
+      return NextResponse.json(
+        { error: "Unable to save the pre-release status. Check persistent storage configuration." },
+        { status: 500 }
+      );
+    }
+  }
+
   const existing = getEventsStore();
   const savedEvent = existing.find((item) => item.slug === params.slug);
   if (!savedEvent) {

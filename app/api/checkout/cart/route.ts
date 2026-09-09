@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import type { CartItem } from "@/lib/cart-context";
+import { getMerchandiseStore, getSinglesStore } from "@/lib/store";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -19,17 +20,38 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
   }
 
-  const items = body.items as CartItem[];
+  const requestedItems = body.items as CartItem[];
+  const cards = getSinglesStore();
+  const merchandise = getMerchandiseStore();
+  const items: CartItem[] = [];
+  for (const requested of requestedItems) {
+    const quantity = Math.max(1, Math.floor(Number(requested.quantity)));
+    if ("category" in requested.card) {
+      const product = merchandise.find((item) => item.id === (requested.card.inventoryId ?? requested.card.id));
+      const size = requested.card.selectedSize;
+      if (!product?.active || product.quantity < quantity || (product.sizes.length > 0 && (!size || !product.sizes.includes(size)))) {
+        return NextResponse.json({ error: `${requested.card.name} is no longer available.` }, { status: 409 });
+      }
+      items.push({ card: { ...product, id: requested.card.id, inventoryId: product.id, selectedSize: size }, quantity });
+    } else {
+      const card = cards.find((item) => item.id === requested.card.id);
+      if (!card || card.hidden || card.quantity < quantity) {
+        return NextResponse.json({ error: `${requested.card.name} is no longer available.` }, { status: 409 });
+      }
+      items.push({ card, quantity });
+    }
+  }
 
   const line_items = items.map(({ card, quantity }) => {
-    const conditionLabel = CONDITION_LABELS[card.condition] ?? card.condition;
-    const detailParts = [
-      card.set,
-      card.type,
-      card.rarity,
-      conditionLabel,
-      card.foil ? "Foil" : null,
-    ].filter(Boolean);
+    const detailParts = "category" in card
+      ? [card.category, card.description]
+      : [
+          card.set,
+          card.type,
+          card.rarity,
+          CONDITION_LABELS[card.condition] ?? card.condition,
+          card.foil ? "Foil" : null,
+        ];
 
     return {
       price_data: {
@@ -101,12 +123,18 @@ export async function POST(request: NextRequest) {
       orderType: "singles",
       itemCount: String(items.reduce((sum, i) => sum + i.quantity, 0)),
       itemSummary: items
-        .map((i) => `${i.card.name} (${i.card.condition})${i.card.foil ? " Foil" : ""} x${i.quantity}`)
+        .map((item) => {
+          const detail = "category" in item.card
+            ? [item.card.category, item.card.selectedSize ? `Size ${item.card.selectedSize}` : null].filter(Boolean).join(" · ")
+            : `${item.card.condition}${item.card.foil ? " Foil" : ""}`;
+          return `${item.card.name} (${detail}) x${item.quantity}`;
+        })
         .join(", ")
         .slice(0, 490),
+      cartItems: JSON.stringify(items.map((item) => ({ id: item.card.inventoryId ?? item.card.id, qty: item.quantity }))).slice(0, 490),
     },
     success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url:  `${siteUrl}/singles?cancelled=true`,
+    cancel_url:  `${siteUrl}/shop?cancelled=true`,
   });
 
   return NextResponse.json({ url: session.url });

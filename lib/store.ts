@@ -16,6 +16,7 @@ import { getVercelOidcToken } from "@vercel/oidc";
 import { mtgEvents, type MtgEvent } from "./events-data";
 import { foodTrucks, type FoodTruck } from "./food-trucks-data";
 import { singles, type SingleCard } from "./singles-data";
+import { merchandise, type MerchandiseProduct } from "./merchandise-data";
 import {
   DEFAULT_SITE_APPEARANCE,
   isThemeTransitionId,
@@ -74,6 +75,55 @@ export function deleteEvent(slug: string): MtgEvent[] {
   const events = getEventsStore().filter((e) => e.slug !== slug);
   saveEventsStore(events);
   return events;
+}
+
+const PRERELEASE_EVENT_BLOB = "events/prerelease.json";
+
+/** Persistent pre-release event storage for serverless production. */
+export async function getPrereleaseEventStore(): Promise<MtgEvent | null> {
+  try {
+    const blobAuth = await getBlobAuth();
+    if (blobAuth) {
+      const result = await get(PRERELEASE_EVENT_BLOB, {
+        access: "private",
+        useCache: false,
+        ...blobAuth,
+      });
+      if (result?.statusCode === 200) {
+        return JSON.parse(await new Response(result.stream).text()) as MtgEvent;
+      }
+    }
+  } catch (error) {
+    console.error("Unable to read pre-release event from Vercel Blob:", error);
+  }
+
+  return getEventsStore().find((event) => event.format === "Prerelease") ?? null;
+}
+
+export async function savePrereleaseEventStore(event: MtgEvent): Promise<MtgEvent> {
+  const blobAuth = await getBlobAuth();
+  if (blobAuth) {
+    await put(PRERELEASE_EVENT_BLOB, JSON.stringify(event, null, 2), {
+      access: "private",
+      allowOverwrite: true,
+      contentType: "application/json",
+      cacheControlMaxAge: 60,
+      ...blobAuth,
+    });
+    return event;
+  }
+
+  if (process.env.VERCEL) {
+    throw new Error("Persistent storage credentials are unavailable.");
+  }
+
+  const existing = getEventsStore();
+  const index = existing.findIndex((item) => item.format === "Prerelease");
+  const events = index >= 0
+    ? existing.map((item, itemIndex) => itemIndex === index ? event : item)
+    : [...existing, event];
+  saveEventsStore(events);
+  return event;
 }
 
 // ─── Orders ──────────────────────────────────────────────────────────────────
@@ -144,10 +194,12 @@ function normalizeSiteAppearance(stored: Partial<SiteAppearance>): SiteAppearanc
   };
 }
 
-async function getBlobOidcAuth(): Promise<{
-  storeId: string;
-  oidcToken: string;
-} | null> {
+async function getBlobAuth(): Promise<
+  { token: string } | { storeId: string; oidcToken: string } | null
+> {
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (token) return { token };
+
   const storeId = process.env.BLOB_STORE_ID;
   if (!storeId) return null;
 
@@ -164,7 +216,7 @@ async function getBlobOidcAuth(): Promise<{
 
 export async function getSiteAppearanceStore(): Promise<SiteAppearance> {
   try {
-    const blobAuth = await getBlobOidcAuth();
+    const blobAuth = await getBlobAuth();
     if (blobAuth) {
       const result = await get(SITE_APPEARANCE_BLOB, {
         access: "private",
@@ -190,7 +242,7 @@ export async function getSiteAppearanceStore(): Promise<SiteAppearance> {
 export async function saveSiteAppearanceStore(
   settings: SiteAppearance
 ): Promise<SiteAppearance> {
-  const blobAuth = await getBlobOidcAuth();
+  const blobAuth = await getBlobAuth();
   if (blobAuth) {
     await put(SITE_APPEARANCE_BLOB, JSON.stringify(settings, null, 2), {
       access: "private",
@@ -273,14 +325,61 @@ export function updateSingle(id: string, patch: Partial<SingleCard>): SingleCard
 export function decrementInventory(cartItems: { id: string; qty: number }[]): void {
   const cards = getSinglesStore();
   const updated = cards.map((c) => {
-    const purchased = cartItems.find((i) => i.id === c.id);
-    if (!purchased) return c;
-    return { ...c, quantity: Math.max(0, c.quantity - purchased.qty) };
+    const purchasedQty = cartItems
+      .filter((item) => item.id === c.id)
+      .reduce((sum, item) => sum + item.qty, 0);
+    if (!purchasedQty) return c;
+    return { ...c, quantity: Math.max(0, c.quantity - purchasedQty) };
   });
   saveSinglesStore(updated);
+
+  const products = getMerchandiseStore();
+  const updatedProducts = products.map((product) => {
+    const purchasedQty = cartItems
+      .filter((item) => item.id === product.id)
+      .reduce((sum, item) => sum + item.qty, 0);
+    if (!purchasedQty) return product;
+    return { ...product, quantity: Math.max(0, product.quantity - purchasedQty) };
+  });
+  saveMerchandiseStore(updatedProducts);
 }
 
 export { type SingleCard };
+
+// ─── Merchandise Inventory ───────────────────────────────────────────────────
+
+export function getMerchandiseStore(): MerchandiseProduct[] {
+  return readJson<MerchandiseProduct[]>("merchandise.json", merchandise);
+}
+
+export function saveMerchandiseStore(products: MerchandiseProduct[]): void {
+  writeJson("merchandise.json", products);
+}
+
+export function addMerchandise(product: MerchandiseProduct): MerchandiseProduct[] {
+  const products = [...getMerchandiseStore(), product];
+  saveMerchandiseStore(products);
+  return products;
+}
+
+export function updateMerchandise(
+  id: string,
+  patch: Partial<MerchandiseProduct>
+): MerchandiseProduct[] {
+  const products = getMerchandiseStore().map((product) =>
+    product.id === id ? { ...product, ...patch } : product
+  );
+  saveMerchandiseStore(products);
+  return products;
+}
+
+export function deleteMerchandise(id: string): MerchandiseProduct[] {
+  const products = getMerchandiseStore().filter((product) => product.id !== id);
+  saveMerchandiseStore(products);
+  return products;
+}
+
+export { type MerchandiseProduct };
 
 // ─── Registrations ────────────────────────────────────────────────────────────
 

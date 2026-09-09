@@ -48,10 +48,18 @@ export default function CartReviewClient() {
                     <div>
                       <p className={styles.itemName}>{card.name}</p>
                       <p className={styles.itemMeta}>
-                        {formatSetDisplay(card.set, card.setCode, card.collectorNumber)}
-                        {" · "}
-                        {formatCondition(card.condition)}
-                        {card.foil ? " · Foil" : ""}
+                        {"category" in card ? (
+                          [card.category, card.selectedSize ? `Size: ${card.selectedSize}` : null]
+                            .filter(Boolean)
+                            .join(" · ")
+                        ) : (
+                          <>
+                            {formatSetDisplay(card.set, card.setCode, card.collectorNumber)}
+                            {" · "}
+                            {formatCondition(card.condition)}
+                            {card.foil ? " · Foil" : ""}
+                          </>
+                        )}
                       </p>
                     </div>
                     <button
@@ -136,7 +144,7 @@ export default function CartReviewClient() {
             Complete Purchase
           </button>
 
-          <Link href="/card-shop" className={styles.continueLink}>
+          <Link href="/shop" className={styles.continueLink}>
             Continue Shopping
           </Link>
         </aside>

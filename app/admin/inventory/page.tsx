@@ -6,6 +6,7 @@ import type { SingleCard, Condition, CardColor, CardType, Rarity, Availability }
 import { formatCondition, formatSetDisplay, normalizeRarity, rarityBadgeLabel } from "@/lib/singles-data";
 import StatsCard from "@/components/admin/StatsCard";
 import BulkImportModal from "./BulkImportModal";
+import MerchandiseAdmin from "./MerchandiseAdmin";
 import styles from "./admin-inventory.module.css";
 
 // ── Scryfall helpers ──────────────────────────────────────────────────────────
@@ -1050,8 +1051,8 @@ export default function AdminInventoryPage() {
             </div>
           </button>
 
-          {/* Merchandise — coming soon */}
-          <div className={styles.hubCardDisabled}>
+          {/* Merchandise */}
+          <button className={styles.hubCard} onClick={() => setInventoryView("merchandise")}>
             <div className={styles.hubCardTop}>
               <div className={styles.hubCardIcon}>
                 <svg width="24" height="24" viewBox="0 0 40 40" fill="none" aria-hidden="true">
@@ -1067,43 +1068,19 @@ export default function AdminInventoryPage() {
             </div>
             <div className={styles.hubCardFooter}>
               <div className={styles.hubCardMeta}>
-                <span className={styles.hubCardStatNum}>—</span>
-                <span className={styles.hubCardStatLabel}>items listed</span>
+                <span className={styles.hubCardStatNum}>Shop</span>
+                <span className={styles.hubCardStatLabel}>products &amp; stock</span>
               </div>
-              <span className={styles.hubComingSoonBadge}>Coming Soon</span>
+              <span className={styles.hubCardCta}>Open →</span>
             </div>
-          </div>
+          </button>
         </div>
       </div>
     );
   }
 
-  // ── Merchandise placeholder ─────────────────────────────────────────────────
   if (inventoryView === "merchandise") {
-    return (
-      <div className={styles.page}>
-        <div className={styles.header}>
-          <div>
-            <button className={styles.backBtn} onClick={() => setInventoryView(null)}>← Inventory</button>
-            <h1 className={styles.title}>Merchandise</h1>
-            <p className={styles.subtitle}>Apparel, accessories, and store goods</p>
-          </div>
-        </div>
-        <div className={styles.merchandisePlaceholder}>
-          <div className={styles.merchandisePlaceholderIcon}>
-            <svg width="56" height="56" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-              <rect x="4" y="18" width="32" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
-              <path d="M12 18v-4a8 8 0 0 1 16 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              <line x1="4" y1="26" x2="36" y2="26" stroke="currentColor" strokeWidth="1.8" />
-            </svg>
-          </div>
-          <h2 className={styles.merchandisePlaceholderTitle}>Merchandise Inventory</h2>
-          <p className={styles.merchandisePlaceholderDesc}>
-            This section is coming soon. You&apos;ll be able to list merchandise items for sale on the site — apparel, accessories, and other store goods.
-          </p>
-        </div>
-      </div>
-    );
+    return <MerchandiseAdmin onBack={() => setInventoryView(null)} />;
   }
 
   return (

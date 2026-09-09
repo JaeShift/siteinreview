@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { getEventsStore } from "@/lib/store";
+import { getEventsStore, getMerchandiseStore, getSinglesStore } from "@/lib/store";
 import type { CartItem } from "@/lib/cart-context";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -26,15 +26,49 @@ export async function POST(request: NextRequest) {
 
   // ── Cart checkout ────────────────────────────────────────────────────────
   if (body.type === "cart") {
-    const items = body.items as CartItem[];
-    if (!items?.length) return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+    const requestedItems = body.items as CartItem[];
+    if (!requestedItems?.length) return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+
+    const cards = getSinglesStore();
+    const merchandise = getMerchandiseStore();
+    const items: CartItem[] = [];
+    for (const requested of requestedItems) {
+      const quantity = Math.max(1, Math.floor(Number(requested.quantity)));
+      if ("category" in requested.card) {
+        const product = merchandise.find((item) => item.id === (requested.card.inventoryId ?? requested.card.id));
+        if (!product?.active || product.quantity < quantity) {
+          return NextResponse.json({ error: `${requested.card.name} is no longer available in that quantity.` }, { status: 409 });
+        }
+        const selectedSize = requested.card.selectedSize;
+        if (product.sizes.length && (!selectedSize || !product.sizes.includes(selectedSize))) {
+          return NextResponse.json({ error: `Select an available size for ${product.name}.` }, { status: 400 });
+        }
+        items.push({ card: { ...product, id: requested.card.id, inventoryId: product.id, selectedSize }, quantity });
+      } else {
+        const card = cards.find((item) => item.id === requested.card.id);
+        if (!card || card.hidden || card.quantity < quantity) {
+          return NextResponse.json({ error: `${requested.card.name} is no longer available in that quantity.` }, { status: 409 });
+        }
+        items.push({ card, quantity });
+      }
+    }
+    for (const product of merchandise) {
+      const requestedQuantity = items
+        .filter((item) => item.card.inventoryId === product.id)
+        .reduce((sum, item) => sum + item.quantity, 0);
+      if (requestedQuantity > product.quantity) {
+        return NextResponse.json({ error: `${product.name} is no longer available in that quantity.` }, { status: 409 });
+      }
+    }
 
     const line_items = items.map(({ card, quantity }) => ({
       price_data: {
         currency: "usd",
         product_data: {
           name: card.name,
-          description: [card.set, card.type, card.rarity, CONDITION_LABELS[card.condition] ?? card.condition, card.foil ? "Foil" : null].filter(Boolean).join(" · "),
+          description: "category" in card
+            ? [card.category, card.description].filter(Boolean).join(" · ")
+            : [card.set, card.type, card.rarity, CONDITION_LABELS[card.condition] ?? card.condition, card.foil ? "Foil" : null].filter(Boolean).join(" · "),
           ...(card.imageUrl?.startsWith("https://") ? { images: [card.imageUrl] } : {}),
         },
         unit_amount: Math.round(card.price * 100),
@@ -49,15 +83,20 @@ export async function POST(request: NextRequest) {
       mode: "payment",
       billing_address_collection: "required",
       custom_text: {
-        submit: { message: "You'll receive an order confirmation email. Cards are available for in-store pickup at Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032." },
+        submit: { message: "You'll receive an order confirmation email. In-store pickup is available at Kitsune Brewing Co. — 3321 E Bell Rd Suite B-5, Phoenix, AZ 85032." },
       },
       metadata: {
         orderType: "singles",
-        category: "cards",
+        category: items.every((item) => "category" in item.card) ? "merchandise" : "shop",
         itemCount: String(items.reduce((s, i) => s + i.quantity, 0)),
-        itemSummary: items.map((i) => `${i.card.name} (${i.card.condition})${i.card.foil ? " Foil" : ""} x${i.quantity}`).join(", ").slice(0, 490),
+        itemSummary: items.map((item) => {
+          const detail = "category" in item.card
+            ? [item.card.category, item.card.selectedSize ? `Size ${item.card.selectedSize}` : null].filter(Boolean).join(" · ")
+            : `${item.card.condition}${item.card.foil ? " Foil" : ""}`;
+          return `${item.card.name} (${detail}) x${item.quantity}`;
+        }).join(", ").slice(0, 490),
         // compact array of {id, qty} for inventory decrement on fulfillment
-        cartItems: JSON.stringify(items.map((i) => ({ id: i.card.id, qty: i.quantity }))).slice(0, 490),
+        cartItems: JSON.stringify(items.map((i) => ({ id: i.card.inventoryId ?? i.card.id, qty: i.quantity }))).slice(0, 490),
       },
       return_url: returnUrl,
     });
