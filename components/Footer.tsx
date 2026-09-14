@@ -33,6 +33,7 @@ export default function Footer({
               <Image
                 src="/images/logo.png"
                 alt="Kitsune Brewing Co"
+                className={styles.footerMark}
                 width={80}
                 height={80}
               />

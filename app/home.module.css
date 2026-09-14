@@ -86,7 +86,8 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: clamp(600px, 72vh, 820px);
+  /* Window height must not change the hero composition or background crop. */
+  min-height: 600px;
   overflow: hidden;
   color: var(--color-cream-paper);
   background: var(--color-deep-ink);
@@ -116,6 +117,41 @@
   border: 1px solid var(--color-soft-gold);
 }
 
+.heroBeer {
+  --beer-width: clamp(130px, calc(28.125vw - 120px), 480px);
+  --beer-right: clamp(1%, calc(38vw - 560px), 14%);
+  --beer-bottom: 0px;
+  position: absolute;
+  inset: 0;
+  /* This decorative layer cannot contribute to the original hero dimensions. */
+  contain: size layout;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.heroBeer::before {
+  content: "";
+  position: absolute;
+  right: var(--beer-right);
+  bottom: calc(var(--beer-bottom) - 6px);
+  width: var(--beer-width);
+  height: clamp(24px, 3vw, 52px);
+  background: radial-gradient(ellipse, rgba(5, 7, 5, .95) 12%, rgba(5, 7, 5, .65) 40%, transparent 72%);
+  filter: blur(4px);
+}
+
+.heroBeerArt {
+  position: absolute;
+  right: var(--beer-right);
+  bottom: var(--beer-bottom);
+  width: var(--beer-width);
+  height: auto;
+  max-height: 74%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: saturate(.95) brightness(1.08) contrast(1.04);
+}
+
 .heroContent {
   position: relative;
   z-index: 2;
@@ -138,10 +174,6 @@
     flex-direction: column;
     justify-content: center;
   }
-}
-
-@media (min-width: 761px) and (max-width: 1100px) {
-  .heroContent { --hero-frame-brand-height: clamp(0.9rem, 2.7vw, 3.15rem); }
 }
 
 .heroRule {
@@ -650,6 +682,16 @@
 }
 
 @media (max-width: 760px) {
+  .heroBeer {
+    --beer-width: min(32vw, 154.667px);
+    --beer-right: 10%;
+    --beer-bottom: calc(100% - min(58vw, 280px));
+  }
+
+  .heroBeerArt {
+    max-height: none;
+  }
+
   .heroStage::after { inset: 8px; }
   .brandRibbon { gap: 14px; padding-block: 18px; }
   .brandRibbon > span { font-size: 1.125rem; }

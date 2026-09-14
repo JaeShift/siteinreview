@@ -4,6 +4,7 @@ import Link from "next/link";
 import MenuEmbed from "@/components/MenuEmbed";
 import CalendarEmbed from "@/components/CalendarEmbed";
 import MapEmbed from "@/components/MapEmbed";
+import HeroWordmark from "@/components/HeroWordmark";
 import styles from "./home.module.css";
 
 export const metadata: Metadata = {
@@ -24,11 +25,22 @@ export default function HomePage() {
             sizes="100vw"
             className={styles.heroBackdrop}
           />
+          <div className={styles.heroBeer} aria-hidden="true">
+            <Image
+              src="/images/home/hero-beer-woodcut.png"
+              alt=""
+              width={1024}
+              height={1536}
+              priority
+              sizes="(max-width: 760px) 160px, (max-width: 2134px) clamp(130px, calc(28.125vw - 120px), 480px), 480px"
+              className={styles.heroBeerArt}
+            />
+          </div>
           <div className={styles.heroShade} />
           <div className={styles.heroContent}>
             <span className={styles.heroRule} aria-hidden="true" />
             <div className={styles.heroIdentity}>
-              <h1 id="home-title" aria-label="Kitsune"><Image src="/images/home/kitsune-wordmark-textured.png" alt="" width={582} height={229} priority className={styles.wordmarkArt} /></h1>
+              <h1 id="home-title" aria-label="Kitsune"><HeroWordmark className={styles.wordmarkArt} /></h1>
               <p className={styles.heroBrand}><span>Brewing</span><span>Company</span></p>
             </div>
             <p className={styles.heroPromise}>Great beer. Good games.<br />A place to belong.</p>
