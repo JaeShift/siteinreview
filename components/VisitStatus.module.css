@@ -1,0 +1,8 @@
+.visitStatus { display: flex; align-items: center; gap: 12px; min-height: 52px; color: var(--color-ink); }
+.visitStatus > svg { flex-shrink: 0; color: #806235; }
+.visitStatus > svg:last-child { margin-left: auto; }
+.visitStatus > span { min-width: 0; }
+.visitStatus strong, .visitStatus span span { display: block; }
+.visitStatus strong { font-size: .875rem; line-height: 1.4; font-weight: 600; }
+.visitStatus span span { margin-top: 3px; font-size: .8125rem; line-height: 1.4; color: #6c6255; }
+.visitStatus:focus-visible { outline: 2px solid var(--color-action); outline-offset: 4px; }

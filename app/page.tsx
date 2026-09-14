@@ -5,7 +5,7 @@ import MenuEmbed from "@/components/MenuEmbed";
 import CalendarEmbed from "@/components/CalendarEmbed";
 import MapEmbed from "@/components/MapEmbed";
 import HeroWordmark from "@/components/HeroWordmark";
-import MobileTapPreview from "@/components/MobileTapPreview";
+import VisitStatus from "@/components/VisitStatus";
 import styles from "./home.module.css";
 
 export const metadata: Metadata = {
@@ -44,8 +44,6 @@ export default function HomePage() {
               <h1 id="home-title" aria-label="Kitsune"><HeroWordmark className={styles.wordmarkArt} /></h1>
               <p className={styles.heroBrand}>Brewing Company</p>
             </div>
-            <p className={styles.mobileLocation}>North Phoenix, Arizona</p>
-            <h1 className={styles.mobileHeroTitle}>Great beer.<br />Good games.<br />A place to belong.</h1>
             <p className={styles.heroPromise}>Great beer. Good games.<br />A place to belong.</p>
             <div className={styles.heroActions}>
               <a href="#tap-list" className={styles.solidButton}><span className={styles.heroActionLabel}>Find your <br className={styles.mobileButtonBreak} />beer</span><span className={styles.heroActionArrow} aria-hidden="true">→</span></a>
@@ -53,7 +51,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <MobileTapPreview />
+        <div className={styles.mobileVisit}><VisitStatus /></div>
         <div className={styles.taproomBar}>
           <p>Your neighborhood taproom</p>
           <span>3321 E Bell Rd · North Phoenix, AZ</span>

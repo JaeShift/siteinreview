@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Clock3 } from "lucide-react";
 import { DIRECTIONS_URL, getTaproomStatus } from "@/lib/taproom-hours";
-import styles from "./MobileTapPreview.module.css";
+import styles from "./VisitStatus.module.css";
 
 export default function VisitStatus() {
   const [status, setStatus] = useState<ReturnType<typeof getTaproomStatus> | null>(null);
