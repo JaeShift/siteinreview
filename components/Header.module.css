@@ -24,6 +24,7 @@
 .cartLink { border: 1px solid var(--color-action); border-radius: 0; color: var(--color-action) !important; padding: 11px 17px; }
 .hamburger { display: none; }
 .mobileControls { display: none; }
+.mobileBrand { display: none; }
 .headerHolding { isolation: isolate; }
 .headerLogo { padding-right: 28px; border-right: 1px solid var(--detail-line); }
 .navLink { position: relative; }
@@ -39,6 +40,19 @@
   .headerInner { gap: 20px; }
   .homeFoxLogo { width: 48px; height: 48px; }
   .homeWordmark { font-size: 1.9rem; }
+}
+@media (max-width: 760px) {
+  .headerHome { --header-height: 80px; background: #171815; color: var(--color-cream-paper); border-bottom: 0; box-shadow: none; }
+  .headerHome .communityStrip { display: none; }
+  .headerHome .headerInner { min-height: 80px; padding: 16px 6.25%; gap: 8px; }
+  .headerHome .headerLogo { gap: 12px; }
+  .headerHome .homeFoxLogo { width: 36px; height: 36px; filter: invert(1) sepia(.4) brightness(1.5); }
+  .headerHome .homeWordmark { display: none; }
+  .headerHome .mobileBrand { display: block; font: 400 clamp(.9rem, 4.2vw, 1.3rem)/1 var(--font-body); letter-spacing: .22em; text-transform: uppercase; }
+  .headerHome .hamburger { border: 0; }
+  .headerHome .hamburgerBar { background: currentColor; width: 22px; border-radius: 2px; }
+  .headerHome .mobileControls { gap: 2px; }
+  .headerHome .mobileCartButton:focus-visible, .headerHome .hamburger:focus-visible { outline: 2px solid var(--color-soft-gold); outline-offset: 2px; }
 }
 @media (max-width: 850px) {
   .mobileControls { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }

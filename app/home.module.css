@@ -224,6 +224,8 @@
 }
 
 .mobileLocation, .mobileHeroTitle { display: none; }
+.mobileButtonBreak { display: none; }
+.heroActions a:hover > .heroActionLabel { transform: none; }
 
 .heroActions {
   display: grid;
@@ -685,20 +687,21 @@
 
 @media (max-width: 760px) {
   .heroBeer {
-    --beer-width: clamp(82px, 24vw, 116px);
-    --beer-right: 2%;
+    --beer-width: clamp(112px, 35vw, 245px);
+    --beer-right: 12%;
     --beer-bottom: auto;
   }
 
   .heroBeerArt {
-    top: 14px;
+    top: 38px;
     max-height: none;
-    opacity: .75;
+    opacity: .9;
+    mask-image: linear-gradient(#000 65%, transparent);
   }
 
-  .heroBeer::before { display: none; }
+  .heroBeer::before { display: block; top: -12%; right: -10%; bottom: auto; width: 68vw; height: 68vw; max-width: 490px; max-height: 490px; border-radius: 50%; background: #76291e; opacity: .6; filter: none; }
 
-  .heroStage::after { inset: 8px; }
+  .heroStage::after { display: none; }
   .brandRibbon { gap: 14px; padding-block: 18px; }
   .brandRibbon > span { font-size: 1.125rem; }
   .brandRibbon > span:last-child, .brandRibbon > img:last-of-type { display: none; }
@@ -706,32 +709,35 @@
   .visitCopy { border-width: 8px; outline-offset: -14px; }
   .heroStage {
     min-height: 0;
-    padding-top: 0;
+    padding-top: clamp(170px, 45vw, 290px);
+    background: #171815;
   }
 
   .heroBackdrop {
     object-fit: cover;
     object-position: right center;
-    mask-image: linear-gradient(#000 68%, transparent);
+    opacity: 0;
+    mask-image: linear-gradient(#000, transparent 65%);
   }
 
   .heroShade {
-    background: linear-gradient(90deg, rgba(23,24,21,.88), rgba(23,24,21,.55) 58%, rgba(23,24,21,.12)), linear-gradient(0deg, var(--color-ink), transparent 72%);
+    background: linear-gradient(0deg, #171815 30%, rgba(23,24,21,.2) 72%, transparent);
   }
 
   .heroContent {
     width: 100%;
     margin-left: 0;
-    padding: 20px var(--site-gutter);
+    padding: 12px 6.25% 28px;
   }
 
   .heroIdentity, .heroRule, .heroPromise { display: none; }
-  .mobileLocation { display: block; margin: 0 0 12px; font: 600 .65rem/1.4 var(--font-body); letter-spacing: .12em; color: var(--color-soft-gold); text-transform: uppercase; }
-  .home .mobileHeroTitle { display: block; margin: 0; font: 500 clamp(1.6rem, 7.5vw, 2.15rem)/1.15 var(--font-body); letter-spacing: -.035em; text-transform: none; }
+  .mobileLocation { display: block; margin: 0 0 20px; font: 400 clamp(.65rem, 2.8vw, .875rem)/1.4 var(--font-body); letter-spacing: .22em; color: var(--color-soft-gold); text-transform: uppercase; }
+  .home .mobileHeroTitle { display: block; margin: 0; font: 400 clamp(1.75rem, 8.6vw, 3.5rem)/1.2 var(--font-body); letter-spacing: -.035em; text-transform: none; }
 
-  .heroActions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; width: 100%; }
-  .home .heroActions a { justify-content: center; min-height: 48px; padding: 10px 8px; font-size: .75rem; line-height: 1.35; letter-spacing: .025em; white-space: normal; text-align: center; }
-  .heroActions a > span { display: none; }
+  .heroActions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 26px; width: 100%; }
+  .home .heroActions a { justify-content: center; min-height: 80px; padding: 16px max(18px, 5vw); font-size: clamp(.875rem, 3.7vw, 1.25rem); font-weight: 400; line-height: 1.3; letter-spacing: .035em; white-space: normal; text-align: center; border-radius: 4px; }
+  .heroActions a > .heroActionArrow { display: none; }
+  .mobileButtonBreak { display: block; }
 
   .taproomBar { display: none; }
 

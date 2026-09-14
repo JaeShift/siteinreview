@@ -33,7 +33,7 @@ export default function HomePage() {
               width={1024}
               height={1536}
               priority
-              sizes="(max-width: 760px) 160px, (max-width: 2134px) clamp(130px, calc(28.125vw - 120px), 480px), 480px"
+              sizes="(max-width: 760px) 245px, (max-width: 2134px) clamp(130px, calc(28.125vw - 120px), 480px), 480px"
               className={styles.heroBeerArt}
             />
           </div>
@@ -48,8 +48,8 @@ export default function HomePage() {
             <h1 className={styles.mobileHeroTitle}>Great beer.<br />Good games.<br />A place to belong.</h1>
             <p className={styles.heroPromise}>Great beer. Good games.<br />A place to belong.</p>
             <div className={styles.heroActions}>
-              <a href="#tap-list" className={styles.solidButton}>Find your beer <span aria-hidden="true">→</span></a>
-              <Link href="/mtg-and-more" className={styles.lineButton}>Find your game <span aria-hidden="true">→</span></Link>
+              <a href="#tap-list" className={styles.solidButton}><span className={styles.heroActionLabel}>Find your <br className={styles.mobileButtonBreak} />beer</span><span className={styles.heroActionArrow} aria-hidden="true">→</span></a>
+              <Link href="/mtg-and-more" className={styles.lineButton}><span className={styles.heroActionLabel}>Find your <br className={styles.mobileButtonBreak} />game</span><span className={styles.heroActionArrow} aria-hidden="true">→</span></Link>
             </div>
           </div>
         </div>

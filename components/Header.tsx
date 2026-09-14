@@ -107,6 +107,7 @@ export default function Header() {
           <span className={styles.homeWordmark} data-site-wordmark>
             <KitsuneWordmark decorative className={styles.wordmarkArt} /><small>Brewing Company</small>
           </span>
+          <span className={styles.mobileBrand} aria-hidden="true">Kitsune</span>
         </Link>
 
         {/* Desktop Nav */}
