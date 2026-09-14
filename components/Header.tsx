@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import styles from "./Header.module.css";
 import KitsuneWordmark from "./KitsuneWordmark";
+import { ShoppingBag } from "lucide-react";
 
 type NavItem = {
   label: string;
@@ -59,13 +60,11 @@ const navLinks: NavItem[] = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mobileGroup, setMobileGroup] = useState<string | null>(null);
   const pathname = usePathname();
   const { totalCount, openCart } = useCart();
 
   useEffect(() => {
     setMenuOpen(false);
-    setMobileGroup(null);
   }, [pathname]);
 
   useEffect(() => {
@@ -155,16 +154,28 @@ export default function Header() {
           </button>
         </nav>
 
+        <div className={styles.mobileControls}>
+        <button
+          type="button"
+          className={styles.mobileCartButton}
+          onClick={() => { setMenuOpen(false); openCart(); }}
+          aria-label={`Open cart — ${totalCount} item${totalCount !== 1 ? "s" : ""}`}
+        >
+          <ShoppingBag size={23} strokeWidth={1.6} aria-hidden="true" />
+          {totalCount > 0 && <span className={styles.cartCount} aria-hidden="true">{totalCount}</span>}
+        </button>
         <button
           className={styles.hamburger}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
           onClick={() => setMenuOpen((v) => !v)}
         >
           <span className={styles.hamburgerBar} />
           <span className={styles.hamburgerBar} />
           <span className={styles.hamburgerBar} />
         </button>
+        </div>
       </div>
 
       {/* Mobile Drawer */}
@@ -176,33 +187,8 @@ export default function Header() {
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"
           />
-          <nav className={styles.mobileNav} aria-label="Mobile navigation">
-            {navLinks.map((item) => item.children ? (
-              <div key={item.label}>
-                <button
-                  className={`${styles.mobileNavLink} ${styles.mobileNavGroupBtn} ${itemIsActive(item) ? styles.mobileNavLinkActive : ""}`}
-                  onClick={() => setMobileGroup((current) => current === item.label ? null : item.label)}
-                  aria-expanded={mobileGroup === item.label}
-                >
-                  {item.label}
-                  <span aria-hidden="true">{mobileGroup === item.label ? "−" : "+"}</span>
-                </button>
-                {mobileGroup === item.label && (
-                  <div className={styles.mobileSubMenu}>
-                    {item.children.map((child) => (
-                      <Link
-                        key={`${child.label}-${child.href}`}
-                        href={child.href}
-                        className={`${styles.mobileNavLink} ${styles.mobileNavSubLink} ${pathname === child.href || pathname.startsWith(`${child.href}/`) ? styles.mobileNavLinkActive : ""}`}
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
+          <nav id="mobile-navigation" className={styles.mobileNav} aria-label="Mobile navigation">
+            {navLinks.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

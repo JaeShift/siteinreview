@@ -3,16 +3,7 @@ import Image from "next/image";
 import SocialLinks from "./SocialLinks";
 import styles from "./Footer.module.css";
 import KitsuneWordmark from "./KitsuneWordmark";
-
-const hours = [
-  { day: "Monday", hours: "3:00 PM – 9:00 PM" },
-  { day: "Tuesday", hours: "3:00 PM – 9:00 PM" },
-  { day: "Wednesday", hours: "3:00 PM – 9:00 PM" },
-  { day: "Thursday", hours: "3:00 PM – 9:00 PM" },
-  { day: "Friday", hours: "Closed" },
-  { day: "Saturday", hours: "Closed" },
-  { day: "Sunday", hours: "Closed" },
-];
+import { TAPROOM_HOURS, formatDayHours } from "@/lib/taproom-hours";
 
 export default function Footer({
   showHours = true,
@@ -63,17 +54,13 @@ export default function Footer({
           <div className={styles.footerCol}>
             <h3 className={styles.footerHeading}>Hours</h3>
             <ul className={styles.footerHours}>
-              {hours.map(({ day, hours: h }) => (
-                <li key={day} className={styles.footerHoursRow}>
-                  <span className={styles.footerHoursDay}>{day}</span>
+              {TAPROOM_HOURS.map((day) => (
+                <li key={day.day} className={styles.footerHoursRow}>
+                  <span className={styles.footerHoursDay}>{day.day}</span>
                   <span
-                    className={
-                      h === "Closed"
-                        ? styles.footerHoursTimeClosed
-                        : styles.footerHoursTime
-                    }
+                    className={styles.footerHoursTime}
                   >
-                    {h}
+                    {formatDayHours(day)}
                   </span>
                 </li>
               ))}

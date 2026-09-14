@@ -23,6 +23,7 @@
 .visitCta { letter-spacing: 0.04em; }
 .cartLink { border: 1px solid var(--color-action); border-radius: 0; color: var(--color-action) !important; padding: 11px 17px; }
 .hamburger { display: none; }
+.mobileControls { display: none; }
 .headerHolding { isolation: isolate; }
 .headerLogo { padding-right: 28px; border-right: 1px solid var(--detail-line); }
 .navLink { position: relative; }
@@ -40,10 +41,18 @@
   .homeWordmark { font-size: 1.9rem; }
 }
 @media (max-width: 850px) {
+  .mobileControls { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .mobileCartButton { position: relative; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
+  .cartCount { position: absolute; top: 0; right: 0; min-width: 17px; height: 17px; border-radius: 50%; padding: 0 3px; background: var(--color-action); color: var(--color-cream-paper); font: 700 .65rem/17px var(--font-body); text-align: center; }
+  .headerInner { gap: 12px; }
+  .headerLogo { gap: 8px; min-width: 0; }
+  .homeFoxLogo { width: 34px; height: 34px; }
+  .wordmarkArt { width: 108px; }
+  .homeWordmark small { font-size: .6rem; margin-top: 5px; }
   .headerLogo { border-right: 0; padding-right: 0; }
   .communityStrip { justify-content: center; font-size: 0.6875rem; }
   .communityStrip span:last-child { display: none; }
-  .headerInner { min-height: 78px; padding-block: 10px; }
+  .headerInner { min-height: 68px; padding-block: 8px; }
   .headerNav { display: none; }
   .hamburger { display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; align-items: center; background: transparent; border: 1px solid var(--color-soft-gold); cursor: pointer; }
   .hamburgerBar { width: 21px; height: 2px; background: var(--color-ink); }

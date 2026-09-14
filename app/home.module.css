@@ -203,9 +203,9 @@
   left: 21%;
   right: 9%;
   bottom: 7%;
-  display: flex;
-  justify-content: center;
-  gap: 1.1em;
+  text-align: center;
+  word-spacing: .75em;
+  white-space: nowrap;
   margin: 0;
   color: var(--color-cream-paper);
   font-size: 3cqw;
@@ -222,6 +222,8 @@
   font-size: clamp(1.125rem, 1.5vw, 1.5rem);
   line-height: 1.5;
 }
+
+.mobileLocation, .mobileHeroTitle { display: none; }
 
 .heroActions {
   display: grid;
@@ -683,14 +685,18 @@
 
 @media (max-width: 760px) {
   .heroBeer {
-    --beer-width: min(32vw, 154.667px);
-    --beer-right: 10%;
-    --beer-bottom: calc(100% - min(58vw, 280px));
+    --beer-width: clamp(82px, 24vw, 116px);
+    --beer-right: 2%;
+    --beer-bottom: auto;
   }
 
   .heroBeerArt {
+    top: 14px;
     max-height: none;
+    opacity: .75;
   }
+
+  .heroBeer::before { display: none; }
 
   .heroStage::after { inset: 8px; }
   .brandRibbon { gap: 14px; padding-block: 18px; }
@@ -700,7 +706,7 @@
   .visitCopy { border-width: 8px; outline-offset: -14px; }
   .heroStage {
     min-height: 0;
-    padding-top: min(58vw, 280px);
+    padding-top: 0;
   }
 
   .heroBackdrop {
@@ -710,22 +716,24 @@
   }
 
   .heroShade {
-    background: linear-gradient(0deg, var(--color-ink) 0%, rgba(23,24,21,.82) 42%, transparent 78%);
+    background: linear-gradient(90deg, rgba(23,24,21,.88), rgba(23,24,21,.55) 58%, rgba(23,24,21,.12)), linear-gradient(0deg, var(--color-ink), transparent 72%);
   }
 
   .heroContent {
     width: 100%;
     margin-left: 0;
-    padding: 28px var(--site-gutter) 36px;
+    padding: 20px var(--site-gutter);
   }
 
-  .heroIdentity { width: 100%; }
+  .heroIdentity, .heroRule, .heroPromise { display: none; }
+  .mobileLocation { display: block; margin: 0 0 12px; font: 600 .65rem/1.4 var(--font-body); letter-spacing: .12em; color: var(--color-soft-gold); text-transform: uppercase; }
+  .home .mobileHeroTitle { display: block; margin: 0; font: 500 clamp(1.6rem, 7.5vw, 2.15rem)/1.15 var(--font-body); letter-spacing: -.035em; text-transform: none; }
 
-  .heroActions { grid-template-columns: 1fr; gap: 12px; }
+  .heroActions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; width: 100%; }
+  .home .heroActions a { justify-content: center; min-height: 48px; padding: 10px 8px; font-size: .75rem; line-height: 1.35; letter-spacing: .025em; white-space: normal; text-align: center; }
+  .heroActions a > span { display: none; }
 
-  .taproomBar { flex-wrap: wrap; gap: 8px 20px; }
-
-  .taproomBar > span { width: 100%; }
+  .taproomBar { display: none; }
 
   .manifesto,
   .menuSection,
