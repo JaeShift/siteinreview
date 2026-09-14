@@ -86,7 +86,7 @@
 }
 
 .filterTab:hover { border-color: var(--color-black); color: var(--color-black); }
-.filterTabActive { background: var(--color-black); color: #fff; border-color: var(--color-black); }
+.filterTabActive { background: var(--color-black); color: var(--color-cream-paper); border-color: var(--color-black); }
 
 /* ─── Stats row ─────────────────────────────────────────────────────────────── */
 .statsRow {
@@ -143,11 +143,11 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--color-muted);
-  background: #fafafa;
+  background: var(--color-cream-paper);
 }
 
 .tableRow:last-child { border-bottom: none; }
-.tableRow:hover { background: #fafafa; }
+.tableRow:hover { background: var(--color-cream-paper); }
 
 .nameCell {
   display: flex;
@@ -194,7 +194,7 @@
 }
 
 .statusConfirmed  { color: #15803d; background: rgba(0,128,0,0.08); }
-.statusWaitlisted { color: #92400e; background: rgba(245,158,11,0.12); }
+.statusWaitlisted { color: #87672f; background: rgba(245,158,11,0.12); }
 .statusCancelled  { color: var(--color-muted); background: rgba(0,0,0,0.05); }
 .statusRefunded   { color: #1d4ed8; background: rgba(37,99,235,0.1); }
 
@@ -317,7 +317,7 @@
     justify-content: flex-start;
   }
 }
-.checkinBtnChecked { border-color: #22c55e; background: #22c55e; color: #fff; }
+.checkinBtnChecked { border-color: #22c55e; background: #22c55e; color: var(--color-cream-paper); }
 
 .checkinTime {
   font-size: 10px;
@@ -389,8 +389,8 @@
 }
 
 .refundBtn:hover:not(:disabled) {
-  border-color: #b45309;
-  color: #b45309;
+  border-color: #87672f;
+  color: #87672f;
 }
 
 .emptyRow {
@@ -534,7 +534,7 @@
 }
 
 .flashSuccess { background: #f0fdf4; border-color: #22c55e; color: #15803d; }
-.flashError   { background: #fef2f2; border-color: var(--color-accent); color: #991b1b; }
+.flashError   { background: #fef2f2; border-color: var(--color-status-error); color: #991b1b; }
 
 .undoToast {
   position: fixed;
@@ -546,15 +546,15 @@
   gap: 20px;
   padding: 14px 16px 14px 20px;
   background: var(--color-black);
-  color: #fff;
+  color: var(--color-cream-paper);
   font-size: 14px;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.24);
 }
 
 .undoBtn {
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(242, 232, 213, 0.45);
   background: transparent;
-  color: #fff;
+  color: var(--color-cream-paper);
   padding: 7px 12px;
   font-family: var(--font-heading);
   font-size: 10px;
@@ -565,7 +565,7 @@
 }
 
 .undoBtn:hover {
-  border-color: #fff;
+  border-color: var(--color-cream-paper);
 }
 
 @media screen and (max-width: 600px) {
@@ -601,8 +601,8 @@
   .page {
     display: block;
     padding: 0;
-    background: #fff;
-    color: #111;
+    background: var(--color-cream-paper);
+    color: var(--color-ink);
   }
 
   .page > :not(.printSheet) {
@@ -612,7 +612,7 @@
   .printSheet {
     display: block;
     font-family: Arial, Helvetica, sans-serif;
-    color: #111;
+    color: var(--color-ink);
   }
 
   .printHeader {
@@ -620,7 +620,7 @@
     align-items: center;
     gap: 20px;
     padding-bottom: 18px;
-    border-bottom: 3px solid #111;
+    border-bottom: 3px solid var(--color-ink);
   }
 
   .printLogo {
@@ -645,7 +645,7 @@
   }
 
   .printBrand h1 {
-    color: #111;
+    color: var(--color-ink);
     font-family: var(--font-heading);
     font-size: 25px;
     font-weight: 600;
@@ -656,12 +656,12 @@
 
   .printEvent {
     padding: 20px 0 18px;
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid var(--color-muted);
   }
 
   .printEvent h2 {
     margin-top: 5px;
-    color: #111;
+    color: var(--color-ink);
     font-family: var(--font-heading);
     font-size: 22px;
     font-weight: 600;
@@ -687,7 +687,7 @@
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #555;
+    color: var(--color-text-light);
   }
 
   .printMeta strong {
@@ -700,7 +700,7 @@
     display: flex;
     justify-content: space-between;
     padding: 12px 0;
-    border-bottom: 2px solid #111;
+    border-bottom: 2px solid var(--color-ink);
     font-family: var(--font-heading);
     font-size: 9px;
     font-weight: 700;
@@ -718,8 +718,8 @@
 
   .printTableHeader {
     padding: 10px 8px;
-    background: #f1f1f1 !important;
-    border-bottom: 1px solid #aaa;
+    background: var(--color-gray-light) !important;
+    border-bottom: 1px solid var(--color-muted);
     font-family: var(--font-heading);
     font-size: 8px;
     font-weight: 700;
@@ -732,7 +732,7 @@
   .printTableRow {
     min-height: 54px;
     padding: 8px;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid var(--color-muted);
     break-inside: avoid;
     font-size: 9px;
     line-height: 1.35;
@@ -742,7 +742,7 @@
     width: 20px;
     height: 20px;
     margin: 0 auto;
-    border: 2px solid #111;
+    border: 2px solid var(--color-ink);
   }
 
   .printAttendee,
@@ -761,7 +761,7 @@
   .printAttendee span,
   .printContact span {
     overflow-wrap: anywhere;
-    color: #444;
+    color: var(--color-cedar);
     font-size: 8px;
   }
 
@@ -774,8 +774,8 @@
 
   .printEmpty {
     padding: 28px 8px;
-    border-bottom: 1px solid #bbb;
-    color: #555;
+    border-bottom: 1px solid var(--color-muted);
+    color: var(--color-text-light);
     font-size: 10px;
     text-align: center;
   }
@@ -786,8 +786,8 @@
     gap: 20px;
     margin-top: 22px;
     padding-top: 10px;
-    border-top: 1px solid #aaa;
-    color: #555;
+    border-top: 1px solid var(--color-muted);
+    color: var(--color-text-light);
     font-size: 7px;
   }
 }

@@ -1,6 +1,6 @@
 .card {
-  background: #fbf8f2;
-  border: 1px solid rgba(24, 26, 27, 0.28);
+  background: var(--color-white);
+  border: var(--public-card-border, 1px solid var(--color-border));
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -14,7 +14,7 @@
   width: 100%;
   padding-bottom: 140%; /* MTG card ratio: 2.5" × 3.5" = 5:7 */
   overflow: hidden;
-  background-color: #e8e8e8;
+  background-color: var(--color-gray-light);
   border-radius: 0;
   box-shadow: none;
   transition: filter 0.2s ease, transform 0.2s ease;
@@ -46,9 +46,9 @@
   width: 62px;
   height: 62px;
   border-radius: 0;
-  background: rgba(24, 26, 27, 0.86);
-  border: 1px solid #fbf8f2;
-  color: #fff;
+  background: rgba(23, 24, 21, 0.86);
+  border: 1px solid var(--color-white);
+  color: var(--color-cream-paper);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,13 +68,13 @@
 
 .metaFixed {
   padding-top: 6px;
-  border-top: 1px solid rgba(24, 26, 27, 0.18);
+  border-top: 1px solid rgba(23, 24, 21, 0.18);
   margin-bottom: 2px;
 }
 
 .metaRarity {
-  font-family: var(--font-heading);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -83,8 +83,8 @@
 }
 
 .metaCond {
-  font-family: var(--font-heading);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -95,10 +95,10 @@
 .rarityBadge {
   background: var(--color-black);
   color: var(--color-white);
-  font-family: var(--font-heading);
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 3px 7px;
 }
@@ -110,12 +110,12 @@
 }
 
 .foilBadge {
-  background: #ead7a0;
-  color: #181a1b;
-  font-family: var(--font-heading);
-  font-size: 10px;
+  background: var(--color-soft-gold);
+  color: var(--color-black);
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   padding: 5px 8px;
   line-height: 1.2;
   border-radius: 0;
@@ -139,9 +139,9 @@
 }
 
 .lowStockBadge {
-  color: #c84d1d;
-  font-family: var(--font-heading);
-  font-size: 10px;
+  color: var(--color-accent);
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
 }
@@ -149,19 +149,19 @@
 .condBadge {
   background: var(--color-accent);
   color: var(--color-white);
-  font-family: var(--font-heading);
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 3px 7px;
 }
 
 /* ── Body — detached info panel ── */
 .body {
-  background: #fbf8f2;
+  background: var(--color-white);
   border: 0;
-  border-top: 3px solid #181a1b;
+  border-top: 3px solid var(--color-black);
   border-radius: 0;
   padding: 12px 14px 14px;
   display: flex;
@@ -173,19 +173,19 @@
 
 .card:hover .body {
   border-color: transparent;
-  border-top-color: #c84d1d;
+  border-top-color: var(--color-accent);
 }
 
 
 .setName {
-  font-family: var(--font-heading);
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(24, 26, 27, 0.58);
+  color: var(--color-muted);
   margin: 0 0 6px;
-  opacity: 0.8;
+  opacity: 1;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -194,11 +194,11 @@
 
 .name {
   font-family: var(--font-heading);
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: #181a1b;
-  line-height: 1.3;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--color-black);
+  line-height: 1.05;
   margin: 0 0 4px;
   transition: color 0.2s;
   display: -webkit-box;
@@ -209,7 +209,7 @@
 }
 
 .card:hover .name {
-  color: #c84d1d;
+  color: var(--color-accent);
 }
 
 .bodyTop {
@@ -226,10 +226,11 @@
 
 .price {
   font-family: var(--font-heading);
-  font-size: 20px;
-  font-weight: 700;
-  color: #181a1b;
-  line-height: 1;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-black);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
 }
 
 .quickAddBtn {
@@ -237,7 +238,7 @@
   height: 44px;
   border: none;
   background: transparent;
-  color: #181a1b;
+  color: var(--color-black);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -248,14 +249,14 @@
 }
 
 .quickAddBtn:hover:not(:disabled) {
-  color: #c84d1d;
+  color: var(--color-accent);
 }
 
 .quickViewLabel {
-  font-family: var(--font-heading);
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -274,23 +275,23 @@
 }
 
 .soldOutBadge {
-  font-family: var(--font-heading);
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #bbb;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
 }
 
 .viewBtn {
   width: 100%;
   padding: 12px;
-  background: #181a1b;
-  color: #fbf8f2;
-  font-family: var(--font-heading);
-  font-size: 11px;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   border: none;
   cursor: pointer;
@@ -304,11 +305,11 @@
 }
 
 .viewBtn:hover:not(:disabled) {
-  background: #c84d1d;
+  background: var(--color-accent);
 }
 
 .viewBtnAdded {
-  background: #22c55e !important;
+  background: var(--color-tea-green) !important;
 }
 
 .viewBtnMax {
@@ -322,22 +323,22 @@
 }
 
 .addBtn {
-  font-size: 10px;
+  font-size: 12px;
   padding: 10px 20px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.04em;
 }
 
 .addedBtn {
-  background: #22c55e !important;
-  border-color: #22c55e !important;
+  background: var(--color-tea-green) !important;
+  border-color: var(--color-tea-green) !important;
 }
 
 .soldOut {
-  font-family: var(--font-heading);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   color: var(--color-muted);
 }
 
@@ -345,7 +346,7 @@
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  background: rgba(24, 26, 27, 0.78);
+  background: rgba(23, 24, 21, 0.78);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -355,15 +356,15 @@
 }
 
 .modal {
-  background: #fbf8f2;
+  background: var(--color-white);
   width: 100%;
   max-width: 760px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
   padding: 36px;
-  border: 1px solid #181a1b;
-  box-shadow: 10px 10px 0 #000000;
+  border: 1px solid var(--color-black);
+  box-shadow: 10px 10px 0 var(--color-black);
 }
 
 .modalClose {
@@ -397,7 +398,7 @@
   border-radius: 0;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-  background-color: #f3f3f3;
+  background-color: var(--color-gray-light);
 }
 
 .modalImg {
@@ -415,12 +416,12 @@
 
 .modalName {
   font-family: var(--font-heading);
-  font-size: 22px;
-  font-weight: 700;
-  color: #181a1b;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--color-black);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  line-height: 1.2;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
 }
 
 .modalDetails {
@@ -435,14 +436,14 @@
   align-items: center;
   font-size: 13px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(24, 26, 27, 0.2);
+  border-bottom: 1px solid rgba(23, 24, 21, 0.2);
 }
 
 .modalLabel {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-weight: 700;
-  font-size: 10px;
-  letter-spacing: 0.1em;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-gray-mid);
 }
@@ -458,15 +459,15 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 16px;
-  border-top: 2px solid #181a1b;
+  border-top: 2px solid var(--color-black);
   margin-top: auto;
 }
 
 .modalPrice {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 28px;
   font-weight: 700;
-  color: #181a1b;
+  color: var(--color-black);
 }
 
 .modalImageCol {
@@ -478,12 +479,12 @@
 .flipBtn {
   width: 100%;
   padding: 8px;
-  background: #181a1b;
-  color: #fbf8f2;
-  font-family: var(--font-heading);
-  font-size: 10px;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   border: none;
   cursor: pointer;
@@ -491,7 +492,7 @@
   border-radius: 0;
 }
 
-.flipBtn:hover { background: #c84d1d; }
+.flipBtn:hover { background: var(--color-accent); }
 
 .modalOracle {
   font-family: var(--font-body);
@@ -499,8 +500,8 @@
   color: var(--color-text);
   line-height: 1.6;
   padding: 12px;
-  background: #f3ede3;
-  border-left: 3px solid #c84d1d;
+  background: var(--color-bg);
+  border-left: 3px solid var(--color-accent);
   margin: 0;
   font-style: italic;
 }
@@ -554,15 +555,15 @@
 }
 
 .modalFormatTag {
-  font-family: var(--font-heading);
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 3px 7px;
-  background: #f3ede3;
-  color: #181a1b;
-  border: 1px solid rgba(24, 26, 27, 0.2);
+  background: var(--color-bg);
+  color: var(--color-black);
+  border: 1px solid rgba(23, 24, 21, 0.2);
   border-radius: 0;
 }
 

@@ -81,7 +81,7 @@ export default function CalendarView({ events, initialFilter = "all", showToggle
     <div className={styles.calendarWrapper}>
       <div className={styles.legend}>
         <span className={styles.legendItem}>
-          <span className={styles.legendDot} style={{ background: "#ff0000" }} />
+          <span className={styles.legendDot} style={{ background: "#b64028" }} />
           Events
         </span>
       </div>
@@ -116,7 +116,7 @@ export default function CalendarView({ events, initialFilter = "all", showToggle
                       <button
                         key={evt.id}
                         className={styles.eventPill}
-                        style={{ backgroundColor: evt.color ?? "#333" }}
+                        style={{ backgroundColor: evt.color ?? "#4a3024" }}
                         onClick={() => setSelectedEvent(evt)}
                         title={evt.title}
                       >

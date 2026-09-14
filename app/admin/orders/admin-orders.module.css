@@ -66,7 +66,7 @@
 }
 
 .importBtn {
-  background: #1a1a2e;
+  background: var(--color-ink);
   color: var(--color-white);
   font-family: var(--font-heading);
   font-size: 11px;
@@ -86,8 +86,8 @@
 
 .sourceBadge {
   display: inline-block;
-  background: #1a1a2e;
-  color: #fff;
+  background: var(--color-ink);
+  color: var(--color-cream-paper);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -99,7 +99,7 @@
 .sourceBadgeStripe {
   display: inline-block;
   background: #635bff;
-  color: #fff;
+  color: var(--color-cream-paper);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -187,7 +187,7 @@
   top: -8px;
   right: -22px;
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-cream-paper);
   font-family: var(--font-heading);
   font-size: 9px;
   font-weight: 800;
@@ -325,18 +325,18 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--color-muted);
-  background: #fafafa;
+  background: var(--color-cream-paper);
 }
 
 .tableRow:last-child { border-bottom: none; }
-.tableRow:hover { background: #fafafa; }
+.tableRow:hover { background: var(--color-cream-paper); }
 
 .tableRowNew {
-  background: #fffbeb;
+  background: var(--color-cream-paper);
   border-left: 3px solid var(--color-accent);
 }
 
-.tableRowNew:hover { background: #fff8e1; }
+.tableRowNew:hover { background: var(--color-cream-paper); }
 
 .newPill {
   display: inline-flex;
@@ -344,7 +344,7 @@
   margin-left: 6px;
   padding: 1px 6px;
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-cream-paper);
   font-family: var(--font-heading);
   font-size: 8px;
   font-weight: 800;
@@ -408,7 +408,7 @@
 }
 
 .status_paid     { background: #f0fdf4; color: #15803d; }
-.status_pending  { background: #fefce8; color: #a16207; }
+.status_pending  { background: var(--color-cream-paper); color: #87672f; }
 .status_refunded { background: #fef2f2; color: #991b1b; }
 
 .date {
@@ -438,16 +438,16 @@
 
 .bulkLabel {
   font-size: 11px;
-  color: rgba(255,255,255,0.6);
+  color: rgba(242, 232, 213,0.6);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-family: var(--font-heading);
 }
 
 .bulkMoveBtn {
-  background: rgba(255,255,255,0.15);
+  background: rgba(242, 232, 213,0.15);
   color: var(--color-white);
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(242, 232, 213,0.3);
   font-family: var(--font-heading);
   font-size: 11px;
   font-weight: 700;
@@ -459,7 +459,7 @@
 }
 
 .bulkMoveBtn:hover:not(:disabled) {
-  background: rgba(255,255,255,0.25);
+  background: rgba(242, 232, 213,0.25);
 }
 
 .bulkMoveBtn:disabled {
@@ -471,7 +471,7 @@
   margin-left: auto;
   background: none;
   border: none;
-  color: rgba(255,255,255,0.5);
+  color: rgba(242, 232, 213,0.5);
   font-size: 11px;
   cursor: pointer;
   font-family: var(--font-heading);
@@ -483,7 +483,7 @@
 }
 
 .tableRowChecked {
-  background: #f5f5f0;
+  background: var(--color-gray-light);
 }
 
 .categorySelect {
@@ -527,7 +527,7 @@
 
 .deleteBtn:hover {
   background: #991b1b;
-  color: #fff;
+  color: var(--color-cream-paper);
 }
 
 .deleteBtn:disabled {
@@ -541,9 +541,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #92400e;
-  background: #fffbeb;
-  border: 1px solid #fcd34d;
+  color: #87672f;
+  background: var(--color-cream-paper);
+  border: 1px solid var(--color-soft-gold);
   padding: 4px 10px;
   cursor: pointer;
   border-radius: 2px;
@@ -552,8 +552,8 @@
 }
 
 .refundBtn:hover {
-  background: #92400e;
-  color: #fff;
+  background: #87672f;
+  color: var(--color-cream-paper);
 }
 
 .refundBtn:disabled {

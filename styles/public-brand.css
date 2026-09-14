@@ -1,0 +1,80 @@
+/* Public brand: ink, textured paper, and vermilion, independent beer, and an open invitation. */
+[data-site-theme="taproom"] {
+  --public-surface: var(--color-cream-paper);
+  --public-surface-muted: var(--color-surface-muted);
+  --public-panel: var(--color-paper);
+  --public-line: var(--color-border);
+  --public-section-sm: var(--section-sm);
+  --public-section-md: var(--section-md);
+  --public-section-lg: var(--section-lg);
+  --public-card-padding: clamp(22px, 3vw, 34px);
+  --public-card-border: 1px solid var(--public-line);
+  --detail-line: rgba(184, 154, 98, .55);
+  --detail-shadow: 5px 5px 0 rgba(74, 48, 36, .1);
+  --detail-paper: var(--texture-grain), linear-gradient(115deg, rgba(255, 255, 255, .22), transparent 65%);
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  background-image: var(--texture-grain);
+}
+[data-site-theme="taproom"] > main { flex: 1; overflow: clip; }
+[data-site-theme="taproom"] :is(h1,h2,h3) { font-family: var(--font-heading); font-weight: 800; font-style: normal; text-transform: uppercase; letter-spacing: -0.015em; line-height: 1; }
+[data-site-theme="taproom"] :is(h1,h2) em { font-style: italic; font-family: var(--font-fraunces), Georgia, serif; text-transform: none; letter-spacing: -0.03em; }
+[data-site-theme="taproom"] .eyebrow {
+  margin: 0 0 18px;
+  color: var(--color-muted-gold);
+  font: 700 0.7rem/1.6 var(--font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+[data-site-theme="taproom"] .public-card {
+  padding: var(--public-card-padding);
+  background: var(--public-panel);
+  border: var(--public-card-border);
+  background-image: var(--detail-paper);
+  box-shadow: var(--detail-shadow);
+  border-top: 3px solid var(--color-muted-gold);
+}
+[data-site-theme="taproom"] .filter-pill {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-ink);
+  background: transparent;
+  color: var(--color-ink);
+  font: 700 0.8125rem/1.4 var(--font-body);
+  cursor: pointer;
+}
+[data-site-theme="taproom"] .filter-pill:hover { background: var(--color-surface-muted); }
+[data-site-theme="taproom"] .filter-pill[aria-pressed="true"],
+[data-site-theme="taproom"] .filter-pill.is-active {
+  background: var(--color-ink);
+  color: var(--color-cream-paper);
+}
+[data-site-theme="taproom"] :is(button,input,select,textarea) { font-family: var(--font-body); }
+[data-site-theme="taproom"] :is(input,select,textarea) { border-radius: 0; }
+[data-site-theme="taproom"] :is(a,button,input,select,textarea):focus-visible { outline: 3px solid var(--color-action); outline-offset: 4px; }
+[data-site-theme="taproom"] .container { width: 100%; max-width: 1440px; padding-inline: var(--site-gutter); }
+[data-site-theme="taproom"] .page-banner { position: relative; min-height: clamp(210px, 24vw, 320px); display: flex; flex-direction: column; justify-content: flex-end; padding: var(--public-section-sm) var(--site-gutter); text-align: left; background-color: var(--color-roasted-brown); background-image: var(--texture-grain), var(--texture-wave); background-size: 180px 180px, 320px 192px; background-blend-mode: multiply, normal; color: var(--color-cream-paper); border-bottom: 3px solid var(--color-action); background-repeat: repeat, no-repeat; background-position: center, right bottom; }
+[data-site-theme="taproom"] .page-banner h1 { color: inherit; font-size: var(--type-page-title); line-height: 0.92; max-width: 1000px; }
+[data-site-theme="taproom"] .btn { min-height: 48px; padding: 13px 24px; border-radius: 0; font: 700 0.8125rem/1.4 var(--font-body); letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--color-roasted-brown); }
+[data-site-theme="taproom"] .btn { box-shadow: inset 0 0 0 3px var(--color-cream-paper), inset 0 0 0 4px currentColor; transition: background-color .2s, color .2s, transform .2s; }
+[data-site-theme="taproom"] .btn-primary { box-shadow: inset 0 0 0 3px var(--color-action), inset 0 0 0 4px rgba(242,232,213,.3); }
+[data-site-theme="taproom"] .btn:active { transform: translateY(1px); }
+[data-site-theme="taproom"] .btn-primary { background: var(--color-action); border-color: var(--color-action); color: var(--color-cream-paper); }
+[data-site-theme="taproom"] .btn-primary:hover { background: var(--color-action-hover); border-color: var(--color-action-hover); }
+[data-site-theme="taproom"] .btn-outline { color: var(--color-roasted-brown); background: transparent; }
+[data-site-theme="taproom"] .btn-outline:hover { background: var(--color-roasted-brown); color: var(--color-cream-paper); }
+[data-site-theme="taproom"] .form-input { min-height: 50px; background: var(--color-surface-raised); color: var(--color-text); border: 1px solid var(--color-border); font-size: 1rem; }
+[data-site-theme="taproom"] .form-label { font: 700 0.8125rem/1.4 var(--font-body); letter-spacing: 0.03em; }
+[data-site-theme="taproom"] .skipLink { background: var(--color-roasted-brown); color: var(--color-cream-paper); }
+[data-site-theme="taproom"]:not([data-route^="/checkout"]) main footer { display: none; }
+@media (max-width: 760px) {
+  [data-site-theme="taproom"] .page-banner { min-height: 190px; padding-block: 42px; }
+  [data-site-theme="taproom"] .page-banner h1 { font-size: clamp(2.75rem, 13vw, 4.35rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-site-theme="taproom"] *, [data-site-theme="taproom"] *::before, [data-site-theme="taproom"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

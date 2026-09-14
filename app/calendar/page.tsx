@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageSection from "@/components/PageSection";
+import PageHero from "@/components/ui/PageHero";
 import CalendarPageClient from "./CalendarPageClient";
-import MtgFooter from "@/components/MtgFooter";
 import { getCalendarProvider } from "@/lib/calendar";
 import styles from "./calendar.module.css";
 
@@ -36,26 +36,17 @@ export default async function CalendarPage() {
 
   return (
     <>
-      <div className={`page-banner ${styles.pageBanner}`}>
-        <h1>Events &amp; Schedule</h1>
-      </div>
+      <PageHero kicker="Make a night of it" title="Events and schedule" />
 
-      <PageSection background="white">
-        <p className={styles.intro}>
-          All upcoming MTG events at Kitsune Brewing Co. Click any entry to see details.
-        </p>
+      <PageSection surface="cream" size="md">
+        <div className={styles.introRow}>
+          <p className={styles.intro}>
+            All upcoming MTG events at Kitsune Brewing Co. Click any entry to see details.
+          </p>
+          <Link href="/events" className="btn btn-outline">Browse event details →</Link>
+        </div>
         <CalendarPageClient events={serializedEvents} />
       </PageSection>
-
-      <section className={styles.quickSection}>
-        <div className="container">
-          <h2 className={styles.quickHeading}>Quick Links</h2>
-          <div className={styles.quickLinks}>
-            <Link href="/events" className="btn btn-outline">View All Events →</Link>
-          </div>
-        </div>
-      </section>
-      <MtgFooter />
     </>
   );
 }

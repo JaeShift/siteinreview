@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  border: 1px solid var(--site-line, #e8e8e8);
+  border: 1px solid var(--site-line, var(--color-border));
   overflow: hidden;
 }
 
@@ -13,6 +13,17 @@
   display: block;
 }
 
+.mapPreview { position: relative; display: flex; flex-direction: column; background-color: var(--color-paper); background-image: var(--texture-grain), var(--texture-wave); background-repeat: repeat, no-repeat; background-position: center, right bottom; background-size: 180px 180px, 300px 180px; }
+.mapIntro { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center; }
+.mapIntro > svg { color: var(--color-action); margin-bottom: 20px; }
+.mapIntro .mapLabel { font-size: .8125rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--color-text-light); }
+.mapIntro h3 { margin: 16px 0 12px; font: 700 clamp(2rem, 3vw, 2.75rem)/1.1 var(--font-heading); }
+.mapIntro p { font-size: 1rem; }
+.mapIntro button { display: flex; align-items: center; gap: 24px; min-height: 52px; margin-top: 24px; padding: 14px 22px; border: 1px solid var(--color-ink); background: transparent; font: 600 .875rem/1.4 var(--font-body); cursor: pointer; }
+.mapIntro button:hover { background: var(--color-ink); color: var(--color-cream-paper); }
+.mapPreview .mapExternal { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 16px 24px; min-height: 56px; border-top: 1px solid var(--color-border); color: var(--color-ink); font-size: .875rem; background: var(--color-cream-paper); }
+.mapPreview .mapIframe { flex: 1; height: 0; min-height: 340px; }
+
 .addressBar {
   text-align: center;
   padding-top: 20px;
@@ -21,8 +32,8 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  background-color: var(--site-paper, #fafafa);
-  border-top: 1px solid var(--site-line, #e0e0e0);
+  background-color: var(--site-paper, var(--color-cream-paper));
+  border-top: 1px solid var(--site-line, var(--color-border));
   width: 100%;
   margin-top: 64px;
   margin-bottom: -72px;

@@ -278,17 +278,6 @@ function SinglesInner({ initialCards }: { initialCards: SingleCardData[] }) {
       </section>
 
       {/* Footer */}
-      <footer className={styles.shopFooter}>
-        <p className={styles.shopFooterName}>Kitsune Brewing Company</p>
-        <div className={styles.shopFooterLinks}>
-          <a href="tel:+16022458593" className={styles.shopFooterLink}>(602) 245-8593</a>
-          <a href="http://instagram.com/kitsunebrewingco" target="_blank" rel="noopener noreferrer" className={styles.shopFooterLink}>Instagram</a>
-          <a href="https://www.facebook.com/KitsuneBrewCo" target="_blank" rel="noopener noreferrer" className={styles.shopFooterLink}>Facebook</a>
-        </div>
-        <p className={styles.shopFooterCopy}>
-          &copy; {new Date().getFullYear()} Kitsune Brewing Company. 3321 E Bell Rd Suite B-5 Phoenix, AZ 85032
-        </p>
-      </footer>
 
       {/* Floating cart */}
       <button

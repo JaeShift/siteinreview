@@ -1,20 +1,33 @@
 import type { Metadata, Viewport } from "next";
+import { Barlow_Condensed, DM_Sans, Fraunces, Manrope } from "next/font/google";
 import SiteShell from "@/components/SiteShell";
-import { getSiteAppearanceStore } from "@/lib/store";
 import "@/styles/globals.css";
+import "@/styles/public-brand.css";
 
-export const dynamic = "force-dynamic";
+const barlow = Barlow_Condensed({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-barlow", display: "swap", fallback: ["Impact", "Arial Narrow", "sans-serif"] });
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm", display: "swap", fallback: ["Arial", "sans-serif"] });
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  display: "swap",
+  fallback: ["Georgia", "serif"],
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  display: "swap",
+  fallback: ["Arial", "sans-serif"],
+});
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#ffffff",
+  themeColor: "#171815",
 };
-
-// Fonts are loaded by the Adobe Fonts kit in the <head> below.
-// futura-pt → headings   |   proxima-nova → body / nav / forms / footer
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -39,21 +52,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const appearance = await getSiteAppearanceStore();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${fraunces.variable} ${manrope.variable} ${barlow.variable} ${dmSans.variable}`}>
       <head>
-        <link rel="preconnect" href="https://use.typekit.net" crossOrigin="" />
-        <link rel="preconnect" href="https://p.typekit.net" crossOrigin="" />
-        {/* Adobe Fonts kit — loads futura-pt + proxima-nova */}
-        <link rel="stylesheet" href="https://use.typekit.net/nkn8ouk.css" />
         {/* Mana font — official MTG mana/set symbols */}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css" />
       </head>
       <body>
-        <SiteShell appearance={appearance}>{children}</SiteShell>
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );

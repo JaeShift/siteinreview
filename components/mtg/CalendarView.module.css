@@ -7,22 +7,22 @@
 .toggleBar {
   display: flex;
   gap: 0;
-  border: 1px solid rgba(24, 26, 27, 0.28);
+  border: 1px solid rgba(23, 24, 21, 0.28);
   align-self: flex-start;
 }
 
 .toggleBtn {
   padding: 10px 20px;
-  font-family: var(--font-heading);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: #fbf8f2;
+  background: var(--color-white);
   border: none;
   border-right: 1px solid var(--color-border);
   cursor: pointer;
-  color: rgba(24, 26, 27, 0.68);
+  color: rgba(23, 24, 21, 0.68);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
@@ -31,8 +31,8 @@
 }
 
 .toggleBtnActive {
-  background: #181a1b;
-  color: #fbf8f2;
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
 .legend {
@@ -45,26 +45,26 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-heading);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(24, 26, 27, 0.68);
+  letter-spacing: 0.04em;
+  color: rgba(23, 24, 21, 0.68);
 }
 
 .legendDot {
   width: 10px;
   height: 10px;
   border-radius: 0;
-  background: #c84d1d !important;
+  background: var(--color-accent) !important;
   flex-shrink: 0;
 }
 
 .calendar {
-  border: 1px solid rgba(24, 26, 27, 0.28);
+  border: 1px solid rgba(23, 24, 21, 0.28);
   overflow: hidden;
-  background: #fbf8f2;
+  background: var(--color-white);
 }
 
 .calHeader {
@@ -72,14 +72,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  background: #181a1b;
-  border-bottom: 1px solid #181a1b;
+  background: var(--color-black);
+  border-bottom: 1px solid var(--color-black);
 }
 
 .navBtn {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fbf8f2;
+  border: 1px solid rgba(242, 232, 213, 0.3);
+  color: var(--color-white);
   cursor: pointer;
   width: 44px;
   height: 44px;
@@ -91,35 +91,35 @@
 }
 
 .navBtn:hover {
-  border-color: #fbf8f2;
+  border-color: var(--color-white);
   background: rgba(251, 248, 242, 0.1);
 }
 
 .monthLabel {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #fbf8f2;
+  letter-spacing: 0.04em;
+  color: var(--color-white);
 }
 
 .dayNames {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background: #f3ede3;
-  border-bottom: 1px solid rgba(24, 26, 27, 0.22);
+  background: var(--color-bg);
+  border-bottom: 1px solid rgba(23, 24, 21, 0.22);
 }
 
 .dayName {
   padding: 8px 4px;
   text-align: center;
-  font-family: var(--font-heading);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(24, 26, 27, 0.68);
+  letter-spacing: 0.04em;
+  color: rgba(23, 24, 21, 0.68);
 }
 
 .grid {
@@ -130,12 +130,12 @@
 .cell {
   min-height: 96px;
   padding: 6px 4px 4px;
-  border-right: 1px solid rgba(24, 26, 27, 0.18);
-  border-bottom: 1px solid rgba(24, 26, 27, 0.18);
+  border-right: 1px solid rgba(23, 24, 21, 0.18);
+  border-bottom: 1px solid rgba(23, 24, 21, 0.18);
   display: flex;
   flex-direction: column;
   gap: 3px;
-  background: #fbf8f2;
+  background: var(--color-white);
   transition: background-color 0.1s ease;
 }
 
@@ -144,7 +144,7 @@
 }
 
 .cell:hover:not(.cellEmpty) {
-  background: #f3ede3;
+  background: var(--color-bg);
 }
 
 .cellEmpty {
@@ -152,8 +152,8 @@
 }
 
 .cellToday .dayNum {
-  background: #c84d1d;
-  color: #fbf8f2;
+  background: var(--color-accent);
+  color: var(--color-white);
   border-radius: 0;
   width: 22px;
   height: 22px;
@@ -163,10 +163,10 @@
 }
 
 .dayNum {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
-  color: rgba(24, 26, 27, 0.68);
+  color: rgba(23, 24, 21, 0.68);
   line-height: 1;
   align-self: flex-start;
 }
@@ -186,8 +186,8 @@
   text-align: left;
   overflow: hidden;
   width: 100%;
-  background: #c84d1d !important;
-  border-left: 2px solid #181a1b;
+  background: var(--color-accent) !important;
+  border-left: 2px solid var(--color-black);
   transition: opacity 0.15s ease;
 }
 
@@ -196,11 +196,11 @@
 }
 
 .eventPillText {
-  font-family: var(--font-heading);
-  font-size: 9px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.03em;
-  color: #fbf8f2;
+  color: var(--color-white);
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -209,9 +209,9 @@
 }
 
 .moreEvents {
-  font-size: 9px;
-  color: rgba(24, 26, 27, 0.6);
-  font-family: var(--font-heading);
+  font-size: 12px;
+  color: rgba(23, 24, 21, 0.6);
+  font-family: var(--font-body);
   font-weight: 700;
   letter-spacing: 0.05em;
   padding-left: 4px;
@@ -225,12 +225,12 @@
 }
 
 .modalType {
-  font-family: var(--font-heading);
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: #c84d1d;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
 }
 
 .modalMeta {
@@ -241,20 +241,20 @@
 
 .modalMeta p {
   font-size: 14px;
-  color: #181a1b;
+  color: var(--color-black);
 }
 
 .modalDesc {
   font-size: 14px;
-  color: rgba(24, 26, 27, 0.7);
+  color: rgba(23, 24, 21, 0.7);
   line-height: 1.6;
   padding-top: 4px;
-  border-top: 1px solid rgba(24, 26, 27, 0.2);
+  border-top: 1px solid rgba(23, 24, 21, 0.2);
 }
 
 .modalBtn {
   align-self: flex-start;
-  font-size: 11px;
+  font-size: 12px;
   padding: 10px 20px;
   border-radius: 0;
 }
@@ -272,7 +272,7 @@
     flex: 1;
     min-height: 44px;
     padding: 8px;
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .legend {
@@ -295,10 +295,18 @@
   }
 
   .dayNum {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .eventPillText {
-    font-size: 9px;
+    font-size: 12px;
   }
+}
+
+.monthTitle {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
 }

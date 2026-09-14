@@ -65,6 +65,28 @@ async function findWpnProductPageByName(setName: string): Promise<string | null>
   );
 }
 
+function wpnSlug(setName: string): string {
+  return setName
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+async function findWpnProductPageBySlug(setName: string): Promise<string | null> {
+  const slug = wpnSlug(setName);
+  if (!slug) return null;
+
+  const url = `https://wpn.wizards.com/en/products/${slug}`;
+  const res = await fetch(url, {
+    cache: "no-store",
+    headers: { "User-Agent": BOT_UA },
+  });
+  return res.ok ? url : null;
+}
+
 // ── Product page data fetcher ──────────────────────────────────────────────
 
 function cleanHtmlText(value: string): string {
@@ -99,7 +121,7 @@ async function fetchWpnPageData(productUrl: string): Promise<{ images: string[];
   while ((m = srcRe.exec(html)) !== null) {
     const raw = m[1];
     const url = raw.startsWith("//") ? `https:${raw}` : raw;
-    if (/logo|icon|WPN_Full|WPN_wizard|hasbro|esrb/i.test(url)) continue;
+    if (/logo|icon|WPN_Full|WPN_wizard|hasbro|esrb|globe\.svg/i.test(url)) continue;
     if (!seen.has(url)) { seen.add(url); images.push(url); }
   }
 
@@ -128,7 +150,10 @@ export async function GET(request: NextRequest) {
   if (!releaseDate) return NextResponse.json({ error: "releaseDate required" }, { status: 400 });
 
   try {
-    let productUrl = await findWpnProductPage(releaseDate);
+    // WPN product URLs are normally derived from the set name. Resolve that
+    // first because the product-list markup and its release dates change often.
+    let productUrl = setName ? await findWpnProductPageBySlug(setName) : null;
+    if (!productUrl) productUrl = await findWpnProductPage(releaseDate);
     if (!productUrl && setName) productUrl = await findWpnProductPageByName(setName);
 
     if (!productUrl) {
@@ -136,7 +161,17 @@ export async function GET(request: NextRequest) {
     }
 
     const { images, description } = await fetchWpnPageData(productUrl);
-    return NextResponse.json({ images, description, productUrl });
+    const heroImage =
+      images.find((url) => /prrls|prerelease/i.test(url)) ??
+      images.find((url) => /product/i.test(url)) ??
+      images[0] ??
+      "";
+    const bannerImage =
+      images.find((url) => /header|1920x700|key.?art/i.test(url)) ??
+      images[0] ??
+      "";
+
+    return NextResponse.json({ images, heroImage, bannerImage, description, productUrl });
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : String(err) },

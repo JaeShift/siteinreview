@@ -9,22 +9,22 @@ interface Props {
 }
 
 const FORMAT_COLORS: Record<string, string> = {
-  Commander:  "#6b3fa0",
-  Draft:      "#1a6b3c",
-  Standard:   "#1a3a6b",
-  Modern:     "#8b1a1a",
-  Pioneer:    "#1a6b6b",
-  Legacy:     "#4a1a00",
-  Sealed:     "#006633",
-  Prerelease: "#cc6600",
-  RCQ:        "#181a1b",
-  Casual:     "#555555",
+  Commander:  "var(--color-cedar)",
+  Draft:      "var(--color-action)",
+  Standard:   "var(--color-ink)",
+  Modern:     "var(--color-action)",
+  Pioneer:    "var(--color-cedar)",
+  Legacy:     "var(--color-ink)",
+  Sealed:     "var(--color-action)",
+  Prerelease: "var(--color-action)",
+  RCQ:        "var(--color-ink)",
+  Casual:     "var(--color-cedar)",
 };
 
 export default function MtgEventCard({ event }: Props) {
   const soldOut = isEventSoldOut(event);
   const seatsLeft = getSeatsRemaining(event);
-  const formatColor = FORMAT_COLORS[event.format] ?? "#181a1b";
+  const formatColor = FORMAT_COLORS[event.format] ?? "var(--color-ink)";
 
   return (
     <article className={styles.card}>

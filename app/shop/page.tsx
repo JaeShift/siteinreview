@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import PageHero from "@/components/ui/PageHero";
 import ShopClient from "./ShopClient";
 import { getMerchandiseStore } from "@/lib/store";
 import styles from "./shop.module.css";
@@ -17,20 +17,11 @@ export default function ShopPage() {
 
   return (
     <div className={styles.page}>
-      <section className={styles.hero}>
-        <div className={styles.heroInner}>
-          <div className={styles.heroCopy}>
-            <p>Kitsune Brewing Co. · Phoenix, Arizona</p>
-            <h1>Wear<br />the fox.</h1>
-            <span>Taproom goods, brewery gear, and Kitsune originals—made for regulars, road trips, and the next round.</span>
-          </div>
-          <div className={styles.heroMark} aria-hidden="true">
-            <span>Den Supply Co.</span>
-            <Image src="/images/logo.png" alt="" width={240} height={240} priority />
-            <small>Est. in Phoenix</small>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        kicker="Kitsune Brewing Co. · Phoenix, Arizona"
+        title={<>Wear<br />the fox.</>}
+        description="Taproom goods, brewery gear, and Kitsune originals—made for regulars, road trips, and the next round."
+      />
       <section className={styles.catalog}>
         <header className={styles.catalogHeader}>
           <div>

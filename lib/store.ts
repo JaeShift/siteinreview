@@ -17,12 +17,6 @@ import { mtgEvents, type MtgEvent } from "./events-data";
 import { foodTrucks, type FoodTruck } from "./food-trucks-data";
 import { singles, type SingleCard } from "./singles-data";
 import { merchandise, type MerchandiseProduct } from "./merchandise-data";
-import {
-  DEFAULT_SITE_APPEARANCE,
-  isThemeTransitionId,
-  isThemeTransitionSpeed,
-  type SiteAppearance,
-} from "./site-appearance";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 
@@ -179,21 +173,6 @@ export function saveNotificationSettingsStore(settings: NotificationSettings): v
   writeJson("notification-settings.json", settings);
 }
 
-// ─── Site appearance ─────────────────────────────────────────────────────────
-
-const SITE_APPEARANCE_BLOB = "settings/site-appearance.json";
-
-function normalizeSiteAppearance(stored: Partial<SiteAppearance>): SiteAppearance {
-  return {
-    transition: isThemeTransitionId(stored.transition)
-      ? stored.transition
-      : DEFAULT_SITE_APPEARANCE.transition,
-    speed: isThemeTransitionSpeed(stored.speed)
-      ? stored.speed
-      : DEFAULT_SITE_APPEARANCE.speed,
-  };
-}
-
 async function getBlobAuth(): Promise<
   { token: string } | { storeId: string; oidcToken: string } | null
 > {
@@ -212,56 +191,6 @@ async function getBlobAuth(): Promise<
     if (process.env.VERCEL) throw error;
     return null;
   }
-}
-
-export async function getSiteAppearanceStore(): Promise<SiteAppearance> {
-  try {
-    const blobAuth = await getBlobAuth();
-    if (blobAuth) {
-      const result = await get(SITE_APPEARANCE_BLOB, {
-        access: "private",
-        useCache: false,
-        ...blobAuth,
-      });
-
-      if (result?.statusCode === 200) {
-        const stored = JSON.parse(
-          await new Response(result.stream).text()
-        ) as Partial<SiteAppearance>;
-        return normalizeSiteAppearance(stored);
-      }
-    }
-  } catch (error) {
-    console.error("Unable to read site appearance from Vercel Blob:", error);
-  }
-
-  const stored = readJson<Partial<SiteAppearance>>("site-appearance.json", DEFAULT_SITE_APPEARANCE);
-  return normalizeSiteAppearance(stored);
-}
-
-export async function saveSiteAppearanceStore(
-  settings: SiteAppearance
-): Promise<SiteAppearance> {
-  const blobAuth = await getBlobAuth();
-  if (blobAuth) {
-    await put(SITE_APPEARANCE_BLOB, JSON.stringify(settings, null, 2), {
-      access: "private",
-      allowOverwrite: true,
-      contentType: "application/json",
-      cacheControlMaxAge: 60,
-      ...blobAuth,
-    });
-    return settings;
-  }
-
-  if (process.env.VERCEL) {
-    throw new Error(
-      "Vercel Blob OIDC credentials are unavailable for this environment."
-    );
-  }
-
-  writeJson("site-appearance.json", settings);
-  return settings;
 }
 
 // ─── Food Trucks ─────────────────────────────────────────────────────────────

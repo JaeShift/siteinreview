@@ -66,7 +66,7 @@ export default function EventDetailClient({ event }: Props) {
     <>
       <EventBanner imageUrl={event.imageUrl} title={event.title} subtitle={event.format} height="lg" />
 
-      <PageSection background="white">
+      <PageSection surface="cream" size="md">
         <div className={styles.layout}>
           {/* Main content */}
           <div className={styles.main}>

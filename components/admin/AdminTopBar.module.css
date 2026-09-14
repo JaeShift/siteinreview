@@ -1,6 +1,6 @@
 .topBar {
-  background: #111111;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: var(--color-roasted-brown);
+  border-bottom: 1px solid rgba(179, 154, 104, 0.55);
   position: sticky;
   top: 0;
   z-index: 200;
@@ -22,10 +22,10 @@
   font-weight: 700;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--color-white);
+  color: var(--color-cream-paper);
   flex-shrink: 0;
   padding-right: 16px;
-  border-right: 1px solid rgba(255,255,255,0.12);
+  border-right: 1px solid rgba(242, 232, 213,0.12);
 }
 
 .nav {
@@ -40,12 +40,12 @@
 .navLink,
 .navLink:link,
 .navLink:visited {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.45);
+  color: rgba(241, 237, 226, 0.68);
   text-decoration: none;
   padding: 6px 12px;
   white-space: nowrap;
@@ -54,12 +54,12 @@
   display: inline-flex;
   align-items: center;
 }
-.navLink:hover { color: rgba(255,255,255,0.85); }
+.navLink:hover { color: var(--color-soft-gold); }
 .navLinkActive,
 .navLinkActive:link,
 .navLinkActive:visited {
-  color: var(--color-white);
-  background: rgba(255,255,255,0.08);
+  color: var(--color-cream-paper);
+  background: var(--color-action);
 }
 
 .actions {
@@ -68,18 +68,18 @@
   gap: 16px;
   flex-shrink: 0;
   padding-left: 16px;
-  border-left: 1px solid rgba(255,255,255,0.12);
+  border-left: 1px solid rgba(242, 232, 213,0.12);
 }
 
 .siteLink,
 .siteLink:link,
 .siteLink:visited {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-soft-gold);
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.15s;
@@ -87,15 +87,15 @@
   display: inline-flex;
   align-items: center;
 }
-.siteLink:hover { color: #cc0000; }
+.siteLink:hover { color: var(--color-cream-paper); }
 
 .logoutBtn {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255,80,80,0.6);
+  color: rgba(241, 237, 226, 0.68);
   background: none;
   border: none;
   min-height: 44px;
@@ -103,7 +103,7 @@
   cursor: pointer;
   transition: color 0.15s;
 }
-.logoutBtn:hover { color: rgba(255,80,80,0.9); }
+.logoutBtn:hover { color: var(--color-cream-paper); }
 
 /* ── Hamburger button (hidden on desktop) ── */
 .hamburger {
@@ -125,7 +125,7 @@
   display: block;
   width: 20px;
   height: 2px;
-  background: rgba(255,255,255,0.75);
+  background: rgba(242, 232, 213,0.75);
   border-radius: 1px;
   transition: transform 0.2s, opacity 0.2s;
 }
@@ -156,8 +156,8 @@
     right: 0;
     flex-direction: column;
     align-items: stretch;
-    background: #111111;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: var(--color-ink);
+    border-bottom: 1px solid rgba(242, 232, 213,0.1);
     box-shadow: 0 16px 28px rgba(0,0,0,0.4);
     z-index: 199;
     overflow-y: auto;
@@ -172,7 +172,7 @@
   .navLink {
     padding: 14px 20px;
     font-size: 11px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(242, 232, 213,0.06);
     min-height: 50px;
   }
 

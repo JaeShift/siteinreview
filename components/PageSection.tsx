@@ -5,6 +5,9 @@ type Props = {
   className?: string;
   id?: string;
   background?: "white" | "light" | "black";
+  surface?: "cream" | "paper" | "muted" | "ink" | "cedar";
+  size?: "sm" | "md" | "lg";
+  divider?: boolean;
   centered?: boolean;
   noBottomPadding?: boolean;
 };
@@ -14,21 +17,30 @@ export default function PageSection({
   className = "",
   id,
   background = "white",
+  surface,
+  size = "md",
+  divider = false,
   centered = false,
   noBottomPadding = false,
 }: Props) {
-  const bgMap = {
-    white: "var(--color-white)",
-    light: "var(--color-bg)",
-    black: "var(--color-black)",
-  };
+  const legacySurface = {
+    white: "paper",
+    light: "cream",
+    black: "ink",
+  } as const;
+  const surfaceClass = styles[surface ?? legacySurface[background]];
+  const sizeClass = styles[size];
+  const sectionClassName = [
+    styles.pageSection,
+    surfaceClass,
+    sizeClass,
+    divider ? styles.divider : "",
+    noBottomPadding ? styles.noBottomPadding : "",
+    className,
+  ].filter(Boolean).join(" ");
 
   return (
-    <section
-      id={id}
-      className={`${styles.pageSection}${noBottomPadding ? ` ${styles.noBottomPadding}` : ""}${className ? ` ${className}` : ""}`}
-      style={{ backgroundColor: bgMap[background] }}
-    >
+    <section id={id} className={sectionClassName}>
       <div className={`container${centered ? ` ${styles.textCentered}` : ""}`}>
         {children}
       </div>

@@ -141,19 +141,28 @@ export default function EventsAdminClient({ initialEvents }: Props) {
       const res = await fetch(
         `/api/admin/prerelease/wpn-images?releaseDate=${set.released_at}&setName=${encodeURIComponent(set.name)}`
       );
-      if (res.ok) {
-        const data = await res.json() as { images: string[]; description: string };
+      if (!res.ok) throw new Error("WPN image request failed");
+
+      {
+        const data = await res.json() as {
+          images: string[];
+          heroImage?: string;
+          bannerImage?: string;
+          description: string;
+        };
         const imgs = data.images ?? [];
-        // Index 3 is consistently the prerelease pack photo; fall back down the list if fewer images
-        const heroImage = imgs[3] ?? imgs[2] ?? imgs[1] ?? imgs[0] ?? "";
-        const bannerImage = imgs[2] ?? imgs[1] ?? imgs[0] ?? "";
+        const heroImage = data.heroImage ?? imgs[0] ?? "";
+        const bannerImage = data.bannerImage ?? imgs[0] ?? "";
         if (heroImage) setPrEvent((e) => e ? { ...e, imageUrl: heroImage, bannerImageUrl: bannerImage } : e);
+        else setScryfallError("Set details were filled, but WPN did not return an image. Upload one below.");
         const shortDesc = `Be among the first to experience <em>Magic: The Gathering® | ${set.name}</em> at Kitsune Brewing\u00a0Co. Explore new cards, build your sealed deck, and play the set before its official release.`;
         const fullDesc = data.description?.trim()
           || `Experience the ${set.name} Prerelease at Kitsune Brewing Co.! Be among the first players in Phoenix to crack open the newest Magic: The Gathering set.`;
         setPrEvent((e) => e ? { ...e, shortDescription: shortDesc, description: fullDesc } : e);
       }
-    } catch { /* silently skip */ }
+    } catch {
+      setScryfallError("Could not fetch the official WPN image. Upload one below.");
+    }
     finally { setPrImagesLoading(false); }
   }
 
@@ -355,7 +364,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
             onClick={refreshEvents}
             disabled={refreshing}
             title="Refresh registration counts"
-            style={{ background: "none", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 6, color: "inherit", fontSize: 22, padding: "0 16px", cursor: "pointer", opacity: refreshing ? 0.5 : 1, height: 52, minWidth: 52 }}
+            style={{ background: "none", border: "1px solid rgba(242, 232, 213,0.2)", borderRadius: 6, color: "inherit", fontSize: 22, padding: "0 16px", cursor: "pointer", opacity: refreshing ? 0.5 : 1, height: 52, minWidth: 52 }}
           >
             ↻
           </button>
@@ -469,7 +478,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                       flex: 1, padding: "8px 0", borderRadius: 6, border: "1.5px solid",
                       fontWeight: 600, fontSize: 13, cursor: "pointer",
                       background: !prEvent.hidden ? "#16a34a" : "transparent",
-                      color: !prEvent.hidden ? "#fff" : "var(--color-text-light)",
+                      color: !prEvent.hidden ? "var(--color-cream-paper)" : "var(--color-text-light)",
                       borderColor: !prEvent.hidden ? "#16a34a" : "var(--color-border)",
                     }}
                   >Live</button>
@@ -479,9 +488,9 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                     style={{
                       flex: 1, padding: "8px 0", borderRadius: 6, border: "1.5px solid",
                       fontWeight: 600, fontSize: 13, cursor: "pointer",
-                      background: prEvent.hidden ? "#d97706" : "transparent",
-                      color: prEvent.hidden ? "#fff" : "var(--color-text-light)",
-                      borderColor: prEvent.hidden ? "#d97706" : "var(--color-border)",
+                      background: prEvent.hidden ? "#87672f" : "transparent",
+                      color: prEvent.hidden ? "var(--color-cream-paper)" : "var(--color-text-light)",
+                      borderColor: prEvent.hidden ? "#87672f" : "var(--color-border)",
                     }}
                   >No Current Event</button>
                 </div>
@@ -510,7 +519,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                         <button type="button" className="btn btn-outline" style={{ fontSize: 12 }} onClick={fetchScryfallSets} disabled={scryfallLoading}>
                           {scryfallLoading ? "Fetching…" : "Fetch Upcoming Sets"}
                         </button>
-                        {scryfallError && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{scryfallError}</span>}
+                        {scryfallError && <span style={{ fontSize: 12, color: "var(--color-red, #922f2f)" }}>{scryfallError}</span>}
                       </div>
                     ) : (
                       <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
@@ -528,7 +537,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   <div className={styles.formGroup}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <label className="form-label" style={{ margin: 0 }}>Set Name / Title *</label>
-                      {prError === "Set name / title is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                      {prError === "Set name / title is required." && <span style={{ fontSize: 12, color: "var(--color-red, #922f2f)" }}>{prError}</span>}
                     </div>
                     <input
                       className="form-input"
@@ -542,7 +551,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   <div className={styles.formGroup}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <label className="form-label" style={{ margin: 0 }}>Entry Fee ($) *</label>
-                      {prError === "Entry fee is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                      {prError === "Entry fee is required." && <span style={{ fontSize: 12, color: "var(--color-red, #922f2f)" }}>{prError}</span>}
                     </div>
                     <input
                       type="number" min={0} step={0.01} className="form-input"
@@ -555,7 +564,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   <div className={styles.formGroup}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <label className="form-label" style={{ margin: 0 }}>Player Limit</label>
-                      {prError === "Player limit is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                      {prError === "Player limit is required." && <span style={{ fontSize: 12, color: "var(--color-red, #922f2f)" }}>{prError}</span>}
                     </div>
                     <input
                       type="number"
@@ -573,7 +582,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   <div className={styles.formGroup}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <label className="form-label" style={{ margin: 0 }}>Date *</label>
-                      {prError === "Date is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                      {prError === "Date is required." && <span style={{ fontSize: 12, color: "var(--color-red, #922f2f)" }}>{prError}</span>}
                     </div>
                     <input type="date" className="form-input" value={prEvent.date}
                       onChange={(e) => { setPrError(null); setPrEvent((ev) => ev ? { ...ev, date: e.target.value } : ev); }} />
@@ -582,7 +591,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   <div className={styles.formGroup}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <label className="form-label" style={{ margin: 0 }}>Time *</label>
-                      {prError === "Time is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                      {prError === "Time is required." && <span style={{ fontSize: 12, color: "var(--color-red, #922f2f)" }}>{prError}</span>}
                     </div>
                     <input className="form-input" value={prEvent.time}
                       onChange={(e) => { setPrError(null); setPrEvent((ev) => ev ? { ...ev, time: e.target.value } : ev); }}
@@ -592,8 +601,8 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <label className="form-label" style={{ margin: 0 }}>Short Event Description *</label>
-                      <span style={{ fontSize: 11, color: "var(--color-muted, #888)", whiteSpace: "nowrap", textTransform: "none", fontFamily: "var(--font-body, sans-serif)", fontWeight: 400 }}>&lt;em&gt; will italicize text</span>
-                      {prError === "Short description is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)", whiteSpace: "nowrap" }}>{prError}</span>}
+                      <span style={{ fontSize: 11, color: "var(--color-muted, #776b60)", whiteSpace: "nowrap", textTransform: "none", fontFamily: "var(--font-body, sans-serif)", fontWeight: 400 }}>&lt;em&gt; will italicize text</span>
+                      {prError === "Short description is required." && <span style={{ fontSize: 12, color: "var(--color-red, #922f2f)", whiteSpace: "nowrap" }}>{prError}</span>}
                     </div>
                     <textarea className="form-input" rows={3}
                       value={prEvent.shortDescription}
@@ -612,7 +621,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
                   <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <label className="form-label" style={{ margin: 0 }}>Pre-Release Image *</label>
-                      {prError === "Hero image is required." && <span style={{ fontSize: 12, color: "var(--color-red, #c0392b)" }}>{prError}</span>}
+                      {prError === "Hero image is required." && <span style={{ fontSize: 12, color: "var(--color-red, #922f2f)" }}>{prError}</span>}
                     </div>
                     {prImagesLoading && <p style={{ fontSize: 13, color: "var(--color-text-light)", margin: "6px 0" }}>Fetching WPN images…</p>}
 
@@ -927,7 +936,7 @@ export default function EventsAdminClient({ initialEvents }: Props) {
               {!isNew && (
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                   <label className="form-label">Registered Count (read-only — managed automatically)</label>
-                  <input className="form-input" value={editing.registeredCount} readOnly style={{ background: "#f5f5f5", cursor: "not-allowed" }} />
+                  <input className="form-input" value={editing.registeredCount} readOnly style={{ background: "#e8dcc8", cursor: "not-allowed" }} />
                 </div>
               )}
             </form>

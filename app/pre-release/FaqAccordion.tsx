@@ -34,7 +34,7 @@ export default function FaqAccordion() {
             onClick={() => setOpenIndex(openIndex === i ? null : i)}
             aria-expanded={openIndex === i}
           >
-            <span>{item.q.toUpperCase()}</span>
+            <span>{item.q}</span>
             <span className={styles.faqIcon}>{openIndex === i ? "−" : "+"}</span>
           </button>
           {openIndex === i && (

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import SocialLinks from "./SocialLinks";
 import styles from "./Footer.module.css";
+import KitsuneWordmark from "./KitsuneWordmark";
 
 const hours = [
   { day: "Monday", hours: "3:00 PM – 9:00 PM" },
@@ -16,19 +17,18 @@ const hours = [
 export default function Footer({
   showHours = true,
   editorial = true,
-  arcane = false,
 }: {
   showHours?: boolean;
   editorial?: boolean;
-  arcane?: boolean;
 }) {
   return (
-    <footer className={`${styles.footer} ${editorial ? styles.footerHome : ""} ${arcane ? styles.footerArcane : ""}`}>
+    <footer className={`${styles.footer} ${editorial ? styles.footerHome : ""}`}>
+      <div className={`${styles.brandClosing} container`} aria-hidden="true"><span>Good beer.<br /><em>Better company.</em></span><div className={styles.closingSeal}><Image src="/images/logo.png" alt="" width={84} height={84} /><span>North Phoenix<br />Independent spirit</span></div></div>
       <div className={`${styles.footerInner} ${!showHours ? styles.footerInnerCompact : ""} container`}>
         <div className={styles.footerLogoCol}>
           <Link href="/" aria-label="Kitsune Brewing Co — Home">
             {editorial ? (
-              <span className={styles.footerWordmark}>Kitsune<br />Brewing Co.</span>
+              <span className={styles.footerWordmark}><KitsuneWordmark decorative className={styles.wordmarkArt} /><small>Brewing Company</small></span>
             ) : (
               <Image
                 src="/images/logo.png"

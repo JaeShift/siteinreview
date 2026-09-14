@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="192" viewBox="0 0 320 192">
+  <defs>
+    <pattern id="waves" width="80" height="48" patternUnits="userSpaceOnUse">
+      <g fill="none" stroke="#b89a62" stroke-width="1.2" opacity=".3">
+        <path d="M0 48a40 40 0 0 1 80 0M8 48a32 32 0 0 1 64 0M16 48a24 24 0 0 1 48 0M24 48a16 16 0 0 1 32 0M32 48a8 8 0 0 1 16 0"/>
+        <path d="M-40 24a40 40 0 0 1 80 0M-32 24a32 32 0 0 1 64 0M-24 24a24 24 0 0 1 48 0M-16 24a16 16 0 0 1 32 0M-8 24a8 8 0 0 1 16 0M40 24a40 40 0 0 1 80 0M48 24a32 32 0 0 1 64 0M56 24a24 24 0 0 1 48 0M64 24a16 16 0 0 1 32 0M72 24a8 8 0 0 1 16 0"/>
+      </g>
+    </pattern>
+    <linearGradient id="fade"><stop stop-color="white" stop-opacity="0"/><stop offset="1" stop-color="white"/></linearGradient>
+    <mask id="edge"><rect width="320" height="192" fill="url(#fade)"/></mask>
+  </defs>
+  <rect width="320" height="192" fill="url(#waves)" mask="url(#edge)"/>
+</svg>

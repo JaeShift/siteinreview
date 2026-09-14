@@ -1,4 +1,4 @@
-import Image from "next/image";
+import PageHero from "@/components/ui/PageHero";
 import styles from "./EventBanner.module.css";
 
 interface Props {
@@ -10,20 +10,13 @@ interface Props {
 
 export default function EventBanner({ imageUrl, title, subtitle, height = "md" }: Props) {
   return (
-    <div className={`${styles.banner} ${styles[height]}`}>
-      <Image
-        src={imageUrl}
-        alt={title}
-        fill
-        style={{ objectFit: "cover" }}
-        sizes="100vw"
-        priority
-      />
-      <div className={styles.overlay} />
-      <div className={`container ${styles.content}`}>
-        {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
-        <h1 className={styles.title}>{title}</h1>
-      </div>
-    </div>
+    <PageHero
+      variant="image"
+      image={imageUrl}
+      imageAlt={title}
+      kicker={subtitle}
+      title={title}
+      className={styles[height]}
+    />
   );
 }

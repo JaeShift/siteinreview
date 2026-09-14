@@ -1,33 +1,29 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import ContactForm from "@/components/ContactForm";
 import AddressBar from "@/components/AddressBar";
+import PageSection from "@/components/PageSection";
+import PageHero from "@/components/ui/PageHero";
 import styles from "./contact.module.css";
-
-export const metadata: Metadata = {
-  title: "Contact Us",
-  description:
-    "Get in touch with Kitsune Brewing Co. in Phoenix, AZ. Send us a message, find our address, or give us a call.",
-};
-
+export const metadata: Metadata = { title: "Say Hello", description: "Get in touch with Kitsune Brewing Co. in North Phoenix. Questions, events, or your next visit — we'd love to hear from you." };
 export default function ContactPage() {
   return (
     <>
-      <section className={styles.contactSection}>
-        <div className="container">
-          <Image
-            src="/images/logo.png"
-            alt=""
-            width={96}
-            height={96}
-            className={styles.logoWatermark}
-            aria-hidden="true"
-          />
-          <h1 className={styles.contactHeading}>Contact Us</h1>
-          <p className={styles.contactSubtitle}>Please complete the form below</p>
-          <ContactForm />
+      <PageHero kicker="Good conversations start here" title="Hey, neighbor." />
+      <PageSection surface="cream" size="md">
+        <div className={styles.contactSection}>
+          <aside className={styles.contactInfo}>
+            <h2>Come on in.<br />Or drop a line.</h2>
+            <p>Questions about beer, Magic, or getting your group together? Send us a message.</p>
+            <address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address>
+            <a href="tel:+16022458593">(602) 245-8593</a>
+            <a href="mailto:Tyler@KitsuneBeerCo.com">Tyler@KitsuneBeerCo.com</a>
+          </aside>
+          <div className={styles.formPanel}>
+            <h2>Send a message</h2>
+            <ContactForm />
+          </div>
         </div>
-      </section>
+      </PageSection>
       <AddressBar />
     </>
   );

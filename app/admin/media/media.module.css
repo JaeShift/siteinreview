@@ -36,7 +36,7 @@
 /* ── Drop zone ───────────────────────────────────────────────────────────── */
 .dropZone {
   border: 2px dashed var(--color-border);
-  background: #fafafa;
+  background: var(--color-cream-paper);
   padding: 36px 24px;
   display: flex;
   flex-direction: column;
@@ -50,7 +50,7 @@
 .dropZone:hover,
 .dropZoneActive {
   border-color: var(--color-black);
-  background: #f3f3f3;
+  background: var(--color-gray-light);
 }
 
 .dropIcon {
@@ -104,7 +104,7 @@
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: #f3f3f3;
+  background: var(--color-gray-light);
   cursor: zoom-in;
   display: flex;
   align-items: center;
@@ -163,7 +163,7 @@
   transition: background 0.12s, color 0.12s;
 }
 
-.actionBtn:hover { background: #f3f3f3; color: var(--color-black); }
+.actionBtn:hover { background: var(--color-gray-light); color: var(--color-black); }
 
 .actionBtnCopied {
   color: #15803d;
@@ -250,7 +250,7 @@
   top: 10px;
   right: 10px;
   background: rgba(0,0,0,0.5);
-  color: white;
+  color: var(--color-cream-paper);
   border: none;
   width: 28px;
   height: 28px;
@@ -264,7 +264,7 @@
   width: 100%;
   max-height: 70vh;
   object-fit: contain;
-  background: #111;
+  background: var(--color-ink);
   display: block;
 }
 

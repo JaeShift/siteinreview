@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/ui/PageHero";
 import SinglesClient from "./SinglesClient";
 import { getSinglesStore } from "@/lib/store";
 import styles from "./singles.module.css";
@@ -15,23 +16,11 @@ export default function SinglesPage() {
   const cards = getSinglesStore().filter((c) => c.quantity > 0);
   return (
     <>
-      <section className={styles.banner}>
-        <div
-          className={styles.bannerBg}
-          style={{ backgroundImage: `url('/images/singles-cards.png')` }}
-        />
-        <div className={styles.bannerOverlay} />
-        <div className={styles.bannerContent}>
-          <div className={styles.bannerMana} aria-hidden="true">
-            <i className="ms ms-w ms-cost" />
-            <i className="ms ms-u ms-cost" />
-            <i className="ms ms-b ms-cost" />
-            <i className="ms ms-r ms-cost" />
-            <i className="ms ms-g ms-cost" />
-          </div>
-          <h1 className={styles.bannerTitle}>SHOP MAGIC</h1>
-        </div>
-      </section>
+      <PageHero
+        kicker="From the taproom"
+        title="Shop Magic"
+        description="Singles and sealed product, priced for the table."
+      />
 
       <SinglesClient initialCards={cards} />
     </>

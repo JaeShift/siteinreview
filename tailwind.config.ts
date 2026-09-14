@@ -9,14 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "kitsune-accent": "#FF0000",
-        "kitsune-visited": "#008000",
-        "kitsune-black": "#000000",
-        "kitsune-bg": "#FAFAFA",
+        "kitsune-rust": "var(--color-action)",
+        "kitsune-tea": "var(--color-tea-green)",
+        "kitsune-gold": "var(--color-soft-gold)",
+        "kitsune-brown": "var(--color-ink)",
+        "kitsune-cedar": "var(--color-cedar)",
+        "kitsune-cream": "var(--color-cream-paper)",
       },
       fontFamily: {
-        heading: ["var(--font-heading)", "futura-pt", "Jost", "sans-serif"],
-        body: ["var(--font-body)", "proxima-nova", "DM Sans", "sans-serif"],
+        heading: ["var(--font-heading)", "Georgia", "serif"],
+        body: ["var(--font-body)", "Segoe UI", "sans-serif"],
       },
     },
   },

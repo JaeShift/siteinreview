@@ -1,15 +1,22 @@
 .cta {
-  padding: clamp(72px, 9vw, 128px) var(--site-gutter, 24px);
-  border-top: 1px solid rgba(251, 248, 242, 0.18);
-  border-bottom: 6px solid var(--site-copper, #c84d1d);
+  position: relative;
+  padding: var(--section-md) var(--site-gutter, 24px);
+  border-top: 1px solid rgba(242, 232, 213, 0.18);
+  border-bottom: 3px solid var(--color-action);
+  background-image: var(--texture-grain), var(--texture-wave);
+  background-repeat: repeat, no-repeat;
+  background-size: 180px 180px, 420px 252px;
+  background-position: center, right bottom;
 }
+.cta::before { content: ""; position: absolute; inset: 14px; border: 1px solid rgba(184,154,98,.4); pointer-events: none; }
+.inner::before { content: ""; width: 42px; height: 42px; background: url('/images/logo.png') center / contain no-repeat; margin-bottom: 8px; }
 
 .black {
-  background-color: var(--color-black);
+  background-color: var(--color-ink);
 }
 
 .red {
-  background-color: var(--site-copper, var(--color-accent));
+  background-color: var(--color-cedar);
 }
 
 .inner {
@@ -22,7 +29,7 @@
 
 .headline {
   font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 6vw, 5.75rem);
+  font-size: var(--type-section-title);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: -0.04em;
@@ -32,7 +39,7 @@
 
 .subtext {
   font-size: 16px;
-  color: rgba(251, 248, 242, 0.72);
+  color: var(--color-cream-muted);
   max-width: 540px;
   line-height: 1.6;
 }
@@ -47,26 +54,26 @@
 }
 
 .primaryBtn {
-  background-color: var(--color-white);
-  color: var(--site-ink, var(--color-black));
-  border-color: var(--color-white);
+  background-color: var(--color-action);
+  color: var(--color-cream-paper);
+  border-color: var(--color-action);
 }
 
 .primaryBtn:hover {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
-  color: var(--color-white);
+  background-color: var(--color-cream-paper);
+  border-color: var(--color-cream-paper);
+  color: var(--color-ink);
 }
 
 .secondaryBtn {
-  border-color: rgba(251, 248, 242, 0.52);
-  color: var(--color-white);
+  border-color: rgba(242, 232, 213, 0.52);
+  color: var(--color-cream-paper);
 }
 
 .secondaryBtn:hover {
-  background-color: var(--color-white);
-  color: var(--color-black);
-  border-color: var(--color-white);
+  background-color: var(--color-cream-paper);
+  color: var(--color-ink);
+  border-color: var(--color-cream-paper);
 }
 
 @media (max-width: 640px) {

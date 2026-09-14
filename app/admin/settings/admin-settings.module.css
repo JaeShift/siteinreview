@@ -115,7 +115,7 @@
 }
 
 .unsavedLabel {
-  color: #92400e;
+  color: #87672f;
   font-size: 12px;
   font-weight: 600;
 }
@@ -152,12 +152,12 @@
 }
 
 .warningBox {
-  background: #fff8f0;
-  border: 1px solid #ffd0a0;
-  border-left: 3px solid #cc7700;
+  background: var(--color-cream-paper);
+  border: 1px solid var(--color-cream-paper);
+  border-left: 3px solid #87672f;
   padding: 14px 16px;
   font-size: 13px;
-  color: #8b5000;
+  color: #87672f;
   line-height: 1.5;
   margin-top: 12px;
 }
@@ -254,11 +254,11 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-muted);
-  background: #fafafa;
+  background: var(--color-cream-paper);
 }
 
 .codeRow:last-child { border-bottom: none; }
-.codeRow:hover { background: #fafafa; }
+.codeRow:hover { background: var(--color-cream-paper); }
 
 .codeName {
   font-family: var(--font-heading);
@@ -360,7 +360,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #c05000;
+  color: #87672f;
   background: rgba(192, 80, 0, 0.08);
   padding: 3px 8px;
   white-space: nowrap;
@@ -382,7 +382,7 @@
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--color-muted);
-  background: #fafafa;
+  background: var(--color-cream-paper);
   padding: 7px 16px;
   border-bottom: 1px solid var(--color-border);
 }
@@ -441,7 +441,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--color-cream-paper);
   transition: transform 0.2s;
 }
 
@@ -451,10 +451,10 @@
 
 .notifDenied {
   font-size: 13px;
-  color: #c05000;
-  background: #fff8f0;
-  border: 1px solid #ffd0a0;
-  border-left: 3px solid #cc7700;
+  color: #87672f;
+  background: var(--color-cream-paper);
+  border: 1px solid var(--color-cream-paper);
+  border-left: 3px solid #87672f;
   padding: 12px 14px;
   line-height: 1.5;
 }
@@ -490,7 +490,7 @@
 }
 
 .speedBtnOn {
-  color: #fff;
+  color: var(--color-cream-paper);
   background: var(--color-black);
   border-color: var(--color-black);
 }

@@ -5,6 +5,7 @@ import PageSection from "@/components/PageSection";
 import MtgEventCard from "@/components/mtg/MtgEventCard";
 import SearchBar from "@/components/ui/SearchBar";
 import EmptyState from "@/components/ui/EmptyState";
+import PageHero from "@/components/ui/PageHero";
 import type { MtgEvent, EventFormat } from "@/lib/events-data";
 import styles from "./events.module.css";
 
@@ -43,11 +44,9 @@ export default function EventsClient({ events }: Props) {
 
   return (
     <>
-      <div className={`page-banner ${styles.pageBanner}`}>
-        <h1>MTG Events</h1>
-      </div>
+      <PageHero kicker="At the taproom" title="Upcoming nights" />
 
-      <PageSection background="white" className={styles.eventsSection}>
+      <PageSection surface="cream" size="md" className={styles.eventsSection}>
         <div className={styles.controls}>
           <div className={styles.filterBar}>
             <button
@@ -111,9 +110,8 @@ export default function EventsClient({ events }: Props) {
         )}
       </PageSection>
 
-      <section className={styles.infoBanner}>
-        <div className="container">
-          <div className={styles.infoGrid}>
+      <PageSection surface="cream" size="sm" divider className={styles.infoBanner}>
+        <div className={styles.infoGrid}>
             <div className={styles.infoItem}>
               <h3>Location</h3>
               <p>3321 E Bell Rd Suite B-5<br />Phoenix, AZ 85032</p>
@@ -131,9 +129,8 @@ export default function EventsClient({ events }: Props) {
               <h3>New to MTG?</h3>
               <p>Beginners welcome! We have loaner decks and staff happy to teach.</p>
             </div>
-          </div>
         </div>
-      </section>
+      </PageSection>
     </>
   );
 }

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getProductBySlug, mtgProducts } from "@/lib/mtg-products";
+import PageHero from "@/components/ui/PageHero";
 import styles from "./product.module.css";
 
 type Props = {
@@ -31,9 +32,7 @@ export default function MtgProductPage({ params }: Props) {
 
   return (
     <>
-      <div className={`page-banner ${styles.pageBanner}`}>
-        <h1>MTG and More</h1>
-      </div>
+      <PageHero kicker="Cards, games, and gathering" title="MTG and More" />
 
       <section className={styles.productSection}>
         <div className="container">

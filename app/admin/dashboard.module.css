@@ -57,7 +57,7 @@
   justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid var(--color-border);
-  background: #fafafa;
+  background: var(--color-cream-paper);
 }
 
 .panelTitle {
@@ -110,7 +110,7 @@
 }
 
 .tableHead {
-  background: #fafafa;
+  background: var(--color-cream-paper);
   font-family: var(--font-heading);
   font-size: 9px;
   font-weight: 700;
@@ -191,14 +191,14 @@
 }
 
 .statusPending {
-  color: #c05000;
+  color: #87672f;
   background: rgba(192, 80, 0, 0.08);
 }
 
 .emptyState {
   padding: 32px 20px;
   text-align: center;
-  color: var(--color-muted, #999);
+  color: var(--color-muted, var(--color-muted));
   font-size: 13px;
   line-height: 1.6;
 }
@@ -215,7 +215,7 @@
   gap: 20px;
   padding: 18px 20px;
   border-bottom: 1px solid var(--color-border);
-  background: #fafafa;
+  background: var(--color-cream-paper);
 }
 
 .attentionEyebrow {
@@ -264,7 +264,7 @@
 }
 
 .attentionItem:hover {
-  background: #fafafa;
+  background: var(--color-cream-paper);
 }
 
 .attentionCount {
@@ -273,7 +273,7 @@
   width: 38px;
   height: 38px;
   border: 1px solid var(--color-border);
-  background: #f5f5f5;
+  background: var(--color-cream-paper);
   font-family: var(--font-heading);
   font-size: 16px;
   font-weight: 700;
@@ -294,9 +294,9 @@
 }
 
 .attentionCountHolding {
-  border-color: #d4c8b0;
-  background: #faf6ee;
-  color: #7a6a3a;
+  border-color: var(--color-border);
+  background: var(--color-cream-paper);
+  color: #87672f;
   font-size: 14px;
 }
 

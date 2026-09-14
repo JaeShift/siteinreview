@@ -88,7 +88,7 @@
   gap: 8px;
   padding: 16px 20px;
   border-bottom: 1px solid var(--color-border);
-  background: #fafafa;
+  background: var(--color-cream-paper);
 }
 
 .invSearch {
@@ -202,20 +202,20 @@
 }
 
 .bulkDeselectBtn {
-  border-color: #aaa !important;
-  color: #ccc !important;
+  border-color: var(--color-muted) !important;
+  color: var(--color-border) !important;
   background: transparent !important;
 }
 
 .bulkDeselectBtn:hover:not(:disabled) {
   border-color: var(--color-white) !important;
   color: var(--color-white) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
+  background: rgba(242, 232, 213, 0.08) !important;
 }
 
 .bulkVisBtn {
-  border-color: #6b6b72 !important;
-  color: #d4d4d8 !important;
+  border-color: var(--color-text-light) !important;
+  color: var(--color-border) !important;
   background: transparent !important;
   white-space: nowrap;
 }
@@ -223,7 +223,7 @@
 .bulkVisBtn:hover:not(:disabled) {
   border-color: var(--color-white) !important;
   color: var(--color-white) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
+  background: rgba(242, 232, 213, 0.08) !important;
 }
 
 .bulkPriceWrap {
@@ -233,7 +233,7 @@
 }
 
 .bulkPriceDollar {
-  color: #a1a1aa;
+  color: var(--color-muted);
   font-family: var(--font-heading);
   font-size: 12px;
   font-weight: 700;
@@ -243,17 +243,17 @@
   width: 80px;
   height: 34px;
   padding: 0 8px;
-  background: #27272a;
-  border: 1px solid #52525b;
+  background: var(--color-ink);
+  border: 1px solid var(--color-text-light);
   border-radius: 3px;
-  color: #e4e4e7;
+  color: var(--color-border);
   font-family: var(--font-heading);
   font-size: 12px;
   font-weight: 700;
   outline: none;
 }
 
-.bulkPriceInput:focus { border-color: #a1a1aa; }
+.bulkPriceInput:focus { border-color: var(--color-muted); }
 
 /* ── Bulk price editor modal ── */
 .bulkPriceTopBar {
@@ -277,7 +277,7 @@
 .bulkPriceSetAllBtn {
   flex-shrink: 0;
   background: #15803d;
-  color: #fff;
+  color: var(--color-cream-paper);
   border: none;
   font-family: var(--font-heading);
   font-size: 10px;
@@ -320,7 +320,7 @@
 .bulkPriceThumbEmpty {
   width: 44px;
   height: 62px;
-  background: #f0f0f0;
+  background: var(--color-gray-light);
   border: 1px dashed var(--color-border);
   border-radius: 3px;
   flex-shrink: 0;
@@ -424,7 +424,7 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--color-muted);
-  background: #fafafa;
+  background: var(--color-cream-paper);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -438,7 +438,7 @@
 .tableRow:last-child { border-bottom: none; }
 
 .tableRow:hover {
-  background: #fafafa;
+  background: var(--color-cream-paper);
 }
 
 .cardName {
@@ -482,8 +482,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #d4a017;
-  color: #fff;
+  background: var(--color-soft-gold);
+  color: var(--color-cream-paper);
   font-size: 9px;
   font-weight: 700;
   font-family: var(--font-heading);
@@ -513,10 +513,10 @@
   border-radius: 50%;
 }
 
-.rarity_Common     { background: #d4d4d4; color: #444; }
+.rarity_Common     { background: var(--color-border); color: var(--color-cedar); }
 .rarity_Uncommon   { background: #c8d8e8; color: #2a5a80; }
-.rarity_Rare       { background: #fef3a0; color: #a07000; }
-.rarity_MythicRare { background: #fde0c0; color: #b83c00; }
+.rarity_Rare       { background: var(--color-cream-paper); color: #87672f; }
+.rarity_MythicRare { background: var(--color-cream-paper); color: #922f2f; }
 
 .price {
   font-family: var(--font-heading);
@@ -555,7 +555,7 @@
 }
 
 .priceDown {
-  color: #dc2626;
+  color: #922f2f;
   font-size: 10px;
 }
 
@@ -567,13 +567,13 @@
 }
 
 .editBtn {
-  color: #e4e4e7;
-  border-color: #52525b;
+  color: var(--color-border);
+  border-color: var(--color-text-light);
 }
 
 .editBtn:hover {
-  background: #3f3f46;
-  color: #fff;
+  background: var(--color-cedar);
+  color: var(--color-cream-paper);
 }
 
 .visibilityBtn {
@@ -594,7 +594,7 @@
 
 .visibilityLive {
   background: #16a34a;
-  color: #fff;
+  color: var(--color-cream-paper);
 }
 
 .visibilityLive:hover {
@@ -602,28 +602,28 @@
 }
 
 .visibilityHidden {
-  background: #3f3f46;
-  color: #a1a1aa;
-  border: 1px solid #52525b;
+  background: var(--color-cedar);
+  color: var(--color-muted);
+  border: 1px solid var(--color-text-light);
 }
 
 .visibilityHidden:hover {
-  background: #52525b;
-  color: #d4d4d8;
+  background: var(--color-text-light);
+  color: var(--color-border);
 }
 
 .visibilityOutOfStock {
-  background: #f0f0f0;
-  color: #525252;
-  border: 1px solid #e0e0e0;
+  background: var(--color-gray-light);
+  color: var(--color-text-light);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   width: 96px;
 }
 
 .visibilityOutOfStock:hover {
-  color: #ffffff;
-  background: #181a1b;
-  border-color: #181a1b;
+  color: var(--color-cream-paper);
+  background: var(--color-ink);
+  border-color: var(--color-ink);
 }
 
 .actionsCell {
@@ -649,8 +649,8 @@
 .actionBtn:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .deleteBtn:hover:not(:disabled) {
-  border-color: #cc2200;
-  color: #cc2200;
+  border-color: #922f2f;
+  color: #922f2f;
 }
 
 /* ── Card thumbnail + hover preview ── */
@@ -685,7 +685,7 @@
   border-radius: 3px;
   font-size: 14px;
   color: var(--color-muted);
-  background: #f7f7f7;
+  background: var(--color-gray-light);
   cursor: pointer;
 }
 
@@ -742,8 +742,8 @@
   height: 62px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.38);
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
-  color: #fff;
+  border: 1.5px solid rgba(242, 232, 213, 0.35);
+  color: var(--color-cream-paper);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -773,7 +773,7 @@
   width: 220px;
   height: 307px;
   flex-shrink: 0;
-  background: #f0f0f0;
+  background: var(--color-gray-light);
   border: 1px dashed var(--color-border);
   border-radius: 12px;
   display: flex;
@@ -824,7 +824,7 @@
   line-height: 1.6;
   margin: 0;
   padding: 10px;
-  background: #f7f7f7;
+  background: var(--color-gray-light);
   border-left: 3px solid var(--color-border);
   font-style: italic;
 }
@@ -948,9 +948,9 @@
 }
 
 .dangerBtn {
-  background: #cc2200 !important;
+  background: #922f2f !important;
 }
-.dangerBtn:hover { background: #a81a00 !important; }
+.dangerBtn:hover { background: #922f2f !important; }
 
 /* ── Add Card Modal ── */
 .modal {
@@ -971,7 +971,7 @@
   justify-content: space-between;
   padding: 18px 24px;
   border-bottom: 1px solid var(--color-border);
-  background: #fafafa;
+  background: var(--color-cream-paper);
   flex-shrink: 0;
 }
 
@@ -1007,7 +1007,7 @@
 .formError {
   background: #fff0ee;
   border: 1px solid #ffb3a7;
-  color: #cc2200;
+  color: #922f2f;
   padding: 10px 14px;
   font-size: 12px;
 }
@@ -1139,7 +1139,7 @@
 /* ── Card queue ── */
 .queuePanel {
   border: 1px solid var(--color-border);
-  background: #f7f7f7;
+  background: var(--color-gray-light);
 }
 
 .queueTitle {
@@ -1197,7 +1197,7 @@
   flex-shrink: 0;
   transition: color 0.15s;
 }
-.queueRemoveBtn:hover { color: #cc2200; }
+.queueRemoveBtn:hover { color: #922f2f; }
 
 .queueBtn {
   white-space: nowrap;
@@ -1239,7 +1239,7 @@
   gap: 10px;
   padding: 20px 14px 16px 14px;
   overflow-y: auto;
-  background: var(--color-surface, #fafafa);
+  background: var(--color-surface, var(--color-cream-paper));
 }
 
 .pickSidebarEmpty {
@@ -1335,7 +1335,7 @@
 }
 
 .ctxItem:hover {
-  background: var(--color-surface, #f5f5f5);
+  background: var(--color-surface, var(--color-cream-paper));
 }
 
 /* ── Card Detail Popup ── */
@@ -1379,7 +1379,7 @@
 
 .cardDetailClose:hover {
   color: var(--color-text);
-  background: var(--color-surface, #f5f5f5);
+  background: var(--color-surface, var(--color-cream-paper));
 }
 
 .cardDetailLayout {
@@ -1455,7 +1455,7 @@
   line-height: 1.55;
   white-space: pre-line;
   padding: 10px 12px;
-  background: var(--color-surface, #f8f8f8);
+  background: var(--color-surface, var(--color-gray-light));
   border-radius: 6px;
   border: 1px solid var(--color-border);
 }
@@ -1516,7 +1516,7 @@
   top: 3px;
   right: 3px;
   background: rgba(0,0,0,0.5);
-  color: #fff;
+  color: var(--color-cream-paper);
   border: none;
   border-radius: 50%;
   width: 18px;
@@ -1604,7 +1604,7 @@
 }
 
 .pickQueueRemoveBtn:hover {
-  color: #dc2626;
+  color: #922f2f;
   background: #fee2e2;
 }
 
@@ -1622,7 +1622,7 @@
   padding: 12px 14px;
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  background: var(--color-surface, #fafafa);
+  background: var(--color-surface, var(--color-cream-paper));
 }
 
 .detailFormsThumb {
@@ -1723,7 +1723,7 @@
 }
 
 .detailFormsInputError {
-  border-color: #dc2626;
+  border-color: #922f2f;
 }
 
 .detailFormsInputWrap > span {
@@ -1734,7 +1734,7 @@
 }
 
 .detailFormsRequired {
-  color: #dc2626;
+  color: #922f2f;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1769,7 +1769,7 @@
 .detailFormsDelete:hover {
   border-color: #991b1b;
   background: #991b1b;
-  color: #fff;
+  color: var(--color-cream-paper);
 }
 
 /* ── Mode chooser ── */
@@ -1786,7 +1786,7 @@
   justify-content: space-between;
   padding: 18px 24px;
   border-bottom: 1px solid var(--color-border);
-  background: #fafafa;
+  background: var(--color-cream-paper);
 }
 
 .chooserOptions {
@@ -1809,7 +1809,7 @@
   transition: background 0.15s;
 }
 .chooserOption:last-child { border-right: none; }
-.chooserOption:hover { background: #f5f5f5; }
+.chooserOption:hover { background: var(--color-cream-paper); }
 
 .bulkImportBtn {
   font-size: 11px;
@@ -1840,7 +1840,7 @@
 
 /* ── Scryfall search ── */
 .sfSection {
-  background: #f7f7f7;
+  background: var(--color-gray-light);
   border: 1px solid var(--color-border);
   padding: 16px;
   display: flex;
@@ -1912,7 +1912,7 @@
   transition: background 0.1s;
 }
 .sfOption:last-child { border-bottom: none; }
-.sfOption:hover { background: #f0f0f0; }
+.sfOption:hover { background: var(--color-gray-light); }
 
 .sfFetchBtn {
   padding: 9px 18px;
@@ -1928,7 +1928,7 @@
   white-space: nowrap;
   transition: background 0.15s;
 }
-.sfFetchBtn:hover { background: #333; }
+.sfFetchBtn:hover { background: var(--color-cedar); }
 
 .sfOrDivider {
   font-family: var(--font-heading);
@@ -1950,17 +1950,17 @@
 
 .setPickerBtn {
   padding: 0 10px;
-  background: #3f3f46;
-  border: 1px solid #52525b;
+  background: var(--color-cedar);
+  border: 1px solid var(--color-text-light);
   border-left: none;
-  color: #d4d4d8;
+  color: var(--color-border);
   font-size: 16px;
   cursor: pointer;
   transition: background 0.15s;
   line-height: 1;
 }
 
-.setPickerBtn:hover { background: #52525b; }
+.setPickerBtn:hover { background: var(--color-text-light); }
 
 .setPickerOverlay {
   position: fixed;
@@ -1973,8 +1973,8 @@
 }
 
 .setPickerPopup {
-  background: #1c1c1e;
-  border: 1px solid #3f3f46;
+  background: var(--color-ink);
+  border: 1px solid var(--color-cedar);
   border-radius: 8px;
   width: 420px;
   max-height: 70vh;
@@ -1988,7 +1988,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px 10px;
-  border-bottom: 1px solid #3f3f46;
+  border-bottom: 1px solid var(--color-cedar);
 }
 
 .setPickerTitle {
@@ -1997,27 +1997,27 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #e4e4e7;
+  color: var(--color-border);
 }
 
 .setPickerClose {
   background: none;
   border: none;
-  color: #71717a;
+  color: var(--color-muted);
   font-size: 14px;
   cursor: pointer;
   padding: 2px 6px;
 }
 
-.setPickerClose:hover { color: #e4e4e7; }
+.setPickerClose:hover { color: var(--color-border); }
 
 .setPickerSearch {
   margin: 10px 12px;
   padding: 8px 10px;
-  background: #27272a;
-  border: 1px solid #3f3f46;
+  background: var(--color-ink);
+  border: 1px solid var(--color-cedar);
   border-radius: 4px;
-  color: #e4e4e7;
+  color: var(--color-border);
   font-size: 13px;
   outline: none;
 }
@@ -2033,7 +2033,7 @@
 .setPickerLoading {
   padding: 16px;
   font-size: 13px;
-  color: #71717a;
+  color: var(--color-muted);
   text-align: center;
 }
 
@@ -2044,11 +2044,11 @@
   transition: background 0.1s;
 }
 
-.setPickerRow:hover { background: #27272a; }
+.setPickerRow:hover { background: var(--color-ink); }
 
 .setPickerRowStarred {
   background: rgba(255, 200, 0, 0.05);
-  border-left: 2px solid #f59e0b;
+  border-left: 2px solid var(--color-soft-gold);
 }
 
 .setStarBtn {
@@ -2056,15 +2056,15 @@
   padding: 7px 10px;
   background: none;
   border: none;
-  color: #71717a;
+  color: var(--color-muted);
   font-size: 13px;
   cursor: pointer;
   transition: color 0.15s;
   line-height: 1;
 }
 
-.setPickerRowStarred .setStarBtn { color: #f59e0b; }
-.setStarBtn:hover { color: #f59e0b; }
+.setPickerRowStarred .setStarBtn { color: var(--color-soft-gold); }
+.setStarBtn:hover { color: var(--color-soft-gold); }
 
 .setPickerRowInner {
   display: flex;
@@ -2089,7 +2089,7 @@
 
 .setPickerName {
   font-size: 12px;
-  color: #d4d4d8;
+  color: var(--color-border);
 }
 
 .sfSetInput {
@@ -2119,7 +2119,7 @@
 
 .sfErr {
   font-size: 12px;
-  color: #cc2200;
+  color: #922f2f;
   margin: 0;
 }
 
@@ -2173,7 +2173,7 @@
 /* ── Print picker ── */
 .printPicker {
   border: 1px solid var(--color-border);
-  background: #fafafa;
+  background: var(--color-cream-paper);
   padding: 16px;
 }
 
@@ -2228,7 +2228,7 @@
   right: 4px;
   z-index: 2;
   background: #16a34a;
-  color: #fff;
+  color: var(--color-cream-paper);
   font-size: 11px;
   font-weight: 700;
   width: 20px;
@@ -2263,8 +2263,8 @@
   height: 26px;
   border-radius: 50%;
   background: rgba(0,0,0,0.55);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: #fff;
+  border: 1px solid rgba(242, 232, 213,0.3);
+  color: var(--color-cream-paper);
   font-size: 11px;
   cursor: pointer;
   display: flex;
@@ -2285,7 +2285,7 @@
   border: 0;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.72);
-  color: #fff;
+  color: var(--color-cream-paper);
   font-size: 20px;
   line-height: 1;
   cursor: pointer;
@@ -2314,7 +2314,7 @@
   justify-content: center;
   font-size: 10px;
   color: var(--color-muted);
-  background: #f7f7f7;
+  background: var(--color-gray-light);
 }
 
 .printOptionSet {
@@ -2407,7 +2407,7 @@
   justify-content: center;
   font-size: 11px;
   color: var(--color-muted);
-  background: #f7f7f7;
+  background: var(--color-gray-light);
 }
 
 .importCardInfo {
@@ -2559,7 +2559,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  background: #fafafa;
+  background: var(--color-cream-paper);
   border: none;
   cursor: pointer;
   text-align: left;
@@ -2732,7 +2732,7 @@
 
 .bulkDesc code {
   font-family: monospace;
-  background: #f3f3f3;
+  background: var(--color-gray-light);
   padding: 1px 5px;
   border-radius: 3px;
   font-size: 12px;
@@ -2766,7 +2766,7 @@
   border-radius: 2px;
 }
 
-.bulkTemplateBtn:hover { background: #f5f5f5; }
+.bulkTemplateBtn:hover { background: var(--color-cream-paper); }
 
 .bulkTextarea {
   width: 100%;
@@ -2777,7 +2777,7 @@
   border: 1px solid var(--color-border);
   resize: vertical;
   color: var(--color-text);
-  background: #fafafa;
+  background: var(--color-cream-paper);
   border-radius: 3px;
   box-sizing: border-box;
 }
@@ -2843,7 +2843,7 @@
 .bulkTable th {
   position: sticky;
   top: 0;
-  background: #fafafa;
+  background: var(--color-cream-paper);
   border-bottom: 1px solid var(--color-border);
   padding: 8px 10px;
   text-align: left;
@@ -2857,7 +2857,7 @@
 
 .bulkTable td {
   padding: 5px 8px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-gray-light);
   vertical-align: middle;
 }
 
@@ -3006,7 +3006,7 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  background: #f5f5f5;
+  background: var(--color-cream-paper);
   border: 1px solid var(--color-border);
 }
 
@@ -3043,7 +3043,7 @@
   justify-content: space-between;
   padding: 16px 28px;
   border-top: 1px solid var(--color-border);
-  background: #fafafa;
+  background: var(--color-cream-paper);
   margin-top: auto;
 }
 

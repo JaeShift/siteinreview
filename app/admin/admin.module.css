@@ -3,7 +3,7 @@
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
-  background: #f5f5f5;
+  background: var(--color-cream-paper);
 }
 
 /* Login page gets a dark background via the login.module.css .page rule */
@@ -24,7 +24,7 @@
 
 @media print {
   .adminShell {
-    background: #fff;
+    background: var(--color-cream-paper);
     min-height: unset;
   }
 

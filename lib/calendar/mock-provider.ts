@@ -41,7 +41,7 @@ export class MockCalendarProvider implements CalendarProvider {
         type: "event",
         description: event.shortDescription,
         location: event.location,
-        color: "#ff0000",
+        color: "#687563",
         slug: event.slug,
       });
     }

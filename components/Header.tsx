@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import styles from "./Header.module.css";
+import KitsuneWordmark from "./KitsuneWordmark";
 
 type NavItem = {
   label: string;
@@ -35,6 +36,10 @@ const navLinks: NavItem[] = [
     ],
   },
   {
+    label: "Play Magic",
+    href: "/mtg-and-more",
+  },
+  {
     label: "Shop",
     href: "/shop",
     children: [
@@ -52,7 +57,7 @@ const navLinks: NavItem[] = [
   },
 ];
 
-export default function Header({ arcane = false }: { arcane?: boolean }) {
+export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileGroup, setMobileGroup] = useState<string | null>(null);
   const pathname = usePathname();
@@ -77,6 +82,7 @@ export default function Header({ arcane = false }: { arcane?: boolean }) {
     };
   }, [menuOpen]);
 
+  const isHome = pathname === "/";
   const isHolding = pathname === "/pre-release";
   const itemIsActive = (item: NavItem) =>
     pathname === item.href ||
@@ -86,7 +92,8 @@ export default function Header({ arcane = false }: { arcane?: boolean }) {
     ));
 
   return (
-    <header className={`${styles.header} ${styles.headerHome} ${isHolding ? styles.headerHolding : ""} ${arcane ? styles.headerArcane : ""}`}>
+    <header className={`${styles.header} ${isHome ? styles.headerHome : ""} ${isHolding ? styles.headerHolding : ""}`}>
+      <div className={styles.communityStrip}><span>Independent beer. Everyone welcome.</span><span>North Phoenix, Arizona</span></div>
       <div className={styles.headerInner}>
         <Link href="/" className={styles.headerLogo} aria-label="Kitsune Brewing Co — Home">
           <Image
@@ -99,7 +106,7 @@ export default function Header({ arcane = false }: { arcane?: boolean }) {
             priority
           />
           <span className={styles.homeWordmark} data-site-wordmark>
-            Kitsune Brewing Co.
+            <KitsuneWordmark decorative className={styles.wordmarkArt} /><small>Brewing Company</small>
           </span>
         </Link>
 
@@ -109,7 +116,7 @@ export default function Header({ arcane = false }: { arcane?: boolean }) {
             <div className={styles.navDropdown} key={item.label}>
               <Link
                 href={item.href}
-                className={`${styles.navLink} ${styles.navDropdownTrigger} ${itemIsActive(item) ? styles.navLinkActive : ""}`}
+                className={`${styles.navLink} ${styles.navDropdownTrigger} ${item.label === "Visit" ? styles.visitCta : ""} ${itemIsActive(item) ? styles.navLinkActive : ""}`}
               >
                 {item.label}
                 <svg className={styles.dropdownChevron} width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">

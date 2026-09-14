@@ -1031,7 +1031,7 @@ export default function AdminInventoryPage() {
               <div className={styles.hubCardIcon}>
                 <svg width="24" height="24" viewBox="0 0 40 40" fill="none" aria-hidden="true">
                   <rect x="5" y="6" width="22" height="30" rx="2" stroke="currentColor" strokeWidth="2" />
-                  <rect x="13" y="4" width="22" height="30" rx="2" stroke="currentColor" strokeWidth="2" fill="var(--color-white,#fff)" />
+                  <rect x="13" y="4" width="22" height="30" rx="2" stroke="currentColor" strokeWidth="2" fill="var(--color-white,var(--color-cream-paper))" />
                   <line x1="18" y1="13" x2="30" y2="13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                   <line x1="18" y1="18" x2="30" y2="18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                   <line x1="18" y1="23" x2="26" y2="23" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />

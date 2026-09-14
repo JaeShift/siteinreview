@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getPrereleaseEventStore } from "@/lib/store";
+import PageHero from "@/components/ui/PageHero";
 import FaqAccordion from "./FaqAccordion";
 import RegisterNowButton from "./RegisterNowButton";
 import styles from "./prerelease.module.css";
@@ -48,32 +49,13 @@ export default async function PreReleasePage() {
   if (!event) {
     return (
       <>
-        <div className={holdingStyles.holdingPage}>
-          <div className={holdingStyles.holdingContent}>
-            <span className={holdingStyles.holdingEyebrow}>Kitsune Brewing Co. · Magic: The Gathering</span>
-            <h1 className={holdingStyles.holdingTitle}>
-              The Next Pre-Release Event<br />
-              <em>Is Brewing.</em>
-            </h1>
-            <div className={holdingStyles.holdingDivider} />
-            <p className={holdingStyles.holdingText}>
-              New Magic: The Gathering sets—and the events to celebrate them—are on the way.
-              Check back soon for upcoming prerelease dates, details, and registration.
-            </p>
-            <Link href="/mtg-and-more" className={holdingStyles.holdingBtn}>Explore MTG &amp; More</Link>
-          </div>
-        </div>
-        <footer className={styles.footer}>
-          <p className={styles.footerName}>KITSUNE BREWING COMPANY</p>
-          <div className={styles.footerLinks}>
-            <a href="tel:+16022458593" className={styles.footerLink}>(602) 245-8593</a>
-            <a href="https://instagram.com/kitsunebrewingco" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>INSTAGRAM</a>
-            <a href="https://www.facebook.com/KitsuneBrewCo" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>FACEBOOK</a>
-          </div>
-          <p className={styles.footerCopy}>
-            &copy; {new Date().getFullYear()} KITSUNE BREWING COMPANY. 3321 E BELL RD SUITE B-5 PHOENIX, AZ 85032
-          </p>
-        </footer>
+        <PageHero
+          kicker="Kitsune Brewing Co. · Magic: The Gathering"
+          title={<>The next pre-release<br /><em>is brewing.</em></>}
+          description="New Magic: The Gathering sets—and the events to celebrate them—are on the way. Check back soon for upcoming dates, details, and registration."
+        >
+          <Link href="/mtg-and-more" className={holdingStyles.holdingBtn}>Explore Magic nights</Link>
+        </PageHero>
       </>
     );
   }
@@ -103,11 +85,11 @@ export default async function PreReleasePage() {
           </div>
 
           <div className={styles.heroText}>
-            <span className={styles.featuredLabel}>PRERELEASE EVENT</span>
-            <h1 className={styles.heroTitle}>{title.toUpperCase()}</h1>
+            <span className={styles.featuredLabel}>Pre-release event</span>
+            <h1 className={styles.heroTitle}>{title}</h1>
 
             {dateLabel && (
-              <p style={{ color: "rgba(255,255,255,0.7)", fontFamily: "var(--font-heading)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
+              <p style={{ color: "rgba(242, 232, 213,0.7)", fontFamily: "var(--font-heading)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24 }}>
                 {dateLabel} · {event.time}{event.endTime ? ` – ${event.endTime}` : ""} · Kitsune Brewing Co.
               </p>
             )}
@@ -115,10 +97,10 @@ export default async function PreReleasePage() {
             <div className={styles.priceBox}>
               <div className={styles.priceRow}>
                 <div>
-                  <span className={styles.admissionLabel}>ADMISSION</span>
-                  <span className={styles.price}>{price === 0 ? "FREE" : `$${price % 1 === 0 ? price : price.toFixed(2)}`}</span>
+                  <span className={styles.admissionLabel}>Admission</span>
+                  <span className={styles.price}>{price === 0 ? "Free" : `$${price % 1 === 0 ? price : price.toFixed(2)}`}</span>
                 </div>
-                <span className={styles.perPlayer}>PER PLAYER</span>
+                <span className={styles.perPlayer}>per player</span>
               </div>
               <ul className={styles.includes}>
                 <li className={styles.includesItem}>
@@ -143,13 +125,13 @@ export default async function PreReleasePage() {
       {/* ── What is a Prerelease ── */}
       <section className={styles.explainSection}>
         <div className={styles.explainInner}>
-          <span className={styles.sectionLabel}>01 / PRE-RELEASE</span>
-          <h2 className={styles.explainTitle}>{title.toUpperCase()}</h2>
+          <span className={styles.sectionLabel}>How it works</span>
+          <h2 className={styles.explainTitle}>{title}</h2>
           <p className={styles.explainBody} dangerouslySetInnerHTML={{ __html: description }} />
 
           <div className={styles.explainImage}>
             <Image
-              src={event.bannerImageUrl || "/images/singles-cards.png"}
+              src={event.bannerImageUrl || "/images/uploads/magic spread.png"}
               alt={`${title} banner`}
               fill
               className={styles.explainImg}
@@ -159,19 +141,19 @@ export default async function PreReleasePage() {
 
           <div className={styles.stepsGrid}>
             <div className={styles.stepCard}>
-              <h3 className={styles.stepTitle}>1. OPEN</h3>
+              <h3 className={styles.stepTitle}>1. Open</h3>
               <p className={styles.stepBody}>
                 Receive your Pre-release Kit and discover the newest set before its official release.
               </p>
             </div>
             <div className={styles.stepCard}>
-              <h3 className={styles.stepTitle}>2. BUILD</h3>
+              <h3 className={styles.stepTitle}>2. Build</h3>
               <p className={styles.stepBody}>
                 Build a 40-card sealed deck using the cards from your Pre-release Kit.
               </p>
             </div>
             <div className={styles.stepCard}>
-              <h3 className={styles.stepTitle}>3. PLAY</h3>
+              <h3 className={styles.stepTitle}>3. Play</h3>
               <p className={styles.stepBody}>
                 Try out new cards and strategies against other players before the set officially releases.
               </p>
@@ -184,7 +166,7 @@ export default async function PreReleasePage() {
       <section className={styles.faqSection}>
         <div className={styles.faqInner}>
           <div className={styles.faqLeft}>
-            <h2 className={styles.faqTitle}>FREQUENTLY ASKED QUESTIONS</h2>
+            <h2 className={styles.faqTitle}>Frequently asked questions</h2>
             <p className={styles.faqSub}>
               Everything you need to know before your Prerelease event at Kitsune.
             </p>
@@ -197,7 +179,7 @@ export default async function PreReleasePage() {
       {/* ── CTA ── */}
       <section className={styles.cta} id="register">
         <div className={styles.ctaInner}>
-          <h2 className={styles.ctaTitle}>READY TO PLAY?</h2>
+          <h2 className={styles.ctaTitle}>Save a seat.</h2>
           <p className={styles.ctaBody}>
             Seats fill up fast — secure your spot{dateLabel ? ` for ${title} on ${dateLabel}` : ""} and be
             among the first players in Phoenix to crack open the new set.
@@ -205,32 +187,21 @@ export default async function PreReleasePage() {
           <div className={styles.ctaBtns}>
             {eventSlug ? (
               <Link href={`/events/${eventSlug}`} className={styles.ctaBtnPrimary}>
-                BOOK YOUR SEAT
+                Book your seat
               </Link>
             ) : (
               <Link href="/events" className={styles.ctaBtnPrimary}>
-                VIEW EVENTS
+                View events
               </Link>
             )}
             <Link href="/contact" className={styles.ctaBtnOutline}>
-              CONTACT US
+              Contact us
             </Link>
           </div>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer className={styles.footer}>
-        <p className={styles.footerName}>KITSUNE BREWING COMPANY</p>
-        <div className={styles.footerLinks}>
-          <a href="tel:+16022458593" className={styles.footerLink}>(602) 245-8593</a>
-          <a href="https://instagram.com/kitsunebrewingco" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>INSTAGRAM</a>
-          <a href="https://www.facebook.com/KitsuneBrewCo" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>FACEBOOK</a>
-        </div>
-        <p className={styles.footerCopy}>
-          &copy; {new Date().getFullYear()} KITSUNE BREWING COMPANY. 3321 E BELL RD SUITE B-5 PHOENIX, AZ 85032
-        </p>
-      </footer>
     </>
   );
 }

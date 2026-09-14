@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageHero from "@/components/ui/PageHero";
 import styles from "./commander-nights.module.css";
 
 export const metadata: Metadata = {
@@ -10,49 +11,43 @@ export const metadata: Metadata = {
 
 const SCHEDULE = [
   {
-    day: "TUESDAY NIGHTS",
-    sub: "Casual & Beginner Friendly",
+    day: "Tuesday nights",
+    sub: "Casual and beginner-friendly",
     time: "6:00 PM",
-    entry: "FREE ENTRY",
+    entry: "Free",
   },
   {
-    day: "THURSDAY NIGHTS",
-    sub: "Mid-Power & Brew Review",
+    day: "Thursday nights",
+    sub: "Mid-power and brew review",
     time: "6:30 PM",
-    entry: "FREE ENTRY",
+    entry: "Free",
   },
   {
-    day: "SUNDAY SHOWDOWN",
-    sub: "Higher Stakes / Competitive pods",
+    day: "Sunday showdown",
+    sub: "Higher-stakes competitive pods",
     time: "2:00 PM",
-    entry: "$5 BUY-IN",
+    entry: "$5 buy-in",
   },
 ];
 
 export default function CommanderNightsPage() {
   return (
     <>
-      {/* ── Hero ── */}
-      <section className={styles.hero}>
-        <div
-          className={styles.heroBg}
-          style={{ backgroundImage: `url('/images/commander.jpg')` }}
-        />
-        <div className={styles.heroOverlay} />
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>COMMANDER NIGHTS</h1>
-          <div className={styles.heroAccent} />
-          <p className={styles.heroSub}>
-            Experience the ultimate social format in Phoenix&apos;s premier craft taproom.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        variant="image"
+        image="/images/updated.png"
+        imageAlt="Commander night at Kitsune"
+        kicker="Weekly at the taproom"
+        title="Commander nights"
+        description="Casual pods, mid-power tables, and a Sunday showdown — with something on tap."
+      />
 
       {/* ── What is Commander? ── */}
       <section className={styles.intro}>
         <div className={styles.introInner}>
           <div className={styles.introLeft}>
-            <h2 className={styles.introTitle}>WHAT IS COMMANDER NIGHT?</h2>
+            <p className={styles.heroKicker}>The social format</p>
+            <h2 className={styles.introTitle}>What is Commander night?</h2>
             <p className={styles.introBody}>
               Commander is a unique and exciting way to play Magic: The Gathering that focuses on
               legendary creatures, big plays, and social interaction. At Kitsune Brewing Co., our
@@ -60,9 +55,9 @@ export default function CommanderNightsPage() {
             </p>
             <div className={styles.featureList}>
               <div className={styles.featureItem}>
-                <span className={styles.featureIcon}>♟</span>
+                <span className={styles.featureMark} aria-hidden="true" />
                 <div>
-                  <h4 className={styles.featureTitle}>Social Play</h4>
+                  <h4 className={styles.featureTitle}>Social play</h4>
                   <p className={styles.featureDesc}>
                     Four-player free-for-all games where politics and alliances matter as much as
                     the cards.
@@ -70,9 +65,9 @@ export default function CommanderNightsPage() {
                 </div>
               </div>
               <div className={styles.featureItem}>
-                <span className={styles.featureIcon}>🃏</span>
+                <span className={styles.featureMark} aria-hidden="true" />
                 <div>
-                  <h4 className={styles.featureTitle}>100-Card Decks</h4>
+                  <h4 className={styles.featureTitle}>100-card decks</h4>
                   <p className={styles.featureDesc}>
                     Build around your favorite Legend in a singleton format where no two games are
                     the same.
@@ -85,11 +80,11 @@ export default function CommanderNightsPage() {
           <div className={styles.introImages}>
             <div
               className={styles.introImg1}
-              style={{ backgroundImage: `url('/images/singles-cards.png')` }}
+              style={{ backgroundImage: `url('/images/fox - Copy.png')` }}
             />
             <div
               className={styles.introImg2}
-              style={{ backgroundImage: `url('/images/cases.png')` }}
+              style={{ backgroundImage: `url('/images/1 IMG_0629.jpg')` }}
             />
           </div>
         </div>
@@ -99,13 +94,13 @@ export default function CommanderNightsPage() {
       <section className={styles.howSection}>
         <div className={styles.howInner}>
           <div className={styles.howHeader}>
-            <span className={styles.howLabel}>GET STARTED</span>
-            <h2 className={styles.howTitle}>HOW TO JOIN THE BATTLE</h2>
+            <span className={styles.howLabel}>Getting started</span>
+            <h2 className={styles.howTitle}>How a night usually goes</h2>
           </div>
           <div className={styles.howGrid}>
             <div className={styles.howCardLight}>
               <span className={styles.howNum}>01</span>
-              <h3 className={styles.howCardTitle}>BRING YOUR DECK</h3>
+              <h3 className={styles.howCardTitle}>Bring a deck</h3>
               <p className={styles.howCardDesc}>
                 Bring your favorite 100-card Commander deck. Don&apos;t have one? We often have
                 loaner decks available for beginners — just ask!
@@ -113,18 +108,18 @@ export default function CommanderNightsPage() {
             </div>
             <div className={styles.howCardDark}>
               <span className={styles.howNumDark}>02</span>
-              <h3 className={styles.howCardTitleDark}>GRAB A PINT</h3>
+              <h3 className={styles.howCardTitleDark}>Grab a pint</h3>
               <p className={styles.howCardDescDark}>
                 Support your local brewery! Check in at the bar, grab a fresh craft pour, and
                 we&apos;ll help find you a pod of players at your power level.
               </p>
               <div className={styles.howCardFooter}>
-                <span className={styles.howCardPromo}>PLAYER DISCOUNT ON DRAFTS</span>
+                <span className={styles.howCardPromo}>Player discount on drafts</span>
               </div>
             </div>
             <div className={styles.howCardLight}>
               <span className={styles.howNum}>03</span>
-              <h3 className={styles.howCardTitle}>PLAY &amp; SOCIALIZE</h3>
+              <h3 className={styles.howCardTitle}>Sit down and play</h3>
               <p className={styles.howCardDesc}>
                 Our community is built on &ldquo;Rule 0&rdquo; conversations. We ensure everyone is
                 playing at a compatible power level for maximum fun.
@@ -138,7 +133,7 @@ export default function CommanderNightsPage() {
       <section className={styles.scheduleSection}>
         <div className={styles.scheduleInner}>
           <div className={styles.scheduleLeft}>
-            <h2 className={styles.scheduleTitle}>WEEKLY SCHEDULE</h2>
+            <h2 className={styles.scheduleTitle}>Weekly schedule</h2>
             <p className={styles.scheduleSub}>
               We host multiple sessions to accommodate all schedules and styles of play.
             </p>
@@ -163,7 +158,7 @@ export default function CommanderNightsPage() {
           <div className={styles.scheduleImage}>
             <div
               className={styles.scheduleImgBg}
-              style={{ backgroundImage: `url('/images/swirl.png')` }}
+              style={{ backgroundImage: `url('/images/uploads/beer and magic.png')` }}
             />
           </div>
         </div>
@@ -172,28 +167,17 @@ export default function CommanderNightsPage() {
       {/* ── CTA ── */}
       <section className={styles.cta}>
         <div className={styles.ctaInner}>
-          <h2 className={styles.ctaTitle}>READY TO PLAY?</h2>
+          <h2 className={styles.ctaTitle}>Save a chair.</h2>
           <p className={styles.ctaBody}>
-            Whether you&apos;re looking to join our weekly pods or want to book a private table for
-            your playgroup, we&apos;ve got you covered.
+            Drop in for a weekly pod, or book a few tables for your playgroup.
           </p>
           <div className={styles.ctaBtns}>
-            <a
-              href="https://www.protix.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.ctaBtnOrange}
-            >
-              REGISTER FOR NEXT NIGHT
-            </a>
-            <Link href="/private-events" className={styles.ctaBtnBlack}>
-              REQUEST PRIVATE PARTY
+            <Link href="/events" className={styles.ctaBtnOrange}>
+              See upcoming nights
             </Link>
-          </div>
-          <div className={styles.ctaIcons}>
-            <span className={styles.ctaIcon}>🃏</span>
-            <span className={styles.ctaIcon}>⚔</span>
-            <span className={styles.ctaIcon}>⬟</span>
+            <Link href="/private-events" className={styles.ctaBtnBlack}>
+              Host a private table
+            </Link>
           </div>
         </div>
       </section>
@@ -202,7 +186,7 @@ export default function CommanderNightsPage() {
       <section className={styles.discord}>
         <div className={styles.discordInner}>
           <div className={styles.discordText}>
-            <h3 className={styles.discordTitle}>JOIN OUR DISCORD</h3>
+            <h3 className={styles.discordTitle}>Stay in the loop</h3>
             <p className={styles.discordDesc}>
               Connect with other Phoenix Commander players, arrange games, and get event updates.
             </p>
@@ -210,32 +194,16 @@ export default function CommanderNightsPage() {
           <div className={styles.discordForm}>
             <input
               type="email"
-              placeholder="ENTER EMAIL FOR UPDATES"
+              placeholder="Email for night updates"
               className={styles.discordInput}
               aria-label="Email for updates"
             />
-            <button className={styles.discordBtn}>JOIN</button>
+            <button className={styles.discordBtn}>Join</button>
           </div>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer className={styles.footer}>
-        <p className={styles.footerName}>KITSUNE BREWING CO.</p>
-        <div className={styles.footerLinks}>
-          <a href="tel:+16022458593" className={styles.footerLink}>(602) 245-8593</a>
-          <a href="https://instagram.com/kitsunebrewingco" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>INSTAGRAM</a>
-          <a href="https://www.facebook.com/KitsuneBrewCo" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>FACEBOOK</a>
-        </div>
-        <p className={styles.footerCopy}>
-          &copy; {new Date().getFullYear()} KITSUNE BREWING COMPANY. 3321 E BELL RD SUITE B-5 PHOENIX, AZ 85032
-        </p>
-        <div className={styles.footerBar}>
-          <div className={styles.footerBarOrange} />
-          <div className={styles.footerBarDim} />
-          <div className={styles.footerBarDim} />
-        </div>
-      </footer>
     </>
   );
 }

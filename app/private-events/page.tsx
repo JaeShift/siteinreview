@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Link from "next/link";
+import PageHero from "@/components/ui/PageHero";
 import styles from "./private-events.module.css";
 
 const EVENT_TYPES = [
@@ -27,21 +27,14 @@ export default function PrivateEventsPage() {
 
   return (
     <>
-      {/* ── Hero Banner ── */}
-      <section className={styles.hero}>
-        <div
-          className={styles.heroBg}
-          style={{ backgroundImage: `url('/images/singles-cards.png')` }}
-        />
-        <div className={styles.heroOverlay} />
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            PRIVATE MTG &amp; <br className={styles.brDesk} />
-            GAME EVENTS
-          </h1>
-          <div className={styles.heroAccent} />
-        </div>
-      </section>
+      <PageHero
+        variant="image"
+        image="/images/singles-cards.png"
+        imageAlt=""
+        kicker="Premium tabletop experiences"
+        title={<>Private MTG &amp;<br />game events</>}
+        description="Birthdays, drafts, work nights, and playgroups. Bring your people to Kitsune."
+      />
 
       {/* ── Intro ── */}
       <section className={styles.intro}>
@@ -274,18 +267,6 @@ export default function PrivateEventsPage() {
       </section>
 
       {/* ── Footer ── */}
-      <footer className={styles.footer}>
-        <p className={styles.footerName}>KITSUNE BREWING CO.</p>
-        <div className={styles.footerLinks}>
-          <a href="tel:+16022458593" className={styles.footerLink}>(602) 245-8593</a>
-          <a href="https://instagram.com/kitsunebrewingco" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>INSTAGRAM</a>
-          <a href="https://www.facebook.com/KitsuneBrewCo" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>FACEBOOK</a>
-        </div>
-        <p className={styles.footerCopy}>
-          &copy; {new Date().getFullYear()} KITSUNE BREWING COMPANY. 3321 E BELL RD SUITE B-5 PHOENIX, AZ 85032.
-          MAGIC: THE GATHERING IS A TRADEMARK OF WIZARDS OF THE COAST LLC.
-        </p>
-      </footer>
     </>
   );
 }

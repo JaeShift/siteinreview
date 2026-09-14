@@ -135,7 +135,7 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--color-muted);
-  background: #fafafa;
+  background: var(--color-cream-paper);
 }
 
 .tableRow:last-child { border-bottom: none; }
@@ -161,7 +161,7 @@
   font-size: 8px;
   font-weight: 700;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--color-cream-paper);
   letter-spacing: 0.08em;
 }
 
@@ -243,13 +243,13 @@
   transition: background 0.15s, color 0.15s;
 }
 .editBtn { border-color: var(--color-black); color: var(--color-black); }
-.editBtn:hover { background: var(--color-black); color: #fff; }
+.editBtn:hover { background: var(--color-black); color: var(--color-cream-paper); }
 
 .deleteBtn { border-color: var(--color-accent); color: var(--color-accent); }
-.deleteBtn:hover { background: var(--color-accent); color: #fff; }
+.deleteBtn:hover { background: var(--color-accent); color: var(--color-cream-paper); }
 
 .addScheduleBtn { border-color: var(--color-black); color: var(--color-black); font-size: 9px; }
-.addScheduleBtn:hover { background: var(--color-black); color: #fff; }
+.addScheduleBtn:hover { background: var(--color-black); color: var(--color-cream-paper); }
 
 /* ─── Flash ──────────────────────────────────────────────────────────────── */
 .flash {
@@ -263,7 +263,7 @@
   animation: slideIn 0.2s ease;
 }
 .flashSuccess { background: #f0fdf4; border-color: #22c55e; color: #15803d; }
-.flashError   { background: #fef2f2; border-color: var(--color-accent); color: #991b1b; }
+.flashError   { background: #fef2f2; border-color: var(--color-status-error); color: #991b1b; }
 @keyframes slideIn {
   from { opacity: 0; transform: translateX(20px); }
   to   { opacity: 1; transform: translateX(0); }
