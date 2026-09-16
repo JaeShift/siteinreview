@@ -97,7 +97,7 @@
   height: 100% !important;
   inset: 0 !important;
   object-fit: cover;
-  /* Artwork is 3:1 with the glass at 64-79% of its width. When the stage is
+  /* Artwork is 3:1 with the glass at 62-76% of its width. When the stage is
      narrower than 3:1 the crop comes off the empty left side, not the glass. */
   object-position: 70% 50%;
   filter: brightness(.94);
@@ -133,7 +133,7 @@
     /* Track the glass's left edge through the cover crop, so the two focal
        points keep a consistent gap on both laptops and wide monitors. */
     --hero-drawn: max(100cqw, 300cqh);
-    --hero-copy-anchor: calc((100cqw - var(--hero-drawn)) * 0.7 + var(--hero-drawn) * 0.643);
+    --hero-copy-anchor: calc((100cqw - var(--hero-drawn)) * 0.7 + var(--hero-drawn) * 0.618);
     --hero-gap: clamp(48px, 5.8cqw, 128px);
     /* Anchor the column's right edge to the composition, then let it
        grow leftward (capped by hero height so the lockup keeps its proportion). */
