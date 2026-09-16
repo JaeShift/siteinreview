@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import MenuEmbed from "@/components/MenuEmbed";
 import CalendarEmbed from "@/components/CalendarEmbed";
@@ -14,24 +14,36 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
+  const { props: desktopHero } = getImageProps({
+    src: "/images/home/hero-desktop-v12.png",
+    alt: "",
+    width: 2172,
+    height: 724,
+    sizes: "100vw",
+  });
+
   return (
     <div className={styles.home}>
       <section className={styles.poster} aria-labelledby="home-title">
         <div className={styles.heroStage}>
-          <Image
-            src="/images/home/hero-unified-scene-v6.png"
-            alt="Kitsune fox pint of amber beer resting on a wooden table in front of a Japanese-inspired mural"
-            fill
-            priority
-            sizes="100vw"
-            className={styles.heroBackdrop}
-          />
+          <picture>
+            <source media="(min-width: 761px)" srcSet={desktopHero.srcSet} sizes={desktopHero.sizes} />
+            <Image
+              src="/images/home/hero-unified-scene-v11.png"
+              alt="Kitsune fox pint of amber beer resting on a wooden table in front of a Japanese-inspired mural"
+              fill
+              loading="eager"
+              fetchPriority="high"
+              sizes="100vw"
+              className={styles.heroBackdrop}
+            />
+          </picture>
           <div className={styles.heroShade} />
           <div className={styles.heroContent}>
             <span className={styles.heroRule} aria-hidden="true" />
             <div className={styles.heroIdentity}>
               <h1 id="home-title" aria-label="Kitsune"><HeroWordmark className={styles.wordmarkArt} /></h1>
-              <p className={styles.heroBrand}>Brewing Company</p>
+              <p className={styles.heroBrand}><span>Brewing</span><span>Company</span></p>
             </div>
             <p className={styles.heroPromise}>Great beer. Good games.<br />A place to belong.</p>
             <div className={styles.heroActions}>

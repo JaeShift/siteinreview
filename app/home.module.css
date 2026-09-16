@@ -97,24 +97,24 @@
   height: 100% !important;
   inset: 0 !important;
   object-fit: cover;
-  object-position: center;
-  filter: brightness(.82);
+  /* Artwork is 3:1 with the glass at 64-79% of its width. When the stage is
+     narrower than 3:1 the crop comes off the empty left side, not the glass. */
+  object-position: 70% 50%;
+  filter: brightness(.94);
 }
 
 .heroShade {
   position: absolute;
   inset: 0;
+  /* Legibility comes from shading the text side only, so the beer stays bright. */
   background:
-    linear-gradient(90deg, rgba(23,24,21,.24) 0%, rgba(23,24,21,.16) 34%, transparent 58%),
-    linear-gradient(0deg, rgba(16,14,11,.12), transparent 25%);
+    linear-gradient(90deg, rgba(16,14,11,.58) 0%, rgba(16,14,11,.4) 28%, rgba(16,14,11,.14) 46%, transparent 58%),
+    linear-gradient(0deg, rgba(16,14,11,.18), transparent 22%);
 }
 
 .heroContent {
   position: relative;
   z-index: 2;
-  width: 40%;
-  max-width: 740px;
-  margin-left: 16%;
   padding: 28px 0;
 }
 
@@ -124,14 +124,25 @@
   }
 
   .heroStage {
-    height: clamp(480px, 35vw, 640px);
+    /* Tracks the artwork's 3:1 ratio so the full glass is always in frame. */
+    height: clamp(520px, 33.4vw, 820px);
     container-type: size;
   }
 
   .heroContent {
+    /* Track the glass's left edge through the cover crop, so the two focal
+       points keep a consistent gap on both laptops and wide monitors. */
+    --hero-drawn: max(100cqw, 300cqh);
+    --hero-copy-anchor: calc((100cqw - var(--hero-drawn)) * 0.7 + var(--hero-drawn) * 0.643);
+    --hero-gap: clamp(48px, 5.8cqw, 128px);
+    /* Anchor the column's right edge to the composition, then let it
+       grow leftward (capped by hero height so the lockup keeps its proportion). */
+    width: min(48%, 120cqh, 860px, calc(var(--hero-copy-anchor) - var(--hero-gap) - var(--site-gutter)));
+    margin-left: auto;
+    margin-right: calc(100cqw - var(--hero-copy-anchor) + var(--hero-gap));
     min-height: 0;
     height: 100%;
-    padding-block: 28px;
+    padding-block: clamp(28px, 2.4vw, 48px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -144,7 +155,7 @@
   display: block;
   width: 56px;
   height: 4px;
-  margin-bottom: 16px;
+  margin-bottom: clamp(20px, 1.6vw, 32px);
   background: var(--color-action);
 }
 
@@ -172,28 +183,35 @@
   width: 110%;
   max-width: none;
   height: auto;
-  filter: brightness(.8) sepia(.35) saturate(.9);
+  /* Keep the paper warmth but let the mark read as crisp cream, like the header. */
+  filter: sepia(.18) brightness(.97);
 }
 
 .heroBrand {
   position: relative;
-  text-align: left;
-  word-spacing: .15em;
+  display: flex;
+  justify-content: space-between;
   white-space: nowrap;
-  margin: 0 0 0 24%;
+  /* Pinned to the letter edges of the wordmark PNG (rendered at 110% width,
+     offset -2.6%): the I starts at 18.6% of the image, the E ends at 90.7%. */
+  margin: 0 0 0 17.9%;
+  width: 79.3%;
   color: #d1bd99;
-  font-size: 5cqw;
+  font-size: 5.2cqw;
   font-weight: 400;
   line-height: 1;
   text-transform: uppercase;
-  letter-spacing: 0.34em;
+  letter-spacing: 0.4em;
 }
 
+/* Cancel the trailing letter-space so the Y's ink, not its tracking, meets the E. */
+.heroBrand span:last-child { margin-right: -0.4em; }
+
 .heroPromise {
-  margin: 28px 0 0;
+  margin: clamp(22px, 2vw, 34px) 0 0;
   width: 100%;
   color: #d3c6af;
-  font-size: clamp(1.125rem, 1.5vw, 1.5rem);
+  font-size: clamp(1.0625rem, 1.25vw, 1.5rem);
   line-height: 1.5;
 }
 
@@ -206,14 +224,14 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   width: min(100%, 520px);
   gap: 16px;
-  margin-top: 24px;
+  margin-top: clamp(24px, 2vw, 34px);
   margin-left: 0;
 }
 
 .home .heroActions a {
   min-width: 0;
-  min-height: 60px;
-  padding: 16px 22px;
+  min-height: 56px;
+  padding: 14px 22px;
   gap: 16px;
   justify-content: space-between;
   font-size: 0.875rem;
@@ -649,17 +667,12 @@
   border: 0;
 }
 
-@media (max-width: 1440px) and (min-width: 761px) {
-  .heroIdentity { width: min(100%, 58vw, 880px); }
-}
-
 @media (max-width: 1100px) {
   .manifesto { gap: 36px; }
-  .heroContent { margin-left: 12%; }
 }
 
 @media (max-width: 900px) {
-  .heroContent { width: 48%; margin-left: 7%; }
+  .heroActions { grid-template-columns: minmax(0, 1fr); width: 100%; }
   .home .heroActions a { white-space: normal; }
 
   .sectionHead,

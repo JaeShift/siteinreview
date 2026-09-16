@@ -34,6 +34,9 @@
 .communityStrip { border-bottom: 1px solid var(--color-muted-gold); }
 .communityStrip span:first-child::before { content: ""; display: inline-block; width: 5px; height: 5px; margin: 0 12px 2px 0; background: var(--color-soft-gold); transform: rotate(45deg); }
 .headerHome { isolation: isolate; }
+/* The homepage hero carries the full wordmark, so the header shows the seal alone. */
+.headerHome .homeWordmark { display: none; }
+.headerHome .homeFoxLogo { width: 64px; height: 64px; }
 @media (max-width: 1000px) {
   .headerNav { gap: 18px; }
   .headerInner { gap: 20px; }
