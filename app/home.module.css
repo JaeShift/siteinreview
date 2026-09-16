@@ -675,8 +675,9 @@
   .visitCopy { border-width: 8px; outline-offset: -14px; }
   .heroStage {
     /* svh keeps the first screen stable while Safari's toolbar expands. */
-    --hero-photo-height: min(45svh, 380px, max(150px, calc(100svh - 395px - env(safe-area-inset-bottom, 0px))));
-    --hero-overlap: clamp(70px, 22vw, 110px);
+    --hero-photo-height: min(45svh, 380px, max(150px, calc(100svh - 435px - env(safe-area-inset-bottom, 0px))));
+    /* Keep the letters on the table, below the fox artwork. */
+    --hero-overlap: calc(var(--hero-photo-height) * .12);
     min-height: 0;
     padding-top: calc(var(--hero-photo-height) - var(--hero-overlap));
     background: #100e0b;
@@ -690,7 +691,7 @@
     transform: none;
     object-position: 78% center;
     opacity: 1;
-    mask-image: linear-gradient(#000 55%, rgba(0,0,0,.65) 75%, transparent);
+    mask-image: linear-gradient(#000 78%, rgba(0,0,0,.8) 88%, transparent);
   }
 
   .heroShade {
@@ -715,7 +716,7 @@
   .heroActions a > .heroActionArrow { display: none; }
   .mobileVisit {
     display: block;
-    padding: 0 6.25% calc(56px + env(safe-area-inset-bottom, 0px));
+    padding: 0 6.25% calc(16px + env(safe-area-inset-bottom, 0px));
     background: #100e0b;
     color: #d3c6af;
   }

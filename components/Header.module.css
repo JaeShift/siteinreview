@@ -45,7 +45,7 @@
   .headerHome .communityStrip { display: none; }
   .headerHome .headerInner { min-height: 64px; padding: 10px 6.25%; gap: 8px; }
   .headerHome .headerLogo { gap: 12px; }
-  .headerHome .homeFoxLogo { width: 36px; height: 36px; }
+  .headerHome .homeFoxLogo { width: 44px; height: 44px; }
   .headerHome .homeWordmark { display: none; }
   .headerHome .hamburger { border: 0; }
   .headerHome .hamburgerBar { background: currentColor; width: 22px; border-radius: 2px; }

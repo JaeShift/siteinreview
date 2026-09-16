@@ -2,6 +2,6 @@
 .visitStatus > svg { flex-shrink: 0; color: #b49b71; }
 .visitStatus strong { min-width: 0; font-size: .8125rem; line-height: 1.4; font-weight: 500; }
 .details { display: grid; gap: 3px; min-width: 0; }
-.address { font-size: .75rem; line-height: 1.4; color: #b6a68d; }
+.address { font-size: .75rem; line-height: 1.4; color: #b6a68d; text-decoration: underline; text-decoration-color: rgba(182,166,141,.45); text-underline-offset: 3px; }
 .directions { display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0; margin-left: auto; font-size: .8125rem; color: #d29679; }
 .visitStatus:focus-visible { outline: 2px solid var(--color-action); outline-offset: 4px; }

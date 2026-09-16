@@ -41,7 +41,7 @@ export function getTaproomStatus(now: Date) {
   }
   const minute = Number(part("hour")) * 60 + Number(part("minute"));
   const open = minute >= day.opens * 60 && minute < day.closes * 60;
-  const label = open ? `Open until ${formatHour(day.closes)}`
+  const label = open ? `Open now · until ${formatHour(day.closes)}`
     : minute < day.opens * 60 ? `Opens today at ${formatHour(day.opens)}` : "Closed for today";
   return { label, hours: `${day.day}: ${formatDayHours(day)}`, open, unconfirmed: false };
 }
