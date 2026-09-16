@@ -1,12 +1,12 @@
 import type { HTMLAttributes } from "react";
 import Image from "next/image";
 
-/** Use the original artwork to preserve its exact lettering and paper texture. */
+/** Original lettering traced into curves so desktop scaling keeps sharp edges. */
 export default function HeroWordmark(props: HTMLAttributes<HTMLSpanElement>) {
   return (
     <span {...props}>
       <Image
-        src="/images/home/kitsune-wordmark-textured.png"
+        src="/images/home/kitsune-wordmark-vector.svg"
         alt="Kitsune"
         width={582}
         height={229}

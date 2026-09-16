@@ -19,10 +19,11 @@ export default function HomePage() {
       <section className={styles.poster} aria-labelledby="home-title">
         <div className={styles.heroStage}>
           <Image
-            src="/images/home/hero-translucent-glass-v14.png"
+            src="/images/home/hero-consistent-amber-v18.png"
             alt="Kitsune fox pint of amber beer resting on a wooden table in front of a Japanese-inspired mural"
             fill
             priority
+            quality={95}
             sizes="100vw"
             className={styles.heroBackdrop}
           />
