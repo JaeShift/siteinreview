@@ -19,7 +19,7 @@ export default function HomePage() {
       <section className={styles.poster} aria-labelledby="home-title">
         <div className={styles.heroStage}>
           <Image
-            src="/images/home/hero-unified-scene-v7.png"
+            src="/images/home/hero-unified-scene-v6.png"
             alt="Kitsune fox pint of amber beer resting on a wooden table in front of a Japanese-inspired mural"
             fill
             priority
