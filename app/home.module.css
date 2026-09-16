@@ -86,101 +86,73 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  /* Window height must not change the hero composition or background crop. */
-  min-height: 600px;
+  min-height: 0;
   overflow: hidden;
   color: var(--color-cream-paper);
-  background: var(--color-deep-ink);
+  background: #100e0b;
 }
 
 .heroBackdrop {
+  width: 100% !important;
+  height: 100% !important;
+  inset: 0 !important;
   object-fit: cover;
-  object-position: 72% center;
+  object-position: center;
+  filter: brightness(.82);
 }
 
 .heroShade {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, var(--color-ink) 0%, rgba(23,24,21,.88) 28%, rgba(23,24,21,.28) 62%, transparent 82%),
-    linear-gradient(0deg, rgba(23,24,21,.55), transparent 42%);
+    linear-gradient(90deg, rgba(23,24,21,.24) 0%, rgba(23,24,21,.16) 34%, transparent 58%),
+    linear-gradient(0deg, rgba(16,14,11,.12), transparent 25%);
 }
 
 .heroStage::after {
   content: "";
   position: absolute;
-  inset: 0;
   pointer-events: none;
-  background-image: var(--texture-grain);
-  opacity: 0.45;
   inset: 16px;
-  border: 1px solid var(--color-soft-gold);
-}
-
-.heroBeer {
-  --beer-width: clamp(130px, calc(28.125vw - 120px), 480px);
-  --beer-right: clamp(1%, calc(38vw - 560px), 14%);
-  --beer-bottom: 0px;
-  position: absolute;
-  inset: 0;
-  /* This decorative layer cannot contribute to the original hero dimensions. */
-  contain: size layout;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.heroBeer::before {
-  content: "";
-  position: absolute;
-  right: var(--beer-right);
-  bottom: calc(var(--beer-bottom) - 6px);
-  width: var(--beer-width);
-  height: clamp(24px, 3vw, 52px);
-  background: radial-gradient(ellipse, rgba(5, 7, 5, .95) 12%, rgba(5, 7, 5, .65) 40%, transparent 72%);
-  filter: blur(4px);
-}
-
-.heroBeerArt {
-  position: absolute;
-  right: var(--beer-right);
-  bottom: var(--beer-bottom);
-  width: var(--beer-width);
-  height: auto;
-  max-height: 74%;
-  object-fit: contain;
-  object-position: center bottom;
-  filter: saturate(.95) brightness(1.08) contrast(1.04);
+  border: 1px solid rgba(184,154,98,.18);
 }
 
 .heroContent {
   position: relative;
   z-index: 2;
-  width: min(1344px, 88vw);
-  margin-left: clamp(24px, 6vw, 100px);
-  padding: clamp(56px, 6vw, 96px) var(--site-gutter) clamp(52px, 5vw, 68px);
+  width: 40%;
+  max-width: 740px;
+  margin-left: 16%;
+  padding: 28px 0;
 }
 
 @media (min-width: 761px) {
+  .poster {
+    height: auto;
+  }
+
+  .heroStage {
+    height: clamp(480px, 35vw, 640px);
+    container-type: size;
+  }
+
   .heroContent {
-    /* Retain the original content footprint so resizing the logo does not recrop the photo. */
-    --hero-frame-logo-width: min(1200px, calc(min(1344px, 88vw) - 2 * var(--site-gutter)));
-    --hero-frame-brand-height: clamp(0.495rem, 1.08vw, 1.35rem);
-    min-height: calc(
-      var(--hero-frame-logo-width) * 229 / 582
-      + clamp(56px, 6vw, 96px) + clamp(52px, 5vw, 68px)
-      + var(--hero-frame-brand-height) + clamp(3.15rem, 4.5vw, 4.05rem) + 129.4px
-    );
+    min-height: 0;
+    height: 100%;
+    padding-block: 28px;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
+
+  .heroIdentity { max-width: 100%; }
 }
 
 .heroRule {
   display: block;
-  width: 140px;
-  height: 3px;
-  margin-bottom: 20px;
+  width: 56px;
+  height: 4px;
+  margin-bottom: 16px;
   background: var(--color-action);
 }
 
@@ -188,37 +160,47 @@
 
 .heroIdentity {
   position: relative;
-  width: min(100%, 70vw, 1000px);
+  width: 100%;
   container-type: inline-size;
 }
 
 .wordmarkArt {
+  position: relative;
   display: block;
   width: 100%;
+  /* The long K extends beside the byline, as in the reference lockup. */
+  height: 33cqw;
+}
+
+.wordmarkArt img {
+  position: absolute;
+  top: -2.3cqw;
+  left: -2.6%;
+  display: block;
+  width: 110%;
+  max-width: none;
   height: auto;
+  filter: brightness(.8) sepia(.35) saturate(.9);
 }
 
 .heroBrand {
-  position: absolute;
-  left: 21%;
-  right: 9%;
-  bottom: 7%;
-  text-align: center;
-  word-spacing: .75em;
+  position: relative;
+  text-align: left;
+  word-spacing: .15em;
   white-space: nowrap;
-  margin: 0;
-  color: var(--color-cream-paper);
-  font-size: 3cqw;
+  margin: 0 0 0 24%;
+  color: #d1bd99;
+  font-size: 5cqw;
   font-weight: 400;
   line-height: 1;
   text-transform: uppercase;
-  letter-spacing: 0.45em;
+  letter-spacing: 0.34em;
 }
 
 .heroPromise {
-  margin: clamp(24px, 2.2vw, 36px) 0 0;
-  width: min(100%, 540px);
-  color: var(--color-cream-paper);
+  margin: 28px 0 0;
+  width: 100%;
+  color: #d3c6af;
   font-size: clamp(1.125rem, 1.5vw, 1.5rem);
   line-height: 1.5;
 }
@@ -230,9 +212,10 @@
 .heroActions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  width: min(100%, 540px);
+  width: min(100%, 520px);
   gap: 16px;
   margin-top: 24px;
+  margin-left: 0;
 }
 
 .home .heroActions a {
@@ -249,7 +232,8 @@
 }
 
 .heroStage .lineButton {
-  border-color: rgba(242,232,213,.7);
+  background: #181510;
+  border-color: #b49b71;
   color: var(--color-cream-paper);
 }
 
@@ -673,12 +657,18 @@
   border: 0;
 }
 
+@media (max-width: 1440px) and (min-width: 761px) {
+  .heroIdentity { width: min(100%, 58vw, 880px); }
+}
+
 @media (max-width: 1100px) {
   .manifesto { gap: 36px; }
+  .heroContent { margin-left: 12%; }
 }
 
 @media (max-width: 900px) {
-  .heroContent { width: min(100%, 88vw); }
+  .heroContent { width: 48%; margin-left: 7%; }
+  .home .heroActions a { white-space: normal; }
 
   .sectionHead,
   .manifesto,
@@ -686,22 +676,7 @@
 }
 
 @media (max-width: 760px) {
-  .heroBeer {
-    --beer-width: clamp(104px, 31vw, 215px);
-    --beer-right: 12%;
-    --beer-bottom: auto;
-  }
-
-  .heroBeerArt {
-    top: 24px;
-    max-height: none;
-    opacity: .9;
-    mask-image: linear-gradient(#000 85%, transparent);
-  }
-
-  .heroBeer::before { display: none; }
-
-  .heroStage::after { display: block; inset: 10px; border-color: rgba(184,154,98,.45); }
+  .heroStage::after { inset: 10px; }
   .brandRibbon { gap: 14px; padding-block: 18px; }
   .brandRibbon > span { font-size: 1.125rem; }
   .brandRibbon > span:last-child, .brandRibbon > img:last-of-type { display: none; }
@@ -709,33 +684,37 @@
   .visitCopy { border-width: 8px; outline-offset: -14px; }
   .heroStage {
     min-height: 0;
-    padding-top: clamp(190px, 54vw, 320px);
-    background: #171815;
+    padding-top: clamp(340px, 74vw, 500px);
+    background: #100e0b;
   }
 
   .heroBackdrop {
+    width: 100% !important;
     object-fit: cover;
-    height: clamp(340px, 90vw, 600px) !important;
-    object-position: 82% center;
+    height: clamp(340px, 74vw, 500px) !important;
+    inset: 0 !important;
+    transform: none;
+    object-position: 78% center;
     opacity: 1;
-    mask-image: linear-gradient(#000 50%, transparent);
+    mask-image: linear-gradient(#000 92%, transparent);
   }
 
   .heroShade {
-    background: linear-gradient(0deg, #171815 12%, rgba(23,24,21,.75) 40%, rgba(23,24,21,.06) 80%);
+    background: none;
   }
 
   .heroContent {
     width: 100%;
+    max-width: none;
     margin-left: 0;
     padding: 0 6.25% 32px;
   }
 
   .heroRule { display: none; }
   .heroIdentity { display: block; width: 100%; max-width: 510px; }
-  .heroPromise { display: block; margin-top: 22px; font-size: 1.125rem; line-height: 1.5; }
+  .heroPromise { display: block; margin: 26px 0 0; width: 100%; font-size: 1.125rem; line-height: 1.5; }
 
-  .heroActions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 22px; width: 100%; }
+  .heroActions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 22px 0 0; width: 100%; }
   .home .heroActions a { justify-content: center; min-height: 56px; padding: 12px 10px; font-size: .8125rem; font-weight: 600; line-height: 1.35; letter-spacing: .035em; white-space: normal; text-align: center; border-radius: 0; }
   .heroActions a > .heroActionArrow { display: none; }
   .mobileVisit { display: block; padding: 14px 6.25%; background: var(--color-cream-paper); border-bottom: 1px solid var(--color-border); }

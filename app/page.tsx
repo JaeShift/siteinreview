@@ -19,24 +19,13 @@ export default function HomePage() {
       <section className={styles.poster} aria-labelledby="home-title">
         <div className={styles.heroStage}>
           <Image
-            src="/images/home/kitsune-ink-landscape.webp"
-            alt=""
+            src="/images/home/hero-unified-scene-v7.png"
+            alt="Kitsune fox pint of amber beer resting on a wooden table in front of a Japanese-inspired mural"
             fill
             priority
             sizes="100vw"
             className={styles.heroBackdrop}
           />
-          <div className={styles.heroBeer} aria-hidden="true">
-            <Image
-              src="/images/home/hero-beer-woodcut.png"
-              alt=""
-              width={1024}
-              height={1536}
-              priority
-              sizes="(max-width: 760px) 245px, (max-width: 2134px) clamp(130px, calc(28.125vw - 120px), 480px), 480px"
-              className={styles.heroBeerArt}
-            />
-          </div>
           <div className={styles.heroShade} />
           <div className={styles.heroContent}>
             <span className={styles.heroRule} aria-hidden="true" />
