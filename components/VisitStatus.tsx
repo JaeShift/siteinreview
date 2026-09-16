@@ -15,11 +15,14 @@ export default function VisitStatus() {
   }, []);
 
   return (
-    <a className={styles.visitStatus} href={status?.unconfirmed ? "tel:+16022458593" : DIRECTIONS_URL}
-      title={status?.hours} aria-label={`${status?.label ?? "Taproom hours and directions"}. 3321 E Bell Road, Suite B-5. ${status?.unconfirmed ? "Call the taproom" : "Get directions"}`}>
+    <a className={styles.visitStatus} href={DIRECTIONS_URL}
+      title={status?.hours} aria-label={`${status?.label ?? "Taproom hours"}. Get directions to 3321 E Bell Road, Suite B-5, Phoenix.`}>
       <Clock3 size={21} aria-hidden="true" />
-      <span><strong>{status?.label ?? "Taproom hours & directions"}</strong><span>3321 E Bell Rd, Suite B-5</span></span>
-      <ArrowUpRight size={18} aria-hidden="true" />
+      <span className={styles.details}>
+        <strong>{status?.label ?? "Today’s taproom hours"}</strong>
+        <span className={styles.address}>3321 E Bell Rd</span>
+      </span>
+      <span className={styles.directions}>Directions<ArrowUpRight size={15} aria-hidden="true" /></span>
     </a>
   );
 }

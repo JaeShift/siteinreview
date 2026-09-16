@@ -35,8 +35,8 @@ export default function HomePage() {
             </div>
             <p className={styles.heroPromise}>Great beer. Good games.<br />A place to belong.</p>
             <div className={styles.heroActions}>
-              <a href="#tap-list" className={styles.solidButton}><span className={styles.heroActionLabel}>Find your <br className={styles.mobileButtonBreak} />beer</span><span className={styles.heroActionArrow} aria-hidden="true">→</span></a>
-              <Link href="/mtg-and-more" className={styles.lineButton}><span className={styles.heroActionLabel}>Find your <br className={styles.mobileButtonBreak} />game</span><span className={styles.heroActionArrow} aria-hidden="true">→</span></Link>
+              <a href="#tap-list" className={styles.solidButton}><span className={styles.heroActionLabel}>Find your beer</span><span className={styles.mobileActionLabel}>Our Beers</span><span className={styles.heroActionArrow} aria-hidden="true">→</span></a>
+              <Link href="/mtg-and-more" className={styles.lineButton}><span className={styles.heroActionLabel}>Find your game</span><span className={styles.mobileActionLabel}>Our Games</span><span className={styles.heroActionArrow} aria-hidden="true">→</span></Link>
             </div>
           </div>
         </div>

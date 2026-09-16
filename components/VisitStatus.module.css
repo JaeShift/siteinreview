@@ -1,8 +1,7 @@
-.visitStatus { display: flex; align-items: center; gap: 12px; min-height: 52px; color: var(--color-ink); }
-.visitStatus > svg { flex-shrink: 0; color: #806235; }
-.visitStatus > svg:last-child { margin-left: auto; }
-.visitStatus > span { min-width: 0; }
-.visitStatus strong, .visitStatus span span { display: block; }
-.visitStatus strong { font-size: .875rem; line-height: 1.4; font-weight: 600; }
-.visitStatus span span { margin-top: 3px; font-size: .8125rem; line-height: 1.4; color: #6c6255; }
+.visitStatus { display: flex; align-items: center; gap: 10px; min-height: 56px; padding-block: 8px; border-top: 1px solid rgba(184,154,98,.25); color: inherit; }
+.visitStatus > svg { flex-shrink: 0; color: #b49b71; }
+.visitStatus strong { min-width: 0; font-size: .8125rem; line-height: 1.4; font-weight: 500; }
+.details { display: grid; gap: 3px; min-width: 0; }
+.address { font-size: .75rem; line-height: 1.4; color: #b6a68d; }
+.directions { display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0; margin-left: auto; font-size: .8125rem; color: #d29679; }
 .visitStatus:focus-visible { outline: 2px solid var(--color-action); outline-offset: 4px; }

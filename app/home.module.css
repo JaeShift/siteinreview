@@ -109,14 +109,6 @@
     linear-gradient(0deg, rgba(16,14,11,.12), transparent 25%);
 }
 
-.heroStage::after {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-  inset: 16px;
-  border: 1px solid rgba(184,154,98,.18);
-}
-
 .heroContent {
   position: relative;
   z-index: 2;
@@ -206,7 +198,7 @@
 }
 
 .mobileVisit { display: none; }
-.mobileButtonBreak { display: none; }
+.mobileActionLabel { display: none; }
 .heroActions a:hover > .heroActionLabel { transform: none; }
 
 .heroActions {
@@ -676,27 +668,29 @@
 }
 
 @media (max-width: 760px) {
-  .heroStage::after { inset: 10px; }
   .brandRibbon { gap: 14px; padding-block: 18px; }
   .brandRibbon > span { font-size: 1.125rem; }
   .brandRibbon > span:last-child, .brandRibbon > img:last-of-type { display: none; }
   .brandRibbon img { width: 30px; height: 30px; }
   .visitCopy { border-width: 8px; outline-offset: -14px; }
   .heroStage {
+    /* svh keeps the first screen stable while Safari's toolbar expands. */
+    --hero-photo-height: min(45svh, 380px, max(150px, calc(100svh - 395px - env(safe-area-inset-bottom, 0px))));
+    --hero-overlap: clamp(70px, 22vw, 110px);
     min-height: 0;
-    padding-top: clamp(340px, 74vw, 500px);
+    padding-top: calc(var(--hero-photo-height) - var(--hero-overlap));
     background: #100e0b;
   }
 
   .heroBackdrop {
     width: 100% !important;
     object-fit: cover;
-    height: clamp(340px, 74vw, 500px) !important;
+    height: var(--hero-photo-height) !important;
     inset: 0 !important;
     transform: none;
     object-position: 78% center;
     opacity: 1;
-    mask-image: linear-gradient(#000 92%, transparent);
+    mask-image: linear-gradient(#000 55%, rgba(0,0,0,.65) 75%, transparent);
   }
 
   .heroShade {
@@ -707,17 +701,24 @@
     width: 100%;
     max-width: none;
     margin-left: 0;
-    padding: 0 6.25% 32px;
+    padding: 0 6.25% 16px;
   }
 
   .heroRule { display: none; }
-  .heroIdentity { display: block; width: 100%; max-width: 510px; }
-  .heroPromise { display: block; margin: 26px 0 0; width: 100%; font-size: 1.125rem; line-height: 1.5; }
+  .heroIdentity { display: block; width: 100%; max-width: 390px; }
+  .heroPromise { display: block; margin: 16px 0 0; width: 100%; font-size: 1rem; line-height: 1.45; }
 
-  .heroActions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 22px 0 0; width: 100%; }
-  .home .heroActions a { justify-content: center; min-height: 56px; padding: 12px 10px; font-size: .8125rem; font-weight: 600; line-height: 1.35; letter-spacing: .035em; white-space: normal; text-align: center; border-radius: 0; }
+  .heroActions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 18px 0 0; width: 100%; }
+  .home .heroActions a { justify-content: center; min-height: 52px; padding: 14px 12px; font-size: .875rem; font-weight: 600; line-height: 1.35; letter-spacing: .035em; white-space: nowrap; text-align: center; border-radius: 0; }
+  .heroActionLabel { display: none; }
+  .mobileActionLabel { display: inline; }
   .heroActions a > .heroActionArrow { display: none; }
-  .mobileVisit { display: block; padding: 14px 6.25%; background: var(--color-cream-paper); border-bottom: 1px solid var(--color-border); }
+  .mobileVisit {
+    display: block;
+    padding: 0 6.25% calc(56px + env(safe-area-inset-bottom, 0px));
+    background: #100e0b;
+    color: #d3c6af;
+  }
 
   .taproomBar { display: none; }
 

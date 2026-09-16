@@ -41,12 +41,12 @@
   .homeWordmark { font-size: 1.9rem; }
 }
 @media (max-width: 760px) {
-  .headerHome { --header-height: 80px; }
+  .headerHome { --header-height: 65px; box-shadow: none; }
   .headerHome .communityStrip { display: none; }
-  .headerHome .headerInner { min-height: 80px; padding: 16px 6.25%; gap: 8px; }
+  .headerHome .headerInner { min-height: 64px; padding: 10px 6.25%; gap: 8px; }
   .headerHome .headerLogo { gap: 12px; }
   .headerHome .homeFoxLogo { width: 36px; height: 36px; }
-  .headerHome .homeWordmark { display: block; }
+  .headerHome .homeWordmark { display: none; }
   .headerHome .hamburger { border: 0; }
   .headerHome .hamburgerBar { background: currentColor; width: 22px; border-radius: 2px; }
   .headerHome .mobileControls { gap: 2px; }
