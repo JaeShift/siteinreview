@@ -64,6 +64,18 @@
 .sectionTitle > span { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--color-muted-gold); }
 .menuItem { border-bottom-style: solid; }
 .itemNumber { color: var(--color-soft-gold); font-family: var(--font-body); }
+
+/* The homepage menu is one quiet surface within the larger brand composition. */
+:global([data-route="/"]) .menuEmbedWrapper {
+  padding: clamp(24px, 3vw, 40px);
+  background-image: none;
+  border: 1px solid rgba(242,232,213,.2);
+  box-shadow: none;
+}
+:global([data-route="/"]) .sectionTitle { border-bottom-color: var(--color-border-subtle); }
+:global([data-route="/"]) .itemHeading p { font-size: 1rem; }
+:global([data-route="/"]) .menuNote { max-width: 60ch; font-size: 1rem; }
+
 @media (max-width: 1000px) {
   .menuToolbar { flex-direction: column; align-items: flex-start; gap: 12px; }
   .itemList { column-gap: 28px; }
@@ -78,4 +90,10 @@
   .menuItem { padding: 22px 0; gap: 8px; grid-template-columns: 20px minmax(0, 1fr); }
   .itemHeading { gap: 10px; }
   .itemHeading h4 { font-size: 1.25rem; }
+  :global([data-route="/"]) .itemHeading h4 { font-size: 1.375rem; overflow-wrap: break-word; }
+}
+@media (max-width: 400px) {
+  :global([data-route="/"]) .itemHeading { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  :global([data-route="/"]) .itemPrices { flex-direction: row; flex-wrap: wrap; gap: 12px 24px; }
+  :global([data-route="/"]) .itemPrices > div { align-items: flex-start; }
 }

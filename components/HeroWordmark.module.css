@@ -1,0 +1,47 @@
+.lockup {
+  display: block;
+  position: relative;
+  container-type: inline-size;
+}
+
+.lettering {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ink .lettering {
+  filter: brightness(0);
+}
+
+.ink .subtitle {
+  color: var(--color-ink, #171815);
+}
+
+.subtitle {
+  position: absolute;
+  left: 20%;
+  right: 1.5%;
+  bottom: 9.3%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(9px, 2.2cqw, 18px);
+  color: #eadcbd;
+  font-family: var(--font-barlow, "Arial Narrow"), sans-serif;
+  font-size: clamp(10px, 3.2cqw, 25px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.subtitle::before,
+.subtitle::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #b89a62;
+  opacity: .65;
+}

@@ -1,90 +1,72 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight, MapPin } from "lucide-react";
 import MenuEmbed from "@/components/MenuEmbed";
-import CalendarEmbed from "@/components/CalendarEmbed";
+import UpcomingEvents from "@/components/home/UpcomingEvents";
 import MapEmbed from "@/components/MapEmbed";
-import HeroWordmark from "@/components/HeroWordmark";
 import VisitStatus from "@/components/VisitStatus";
-import styles from "./home.module.css";
+import HeroWordmark from "@/components/HeroWordmark";
+import FeaturedInventory from "@/components/home/FeaturedInventory";
+import Reveal from "@/components/home/Reveal";
+import { getEventsStore, getPrereleaseEventStore, getSinglesStore } from "@/lib/store";
+import { selectFeaturedProducts, selectUpcomingEvents } from "@/lib/home-content";
+import { DIRECTIONS_URL, TAPROOM_HOURS, formatDayHours } from "@/lib/taproom-hours";
+import original from "./home.module.css";
+import styles from "./landing.module.css";
 
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Kitsune Brewing Co. — Beer for everybody",
-  description: "Independent beer, Magic nights, and a place to belong. Welcome to Kitsune Brewing Company in North Phoenix, founded by Tyler Smith.",
+  title: "Kitsune Brewing Co. — Beer, events & Magic in North Phoenix",
+  description: "Independent beer. A place to play. Find upcoming Kitsune events, shop Magic cards, explore the live tap list, and visit our North Phoenix brewery.",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const events = selectUpcomingEvents(getEventsStore(), await getPrereleaseEventStore());
+  const products = selectFeaturedProducts(getSinglesStore());
+
   return (
-    <div className={styles.home}>
-      <section className={styles.poster} aria-labelledby="home-title">
-        <div className={styles.heroStage}>
-          <Image
-            src="/images/home/hero-natural-amber-v19.png"
-            alt="Kitsune fox pint of amber beer resting on a wooden table in front of a Japanese-inspired mural"
-            fill
-            priority
-            quality={95}
-            sizes="100vw"
-            className={styles.heroBackdrop}
-          />
-          <div className={styles.heroShade} />
-          <div className={styles.heroContent}>
-            <span className={styles.heroRule} aria-hidden="true" />
-            <div className={styles.heroIdentity}>
-              <h1 id="home-title" aria-label="Kitsune"><HeroWordmark className={styles.wordmarkArt} /></h1>
-              <p className={styles.heroBrand}><span>Brewing</span><span>Company</span></p>
-            </div>
-            <p className={styles.heroPromise}>Great beer. Good games.<br />A place to belong.</p>
-            <div className={styles.heroActions}>
-              <a href="#tap-list" className={styles.solidButton}><span className={styles.heroActionLabel}>Find your beer</span><span className={styles.mobileActionLabel}>Our Beers</span><span className={styles.heroActionArrow} aria-hidden="true">→</span></a>
-              <Link href="/mtg-and-more" className={styles.lineButton}><span className={styles.heroActionLabel}>Find your game</span><span className={styles.mobileActionLabel}>Our Games</span><span className={styles.heroActionArrow} aria-hidden="true">→</span></Link>
-            </div>
+    <div className={styles.page}>
+      <section className={styles.hero} aria-labelledby="home-title">
+        <div className={styles.heroPattern} aria-hidden="true"><picture><source media="(max-width: 760px)" srcSet="/images/home/hero-cream-clouds-mobile-v2.webp" /><Image src="/images/home/hero-cream-clouds-v2.webp" alt="" fill priority quality={90} sizes="100vw" className={styles.heroBackdrop} /></picture></div>
+        <div className={styles.heroInner}>
+          <div className={styles.heroCopy}>
+            <p className={styles.heroKicker}>Independent brewery <span aria-hidden="true">·</span> North Phoenix</p>
+            <h1 id="home-title" className={styles.heroHeadline} aria-label="Kitsune Brewing Company"><HeroWordmark tone="ink" aria-hidden="true" className={styles.heroWordmark} /></h1>
+            <p className={styles.heroTagline}><span>Good beer.</span>{" "}<span>Good company.</span></p>
+            <p className={styles.heroPromise}>Independent beer, taproom events,<br className={styles.heroCopyBreak} /> and a place to belong.</p>
+            <div className={styles.heroActions}><Link href="/calendar" className={styles.primaryButton}>What’s happening <ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/#tap-list" className={styles.outlineButton}>Our beers <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
+          </div>
+          <div className={styles.heroVisual}>
+            <Image src="/images/home/hero-cream-glass-v1.webp" alt="An amber pint of Kitsune beer, printed with the orange fox, curling clouds, and blue circle" fill priority quality={95} sizes="(max-width: 760px) 220px, (max-width: 1100px) 380px, 414px" className={styles.heroGlass} />
+            <Image src="/images/home/hero-cream-glass-print-v2.webp" alt="" aria-hidden="true" fill priority quality={95} sizes="(max-width: 760px) 220px, (max-width: 1100px) 380px, 414px" className={styles.heroGlassPrint} />
           </div>
         </div>
-        <div className={styles.mobileVisit}><VisitStatus /></div>
-        <div className={styles.taproomBar}>
-          <p>Your neighborhood taproom</p>
-          <span>3321 E Bell Rd · North Phoenix, AZ</span>
-          <a href="#visit">Come hang out <span aria-hidden="true">↗</span></a>
-        </div>
       </section>
+      <div className={styles.visitStrip}><VisitStatus /><p><MapPin size={16} aria-hidden="true" />3321 E Bell Rd · North Phoenix</p><a href="#visit">Plan your visit <ArrowUpRight size={16} aria-hidden="true" /></a></div>
 
-      <section id="discover" className={styles.manifesto} aria-labelledby="story-title">
-        <div className={styles.storyVisual}><figure className={styles.storyPhoto}><Image src="/images/updated.png" alt="Cards and conversation beneath the Kitsune fox mural in the taproom" fill sizes="(max-width: 760px) 100vw, 45vw" /><figcaption>Good company comes with the territory.</figcaption></figure><div className={styles.storySeal}><Image src="/images/logo.png" alt="" fill sizes="112px" /></div></div>
-        <div className={styles.manifestoCopy}><p className={styles.eyebrow}>01 / The spirit of Kitsune</p><h2 id="story-title">A brewery with<br /><span>room for you.</span></h2><p>Tyler Smith built Kitsune to bring people together in the neighborhood he grew up in. Inspired by the welcoming bars he visited in Japan, he brought that spirit home to North Phoenix.</p><p>Today, it&apos;s a place for adventurous beer, familiar faces, new friends, and one more game. Beer lover or not, you belong here.</p><a href="#visit" className={styles.storyLink}>Make yourself at home <span aria-hidden="true">↗</span></a></div>
-      </section>
-
-      <div className={styles.brandRibbon} aria-hidden="true"><span>Independent spirit</span><Image src="/images/logo.png" alt="" width={38} height={38} /><span>Beer for everybody</span><Image src="/images/logo.png" alt="" width={38} height={38} /><span>North Phoenix, AZ</span></div>
-
-      <section id="tap-list" className={styles.menuSection} aria-labelledby="tap-title">
-        <header className={styles.sectionHead}><div><p className={styles.eyebrow}>02 / A little adventure in every pour</p><h2 id="tap-title">Good beer.<br /><span>Your kind of good.</span></h2></div><p>Hazy, crisp, tart, or a little unexpected. Explore the live taproom lineup and find your next favorite pour.</p></header>
-        <div className={styles.tapFeature}><Image src="/images/uploads/fox-tails-tap-panorama.png" alt="Handcrafted fox-tail tap handles at Kitsune" fill sizes="100vw" priority /><div><span>From our taps.</span><strong>To your table.</strong></div><span className={styles.photoIndex}>KITSUNE / NORTH PHOENIX</span></div>
+      {/* Preserve the original taproom photo, typography, full menu and category controls. */}
+      <section id="tap-list" className={`${original.home} ${original.menuSection} ${styles.tapSection}`} aria-labelledby="tap-title">
+        <header className={original.sectionHead}><div><p className={original.eyebrow}>A little adventure in every pour</p><h2 id="tap-title">Good beer.<br /><span>Your kind of good.</span></h2></div><p>Hazy, crisp, tart, or a little unexpected. Explore the live taproom lineup and find your next favorite pour.</p></header>
+        <div className={original.tapFeature}><Image src="/images/uploads/fox-tails-tap-panorama.png" alt="Handcrafted fox-tail tap handles at Kitsune" fill sizes="100vw" /><div><span>From our taps.</span><strong>To your table.</strong></div><span className={original.photoIndex}>KITSUNE / NORTH PHOENIX</span></div>
         <MenuEmbed />
       </section>
 
-      <section id="magic" className={styles.playSection} aria-labelledby="play-title">
-        <div className={styles.playStage}>
-          <Image className={styles.playImage} src="/images/uploads/magic spread.png" alt="Magic Commander decks and boosters at Kitsune" fill sizes="100vw" />
-          <div className={styles.playShade} aria-hidden="true" />
-          <div className={styles.playHeadline}>
-            <p className={styles.eyebrow}>03 / Play at Kitsune</p>
-            <h2 id="play-title"><span className={styles.magicTitle}>Magic</span><span className={styles.magicSubtitle}>The Gathering</span></h2>
-            <p className={styles.playTagline}>Find your next game.</p>
-          </div>
-        </div>
-        <nav className={styles.playLinks} aria-label="Magic at Kitsune">
-          <Link href="/commander-nights"><span>Commander nights</span><span aria-hidden="true">↗</span></Link>
-          <Link href="/pre-release"><span>Prereleases</span><span aria-hidden="true">↗</span></Link>
-          <Link href="/card-shop"><span>Shop Magic</span><span aria-hidden="true">↗</span></Link>
-        </nav>
+      <section id="calendar" className={styles.eventsSection} aria-labelledby="events-title">
+        <UpcomingEvents events={events} />
       </section>
-      <section id="calendar" className={styles.calendarSection} aria-labelledby="calendar-title">
-        <header className={styles.sectionHead}><div><p className={styles.eyebrow}>04 / Make a night of it</p><h2 id="calendar-title">Something good<br /><span>is coming up.</span></h2></div><div><p>Game nights, new releases, and neighborhood hangs. There&apos;s always a reason to make it a Kitsune night.</p><Link href="/events" className={styles.solidButton}>Browse events <span aria-hidden="true">↗</span></Link></div></header>
-        <div className={styles.calendarFrame}><CalendarEmbed compact /></div>
-        <div className={styles.noticeboard}><Link href="/private-events"><small>Bring your whole crew</small><strong>Your party. Our place.</strong><span>Private events ↗</span></Link><Link href="/shop"><small>Take the fox with you</small><strong>Rep your local.</strong><span>Shop brewery goods ↗</span></Link></div>
+      <section id="magic" className={styles.shopSection} aria-labelledby="shop-title">
+        <div className={styles.sectionDivider} aria-hidden="true"><span /><Image src="/images/logo.png" alt="" width={40} height={40} /><span /></div>
+        <Reveal><header className={styles.sectionHead}><div><p className={styles.eyebrow}>For your next game</p><h2 id="shop-title">Featured in the shop.</h2></div><Link href="/card-shop" className={styles.textLink}>Browse all Magic <ArrowUpRight size={18} aria-hidden="true" /></Link></header></Reveal>
+        <Reveal>{products.length ? <FeaturedInventory products={products} /> : <div className={styles.emptyShop}><p>Check the card shop for the latest available inventory.</p><Link href="/card-shop" className={styles.primaryButton}>Browse Magic <ArrowUpRight size={18} aria-hidden="true" /></Link></div>}</Reveal>
+        <div className={styles.shopFootnote}><p>Find your next card. Make yourself at home.</p><Link href="/shop">Looking for Kitsune merchandise? <ArrowUpRight size={17} aria-hidden="true" /></Link></div>
       </section>
 
-      <section id="visit" className={styles.visitSection} aria-labelledby="visit-title"><div className={styles.visitCopy}><p className={styles.eyebrow}>05 / Your neighborhood, your brewery</p><h2 id="visit-title">Find the fox.<br />Stay a while.</h2><address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address><a className={styles.solidButton} href="https://www.google.com/maps/dir/?api=1&destination=Kitsune+Brewing+Company+Phoenix+AZ" target="_blank" rel="noreferrer">Get directions <span aria-hidden="true">↗</span></a><Link className={styles.contactLink} href="/contact">Get in touch ↗</Link></div><div className={styles.mapFrame}><MapEmbed preview /></div></section>
+      <section id="discover" className={styles.communitySection} aria-labelledby="community-title">
+        <Reveal className={styles.communityGrid}><div className={styles.communityPhoto}><Image src="/images/updated.png" alt="Cards and conversation beneath the Kitsune fox mural in the taproom" fill sizes="(max-width: 760px) 100vw, 50vw" /><span>Good company comes with the territory.</span></div><div className={styles.communityCopy}><p className={styles.eyebrow}>The spirit of Kitsune</p><h2 id="community-title">A brewery.<br /><em>A gathering place.</em></h2><p>Independent beer, Japanese inspiration, and a love for the neighborhood. Kitsune brings people together in North Phoenix—around a pint, a table, or a favorite game.</p><div className={styles.communityLinks}><Link href="/mtg-and-more">Magic & more <ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/commander-nights">Find your Commander pod <ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/private-events">Host a private event <ArrowUpRight size={18} aria-hidden="true" /></Link></div></div></Reveal>
+      </section>
+
+      <section id="visit" className={styles.visitSection} aria-labelledby="visit-title"><div className={styles.visitCopy}><p className={styles.eyebrow}>Your neighborhood brewery</p><h2 id="visit-title">Find the fox.<br /><em>Stay a while.</em></h2><address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address><div className={styles.visitActions}><a href={DIRECTIONS_URL} className={styles.primaryButton}>Get directions <ArrowUpRight size={18} aria-hidden="true" /></a><Link href="/contact" className={styles.textLink}>Get in touch <ArrowUpRight size={18} aria-hidden="true" /></Link></div><div className={styles.hours}><h3>Taproom hours</h3><ul>{TAPROOM_HOURS.map(day => <li key={day.day}><span>{day.day}</span><span>{formatDayHours(day)}</span></li>)}</ul><p>All times local to Phoenix.</p></div></div><div className={styles.map}><MapEmbed preview /></div></section>
     </div>
   );
 }

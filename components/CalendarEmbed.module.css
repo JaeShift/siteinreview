@@ -15,20 +15,28 @@
   display: block;
 }
 
-.compact { border: 0; }
+.compact { border: 0; background: transparent; }
 .calendarIntro { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: clamp(24px, 3vw, 40px); }
-.calendarIntro .calendarLabel { font: 700 .8125rem/1.5 var(--font-body); color: var(--color-text-light); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px; }
+.calendarIntro .calendarLabel { font: 600 .875rem/1.5 var(--font-body); color: var(--color-text-light); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
 .calendarIntro h3 { font: 700 clamp(1.75rem, 2.5vw, 2.25rem)/1.15 var(--font-heading); margin-bottom: 12px; }
 .calendarIntro p { max-width: 48ch; font-size: 1rem; line-height: 1.65; }
 .calendarActions { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
-.calendarActions button { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 52px; padding: 14px 22px; border: 1px solid var(--color-ink); background: var(--color-ink); color: var(--color-cream-paper); font: 700 .875rem/1.4 var(--font-body); cursor: pointer; }
+.calendarActions button { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 52px; padding: 14px 22px; border: 1px solid var(--color-ink); background: var(--color-ink); color: var(--color-cream-paper); font: 600 .875rem/1.4 var(--font-body); cursor: pointer; }
 .calendarActions button:hover { background: var(--color-action); border-color: var(--color-action); }
 .calendarActions a { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; font-size: .875rem; border-bottom: 1px solid var(--color-border); }
+.calendarActions :is(a, button):focus-visible { outline: 3px solid var(--color-action); outline-offset: 4px; }
 .compact .calendarIframe { height: 460px; border-top: 1px solid var(--color-border); }
+.minimal .calendarIntro { padding: 20px 0; }
+.minimal .calendarLabel { margin: 0; font-size: .75rem; }
+.minimal .calendarActions { flex-direction: row; align-items: center; gap: 24px; }
+.minimal .calendarActions button { min-height: 44px; padding: 10px 16px; font-size: .8125rem; }
+.minimal .calendarActions a { font-size: .8125rem; }
 @media (max-width: 760px) {
   .calendarIntro { flex-direction: column; align-items: stretch; gap: 24px; }
   .calendarActions { align-items: stretch; }
   .compact .calendarIframe { height: 400px; }
+  .minimal .calendarIntro { gap: 12px; }
+  .minimal .calendarActions { flex-wrap: wrap; gap: 8px 20px; }
 }
 
 @media (max-width: 900px) {
@@ -42,3 +50,71 @@
     height: 400px;
   }
 }
+
+.live {
+  border: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.liveHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  padding: 0 0 20px;
+}
+
+.liveTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-ink);
+}
+
+.liveTitle svg { color: var(--color-action); flex-shrink: 0; }
+.liveDescription { margin: -6px 0 22px; max-width: 68ch; color: var(--color-text-light); font: 400 .875rem/1.7 var(--font-body); }
+.liveTitle h2 {
+  margin: 0;
+  font: 600 clamp(1.65rem, 2.2vw, 2rem)/1.05 var(--font-heading);
+  letter-spacing: -.015em;
+  text-transform: uppercase;
+}
+
+.externalLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 44px;
+  border-bottom: 1px solid var(--color-soft-gold);
+  color: var(--color-ink);
+  font: 600 .8125rem/1.4 var(--font-body);
+  text-decoration: none;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.externalLink:hover { color: var(--color-action); border-color: var(--color-action); }
+.externalLink:focus-visible { outline: 3px solid var(--color-action); outline-offset: 4px; }
+.liveFrame {
+  padding: 8px;
+  border: 1px solid var(--color-soft-gold);
+  background: white;
+  box-shadow: 0 8px 24px rgba(23, 24, 21, .04);
+}
+
+.live .calendarIframe { height: 620px; filter: none; background: white; }
+.timeZone {
+  margin: 12px 0 0;
+  color: var(--color-text-light);
+  font: 400 .75rem/1.5 var(--font-body);
+}
+
+@media (max-width: 759px) {
+  .liveHeader { align-items: flex-start; flex-direction: column; gap: 8px; padding-bottom: 16px; }
+  .liveFrame { padding: 4px; }
+  .live .calendarIframe { height: 540px; }
+}
+
+@media (prefers-reduced-motion: reduce) { .externalLink { transition: none; } }

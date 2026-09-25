@@ -98,8 +98,8 @@ export default function Header() {
           <Image
             src="/images/logo.png"
             alt=""
-            width={40}
-            height={40}
+            width={80}
+            height={80}
             className={styles.homeFoxLogo}
             aria-hidden="true"
             priority

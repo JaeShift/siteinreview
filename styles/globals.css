@@ -76,6 +76,8 @@
   --header-height: 132px;
   --max-width: 1440px;
   --site-gutter: clamp(20px, 4.5vw, 72px);
+  --home-content-width: 1600px;
+  --home-page-gutter: clamp(24px, 4.5vw, 72px);
   --site-section: clamp(4rem, 8vw, 8rem);
   --section-sm: clamp(2.75rem, 5vw, 4rem);
   --section-md: clamp(4rem, 7vw, 6rem);
@@ -96,6 +98,10 @@
   --site-line: var(--color-border);
   --texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.1'/%3E%3C/svg%3E");
   --texture-wave: url("/images/home/brand-waves.svg");
+}
+
+@media (max-width: 760px) {
+  :root { --home-page-gutter: 24px; }
 }
 
 [data-site-theme="editorial"] {
