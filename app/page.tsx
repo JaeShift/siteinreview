@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Anton, Bodoni_Moda } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowDown, ArrowUpRight, MapPin } from "lucide-react";
 import MenuEmbed from "@/components/MenuEmbed";
 import UpcomingEvents from "@/components/home/UpcomingEvents";
 import MapEmbed from "@/components/MapEmbed";
@@ -51,11 +51,16 @@ export default async function HomePage() {
       </section>
       <div className={styles.visitStrip}><VisitStatus /><p><MapPin size={16} aria-hidden="true" />3321 E Bell Rd · North Phoenix</p><a href="#visit">Plan your visit <ArrowUpRight size={16} aria-hidden="true" /></a></div>
 
-      {/* Preserve the original taproom photo, typography, full menu and category controls. */}
       <section id="tap-list" className={`${original.home} ${original.menuSection} ${styles.tapSection}`} aria-labelledby="tap-title">
-        <header className={original.sectionHead}><div><p className={original.eyebrow}>A little adventure in every pour</p><h2 id="tap-title">Good beer.<br /><span>Your kind of good.</span></h2></div><p>Hazy, crisp, tart, or a little unexpected. Explore the live taproom lineup and find your next favorite pour.</p></header>
-        <div className={original.tapFeature}><Image src="/images/uploads/fox-tails-tap-panorama.png" alt="Handcrafted fox-tail tap handles at Kitsune" fill sizes="100vw" /><div><span>From our taps.</span><strong>To your table.</strong></div><span className={original.photoIndex}>KITSUNE / NORTH PHOENIX</span></div>
-        <MenuEmbed />
+        <div className={styles.tapIntro}>
+          <header className={`${original.sectionHead} ${styles.tapHead}`}><div><p className={`${original.eyebrow} ${styles.tapEyebrow}`}><span>A little adventure<br className={styles.mobileBreak} /> in every pour</span></p><h2 id="tap-title">Good beer.<br /><span>Your kind of good.</span></h2></div><p>Hazy, crisp, tart, or a little unexpected. <span>Find your next favorite pour.</span></p></header>
+          <figure className={styles.tapFigure}>
+            <div className={`${original.tapFeature} ${styles.tapPhoto}`}><Image src="/images/uploads/fox-tails-tap-panorama.png" alt="Handcrafted fox-tail tap handles at Kitsune" fill sizes="100vw" /><div><span>From our taps.</span><strong>To your table.</strong></div><span className={original.photoIndex}>KITSUNE / NORTH PHOENIX</span></div>
+            <figcaption className={styles.tapCaption}>Kitsune / North Phoenix<span aria-hidden="true" /></figcaption>
+          </figure>
+        </div>
+        <a className={styles.lineupLink} href="#taproom-lineup"><span>Fresh from the taps</span><strong>The taproom lineup</strong><i aria-hidden="true"><span /><ArrowDown size={24} /><span /></i></a>
+        <div id="taproom-lineup" className={styles.tapMenu}><MenuEmbed /></div>
       </section>
 
       <section id="calendar" className={styles.eventsSection} aria-labelledby="events-title">

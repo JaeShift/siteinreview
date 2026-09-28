@@ -59,6 +59,7 @@
 .menuUnavailable > p:not(.statusLabel) { margin-top: 18px; max-width: 520px; }
 .liveMenuLink, .liveMenuLink:link, .liveMenuLink:visited { display: inline-flex; align-items: center; min-height: 48px; margin-top: 24px; padding: 12px 20px; background: var(--color-action); color: var(--color-cream-paper); font-size: 0.875rem; }
 .menuEmbedWrapper a:focus-visible, .menuUnavailable a:focus-visible { outline: 3px solid var(--color-soft-gold); outline-offset: 4px; }
+.mobileHeading, .mobileCategory, .mobileName, .itemFlavor, .mobileServings, .expandButton { display: none; }
 
 .sectionTitle { border-bottom-color: var(--color-muted-gold); }
 .sectionTitle > span { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--color-muted-gold); }
@@ -96,4 +97,93 @@
   :global([data-route="/"]) .itemHeading { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   :global([data-route="/"]) .itemPrices { flex-direction: row; flex-wrap: wrap; gap: 12px 24px; }
   :global([data-route="/"]) .itemPrices > div { align-items: flex-start; }
+}
+
+/* The mobile lineup follows the supplied editorial menu reference. */
+@media (max-width: 760px) {
+  :global([data-route="/"]) .menuUnavailable { padding: 36px max(24px, 6.5vw); }
+  .menuEmbedWrapper.liveMenu,
+  :global([data-route="/"]) .menuEmbedWrapper.liveMenu {
+    --lineup-gold: #baa574;
+    --lineup-muted: #b9b7ae;
+    --lineup-red: #e17b5d;
+    padding: clamp(44px, 10.4vw, 66px) clamp(22px, 6.5vw, 48px) 36px;
+    background-color: #171712;
+    background-image: var(--texture-grain);
+    background-repeat: repeat;
+    background-position: center;
+    background-size: 180px 180px;
+    border: 0;
+    box-shadow: none;
+    color: #f5efdf;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .liveMenu::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    right: 0;
+    bottom: 0;
+    width: 64vw;
+    height: 40vw;
+    background: url("/images/home/mobile-reference-background-v1.webp") right -48vw / 100vw auto no-repeat;
+    filter: grayscale(1) invert(1) sepia(.8) contrast(1.35);
+    mix-blend-mode: screen;
+    opacity: .5;
+    mask-image: linear-gradient(125deg, transparent 18%, #000 78%);
+    pointer-events: none;
+  }
+
+  .liveMenu .menuToolbar { align-items: stretch; gap: 22px; padding-bottom: 25px; border-bottom: 1px solid var(--lineup-gold); }
+  .liveMenu .statusLabel { display: flex; align-items: center; gap: 13px; color: var(--lineup-gold); font-size: clamp(11px, 3.4vw, 17px); font-weight: 500; line-height: 1.4; letter-spacing: .17em; }
+  .liveMenu .statusLabel::before { content: ""; flex: 0 0 38px; height: 1px; background: currentColor; }
+  .liveMenu .mobileHeading { display: block; margin: 9px 0 0; color: #f5efdf; font: 400 clamp(42px, 13.4vw, 96px)/1.17 var(--font-mobile-display, var(--font-heading)); letter-spacing: -.025em; text-transform: uppercase; }
+  .liveMenu .mobileHeading > span { display: block; width: 125%; margin: 0; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; white-space: nowrap; transform: scaleX(.8); transform-origin: left center; }
+  .liveMenu .updatedLabel { margin-top: 8px; color: var(--lineup-muted); font-size: clamp(14px, 3.75vw, 19px); line-height: 1.5; }
+  .liveMenu .sectionNav { display: flex; flex-wrap: nowrap; width: 100%; gap: 8px; }
+  .liveMenu .sectionNav button { flex: 1 1 0; min-width: 0; min-height: 44px; padding: 10px 9px; border-color: #79786e; font-size: clamp(13px, 3.8vw, 19px); line-height: 1.25; font-weight: 500; }
+  .liveMenu .sectionNav button:last-child { flex-grow: 1.35; }
+  .liveMenu .sectionNav button[aria-pressed="true"] { background: #b54027; border-color: #b54027; }
+  .liveMenu .sectionNav button:hover { border-color: var(--lineup-gold); }
+  .liveMenu .desktopCategory, .liveMenu .desktopName { display: none; }
+  .liveMenu .mobileCategory, .liveMenu .mobileName { display: inline; }
+
+  .liveMenu .sectionTitle,
+  :global([data-route="/"]) .liveMenu .sectionTitle { align-items: center; gap: 16px; min-height: 67px; padding: 19px 0 17px; border-bottom: 1px solid var(--lineup-gold); }
+  .liveMenu .sectionTitle h3 { color: #f5efdf; font: 400 clamp(26px, 7vw, 38px)/1.15 var(--font-mobile-display, var(--font-heading)); letter-spacing: -.01em; }
+  .liveMenu .sectionTitle small { max-width: none; color: #d3d0c5; font-size: clamp(12px, 3.4vw, 17px); line-height: 1.4; white-space: nowrap; }
+  .liveMenu .itemList { grid-template-columns: minmax(0, 1fr); column-gap: 0; }
+  .liveMenu .itemList[data-expanded="false"] .additionalItem { display: none; }
+  .liveMenu .menuItem { grid-template-columns: 28px minmax(0, 1fr); gap: 15px; padding: 22px 0 21px; border-color: rgba(186,165,116,.46); }
+  .liveMenu .itemNumber { padding-top: 3px; color: var(--lineup-gold); font: 400 clamp(16px, 4.4vw, 23px)/1.4 var(--font-body); }
+  .liveMenu .itemHeading,
+  :global([data-route="/"]) .liveMenu .itemHeading { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 10px; }
+  .liveMenu .itemHeading h4,
+  :global([data-route="/"]) .liveMenu .itemHeading h4 { color: #f5efdf; font: 400 clamp(21px, 6vw, 32px)/1.3 var(--font-mobile-display, var(--font-heading)); letter-spacing: 0; overflow-wrap: anywhere; }
+  .liveMenu .itemHeading p,
+  :global([data-route="/"]) .liveMenu .itemHeading p { margin-top: 5px; color: var(--lineup-muted); font-size: 14px; }
+  .liveMenu .itemHeading .houseProducer { display: none; }
+  .liveMenu .itemPrices,
+  :global([data-route="/"]) .liveMenu .itemPrices { display: flex; flex-direction: column; gap: 0; }
+  .liveMenu .itemPrices > div,
+  :global([data-route="/"]) .liveMenu .itemPrices > div { align-items: flex-end; }
+  .liveMenu .itemPrices span, .liveMenu .itemPrices .additionalPrice { display: none; }
+  .liveMenu .itemPrices strong { color: #f5efdf; font: 400 clamp(20px, 5.1vw, 28px)/1.3 var(--font-mobile-display, var(--font-heading)); }
+  .liveMenu .itemFlavor { display: block; margin: 2px 0 0; color: var(--lineup-red); font: italic 400 clamp(18px, 4.8vw, 27px)/1.35 var(--font-mobile-italic, Georgia, serif); letter-spacing: -.03em; }
+  .liveMenu .itemMeta { gap: 2px 0; margin-top: 9px; }
+  .liveMenu .itemMeta li { color: var(--lineup-muted); font-size: clamp(14px, 3.8vw, 19px); line-height: 1.45; }
+  .liveMenu .itemMeta li + li::before { content: "·"; margin: 0 .4em; }
+  .liveMenu .mobileServings { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
+  .liveMenu .mobileServings li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 14px; color: var(--lineup-muted); font-size: clamp(13px, 3.6vw, 18px); line-height: 1.5; }
+  .liveMenu .mobileServings strong { color: #f5efdf; font-weight: 500; }
+
+  .liveMenu .expandButton { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; margin: 16px 0 0; padding: 3px 0; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: var(--lineup-red); font: italic 400 clamp(18px, 4.9vw, 27px)/1.4 var(--font-mobile-italic, Georgia, serif); letter-spacing: -.03em; text-align: left; cursor: pointer; }
+  .liveMenu .expandButton span { font-family: var(--font-body); font-style: normal; font-size: .85em; }
+  .liveMenu .expandButton:hover { color: #f6b294; }
+  .liveMenu .expandButton:focus-visible { outline: 2px solid var(--lineup-gold); outline-offset: 5px; }
+  .liveMenu .menuNote,
+  :global([data-route="/"]) .liveMenu .menuNote { position: relative; max-width: 31ch; margin: 0; padding-top: 26px; color: var(--lineup-muted); font-size: 12px; line-height: 1.65; }
+  .liveMenu .menuNote a { color: #e7dfca; }
 }
