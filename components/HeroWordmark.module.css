@@ -45,3 +45,9 @@
   background: #b89a62;
   opacity: .65;
 }
+
+@media (max-width: 760px) {
+  .lockup .lettering { height: auto; aspect-ratio: 1828 / 800; filter: none; }
+  .lockup .subtitle { left: 14%; right: 14%; bottom: 12%; gap: 2.2vw; color: #b7351c; font: 700 4.5vw/1 var(--font-body); letter-spacing: .095em; }
+  .subtitle::before, .subtitle::after { height: .8vw; background: currentColor; opacity: 1; border-radius: 4px; }
+}

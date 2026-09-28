@@ -91,3 +91,18 @@
   .mobileNavLink:hover, .mobileNavLinkActive { color: var(--color-action); }
   .mobileCartLink { margin-top: 14px; }
 }
+
+@media (max-width: 760px) {
+  .headerHome { --header-height: 21.4118vw; background-color: #f7edde; background-image: url('/images/home/mobile-reference-background-v1.webp'); background-size: 100% auto; background-position: center top; border-color: rgba(177,134,84,.22); }
+  .headerHome .headerInner { min-height: calc(21.4118vw - 1px); padding: 2.35vw 4.6vw .59vw 6.35vw; }
+  .headerHome .homeFoxLogo { width: 18.23vw; height: 18.23vw; }
+  .headerHome .mobileControls { gap: 1.4vw; transform: translateY(-1.3vw); }
+  .headerHome :is(.hamburger, .mobileCartButton) { width: max(44px, 9vw); height: max(44px, 9vw); }
+  .headerHome .mobileCartButton svg { width: 6.4vw; height: 6.4vw; min-width: 24px; min-height: 24px; stroke-width: 1.35; }
+  .headerHome .hamburger { gap: 1.55vw; }
+  .headerHome .hamburgerBar { width: 6vw; height: 2px; }
+  .headerHome .hamburger[aria-expanded='true'] .hamburgerBar:nth-child(1) { transform: translateY(calc(1.55vw + 2px)) rotate(45deg); }
+  .headerHome .hamburger[aria-expanded='true'] .hamburgerBar:nth-child(2) { opacity: 0; }
+  .headerHome .hamburger[aria-expanded='true'] .hamburgerBar:nth-child(3) { transform: translateY(calc(-1.55vw - 2px)) rotate(-45deg); }
+  .headerHome .mobileCartButton:focus-visible, .headerHome .hamburger:focus-visible { outline-color: #b33016; }
+}

@@ -6,6 +6,8 @@ import styles from "./HeroWordmark.module.css";
 export default function HeroWordmark({ className = "", tone = "ivory", ...props }: HTMLAttributes<HTMLSpanElement> & { tone?: "ivory" | "ink" }) {
   return (
     <span {...props} className={`${styles.lockup} ${tone === "ink" ? styles.ink : ""} ${className}`}>
+      <picture>
+      <source media="(max-width: 760px)" srcSet="/images/home/mobile-kitsune-brush-v1.webp" />
       <Image
         src="/images/home/kitsune-hero-lettering-flat.svg"
         alt="Kitsune"
@@ -15,6 +17,7 @@ export default function HeroWordmark({ className = "", tone = "ivory", ...props 
         priority
         unoptimized
       />
+      </picture>
       <span className={styles.subtitle}>Brewing Company</span>
     </span>
   );

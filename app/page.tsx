@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Anton, Bodoni_Moda } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, MapPin } from "lucide-react";
@@ -15,6 +16,9 @@ import { DIRECTIONS_URL, TAPROOM_HOURS, formatDayHours } from "@/lib/taproom-hou
 import original from "./home.module.css";
 import styles from "./landing.module.css";
 
+const mobileDisplay = Anton({ subsets: ["latin"], weight: "400", variable: "--font-mobile-display", display: "swap" });
+const mobileItalic = Bodoni_Moda({ subsets: ["latin"], weight: "400", style: "italic", variable: "--font-mobile-italic", display: "swap", adjustFontFallback: false });
+
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Kitsune Brewing Co. — Beer, events & Magic in North Phoenix",
@@ -26,19 +30,21 @@ export default async function HomePage() {
   const products = selectFeaturedProducts(getSinglesStore());
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${mobileDisplay.variable} ${mobileItalic.variable}`}>
       <section className={styles.hero} aria-labelledby="home-title">
         <div className={styles.heroPattern} aria-hidden="true"><picture><source media="(max-width: 760px)" srcSet="/images/home/hero-cream-clouds-mobile-v2.webp" /><Image src="/images/home/hero-cream-clouds-v2.webp" alt="" fill priority quality={90} sizes="100vw" className={styles.heroBackdrop} /></picture></div>
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
-            <p className={styles.heroKicker}>Independent brewery <span aria-hidden="true">·</span> North Phoenix</p>
+            <p className={styles.heroKicker}>Independent brewery <span className={styles.kickerSeparator} aria-hidden="true">·</span> <span className={styles.kickerLocation}>North Phoenix</span></p>
             <h1 id="home-title" className={styles.heroHeadline} aria-label="Kitsune Brewing Company"><HeroWordmark tone="ink" aria-hidden="true" className={styles.heroWordmark} /></h1>
+            <div className={styles.heroMessage}>
             <p className={styles.heroTagline}><span>Good beer.</span>{" "}<span>Good company.</span></p>
-            <p className={styles.heroPromise}>Independent beer, taproom events,<br className={styles.heroCopyBreak} /> and a place to belong.</p>
-            <div className={styles.heroActions}><Link href="/calendar" className={styles.primaryButton}>What’s happening <ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/#tap-list" className={styles.outlineButton}>Our beers <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
+            <p className={styles.heroPromise}><span>Independent beer,</span>{" "}<span>taproom events,</span><br className={styles.heroCopyBreak} /> <span>and a place to belong.</span></p>
+            <div className={styles.heroActions}><Link href="/#tap-list" className={styles.outlineButton}>Our beers <ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/calendar" className={styles.primaryButton}>What’s happening <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
+            </div>
           </div>
           <div className={styles.heroVisual}>
-            <Image src="/images/home/hero-cream-glass-v1.webp" alt="An amber pint of Kitsune beer, printed with the orange fox, curling clouds, and blue circle" fill priority quality={95} sizes="(max-width: 760px) 220px, (max-width: 1100px) 380px, 414px" className={styles.heroGlass} />
+            <picture><source media="(max-width: 760px)" srcSet="/images/home/mobile-fox-pint-fit-v4.webp" /><Image src="/images/home/hero-cream-glass-v1.webp" alt="An amber pint of Kitsune beer, printed with the orange fox, curling clouds, and blue circle" fill priority quality={95} sizes="(max-width: 760px) 46vw, (max-width: 1100px) 380px, 414px" className={styles.heroGlass} /></picture>
             <Image src="/images/home/hero-cream-glass-print-v2.webp" alt="" aria-hidden="true" fill priority quality={95} sizes="(max-width: 760px) 220px, (max-width: 1100px) 380px, 414px" className={styles.heroGlassPrint} />
           </div>
         </div>
@@ -66,7 +72,7 @@ export default async function HomePage() {
         <Reveal className={styles.communityGrid}><div className={styles.communityPhoto}><Image src="/images/updated.png" alt="Cards and conversation beneath the Kitsune fox mural in the taproom" fill sizes="(max-width: 760px) 100vw, 50vw" /><span>Good company comes with the territory.</span></div><div className={styles.communityCopy}><p className={styles.eyebrow}>The spirit of Kitsune</p><h2 id="community-title">A brewery.<br /><em>A gathering place.</em></h2><p>Independent beer, Japanese inspiration, and a love for the neighborhood. Kitsune brings people together in North Phoenix—around a pint, a table, or a favorite game.</p><div className={styles.communityLinks}><Link href="/mtg-and-more">Magic & more <ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/commander-nights">Find your Commander pod <ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/private-events">Host a private event <ArrowUpRight size={18} aria-hidden="true" /></Link></div></div></Reveal>
       </section>
 
-      <section id="visit" className={styles.visitSection} aria-labelledby="visit-title"><div className={styles.visitCopy}><p className={styles.eyebrow}>Your neighborhood brewery</p><h2 id="visit-title">Find the fox.<br /><em>Stay a while.</em></h2><address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address><div className={styles.visitActions}><a href={DIRECTIONS_URL} className={styles.primaryButton}>Get directions <ArrowUpRight size={18} aria-hidden="true" /></a><Link href="/contact" className={styles.textLink}>Get in touch <ArrowUpRight size={18} aria-hidden="true" /></Link></div><div className={styles.hours}><h3>Taproom hours</h3><ul>{TAPROOM_HOURS.map(day => <li key={day.day}><span>{day.day}</span><span>{formatDayHours(day)}</span></li>)}</ul><p>All times local to Phoenix.</p></div></div><div className={styles.map}><MapEmbed preview /></div></section>
+      <section id="visit" className={styles.visitSection} aria-labelledby="visit-title"><div className={styles.visitCopy}><p className={styles.eyebrow}>Your neighborhood brewery</p><h2 id="visit-title">Find the fox.<br /><em>Stay a while.</em></h2><address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address><div className={styles.visitActions}><a href={DIRECTIONS_URL} className={styles.primaryButton}>Get directions <ArrowUpRight size={18} aria-hidden="true" /></a><Link href="/contact" className={styles.textLink}>Get in touch <ArrowUpRight size={18} aria-hidden="true" /></Link></div><div className={styles.hours}><h3>Taproom hours</h3><ul>{TAPROOM_HOURS.map(day => <li key={day.day}><span>{day.day}</span><span>{formatDayHours(day)}</span></li>)}</ul><p>All times local to Phoenix.</p></div></div><div className={styles.map}><MapEmbed /></div></section>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -60,6 +60,9 @@ const navLinks: NavItem[] = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const cartButton = useRef<HTMLButtonElement>(null);
+  const mobileNavigation = useRef<HTMLElement>(null);
   const pathname = usePathname();
   const { totalCount, openCart } = useCart();
 
@@ -71,13 +74,40 @@ export default function Header() {
     if (!menuOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
+    const navigation = mobileNavigation.current;
+    const menuTrigger = menuButton.current;
+    const cartTrigger = cartButton.current;
+    const background = Array.from(document.querySelectorAll<HTMLElement>('.publicSite > main, .publicSite > footer'));
+    const previousInert = background.map(element => element.inert);
+    background.forEach(element => { element.inert = true; });
+    navigation?.querySelector<HTMLAnchorElement>('a')?.focus();
+    const handleKeys = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        menuTrigger?.focus();
+      }
+      if (event.key !== "Tab") return;
+      const focusable = [cartTrigger, menuTrigger, ...Array.from(navigation?.querySelectorAll<HTMLElement>('a, button') ?? [])].filter((element): element is HTMLElement => element !== null);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
     };
-    window.addEventListener("keydown", closeOnEscape);
+    const desktopViewport = window.matchMedia('(min-width: 851px)');
+    const closeOnDesktop = () => { if (desktopViewport.matches) setMenuOpen(false); };
+    desktopViewport.addEventListener('change', closeOnDesktop);
+    window.addEventListener("keydown", handleKeys);
     return () => {
       document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeOnEscape);
+      background.forEach((element, index) => { element.inert = previousInert[index]; });
+      if (navigation?.contains(document.activeElement)) menuTrigger?.focus();
+      window.removeEventListener("keydown", handleKeys);
+      desktopViewport.removeEventListener('change', closeOnDesktop);
     };
   }, [menuOpen]);
 
@@ -156,15 +186,17 @@ export default function Header() {
 
         <div className={styles.mobileControls}>
         <button
+          ref={cartButton}
           type="button"
           className={styles.mobileCartButton}
           onClick={() => { setMenuOpen(false); openCart(); }}
           aria-label={`Open cart — ${totalCount} item${totalCount !== 1 ? "s" : ""}`}
         >
-          <ShoppingBag size={23} strokeWidth={1.6} aria-hidden="true" />
+          {isHome ? <svg width="26" height="32" viewBox="0 0 26 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10h20v20H3zM7 10V8a6 6 0 0 1 12 0v2M8 15a5 5 0 0 0 10 0" /></svg> : <ShoppingBag size={23} strokeWidth={1.6} aria-hidden="true" />}
           {totalCount > 0 && <span className={styles.cartCount} aria-hidden="true">{totalCount}</span>}
         </button>
         <button
+          ref={menuButton}
           className={styles.hamburger}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
@@ -187,7 +219,7 @@ export default function Header() {
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"
           />
-          <nav id="mobile-navigation" className={styles.mobileNav} aria-label="Mobile navigation">
+          <nav ref={mobileNavigation} id="mobile-navigation" className={styles.mobileNav} aria-label="Mobile navigation">
             {navLinks.map((item) => (
               <Link
                 key={item.href}

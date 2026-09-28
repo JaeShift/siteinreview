@@ -1,6 +1,17 @@
 # Current homepage hero artwork
 
-## Active: September 25 cream hero corrections
+## Active mobile: September 28 supplied mockup
+
+The supplied September 27 mobile mockup is implemented at widths up to 760px. Desktop keeps the September 25 cream composition. The homepage visit section uses the original live Google Maps embed.
+
+- `mobile-reference-background-v1.webp`: cream paper, pale Japanese clouds, cropped red sun, Arizona mountains and saguaros. Extracted from the supplied reference with all text and UI removed.
+- `mobile-kitsune-brush-v1.webp`: transparent black brush wordmark. Brewing Company remains live HTML in red.
+- `mobile-fox-pint-fit-v4.webp`: detailed photographic glass and golden-amber beer, with a slightly narrower centered fox print to show more amber along its sides. Retains the restrained ink wear, condensation over the logo, gentle shading/reflections, and fox/cloud/blue-circle identity. Previous assets remain available. Current edit original, exact prompt, and screenshots are in `artifacts/mobile-logo-fit/`; prior edits are in `artifacts/mobile-logo-integration/` and `artifacts/mobile-glass-detail/`.
+- Live Anton and Bodoni Moda italic headline, DM Sans supporting copy, stacked Our beers and What’s happening actions, live Phoenix hours and directions.
+- Header keeps the cart and menu; keyboard focus is contained while the menu is open.
+- Original generated assets, exact prompts, design brief, screenshots, and verification are in `artifacts/mobile-reference/`. Production assets use WebP with full-quality alpha.
+
+## Active desktop / previous mobile: September 25 cream hero corrections
 
 User-approved extended-K wordmark, evenly softened complete cloud artwork, an opaque amber glass with a softer full blue-circle fox print, and a compact split mobile composition. Hero and visit strip only; no deployment.
 
