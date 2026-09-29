@@ -30,24 +30,30 @@ export default function CalendarEmbed({ compact = false, minimal = false, presen
 
   if (live) {
     return (
-      <section className={`${styles.calendarWrapper} ${styles.live}`} aria-labelledby={`${calendarId}-heading`}>
+      <section className={`${styles.calendarWrapper} ${styles.live} ${compact ? styles.compact : ""}`} aria-labelledby={`${calendarId}-heading`}>
         <div className={styles.liveHeader}>
           <div className={styles.liveTitle}>
             <CalendarDays size={23} strokeWidth={1.5} aria-hidden="true" />
             <h2 id={`${calendarId}-heading`}>{heading}</h2>
           </div>
-          <a className={styles.externalLink} href={GOOGLE_CALENDAR_URL} target="_blank" rel="noreferrer">
+          {!compact && <a className={styles.externalLink} href={GOOGLE_CALENDAR_URL} target="_blank" rel="noreferrer">
             Open in Google Calendar <ArrowUpRight size={17} aria-hidden="true" />
-          </a>
+          </a>}
         </div>
         {description && <p className={styles.liveDescription}>{description}</p>}
-        <div className={styles.liveFrame}>
-          <iframe
+        {compact && <div className={styles.liveActions}>
+          <button type="button" aria-expanded={expanded} aria-controls={calendarId} onClick={() => setExpanded(!expanded)}>
+            {expanded ? "Hide calendar" : "Show live calendar"}<span aria-hidden="true">{expanded ? "−" : "+"}</span>
+          </button>
+          <a className={styles.externalLink} href={GOOGLE_CALENDAR_URL} target="_blank" rel="noreferrer">Open Google Calendar <ArrowUpRight size={17} aria-hidden="true" /></a>
+        </div>}
+        <div id={calendarId} className={styles.liveFrame} hidden={compact && !expanded}>
+          {(!compact || expanded) && <iframe
             src={getGoogleCalendarEmbedUrl(mobile ? "AGENDA" : "MONTH")}
             title="Kitsune taproom events — Google Calendar"
             loading="eager"
             className={styles.calendarIframe}
-          />
+          />}
         </div>
         <p className={styles.timeZone}>All times are local to Phoenix, Arizona.</p>
       </section>

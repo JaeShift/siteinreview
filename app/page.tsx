@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import { Anton, Bodoni_Moda } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import MenuEmbed from "@/components/MenuEmbed";
 import UpcomingEvents from "@/components/home/UpcomingEvents";
 import MapEmbed from "@/components/MapEmbed";
-import VisitStatus from "@/components/VisitStatus";
 import HeroWordmark from "@/components/HeroWordmark";
 import FeaturedInventory from "@/components/home/FeaturedInventory";
 import Reveal from "@/components/home/Reveal";
@@ -49,7 +48,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      <div className={styles.visitStrip}><VisitStatus /><p><MapPin size={16} aria-hidden="true" />3321 E Bell Rd · North Phoenix</p><a href="#visit">Plan your visit <ArrowUpRight size={16} aria-hidden="true" /></a></div>
 
       <section id="tap-list" className={`${original.home} ${original.menuSection} ${styles.tapSection}`} aria-labelledby="tap-title">
         <div className={styles.tapIntro}>
@@ -67,8 +65,7 @@ export default async function HomePage() {
         <UpcomingEvents events={events} />
       </section>
       <section id="magic" className={styles.shopSection} aria-labelledby="shop-title">
-        <div className={styles.sectionDivider} aria-hidden="true"><span /><Image src="/images/logo.png" alt="" width={40} height={40} /><span /></div>
-        <Reveal><header className={styles.sectionHead}><div><p className={styles.eyebrow}>For your next game</p><h2 id="shop-title">Featured in the shop.</h2></div><Link href="/card-shop" className={styles.textLink}>Browse all Magic <ArrowUpRight size={18} aria-hidden="true" /></Link></header></Reveal>
+        <Reveal><header className={styles.sectionHead}><div><p className={styles.eyebrow}>For your next game</p><h2 id="shop-title">Featured in the shop.</h2></div><Link href="/card-shop" className={styles.textLink}>Shop all cards <ArrowUpRight size={18} aria-hidden="true" /></Link></header></Reveal>
         <Reveal>{products.length ? <FeaturedInventory products={products} /> : <div className={styles.emptyShop}><p>Check the card shop for the latest available inventory.</p><Link href="/card-shop" className={styles.primaryButton}>Browse Magic <ArrowUpRight size={18} aria-hidden="true" /></Link></div>}</Reveal>
         <div className={styles.shopFootnote}><p>Find your next card. Make yourself at home.</p><Link href="/shop">Looking for Kitsune merchandise? <ArrowUpRight size={17} aria-hidden="true" /></Link></div>
       </section>

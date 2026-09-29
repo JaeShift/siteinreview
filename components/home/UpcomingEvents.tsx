@@ -21,13 +21,25 @@ export default function UpcomingEvents({ events }: { events: MtgEvent[] }) {
           </div>
           <Link href="/events" className={styles.allEvents}>Browse all events <ArrowUpRight size={18} aria-hidden="true" /></Link>
         </header>
-        <div className={styles.board}>
+        <article className={styles.commander} aria-labelledby="commander-feature-title">
+          <div className={styles.commanderPhoto}>
+            <Image src="/images/uploads/beer and magic.png" alt="A Kitsune beer alongside Commander decks and Magic cards on a taproom table" fill sizes="(max-width: 680px) 100vw, 55vw" />
+            <span>Magic: The Gathering</span>
+          </div>
+          <div className={styles.commanderCopy}>
+            <p>There’s a seat at the table</p>
+            <h3 id="commander-feature-title">Commander<br />nights.</h3>
+            <span>Bring a deck, grab a pint, and find your pod.</span>
+            <Link href="/commander-nights">Explore Commander <ArrowUpRight size={20} aria-hidden="true" /></Link>
+          </div>
+        </article>
+        {events.length > 0 && <div className={styles.board}>
           <div className={styles.boardHeading}>
             <span><CalendarDays size={18} aria-hidden="true" /> Upcoming Magic events</span>
             <a href="#taproom-calendar">Full calendar <ArrowDown size={15} aria-hidden="true" /></a>
           </div>
           <div className={styles.eventList}>
-            {events.length ? events.map(event => {
+            {events.map(event => {
               const date = new Date(`${event.date}T12:00:00-07:00`);
               const formatDate = (options: Intl.DateTimeFormatOptions) => date.toLocaleDateString("en-US", { ...options, timeZone: TAPROOM_TIME_ZONE });
               const dateLabel = formatDate({ weekday: "long", month: "long", day: "numeric", year: "numeric" });
@@ -58,17 +70,12 @@ export default function UpcomingEvents({ events }: { events: MtgEvent[] }) {
                   </div>
                 </article>
               );
-            }) : <div className={styles.empty}><CalendarDays size={32} aria-hidden="true" /><div><h3>More games on the horizon.</h3><p>Find game nights and brewery gatherings in the live calendar below.</p></div><a href="#taproom-calendar">See the calendar <ArrowDown size={16} aria-hidden="true" /></a></div>}
+            })}
           </div>
-          <div className={styles.commander}>
-            <div className={styles.cardMark} aria-hidden="true"><span /><span><Image src="/images/logo.png" alt="" width={32} height={32} /></span></div>
-            <div className={styles.commanderCopy}><p>There’s a seat at the table</p><h3>Commander nights</h3><span>Bring a deck, grab a pint, and find your pod.</span></div>
-            <Link href="/commander-nights">Explore Commander <ArrowUpRight size={18} aria-hidden="true" /></Link>
-          </div>
-        </div>
+        </div>}
       </Reveal>
       <div id="taproom-calendar" className={styles.calendar}>
-        <CalendarEmbed presentation="live" heading="Full taproom calendar" description="Game nights, food trucks, and brewery happenings. Select an event for details." />
+        <CalendarEmbed presentation="live" compact heading="Taproom calendar" description="Game nights, food trucks, and brewery happenings. Find your next reason to stop by." />
       </div>
     </>
   );

@@ -105,6 +105,21 @@
 }
 
 .live .calendarIframe { height: 620px; filter: none; background: white; }
+.live.compact .liveTitle h2 { font:400 clamp(1.75rem,3vw,2.5rem)/1.15 var(--font-mobile-display), Impact, sans-serif; }
+.live.compact .liveHeader { padding-bottom:16px; }
+.live.compact .liveDescription { max-width:62ch; margin:0 0 20px; color:#514a3e; font-size:1rem; }
+.liveActions { display:flex; align-items:center; flex-wrap:wrap; gap:12px 28px; padding:20px 24px; border:1px solid #b9a787; background:rgba(247,237,222,.65); }
+.liveActions>button { display:flex; align-items:center; justify-content:space-between; gap:28px; min-height:46px; padding:12px 18px; border:1px solid #171815; background:#171815; color:#f7edde; font:600 .875rem/1.4 var(--font-body); cursor:pointer; }
+.liveActions>button:hover { background:#b7351c; border-color:#b7351c; }
+.liveActions>button:focus-visible { outline:3px solid var(--color-action); outline-offset:4px; }
+.liveActions .externalLink { color:#a6311c; }
+.live.compact .liveFrame { margin-top:16px; }
+.liveFrame[hidden] { display:none; }
+@media (max-width: 680px) {
+  .liveActions { align-items:stretch; flex-direction:column; gap:10px; padding:16px; }
+  .liveActions .externalLink { justify-content:space-between; width:fit-content; font-size:.8125rem; }
+  .live.compact .liveDescription { font-size:.9375rem; }
+}
 .timeZone {
   margin: 12px 0 0;
   color: var(--color-text-light);
