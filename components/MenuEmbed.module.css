@@ -185,5 +185,5 @@
   .liveMenu .expandButton:focus-visible { outline: 2px solid var(--lineup-gold); outline-offset: 5px; }
   .liveMenu .menuNote,
   :global([data-route="/"]) .liveMenu .menuNote { position: relative; max-width: 31ch; margin: 0; padding-top: 26px; color: var(--lineup-muted); font-size: 12px; line-height: 1.65; }
-  .liveMenu .menuNote a { color: #e7dfca; }
+  .liveMenu .menuNote a { display: block; width: fit-content; margin-top: 4px; color: #e7dfca; }
 }

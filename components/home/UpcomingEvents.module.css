@@ -54,6 +54,7 @@
 .commanderCopy>a:focus-visible { outline-color:#e4c88e!important; }
 .calendar { margin-top:48px; padding-top:32px; border-top:4px double #baa67f; scroll-margin-top:32px; }
 .boardHeading a:focus-visible { outline-color:var(--color-cream-paper)!important; }
+@media(max-width:760px) { .desktop { display:none; } }
 @media(max-width:1100px) {
   .event { grid-template-columns:72px 200px minmax(0,1fr); grid-template-areas:"date art details" "date art purchase"; }
   .date { grid-area:date; }.artwork { grid-area:art; margin-left:18px; }.details { grid-area:details; padding:24px 24px 16px; }

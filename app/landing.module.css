@@ -102,16 +102,16 @@
     --mobile-type-space: max(0px, 4rem - 20vw);
     background-color: #f7edde;
     background-image: url('/images/home/mobile-reference-background-v1.webp');
-    background-size: 100vw auto;
+    background-size: 100vw 203vw;
     background-position: center -21.4118vw;
     background-repeat: no-repeat;
   }
   .hero { background: transparent; }
   .heroPattern, .hero::before, .hero::after { display: none; }
-  .heroInner { display: flow-root; position: relative; min-height: 174.5882vw; height: auto; max-width: none; margin: 0; padding: 0; }
+  .heroInner { display: flow-root; position: relative; min-height: 160vw; height: auto; max-width: none; margin: 0; padding: 0; }
   .heroCopy { display: contents; }
   .heroCopy > * { z-index: 2; }
-  .heroMessage { display: block; position: relative; width: 51vw; margin: calc(72.2vw + var(--mobile-type-space)) 0 27.5vw 5.2vw; }
+  .heroMessage { display: block; position: relative; width: 51vw; margin: calc(68vw + var(--mobile-type-space)) 0 18vw 5.2vw; }
   .heroKicker { position: absolute; top: 4.35vw; left: 22.7vw; display: block; width: 56vw; margin: 0; color: #935b27; font: 400 clamp(.625rem, 2.95vw, 1.375rem)/1.23 var(--font-body); letter-spacing: .12em; }
   .heroKicker::before { content: ''; position: absolute; left: -14.6vw; top: 1.8vw; width: 11.5vw; height: 2vw; border-block: 1.5px solid #b63018; }
   .heroKicker .kickerSeparator { display: none; }
@@ -130,7 +130,7 @@
   .page .heroActions .primaryButton { order: 1; background: transparent; color: #0c0e0c; border-color: #0c0e0c; font-size: max(.625rem, 2.92vw); font-weight: 700; letter-spacing: .045em; }
   .page .heroActions .primaryButton:hover { background: #171815; color: #fffaf1; }
   .heroActions svg { display: block; width: 3.9vw; height: 3.9vw; stroke-width: 1.6; }
-  .heroVisual { position: absolute; top: calc(65.5vw + var(--mobile-type-space)); left: 54.2vw; width: 45.4vw; height: 81.3vw; max-width: none; margin: 0; aspect-ratio: auto; }
+  .heroVisual { position: absolute; top: calc(61.3vw + var(--mobile-type-space)); left: 54.2vw; width: 45.4vw; height: 81.3vw; max-width: none; margin: 0; aspect-ratio: auto; }
   .heroVisual::before, .heroVisual::after, .heroGlassPrint { display: none; }
   .heroGlass { object-fit: fill; mask-image: none; }
   .page .tapSection { padding: 0; border-top: 0; background: #f7edde; }
@@ -154,8 +154,8 @@
   .page .tapHead h2 span { display: block; margin: 0; color: #b7351c; font: italic 400 11.7vw/1.06 var(--font-mobile-italic), Georgia, serif; letter-spacing: -.065em; text-transform: none; }
   .page .tapHead > p { max-width: none; margin-top: 4.7vw; color: #11120f; font: 400 max(1rem, 4.55vw)/1.32 var(--font-body); letter-spacing: -.035em; }
   .tapHead > p > span { display: block; margin-top: .9vw; }
-  .page .tapPhoto { height: auto; min-height: 0; aspect-ratio: 1.16; margin: 0; }
-  .page .tapPhoto img { transform: none; object-position: 53% center; }
+  .page .tapPhoto { height: auto; min-height: 0; aspect-ratio: 16 / 10; margin: 0; }
+  .page .tapPhoto img { transform: none; object-position: 65% center; }
   .page .tapPhoto::after { background: linear-gradient(transparent 56%, rgba(12,13,10,.78)); }
   .page .tapPhoto > div { top: auto; left: 3.8vw; bottom: 2.5vw; transform: none; }
   .page .tapPhoto > div > span { font: italic 400 7.4vw/1.08 var(--font-mobile-italic), Georgia, serif; letter-spacing: -.03em; }
@@ -168,9 +168,15 @@
   .lineupLink strong { font: 400 9.2vw/1.2 var(--font-mobile-display), Impact, sans-serif; letter-spacing: -.025em; text-transform: uppercase; }
   .lineupLink > i { display: flex; align-items: center; gap: 3vw; width: 100%; margin-top: 1vw; color: #b99b64; }
   .lineupLink > i > span { height: 1px; flex: 1; background: currentColor; }
-  .lineupLink svg { width: 4.6vw; height: 4.6vw; min-height: 20px; }
+  .lineupLink svg { width: 4.6vw; height: 4.6vw; min-height: 20px; animation: lineupArrowDown 2s ease-in-out infinite; }
   .lineupLink:hover { filter: brightness(1.1); }
   .page .lineupLink:focus-visible { outline-offset: -5px; outline-color: #b99b64; }
+  .shopSection .sectionHead .eyebrow, .shopFootnote, .communityPhoto > span { display: none; }
+}
+
+@keyframes lineupArrowDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
 }
 
 /* Keep readable tap targets and clear separation on the narrowest phones. */

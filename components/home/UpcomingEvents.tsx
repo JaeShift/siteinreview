@@ -5,6 +5,7 @@ import CalendarEmbed from "@/components/CalendarEmbed";
 import type { MtgEvent } from "@/lib/events-data";
 import { TAPROOM_TIME_ZONE } from "@/lib/taproom-hours";
 import Reveal from "./Reveal";
+import MobileEventsCalendar from "./MobileEventsCalendar";
 import styles from "./UpcomingEvents.module.css";
 
 const displayTime = (value: string) => value.trim().replace(/\s*(AM|PM)$/i, " $1");
@@ -12,6 +13,8 @@ const displayTime = (value: string) => value.trim().replace(/\s*(AM|PM)$/i, " $1
 export default function UpcomingEvents({ events }: { events: MtgEvent[] }) {
   return (
     <>
+      <MobileEventsCalendar featuredEvents={events} />
+      <div className={styles.desktop}>
       <Reveal>
         <header className={styles.heading}>
           <div>
@@ -76,6 +79,7 @@ export default function UpcomingEvents({ events }: { events: MtgEvent[] }) {
       </Reveal>
       <div id="taproom-calendar" className={styles.calendar}>
         <CalendarEmbed presentation="live" compact heading="Taproom calendar" description="Game nights, food trucks, and brewery happenings. Find your next reason to stop by." />
+      </div>
       </div>
     </>
   );

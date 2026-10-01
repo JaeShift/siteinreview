@@ -61,7 +61,7 @@ export default async function HomePage() {
         <div id="taproom-lineup" className={styles.tapMenu}><MenuEmbed /></div>
       </section>
 
-      <section id="calendar" className={styles.eventsSection} aria-labelledby="events-title">
+      <section id="calendar" className={styles.eventsSection} aria-label="Events and taproom calendar">
         <UpcomingEvents events={events} />
       </section>
       <section id="magic" className={styles.shopSection} aria-labelledby="shop-title">

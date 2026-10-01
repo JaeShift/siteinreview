@@ -101,7 +101,7 @@
   .stockRow { flex-wrap: wrap; gap: 0 7px; padding-top: 4px; }
   .stockRow > span { min-height: 28px; display: inline-flex; align-items: center; }
   .viewCart { font-size: .75rem; }
-  .browseControls { margin-top: 19px; padding-top: 16px; gap: 12px; }
+  .browseControls { display: none; }
   .browseHint { display: none; }
 }
 @media (max-width: 600px) {
