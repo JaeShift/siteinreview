@@ -14,6 +14,11 @@ const cache = new Map<string, { events: TaproomEvent[]; expires: number }>();
 const pending = new Map<string, Promise<TaproomEvent[]>>();
 const dateLabel = (value: string, options: Intl.DateTimeFormatOptions) => new Date(`${value}T12:00:00Z`).toLocaleDateString("en-US", { ...options, timeZone: "UTC" });
 const displayTitle = (title: string) => title.replace(/\s+([:;,!?])/g, "$1");
+const timeRange = (event: TaproomEvent) => {
+  const start = eventTime(event);
+  if (event.allDay || !(Date.parse(event.end) > Date.parse(event.start))) return start;
+  return `${start} – ${eventTime({ ...event, start: event.end })}`;
+};
 
 function loadMonth(month: string): Promise<TaproomEvent[]> {
   const saved = cache.get(month);
@@ -118,13 +123,14 @@ export default function MobileEventsCalendar({ featuredEvents }: { featuredEvent
   return <div className={styles.mobile}>
     <header className={styles.heading}>
       <p className={styles.eyebrow}><span>Beer. Games. Good company.</span></p>
-      <h2 id="mobile-events-title">This week<span>at Kitsune.</span></h2>
+      <h2 id="mobile-events-title">This week <span>at Kitsune.</span></h2>
       <p className={styles.intro}>Your next night out starts here.</p>
     </header>
 
+    <div className={styles.schedule}>
     <div className={styles.weekNav} aria-label="Choose a week">
       <button type="button" aria-label="Previous week" onClick={() => changeWeek(-1)} disabled={!week || !today || week <= startOfWeek(today)}><ChevronLeft size={19} /></button>
-      <span aria-live="polite"><small>Lineup · Phoenix time</small><strong>{week ? `${dateLabel(week, { month: "short", day: "numeric" })} – ${dateLabel(weekEnd, { month: "short", day: "numeric" })}` : "This week"}</strong></span>
+      <span aria-live="polite"><strong>{week ? `${dateLabel(week, { month: "short", day: "numeric" })} – ${dateLabel(weekEnd, { month: "short", day: "numeric" })}` : "This week"}</strong></span>
       <button type="button" aria-label="Next week" onClick={() => changeWeek(1)} disabled={!week || week >= "2099-12-24"}><ChevronRight size={19} /></button>
     </div>
     {today && week !== startOfWeek(today) && <button className={styles.reset} type="button" onClick={() => { setWeek(startOfWeek(today)); setExpanded(false); }}>Back to this week</button>}
@@ -133,8 +139,8 @@ export default function MobileEventsCalendar({ featuredEvents }: { featuredEvent
       {weekData.status === "loading" ? <div className={styles.loading} role="status">Loading this week’s happenings…</div> : weekData.status === "error" ? errorMessage(weekData.retry) : weeklyEvents.length === 0 ? <div className={styles.message}><strong>A little room for spontaneity.</strong><p>No upcoming events left this week. Browse next week or come by for a pour.</p></div> : <ul className={styles.weekList} id={`${id}-week`}>
         {visibleEvents.map(event => <li key={event.id}>
           <button type="button" className={styles.eventRow} data-kind={event.kind} data-today={event.date === today || undefined} onClick={e => showDetails(event, e.currentTarget)}>
-            <time dateTime={event.date} className={styles.dateStamp}><span>{dateLabel(event.date, { month: "short" })}</span><strong>{dateLabel(event.date, { day: "2-digit" })}</strong><span>{dateLabel(event.date, { weekday: "short" })}</span></time>
-            <span className={styles.eventCopy}><strong>{displayTitle(event.title)}</strong><span className={styles.eventTime}>{eventTime(event)}</span></span>
+            <time dateTime={event.date} className={styles.dateStamp}><span>{dateLabel(event.date, { month: "short" })}</span><strong>{dateLabel(event.date, { day: "2-digit" })}</strong><span>{dateLabel(event.date, { weekday: "short" })}</span>{event.date === today && <span className={styles.today}>Today</span>}</time>
+            <span className={styles.eventCopy}><strong>{displayTitle(event.title)}</strong><span className={styles.eventTime}>{timeRange(event)}</span></span>
             <ChevronRight className={styles.rowArrow} size={16} aria-hidden="true" />
           </button>
         </li>)}
@@ -142,10 +148,12 @@ export default function MobileEventsCalendar({ featuredEvents }: { featuredEvent
     </div>
     {weekData.status === "ready" && weeklyEvents.length > 4 && <button type="button" className={styles.showAll} aria-expanded={expanded} aria-controls={`${id}-week`} onClick={() => setExpanded(value => !value)}>{expanded ? "Show fewer events" : `All ${weeklyEvents.length} upcoming events`}<ArrowDown size={15} style={{ transform: expanded ? "rotate(180deg)" : undefined }} aria-hidden="true" /></button>}
 
+    </div>
+
     {featuredEvents.length > 0 && <div className={styles.registration}><p className={styles.eyebrow}>Tickets & registration</p>{featuredEvents.map(event => <Link key={event.slug} href={event.format === "Prerelease" ? "/pre-release" : `/events/${event.slug}`}><span><strong>{displayTitle(event.title)}</strong><span>{dateLabel(event.date, { month: "short", day: "numeric" })} · {event.time}{Number.isFinite(event.entryFee) && ` · ${event.entryFee === 0 ? "Free" : `$${event.entryFee.toFixed(2)}`}`}</span></span><ArrowUpRight size={18} aria-hidden="true" /></Link>)}</div>}
 
     {detail && active && <dialog ref={dialog} className={styles.dialog} aria-labelledby={`${id}-detail-title`} onKeyDown={onDialogKey} onCancel={event => { event.preventDefault(); setDetail(null); }} onClick={event => { if (event.target === event.currentTarget) setDetail(null); }}>
-      <div className={styles.dialogBody}><button type="button" className={styles.close} onClick={() => setDetail(null)} aria-label="Close event details" autoFocus><X size={22} /></button><span className={`${styles.detailIcon} ${styles[detail.kind]}`}><EventStamp kind={detail.kind} /></span><p className={styles.eyebrow}>{labels[detail.kind]} at Kitsune</p><h3 id={`${id}-detail-title`}>{displayTitle(detail.title)}</h3><p className={styles.detailDate}>{dateLabel(detail.date, { weekday: "long", month: "long", day: "numeric" })}<br />{eventTime(detail)}{!detail.allDay && detail.end > detail.start ? ` – ${new Date(detail.end).toLocaleTimeString("en-US", { timeZone: "America/Phoenix", hour: "numeric", minute: "2-digit" }).replace(":00", "")}` : ""} · Phoenix time</p>{detail.description && <p className={styles.detailDescription}>{detail.description}</p>}<p className={styles.detailLocation}>{detail.location || "Kitsune Brewing Co. · North Phoenix"}</p>{/commander/i.test(detail.title) && <Link href="/commander-nights" className={styles.detailAction}>Explore Commander <ArrowUpRight size={17} /></Link>}<a className={styles.detailAction} href={`${GOOGLE_CALENDAR_URL}&dates=${detail.date.replaceAll("-", "")}/${addDays(detail.date, 1).replaceAll("-", "")}`} target="_blank" rel="noreferrer">View in Google Calendar <ArrowUpRight size={17} /></a></div>
+      <div className={styles.dialogBody}><button type="button" className={styles.close} onClick={() => setDetail(null)} aria-label="Close event details" autoFocus><X size={22} /></button><span className={`${styles.detailIcon} ${styles[detail.kind]}`}><EventStamp kind={detail.kind} /></span><p className={styles.eyebrow}>{labels[detail.kind]} at Kitsune</p><h3 id={`${id}-detail-title`}>{displayTitle(detail.title)}</h3><p className={styles.detailDate}>{dateLabel(detail.date, { weekday: "long", month: "long", day: "numeric" })}<br />{timeRange(detail)} · Phoenix time</p>{detail.description && <p className={styles.detailDescription}>{detail.description}</p>}<p className={styles.detailLocation}>{detail.location || "Kitsune Brewing Co. · North Phoenix"}</p>{/commander/i.test(detail.title) && <Link href="/commander-nights" className={styles.detailAction}>Explore Commander <ArrowUpRight size={17} /></Link>}<a className={styles.detailAction} href={`${GOOGLE_CALENDAR_URL}&dates=${detail.date.replaceAll("-", "")}/${addDays(detail.date, 1).replaceAll("-", "")}`} target="_blank" rel="noreferrer">View in Google Calendar <ArrowUpRight size={17} /></a></div>
     </dialog>}
   </div>;
 }

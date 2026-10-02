@@ -51,7 +51,7 @@ export default async function HomePage() {
 
       <section id="tap-list" className={`${original.home} ${original.menuSection} ${styles.tapSection}`} aria-labelledby="tap-title">
         <div className={styles.tapIntro}>
-          <header className={`${original.sectionHead} ${styles.tapHead}`}><div><p className={`${original.eyebrow} ${styles.tapEyebrow}`}><span>A little adventure<br className={styles.mobileBreak} /> in every pour</span></p><h2 id="tap-title">Good beer.<br /><span>Your kind of good.</span></h2></div><p>Hazy, crisp, tart, or a little unexpected. <span>Find your next favorite pour.</span></p></header>
+          <header className={`${original.sectionHead} ${styles.tapHead}`}><div><p className={`${original.eyebrow} ${styles.tapEyebrow}`}><span>A little adventure<br className={styles.mobileBreak} /> in every pour</span></p><h2 id="tap-title">Find your pour.<br /><span>Your kind of good.</span></h2></div><p>Hazy, crisp, tart, or a little unexpected. <span>Find your next favorite pour.</span></p></header>
           <figure className={styles.tapFigure}>
             <div className={`${original.tapFeature} ${styles.tapPhoto}`}><Image src="/images/uploads/fox-tails-tap-panorama.png" alt="Handcrafted fox-tail tap handles at Kitsune" fill sizes="100vw" /><div><span>From our taps.</span><strong>To your table.</strong></div><span className={original.photoIndex}>KITSUNE / NORTH PHOENIX</span></div>
             <figcaption className={styles.tapCaption}>Kitsune / North Phoenix<span aria-hidden="true" /></figcaption>

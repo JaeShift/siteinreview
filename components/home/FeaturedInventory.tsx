@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Expand, Plus, RotateCw } from "lucide-react";
 import Modal from "@/components/ui/Modal";
+import MobileFeaturedCards from "./MobileFeaturedCards";
 import { useCart } from "@/lib/cart-context";
 import { formatCondition, formatSetDisplay, type SingleCard } from "@/lib/singles-data";
 import styles from "./FeaturedInventory.module.css";
@@ -148,7 +149,7 @@ export default function FeaturedInventory({ products }: { products: SingleCard[]
 
   const addButton = (card: SingleCard) => (
     <button type="button" className={styles.addButton} disabled={atLimit(card)} onClick={() => add(card)} aria-label={`Add ${card.name} to cart`}>
-      {addedId === card.id ? <><Check size={16} aria-hidden="true" /> Added to cart</> : atLimit(card) ? "All available in cart" : <>Add to cart <Plus size={16} aria-hidden="true" /></>}
+      {card.quantity <= 0 ? "Sold out" : addedId === card.id ? <><Check size={16} aria-hidden="true" /> Added to cart</> : atLimit(card) ? "All available in cart" : <>Add to cart <Plus size={16} aria-hidden="true" /></>}
     </button>
   );
   const cartAction = (card: SingleCard) => inCart(card) > 0 && (
@@ -170,6 +171,12 @@ export default function FeaturedInventory({ products }: { products: SingleCard[]
         exitEnlargement();
       }
     }}>
+      <MobileFeaturedCards products={products} onOpen={quickView} renderDetails={card => <>
+        <h3 className={styles.mobileProductTitle}><button type="button" className={styles.titleButton} onClick={event => quickView(card, event.currentTarget)}><ProductName name={card.name} /></button></h3>
+        <div className={styles.mobileBuyRow}><strong>${card.price.toFixed(2)}</strong>{addButton(card)}</div>
+        <div className={styles.mobileCartRow}>{inCart(card) > 0 && <span>{inCart(card)} in your cart</span>}{cartAction(card)}</div>
+      </>} />
+      <div className={styles.desktopShowcase}>
       <p id={`${railId}-instructions`} className={styles.announcement}>Use the left and right arrow keys to browse cards. Home and End move to the first and last cards.</p>
       <div ref={rail} id={railId} className={styles.grid} role="region" aria-label="Featured Magic cards" aria-roledescription="carousel" aria-describedby={`${railId}-instructions`} tabIndex={0} onKeyDown={event => {
         if (event.target !== event.currentTarget) return;
@@ -207,6 +214,7 @@ export default function FeaturedInventory({ products }: { products: SingleCard[]
         </div>}
       </div>}
       <p className={styles.announcement} role="status" aria-live="polite">{browseAnnouncement}</p>
+      </div>
       <p className={styles.announcement} role="status" aria-live="polite">{announcement}</p>
       <Modal isOpen={selected !== null} onClose={close} title={enlarged ? "Card artwork" : "A closer look"} size="lg">
         <p className={styles.announcement} role="status" aria-live="polite">{announcement}</p>

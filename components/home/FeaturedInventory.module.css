@@ -85,24 +85,43 @@
   .grid { grid-auto-columns: calc(100% - 50px); gap: 18px; }
   .featured .productTitle { font-size: 1.25rem; }
 }
+
+.mobileShowcase { display: none; }
 @media (max-width: 760px) {
-  .grid { grid-auto-columns: calc(100% - 32px); gap: 14px; }
-  .product { grid-template-columns: 40% minmax(0, 1fr); }
-  .productCopy { padding: 18px 14px 6px; }
-  .artwork { min-height: 315px; }
-  .artwork img { padding: 15px 10px 65px; }
-  .featured .productTitle { font-size: 1rem; line-height: 1.4; }
-  .secondaryName { font-size: .75rem; }
-  .set { margin-bottom: 16px; }
-  .meta { align-items: flex-start; flex-direction: column; gap: 8px; padding: 12px 0; }
-  .meta strong { font-size: 1.5rem; }
-  .product .addButton { min-height: 46px; padding-inline: 9px; font-size: .75rem; }
-  .quickView { inset-inline: 8px; padding-inline: 7px; font-size: .6875rem; }
-  .stockRow { flex-wrap: wrap; gap: 0 7px; padding-top: 4px; }
-  .stockRow > span { min-height: 28px; display: inline-flex; align-items: center; }
-  .viewCart { font-size: .75rem; }
-  .browseControls { display: none; }
-  .browseHint { display: none; }
+  .desktopShowcase { display: none; }
+  .mobileShowcase { display: block; color: #f4ebd9; }
+  .mobileStage { position: relative; width: calc(100% + 2 * var(--home-page-gutter)); margin-left: calc(-1 * var(--home-page-gutter)); }
+  .mobileRail { --slide-width: min(82%, 312px); display: flex; gap: 12px; width: 100%; padding-block: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .mobileRail::-webkit-scrollbar { display: none; }
+  .mobileRail::before, .mobileRail::after { content: ''; flex: 0 0 calc((100% - var(--slide-width)) / 2 - 12px); }
+  .mobileRail:focus-visible { outline: 2px solid #c8b88f; outline-offset: -2px; }
+  .mobileSlide { display: grid; place-items: center; flex: 0 0 var(--slide-width); min-width: 0; scroll-snap-align: center; scroll-snap-stop: always; }
+  .mobileArtwork { display: block; position: relative; width: min(290px, calc(100% - 16px)); aspect-ratio: 63 / 88; margin: 0; padding: 0; background: transparent; border: 0; cursor: pointer; }
+  .mobileArtwork img { object-fit: contain; }
+  .mobileArtwork { border-radius: 12px; transition: opacity .2s ease, box-shadow .2s ease; }
+  .mobileSlide[aria-hidden='true'] .mobileArtwork { opacity: .72; }
+  .mobileSlide[aria-hidden='false'] .mobileArtwork { box-shadow: 0 0 0 1px #c5a361, 0 0 20px #c5a36122; }
+  .mobileArrows { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; padding-inline: max(6px, calc((100% - 290px) / 4 - 22px)); pointer-events: none; }
+  .mobileArrows button { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 1px solid #c5a361; border-radius: 50%; background: rgb(23 24 21 / .76); color: #edcb89; box-shadow: 0 2px 8px rgb(0 0 0 / .18); cursor: pointer; pointer-events: auto; transition: background .15s ease; }
+  .mobileArrows button:hover { background: rgb(23 24 21 / .95); }
+  .mobileArrows button:active { background: rgb(23 24 21 / .86); }
+  .featured .mobileArrows button:focus-visible { outline: 2px solid #f4ebd9; outline-offset: 3px; }
+  .mobileDots { display: flex; flex-wrap: wrap; justify-content: center; margin-block: 12px; }
+  .mobileDots button { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+  .mobileDots button span { width: 6px; height: 6px; border: 1px solid #c4b89d; border-radius: 50%; }
+  .mobileDots button[aria-current='true'] span { width: 8px; height: 8px; background: #edcb89; border-color: #edcb89; }
+  .mobileDetails { display: grid; max-width: 352px; margin: 16px auto 0; }
+  .mobileDots + .mobileDetails { margin-top: 0; }
+  .mobileDetailsPanel { display: flex; flex-direction: column; grid-area: 1 / 1; min-width: 0; }
+  .featured .mobileProductTitle { margin: 0 0 16px; color: #f4ebd9; font: 500 1.375rem/1.3 var(--font-fraunces), Georgia, serif; text-transform: none; letter-spacing: -.02em; overflow-wrap: anywhere; }
+  .mobileProductTitle .secondaryName { color: #c8c0ae; font-size: .875rem; }
+  .featured .mobileProductTitle .titleButton { gap: 4px; font-family: inherit; }
+  .mobileBuyRow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px; margin-top: auto; }
+  .mobileBuyRow > strong { color: #f4ebd9; font: 500 1.75rem/1.2 var(--font-fraunces), Georgia, serif; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+  .mobileBuyRow .addButton { width: auto; max-width: 65%; min-height: 44px; padding: 12px 16px; border-color: #b7351c; background: #b7351c; background-image: var(--texture-grain); color: #fff; font-size: .8125rem; }
+  .mobileBuyRow .addButton:disabled { background: #34352e; border-color: #665e4d; color: #d0c6b1; }
+  .mobileCartRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; margin-top: 4px; color: #c8c0ae; font-size: .75rem; }
+  .mobileCartRow .viewCart { color: #f4ebd9; font-size: .75rem; }
 }
 @media (max-width: 600px) {
   .detail { grid-template-columns: 1fr; gap: 26px; }
@@ -111,20 +130,7 @@
   .enlargedToolbar { align-items: stretch; }
   .enlargedToolbar .imageControl { flex: 1; padding-inline: 8px; font-size: .6875rem; }
 }
-@media (max-width: 600px) {
-  .grid { grid-auto-columns: calc(100% - 28px); gap: 12px; }
-  .product { grid-template-columns: minmax(0, 1fr); }
-  .viewButton { border-right: 0; border-bottom: 1px solid #d3c3a6; }
-  .artwork { height: 300px; min-height: 0; }
-  .artwork img { padding: 14px 24px 56px; }
-  .quickView { inset: auto 14px 12px; min-height: 34px; font-size: .75rem; }
-  .productCopy { padding: 18px 18px 8px; }
-  .meta { flex-direction: row; flex-wrap: wrap; align-items: center; }
-  .featured .productTitle { font-size: 1.125rem; }
-  .set { margin-bottom: 14px; }
-  .stockRow { flex-wrap: wrap; }
-}
 @media (prefers-reduced-motion: reduce) {
   .featured * { animation: none !important; transition: none !important; }
-  .grid { scroll-behavior: auto; }
+  .grid, .mobileRail { scroll-behavior: auto; }
 }

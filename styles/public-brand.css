@@ -78,3 +78,10 @@
 @media (prefers-reduced-motion: reduce) {
   [data-site-theme="taproom"] *, [data-site-theme="taproom"] *::before, [data-site-theme="taproom"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* One sizing reference for the homepage header and mobile hero. */
+@media (max-width: 760px) {
+  [data-site-theme="taproom"][data-route="/"] {
+    --home-mobile-unit: min(1vw, 4.3px);
+  }
+}
