@@ -106,3 +106,21 @@
   .headerHome .hamburger[aria-expanded='true'] .hamburgerBar:nth-child(3) { transform: translateY(calc(calc(-1.55 * var(--home-mobile-unit)) - 2px)) rotate(-45deg); }
   .headerHome .mobileCartButton:focus-visible, .headerHome .hamburger:focus-visible { outline-color: #b33016; }
 }
+
+/* October mobile reference: scoped to the homepage header. */
+.mobileBrandText { display: none; }
+@media (max-width: 760px) {
+  .headerHome { --header-height: 70px; background: #faf8f3; border-bottom: 0; color: #10110e; }
+  .headerHome .headerInner { min-height: 70px; padding: 10px 5.3%; }
+  .headerHome .homeFoxLogo { display: block; width: 50px; height: 50px; object-fit: contain; }
+  .headerHome .headerLogo { gap: 10px; }
+  .headerHome .mobileBrandText { display: block; color: #000; font: 800 26px/.95 var(--font-barlow), 'Arial Narrow', sans-serif; letter-spacing: -.015em; text-transform: uppercase; white-space: nowrap; text-align: center; }
+  .mobileBrandText small { display: block; margin-top: 5px; font: 700 9px/1.1 var(--font-body); letter-spacing: .14em; text-align: center; }
+  .headerHome .mobileControls { gap: 9px; transform: none; }
+  .headerHome :is(.hamburger, .mobileCartButton) { width: 44px; height: 44px; }
+  .headerHome .mobileCartButton svg { width: 24px; height: 28px; }
+  .headerHome .hamburger { gap: 7px; }
+  .headerHome .hamburgerBar { width: 29px; height: 2.5px; }
+  .headerHome .hamburger[aria-expanded='true'] .hamburgerBar:nth-child(1) { transform: translateY(9.5px) rotate(45deg); }
+  .headerHome .hamburger[aria-expanded='true'] .hamburgerBar:nth-child(3) { transform: translateY(-9.5px) rotate(-45deg); }
+}

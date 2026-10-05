@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Anton, Bodoni_Moda } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 import MenuEmbed from "@/components/MenuEmbed";
 import UpcomingEvents from "@/components/home/UpcomingEvents";
 import MapEmbed from "@/components/MapEmbed";
@@ -30,9 +30,9 @@ export default async function HomePage() {
 
   return (
     <div className={`${styles.page} ${mobileDisplay.variable} ${mobileItalic.variable}`}>
-      <section className={styles.hero} aria-labelledby="home-title">
+      <section className={styles.hero} aria-label="Kitsune Brewing Company">
         <div className={styles.heroPattern} aria-hidden="true"><picture><source media="(max-width: 760px)" srcSet="/images/home/hero-cream-clouds-mobile-v2.webp" /><Image src="/images/home/hero-cream-clouds-v2.webp" alt="" fill priority quality={90} sizes="100vw" className={styles.heroBackdrop} /></picture></div>
-        <div className={styles.heroInner}>
+        <div className={`${styles.heroInner} ${styles.desktopHeroInner}`}>
           <div className={styles.heroCopy}>
             <p className={styles.heroKicker}>Independent brewery <span className={styles.kickerSeparator} aria-hidden="true">·</span> <span className={styles.kickerLocation}>North Phoenix</span></p>
             <h1 id="home-title" className={styles.heroHeadline} aria-label="Kitsune Brewing Company"><HeroWordmark tone="ink" aria-hidden="true" className={styles.heroWordmark} /></h1>
@@ -46,6 +46,34 @@ export default async function HomePage() {
             <picture><source media="(max-width: 760px)" srcSet="/images/home/mobile-fox-pint-fit-v4.webp" /><Image src="/images/home/hero-cream-glass-v1.webp" alt="An amber pint of Kitsune beer, printed with the orange fox, curling clouds, and blue circle" fill priority quality={95} sizes="(max-width: 760px) 46vw, (max-width: 1100px) 380px, 414px" className={styles.heroGlass} /></picture>
             <Image src="/images/home/hero-cream-glass-print-v2.webp" alt="" aria-hidden="true" fill priority quality={95} sizes="(max-width: 760px) 220px, (max-width: 1100px) 380px, 414px" className={styles.heroGlassPrint} />
           </div>
+        </div>
+        <div className={styles.mobileDesertHero}>
+          <div className={styles.mobileDesertCopy}>
+            <p className={styles.mobileDesertKicker}>Independent beer <span aria-hidden="true">/</span> North Phoenix, AZ</p>
+            <h1 className={styles.mobileDesertHeadline}><span>Good beer.</span>{" "}<em>Bold pours.</em></h1>
+            <p className={styles.mobileDesertPromise}>A fresh pint, an easy conversation,<br /> and a place that feels like yours.</p>
+            <div className={styles.mobileDesertActions}>
+              <Link href="/#tap-list">What’s on tap <ArrowRight aria-hidden="true" size={20} /></Link>
+              <Link href="/calendar">View events <ArrowRight aria-hidden="true" size={20} /></Link>
+            </div>
+          </div>
+          <svg className={styles.mobileReferencePour} viewBox="280 450 308 530" role="img" aria-labelledby="mobile-pour-title">
+            <title id="mobile-pour-title">Amber beer in a clear glass resting on a rugged dark rock</title>
+            <defs>
+              <clipPath id="mobile-pour-outline" clipPathUnits="userSpaceOnUse">
+                <path d="M410 480 C434 462 504 454 548 464 Q570 460 588 466 L588 923 Q514 932 435 923 L429 882 L423 794 L417 699 L412 598 Z" />
+                <path d="M280 959 L293 957 L300 944 L307 939 L312 925 L321 922 L329 911 L340 906 L352 909 L366 909 L377 902 L387 895 L399 887 L410 883 L424 888 L440 905 L477 918 L538 918 L588 915 L588 980 L280 980 Z" />
+              </clipPath>
+              <filter id="mobile-print-feather"><feGaussianBlur stdDeviation="1.5" /></filter>
+              <mask id="mobile-print-area" maskUnits="userSpaceOnUse" x="435" y="567" width="133" height="194">
+                <rect x="439" y="571" width="125" height="186" rx="5" fill="white" filter="url(#mobile-print-feather)" />
+              </mask>
+            </defs>
+            <g clipPath="url(#mobile-pour-outline)">
+              <image href="/images/home/mobile-reference-glass-rock.jpg" x="0" y="0" width="588" height="1280" />
+              <image href="/images/home/mobile-reference-beer-detail-v5.webp" x="0" y="0" width="588" height="1280" mask="url(#mobile-print-area)" />
+            </g>
+          </svg>
         </div>
       </section>
 

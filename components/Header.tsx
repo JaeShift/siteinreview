@@ -134,6 +134,7 @@ export default function Header() {
             aria-hidden="true"
             priority
           />
+          {isHome && <span className={styles.mobileBrandText} aria-hidden="true">Kitsune<small>Brewing Co.</small></span>}
           <span className={styles.homeWordmark} data-site-wordmark>
             <KitsuneWordmark decorative className={styles.wordmarkArt} /><small>Brewing Company</small>
           </span>

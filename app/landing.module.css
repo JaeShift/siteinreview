@@ -202,3 +202,45 @@
   .lineupLink::before { content: ''; position: absolute; inset: -5px 0 auto; height: 6px; background: #171815; clip-path: polygon(0 70%, 4% 38%, 9% 65%, 15% 27%, 21% 55%, 29% 16%, 37% 46%, 44% 24%, 52% 61%, 59% 30%, 66% 57%, 74% 20%, 82% 52%, 90% 28%, 96% 54%, 100% 35%, 100% 100%, 0 100%); }
   .eventsSection::before { content: ''; position: absolute; z-index: -1; inset: 0 0 auto auto; width: min(52%, 300px); height: 150px; background: var(--texture-wave) right top / 140px auto; opacity: .18; mask-image: linear-gradient(225deg, #000, transparent 78%); pointer-events: none; }
 }
+
+/* Reference-led mobile composition; desktop retains its original layout. */
+.mobileDesertHero { display: none; }
+@media (max-width: 760px) {
+  .hero { background: linear-gradient(#82b6c6, #f8ddbf 65vw); }
+  .hero::before, .hero::after { display: block; height: 154vw; background: url('/images/home/mobile-desert-backdrop-v1.webp') center / 100% 100% no-repeat; mix-blend-mode: normal; opacity: 1; z-index: -1; }
+  .hero::before { inset: 0 0 auto; mask-image: linear-gradient(#000 25%, transparent 45%); }
+  /* Keep the 1176 x 1602 landscape in proportion so peaks and cacti sit farther back. */
+  .hero::after { inset: auto 0 -14vw; height: calc(100vw * 1602 / 1176); mask-image: linear-gradient(transparent 42%, #000 62%); }
+  .desktopHeroInner { display: none; }
+  /* Trim the open middle sky while keeping the foreground artwork in proportion. */
+  .mobileDesertHero { display: block; position: relative; isolation: isolate; min-height: 130vw; padding: 26.5vw 6.5% calc(max(39vw, 9.5rem) - 7vw); }
+  .mobileDesertCopy { position: relative; top: clamp(10px, 3vw, 16px); z-index: 2; }
+  .mobileDesertKicker { margin: 0 0 3.5vw; color: #282c2b; font: 600 clamp(.57rem, 2.05vw, .95rem)/1.4 var(--font-body); letter-spacing: .15em; text-transform: uppercase; }
+  .mobileDesertKicker span { margin-inline: 1.2vw; }
+  .mobileDesertHeadline { margin: 0; color: #050605; font-weight: 400; overflow-wrap: anywhere; }
+  .mobileDesertHeadline > span { display: block; font: 400 clamp(3.4rem, 17.8vw, 8.5rem)/1.03 var(--font-mobile-display), Impact, sans-serif; text-transform: uppercase; letter-spacing: -.04em; transform: scaleX(.86); transform-origin: left; }
+  .mobileDesertHeadline > em { display: block; margin-top: .25vw; color: #a52b1d; font: italic 400 clamp(1.8rem, 9vw, 4.5rem)/1.04 var(--font-mobile-italic), Georgia, serif; letter-spacing: -.065em; }
+  .mobileDesertPromise { width: 70%; margin: 3.5vw 0 0; color: #202321; font: 400 clamp(.875rem, 3.52vw, 1.7rem)/1.32 var(--font-body); letter-spacing: -.035em; }
+  .mobileDesertActions { display: flex; flex-direction: column; width: 60%; gap: 1.2vw; margin-top: 3.4vw; }
+  .mobileDesertActions a { display: flex; align-items: center; justify-content: center; gap: 3vw; min-height: 44px; padding: 10px 6px; color: #242725; font: 700 clamp(.7rem, 2.7vw, 1.25rem)/1.25 var(--font-body); letter-spacing: .14em; text-transform: uppercase; }
+  .mobileDesertActions a:first-child { color: #fff7ea; background: #a52b1d; border-radius: 1px; }
+  .mobileDesertActions a:first-child:hover { background: #802013; }
+  .mobileDesertActions a:last-child:hover { color: #a52b1d; }
+  .mobileDesertActions svg { flex-shrink: 0; width: 3.5vw; min-width: 18px; }
+  .mobileReferencePour { position: absolute; z-index: 1; pointer-events: none; display: block; width: 52.381%; height: auto; aspect-ratio: 308 / 530; max-width: none; right: 0; bottom: 0; }
+  /* Let the next section meet the foreground along an irregular terrain edge. */
+  .page .tapSection {
+    --terrain-edge-height: clamp(12px, 3.765vw, 28px);
+    position: relative;
+    z-index: 1;
+    margin-top: calc(-1 * var(--terrain-edge-height));
+    mask-image: url('/images/home/mobile-rock-section-edge.svg'), linear-gradient(#000, #000);
+    mask-size: 100% var(--terrain-edge-height), 100% calc(100% - var(--terrain-edge-height) + 1px);
+    mask-position: center top, center bottom;
+    mask-repeat: no-repeat;
+  }
+  .tapIntro { padding-top: calc(7 * var(--home-mobile-unit) + var(--terrain-edge-height)); }
+}
+@media (max-width: 359px) {
+  .mobileDesertPromise br { display: none; }
+}

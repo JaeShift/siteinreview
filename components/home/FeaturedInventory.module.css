@@ -98,9 +98,8 @@
   .mobileSlide { display: grid; place-items: center; flex: 0 0 var(--slide-width); min-width: 0; scroll-snap-align: center; scroll-snap-stop: always; }
   .mobileArtwork { display: block; position: relative; width: min(290px, calc(100% - 16px)); aspect-ratio: 63 / 88; margin: 0; padding: 0; background: transparent; border: 0; cursor: pointer; }
   .mobileArtwork img { object-fit: contain; }
-  .mobileArtwork { border-radius: 12px; transition: opacity .2s ease, box-shadow .2s ease; }
+  .mobileArtwork { border-radius: 12px; transition: opacity .2s ease; }
   .mobileSlide[aria-hidden='true'] .mobileArtwork { opacity: .72; }
-  .mobileSlide[aria-hidden='false'] .mobileArtwork { box-shadow: 0 0 0 1px #c5a361, 0 0 20px #c5a36122; }
   .mobileArrows { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; padding-inline: max(6px, calc((100% - 290px) / 4 - 22px)); pointer-events: none; }
   .mobileArrows button { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 1px solid #c5a361; border-radius: 50%; background: rgb(23 24 21 / .76); color: #edcb89; box-shadow: 0 2px 8px rgb(0 0 0 / .18); cursor: pointer; pointer-events: auto; transition: background .15s ease; }
   .mobileArrows button:hover { background: rgb(23 24 21 / .95); }
