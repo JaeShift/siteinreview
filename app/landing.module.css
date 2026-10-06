@@ -48,7 +48,29 @@
 .heroGlass { object-fit:contain; object-position:center; mask-image:url('/images/home/hero-cream-glass-mask.svg'); mask-size:100% 100%; mask-position:center; mask-repeat:no-repeat; }
 .heroGlassPrint { object-fit:contain; object-position:center; mask-image:url('/images/home/hero-cream-print-mask.svg'); mask-size:100% 100%; mask-position:center; mask-repeat:no-repeat; pointer-events:none; }
 .hero :is(a,button):focus-visible { outline:3px solid var(--color-ink); outline-offset:5px; }
-.eventsSection { padding:64px var(--gutter) 48px; border-top:1px solid var(--line); background:#f7edde; background-image:var(--texture-grain); }
+.eventsSection {
+  /* White calendars and warm ink event features share the site's rust accents. */
+  --events-surface: #252520;
+  --events-ink: var(--color-ink);
+  --events-text: #fffaf1;
+  --events-muted: #d8cdbb;
+  --events-line: #61594c;
+  --events-control: #8b7860;
+  --events-gold: #ecd5a4;
+  --events-peach: #efbd9a;
+  --events-active: #383027;
+  --calendar-surface: #ffffff;
+  --calendar-text: #171815;
+  --calendar-muted: #5f5b55;
+  --calendar-line: #d8d5d0;
+  --calendar-control: #8a8278;
+  --calendar-accent: #a93822;
+  --calendar-active: #f2f2ef;
+  padding:64px var(--gutter) 48px;
+  border-top:1px solid var(--line);
+  background:#f7edde;
+  background-image:var(--texture-grain);
+}
 
 
 

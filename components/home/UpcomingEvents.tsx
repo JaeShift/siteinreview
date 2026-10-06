@@ -18,8 +18,8 @@ export default function UpcomingEvents({ events }: { events: MtgEvent[] }) {
       <Reveal>
         <header className={styles.heading}>
           <div>
-            <p className={styles.eyebrow}>Play at Kitsune</p>
-            <h2 id="events-title">Events & game nights.</h2>
+            <p className={styles.eyebrow}>Beer. Cards. Good company.</p>
+            <h2 id="events-title">Events & <span>game nights.</span></h2>
             <p className={styles.intro}>Find your next match. Make a night of it.</p>
           </div>
           <Link href="/events" className={styles.allEvents}>Browse all events <ArrowUpRight size={18} aria-hidden="true" /></Link>

@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { GOOGLE_CALENDAR_URL } from "@/lib/calendar-embed";
 import type { MtgEvent } from "@/lib/events-data";
 import { addDays, eventTime, phoenixDate, startOfWeek, upcomingWeekEvents, type TaproomEvent } from "@/lib/taproom-calendar";
@@ -14,6 +14,8 @@ const cache = new Map<string, { events: TaproomEvent[]; expires: number }>();
 const pending = new Map<string, Promise<TaproomEvent[]>>();
 const dateLabel = (value: string, options: Intl.DateTimeFormatOptions) => new Date(`${value}T12:00:00Z`).toLocaleDateString("en-US", { ...options, timeZone: "UTC" });
 const displayTitle = (title: string) => title.replace(/\s+([:;,!?])/g, "$1");
+// The feed's original title stays in event details; the list already shows the hours.
+const listTitle = (title: string) => displayTitle(title).replace(/^all day happy hour\s*:\s*\d{1,2}(?::\d{2})?\s*(?:[ap]m)?\s*[-–]\s*\d{1,2}(?::\d{2})?\s*[ap]m\s*$/i, "All day happy hour");
 const timeRange = (event: TaproomEvent) => {
   const start = eventTime(event);
   if (event.allDay || !(Date.parse(event.end) > Date.parse(event.start))) return start;
@@ -57,7 +59,6 @@ export default function MobileEventsCalendar({ featuredEvents }: { featuredEvent
   const [today, setToday] = useState("");
   const [active, setActive] = useState(false);
   const [week, setWeek] = useState("");
-  const [expanded, setExpanded] = useState(false);
   const [now, setNow] = useState(0);
   const [detail, setDetail] = useState<TaproomEvent | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -104,7 +105,6 @@ export default function MobileEventsCalendar({ featuredEvents }: { featuredEvent
       const next = addDays(value, amount * 7);
       return next < currentWeek ? currentWeek : next;
     });
-    setExpanded(false);
   };
   const onDialogKey = (event: KeyboardEvent<HTMLDialogElement>) => {
     if (event.key !== "Tab") return;
@@ -117,38 +117,48 @@ export default function MobileEventsCalendar({ featuredEvents }: { featuredEvent
   const errorMessage = (retry: () => void) => <div className={styles.message} role="status"><strong>The schedule is taking a breather.</strong><p>Try again, or check the live Google calendar.</p><button type="button" onClick={retry}>Try again</button><a href={GOOGLE_CALENDAR_URL} target="_blank" rel="noreferrer">Open calendar <ArrowUpRight size={14} /></a></div>;
 
   const weekEnd = week ? addDays(week, 6) : "";
+  const isCurrentWeek = !week || !today || week === startOfWeek(today);
   const weeklyEvents = upcomingWeekEvents(weekData.events, week, now);
-  const visibleEvents = expanded ? weeklyEvents : weeklyEvents.slice(0, 4);
+  const days = weeklyEvents.reduce<{ date: string; events: TaproomEvent[] }[]>((groups, event) => {
+    const previous = groups[groups.length - 1];
+    if (previous?.date === event.date) previous.events.push(event);
+    else groups.push({ date: event.date, events: [event] });
+    return groups;
+  }, []);
 
   return <div className={styles.mobile}>
     <header className={styles.heading}>
-      <p className={styles.eyebrow}><span>Beer. Games. Good company.</span></p>
-      <h2 id="mobile-events-title">This week <span>at Kitsune.</span></h2>
+      <p className={styles.eyebrow}><span>Beer. Cards. Good company.</span></p>
+      <h2 id="mobile-events-title">{isCurrentWeek ? "This week" : "Coming up"} <span>at Kitsune.</span></h2>
       <p className={styles.intro}>Your next night out starts here.</p>
     </header>
 
     <div className={styles.schedule}>
     <div className={styles.weekNav} aria-label="Choose a week">
       <button type="button" aria-label="Previous week" onClick={() => changeWeek(-1)} disabled={!week || !today || week <= startOfWeek(today)}><ChevronLeft size={19} /></button>
-      <span aria-live="polite"><strong>{week ? `${dateLabel(week, { month: "short", day: "numeric" })} – ${dateLabel(weekEnd, { month: "short", day: "numeric" })}` : "This week"}</strong></span>
+      <span className={styles.weekLabel} aria-live="polite"><span>{isCurrentWeek ? "This week’s lineup" : "Upcoming lineup"}</span><strong>{week ? `${dateLabel(week, { month: "short", day: "numeric" })} – ${dateLabel(weekEnd, { month: "short", day: "numeric" })}` : "This week"}</strong></span>
       <button type="button" aria-label="Next week" onClick={() => changeWeek(1)} disabled={!week || week >= "2099-12-24"}><ChevronRight size={19} /></button>
     </div>
-    {today && week !== startOfWeek(today) && <button className={styles.reset} type="button" onClick={() => { setWeek(startOfWeek(today)); setExpanded(false); }}>Back to this week</button>}
+    {today && week !== startOfWeek(today) && <button className={styles.reset} type="button" onClick={() => setWeek(startOfWeek(today))}>Back to this week</button>}
 
     <div aria-busy={weekData.status === "loading"}>
       {weekData.status === "loading" ? <div className={styles.loading} role="status">Loading this week’s happenings…</div> : weekData.status === "error" ? errorMessage(weekData.retry) : weeklyEvents.length === 0 ? <div className={styles.message}><strong>A little room for spontaneity.</strong><p>No upcoming events left this week. Browse next week or come by for a pour.</p></div> : <ul className={styles.weekList} id={`${id}-week`}>
-        {visibleEvents.map(event => <li key={event.id}>
-          <button type="button" className={styles.eventRow} data-kind={event.kind} data-today={event.date === today || undefined} onClick={e => showDetails(event, e.currentTarget)}>
-            <time dateTime={event.date} className={styles.dateStamp}><span>{dateLabel(event.date, { month: "short" })}</span><strong>{dateLabel(event.date, { day: "2-digit" })}</strong><span>{dateLabel(event.date, { weekday: "short" })}</span>{event.date === today && <span className={styles.today}>Today</span>}</time>
-            <span className={styles.eventCopy}><strong>{displayTitle(event.title)}</strong><span className={styles.eventTime}>{timeRange(event)}</span></span>
-            <ChevronRight className={styles.rowArrow} size={16} aria-hidden="true" />
-          </button>
+        {days.map(day => <li key={day.date} className={styles.dayGroup} data-today={day.date === today || undefined}>
+          <time dateTime={day.date} className={styles.dateStamp} aria-label={dateLabel(day.date, { weekday: "long", month: "long", day: "numeric" })}><span>{dateLabel(day.date, { month: "short" })}</span><strong>{dateLabel(day.date, { day: "2-digit" })}</strong><span>{dateLabel(day.date, { weekday: "short" })}</span>{day.date === today && <span className={styles.today}>Today</span>}</time>
+          <ul className={styles.dayEvents} aria-label={dateLabel(day.date, { weekday: "long", month: "long", day: "numeric" })}>
+            {day.events.map(event => <li key={event.id}>
+              <button type="button" className={styles.eventRow} data-kind={event.kind} aria-label={`${listTitle(event.title)}, ${dateLabel(event.date, { weekday: "long", month: "long", day: "numeric" })}, ${timeRange(event)}`} onClick={e => showDetails(event, e.currentTarget)}>
+                <span className={styles.eventCopy}><span className={`${styles.eventKind} ${styles[event.kind]}`}>{labels[event.kind]}</span><strong>{listTitle(event.title)}</strong><span className={styles.eventTime}>{timeRange(event)}</span></span>
+                <ArrowRight className={styles.rowArrow} size={18} aria-hidden="true" />
+              </button>
+            </li>)}
+          </ul>
         </li>)}
       </ul>}
     </div>
-    {weekData.status === "ready" && weeklyEvents.length > 4 && <button type="button" className={styles.showAll} aria-expanded={expanded} aria-controls={`${id}-week`} onClick={() => setExpanded(value => !value)}>{expanded ? "Show fewer events" : `All ${weeklyEvents.length} upcoming events`}<ArrowDown size={15} style={{ transform: expanded ? "rotate(180deg)" : undefined }} aria-hidden="true" /></button>}
 
     </div>
+    <div className={styles.calendarFoot}><p className={styles.timezone}>All times local to Phoenix.</p><a href={GOOGLE_CALENDAR_URL} target="_blank" rel="noreferrer">Full calendar <ArrowUpRight size={15} aria-hidden="true" /></a></div>
 
     {featuredEvents.length > 0 && <div className={styles.registration}><p className={styles.eyebrow}>Tickets & registration</p>{featuredEvents.map(event => <Link key={event.slug} href={event.format === "Prerelease" ? "/pre-release" : `/events/${event.slug}`}><span><strong>{displayTitle(event.title)}</strong><span>{dateLabel(event.date, { month: "short", day: "numeric" })} · {event.time}{Number.isFinite(event.entryFee) && ` · ${event.entryFee === 0 ? "Free" : `$${event.entryFee.toFixed(2)}`}`}</span></span><ArrowUpRight size={18} aria-hidden="true" /></Link>)}</div>}
 
