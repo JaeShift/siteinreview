@@ -1,0 +1,8 @@
+# Keep local verification output and credentials out of deployment uploads.
+.git/
+node_modules/
+.next/
+.next-*/
+artifacts/
+.env*
+*.tsbuildinfo

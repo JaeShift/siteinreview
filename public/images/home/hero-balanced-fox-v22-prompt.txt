@@ -1,0 +1,8 @@
+Created with the built-in image_gen tool.
+
+Use case: lighting-weather.
+Task: a precise COLOR-GRADE-ONLY edit of an existing brewery hero banner. User says the original is too reddish brown and the neutral edit is too gray; make ONE version exactly halfway between their color palettes.
+Image 1 (hero-neutral-fox-v21.png) is the EDIT TARGET. Keep its corrected fox logo, glass, beer, foam, condensation, entire mural, cropped red disk, torii, blossoms, waves, wood grain, textures, position, scale, lighting direction, contrast, and 3:1 composition unchanged.
+Image 2 (hero-natural-amber-v19.png) is ONLY a WARMTH REFERENCE, not a geometry or logo reference.
+Adjust image 1's color temperature and saturation to a natural 50/50 midpoint between image 1 and image 2: restore approximately half of image 2's warm gold/chestnut color to the background and wooden table. Wall remains deep dark charcoal with subtle warm umber undertones, not flat blue-gray and not heavily sepia. Blossoms and wave lines soft muted antique champagne-gold, halfway between pale gray-cream and copper-orange. Table natural warm medium walnut with gently golden highlights, halfway between gray weathered wood and reddish copper. Balanced, rich but restrained warmth. Beer keeps its natural amber-gold; fox stays orange and cream; foam remains creamy white; cropped red disk remains red.
+Do not redraw, rearrange, relight or redesign anything. Keep image 1's corrected fox print EXACTLY unchanged. No new details, no new sunlight or environment, no text. This should be recognizably the same banner with an intermediate color grade, distinctly warmer than image 1 and distinctly less brown/red than image 2. Preserve wide 3:1 ratio and resolution around 2172x724.

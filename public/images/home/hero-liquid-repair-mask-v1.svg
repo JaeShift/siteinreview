@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1122" height="1402" viewBox="0 0 1122 1402">
+  <title>Unprinted amber liquid repair mask</title>
+  <desc>White exposes a registered repair of the original 1122 by 1402 glass photograph. Transparent pixels preserve the original fox print, glass edges, foam, rim and base.</desc>
+  <defs>
+    <!-- Feather only the liquid perimeter. The protected print stays hard-edged. -->
+    <filter id="liquid-edge" x="-2%" y="-2%" width="104%" height="104%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="0.75" />
+    </filter>
+    <mask id="unprinted-liquid" maskUnits="userSpaceOnUse" x="0" y="0" width="1122" height="1402" style="mask-type:luminance">
+      <!-- Inside the side highlights; above the thick clear base. -->
+      <path fill="white" filter="url(#liquid-edge)" d="
+        M 344,352
+        C 424,335 491,331 559,332
+        C 630,332 699,336 768,347
+        L 734,1104
+        C 690,1120 615,1128 558,1127
+        C 491,1128 423,1121 384,1106
+        Z" />
+      <!--
+        Connected print footprint, including the black/cream curls around the fox.
+        The 8px protective stroke reserves a 4px source-pixel safety margin.
+        Internal amber pockets are intentionally preserved with the print.
+      -->
+      <path fill="black" stroke="black" stroke-width="8" stroke-linejoin="round" stroke-linecap="round" d="
+        M 466,430
+        C 479,422 499,441 519,458
+        C 533,470 547,478 560,477
+        C 580,470 601,473 619,486
+        L 674,440
+        C 684,430 694,420 707,421
+        C 720,420 731,429 736,443
+        C 744,458 748,477 746,498
+        C 747,513 741,526 735,539
+        C 746,545 755,563 753,583
+        C 757,602 748,621 734,632
+        C 748,628 756,643 756,662
+        C 759,681 754,699 743,715
+        C 747,727 757,740 761,752
+        C 770,765 769,782 761,795
+        C 764,807 757,821 747,830
+        C 745,844 741,854 736,864
+        C 748,871 755,884 756,902
+        C 760,919 754,936 749,947
+        C 750,962 743,978 731,986
+        C 720,994 708,994 696,989
+        C 690,1000 679,1002 668,999
+        C 656,1006 643,1000 633,991
+        C 617,990 606,996 591,997
+        C 569,1005 547,1005 529,1000
+        C 510,1003 492,998 477,990
+        C 461,987 449,978 441,966
+        C 430,975 414,981 403,975
+        C 393,970 389,958 389,947
+        C 380,935 382,923 388,913
+        C 389,901 393,890 397,880
+        C 387,872 381,860 383,846
+        C 377,834 378,821 379,809
+        C 373,796 370,782 372,766
+        C 368,752 372,734 383,723
+        C 373,711 368,697 369,682
+        C 365,667 367,649 374,637
+        C 381,622 393,616 406,617
+        C 391,609 378,601 375,587
+        C 369,574 372,560 378,548
+        C 375,536 381,524 390,518
+        C 390,505 399,496 410,492
+        C 423,488 435,492 443,497
+        C 451,492 461,489 472,490
+        C 465,469 460,444 466,430
+        Z" />
+    </mask>
+  </defs>
+  <rect width="1122" height="1402" fill="white" mask="url(#unprinted-liquid)" />
+</svg>

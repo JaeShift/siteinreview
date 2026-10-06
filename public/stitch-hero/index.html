@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Kitsune Brewing Co. — Mobile Hero</title>
+
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Bodoni+Moda:ital,opsz,wght@1,6..96,600;1,6..96,700&amp;family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&amp;family=Cinzel:wght@600&amp;display=swap" rel="stylesheet">
+<style>
+    :root {
+      --bg-washi: #f2e8d5;
+      --burnt-red: #b33016;
+      --ink-black: #111110;
+      --cloud-taupe: rgba(180, 168, 150, 0.35);
+    }
+    body {
+      background-color: #e5dac4;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink-black);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .font-anton { font-family: 'Anton', sans-serif; letter-spacing: 0.02em; }
+    .font-bodoni { font-family: 'Bodoni Moda', serif; }
+    .hero-container {
+      width: 100%;
+      max-width: 480px;
+      min-height: 780px;
+      height: 100vh;
+      max-height: 840px;
+      position: relative;
+      background-color: var(--bg-washi);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+    @media (min-width: 768px) {
+      .hero-container {
+        max-width: 420px;
+      }
+    }
+    /* Subtle paper tactile grain */
+    .washi-grain {
+      background-image: radial-gradient(rgba(0,0,0,0.035) 1px, transparent 0), radial-gradient(rgba(255,255,255,0.4) 1px, transparent 0);
+      background-size: 8px 8px, 12px 12px;
+      background-position: 0 0, 4px 4px;
+    }
+    /* Smooth button hover/active */
+    .tap-target {
+      min-height: 46px;
+      touch-action: manipulation;
+    }
+  </style>
+<link rel="stylesheet" href="./utilities.css"><link rel="stylesheet" href="./refinement.css"></head>
+<body class="p-0 sm:py-6 sm:px-4"><a class="skip-link" href="#hero-message">Skip to content</a>
+<!-- Mobile Hero Canvas -->
+<main class="hero-container washi-grain select-none concept-hero">
+<!-- Japanese Pale Engraved Cloud Scrolls in Upper Negative Space -->
+<div class="absolute inset-0 pointer-events-none z-0 overflow-hidden concept-clouds">
+<!-- Upper right cloud cluster -->
+<svg class="absolute -top-4 -right-12 w-80 h-64 text-[#d9ceb8] opacity-70" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 240 180">
+<path d="M 40,80 C 40,65 55,50 75,50 C 80,35 100,25 125,28 C 145,18 175,25 185,45 C 205,45 220,60 220,78 C 220,95 205,110 185,110 L 60,110 C 45,110 40,95 40,80 Z" stroke-dasharray="2 1"></path>
+<path d="M 65,65 C 65,58 72,52 82,53 C 85,42 98,36 112,38 C 124,32 142,36 148,48"></path>
+<path d="M 90,48 C 105,48 115,55 125,60"></path>
+<!-- Swirling tail scroll -->
+<path d="M 185,92 C 160,92 145,80 145,68 C 145,55 158,48 168,52 C 178,56 180,68 172,74 C 166,78 158,76 156,70" stroke-width="1"></path>
+<path d="M 60,98 C 80,98 95,88 95,78 C 95,68 85,62 76,65 C 68,68 66,78 72,82" stroke-width="1"></path>
+<!-- Floating secondary swirl -->
+<path d="M 15,120 C 35,120 50,110 50,98 C 50,86 38,80 28,84 C 18,88 16,98 22,104" stroke-width="0.9"></path>
+</svg>
+<!-- Upper mid-left soft subtle cloud ribbon -->
+<svg class="absolute top-16 -left-10 w-56 h-36 text-[#decfae] opacity-45" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 180 100">
+<path d="M 10,50 C 30,50 45,40 55,30 C 70,18 95,22 105,35 C 120,35 135,45 135,58 L 20,58 Z"></path>
+<path d="M 45,42 C 55,42 62,35 70,30"></path>
+<path d="M 80,50 C 70,50 62,44 64,38 C 66,32 74,32 78,36" stroke-width="0.8"></path>
+</svg>
+</div>
+<!-- Compact Header: Brand identity + Cart & Menu -->
+<header class="relative z-20 flex items-center justify-between px-5 pt-4 pb-2 w-full concept-header">
+<a aria-label="Kitsune Brewing Co. Home" class="flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b33016]" href="/">
+<!-- Fox Brand Seal -->
+<div class="w-10 h-10 rounded-full border border-[#111110]/15 bg-[#f5ecdc] p-1 flex items-center justify-center shadow-xs flex-shrink-0">
+<img alt="Kitsune Seal" class="w-full h-full object-contain concept-seal" src="/images/logo.png">
+</div>
+<!-- Black Brush Wordmark -->
+<div class="h-6 flex items-center">
+<img alt="KITSUNE" class="h-5 sm:h-6 object-contain filter contrast-125 concept-wordmark" src="/images/home/mobile-kitsune-brush-v1.webp">
+</div>
+</a>
+<!-- Header Controls: Cart and Menu -->
+<nav aria-label="Secondary navigation" class="flex items-center gap-1.5">
+<!-- Cart button with touch target -->
+<a aria-label="Open current website for shopping cart" class="tap-target min-w-[44px] flex items-center justify-center p-2 rounded-full text-[#111110] hover:text-[#b33016] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b33016]" href="/#main-content" title="Shopping cart on the current website">
+<svg class="w-5 h-5 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<!-- Menu button -->
+<button aria-label="Toggle navigation menu" class="tap-target min-w-[44px] flex items-center justify-center p-2 rounded-full text-[#111110] hover:text-[#b33016] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b33016]" type="button" aria-expanded="false" aria-controls="concept-menu">
+<svg class="w-6 h-6 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3.75 7.5h16.5M3.75 12.5h16.5M3.75 17.5h16.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</nav>
+</header><nav id="concept-menu" class="concept-menu" aria-label="Main navigation" hidden=""><a href="/">Home</a><a href="/#tap-list">Our beers</a><a href="/calendar">Calendar</a><a href="/shop">Merch shop</a><a href="/card-shop">Card shop</a><a href="/contact">Contact</a></nav>
+<!-- Main Content Area: Left-aligned 60-65% text + Right-side amber pint -->
+<div class="relative z-10 flex-1 flex flex-col justify-start px-6 pt-10 sm:pt-14 pb-4 concept-content">
+<!-- Text Column (starts roughly one third down, 62% width max so it never collides with pint) -->
+<div class="w-[62%] sm:w-[60%] flex flex-col z-20 concept-copy">
+<!-- Headline -->
+<h1 class="leading-[0.98] tracking-tight" id="hero-message">
+<span class="block font-anton text-[#111110] text-[40px] sm:text-[46px] uppercase leading-none">
+            Good beer.
+          </span>
+<span class="block font-bodoni italic text-[#b33016] text-[34px] sm:text-[40px] font-semibold leading-[1.05] mt-1 sm:mt-1.5">Good company.</span>
+</h1>
+<!-- Body text -->
+<p class="mt-4 sm:mt-5 text-[#2a2825] text-[15px] sm:text-[16px] leading-[1.4] font-normal max-w-[220px]">Independent beer,<br>taproom events,<br>and a place to belong.</p>
+<!-- CTA Buttons -->
+<div class="mt-6 sm:mt-8 flex flex-col items-start gap-3 w-full concept-actions">
+<!-- Main Action: Solid Burnt Red Button -->
+<a class="tap-target inline-flex items-center justify-center gap-2.5 px-6 py-3 bg-[#b33016] text-[#f2e8d5] text-[15px] font-medium tracking-wide rounded-none shadow-sm hover:bg-[#9a260f] active:bg-[#85200c] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#b33016] primary-action" href="/#tap-list">
+<span>Our beers</span>
+<svg aria-hidden="true" class="w-4 h-4 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<!-- Secondary Action: Text Treatment with Arrow -->
+<a class="tap-target inline-flex items-center gap-2 py-2 text-[#111110] text-[14px] font-semibold hover:text-[#b33016] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#b33016] secondary-action" href="/calendar">
+<span>What's happening</span>
+<svg aria-hidden="true" class="w-4 h-4 stroke-[2.2] text-[#b33016] transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</div>
+</div>
+<!-- Realistic Amber Pint Glass with Fox Artwork, Foam & Condensation -->
+<!-- Positioned at right, cropped by right edge, rises down to bottom-right foreground -->
+<div class="absolute -right-6 bottom-16 sm:bottom-18 w-[215px] sm:w-[235px] h-[480px] pointer-events-none z-15 flex items-end justify-end concept-pint">
+<img alt="Pint of Kitsune craft beer" class="w-full h-full object-contain object-bottom filter drop-shadow-[0_18px_25px_rgba(0,0,0,0.3)]" src="/images/home/mobile-fox-pint-fit-v4.webp">
+</div>
+</div>
+<!-- LOWER FIFTH: Detailed Engraved Arizona Mountain & Saguaro Scene with Near-Black Foreground Rocks -->
+<div class="relative w-full h-[155px] sm:h-[170px] mt-auto pointer-events-none z-10 overflow-hidden concept-landscape">
+<svg class="w-full h-full object-cover object-bottom" fill="none" preserveAspectRatio="none" viewBox="0 0 390 160" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- Paper wash fade to blend mountains naturally into cream -->
+<linearGradient id="skyWash" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#f2e8d5" stop-opacity="0"></stop>
+<stop offset="70%" stop-color="#f2e8d5" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#f2e8d5" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<!-- Distant Mesa / Desert Mountain Ridges (Subtle warm taupe engraving lines) -->
+<g opacity="0.6" stroke="#9c8c77" stroke-width="0.85">
+<!-- Ridge 1 -->
+<path d="M-10 75 Q 35 48, 80 58 T 170 45 T 260 55 T 350 42 T 410 52"></path>
+<path d="M 40 54 L 55 75 M 48 53 L 65 75 M 130 50 L 145 70 M 138 48 L 155 72 M 220 52 L 235 70" stroke-dasharray="1 1.5" stroke-width="0.5"></path>
+<!-- Ridge 2 (Mid ground) -->
+<path d="M-20 90 Q 50 68, 120 78 T 210 65 T 310 76 T 410 68" stroke="#7d6d59" stroke-width="1.1"></path>
+<!-- Engraving hatch texture on mid mountains -->
+<path d="M 80 74 L 95 95 M 88 73 L 105 95 M 98 75 L 115 95 M 170 70 L 185 92 M 178 68 L 195 90 M 270 72 L 285 96 M 278 74 L 295 98" stroke="#7d6d59" stroke-width="0.6"></path>
+</g>
+<!-- Saguaro Cacti Silhouettes across lower midground -->
+<g fill="#332c24" opacity="0.85">
+<!-- Left tall Saguaro -->
+<!-- Trunk -->
+<rect height="52" rx="2.2" width="4.5" x="36" y="52"></rect>
+<!-- Left Arm -->
+<path d="M 36 78 H 27 A 2 2 0 0 1 25 76 V 64 A 2 2 0 0 1 29 64 V 74 H 36 Z"></path>
+<!-- Right Arm -->
+<path d="M 40.5 70 H 48 A 2 2 0 0 1 50 72 V 80 A 2 2 0 0 1 46 80 V 74 H 40.5 Z"></path>
+<!-- Distant smaller saguaro -->
+<rect height="30" opacity="0.6" rx="1.5" width="3" x="88" y="70"></rect>
+<path d="M 88 82 H 83 V 76 H 85 V 80 H 88 Z" opacity="0.6"></path>
+<!-- Mid Saguaro near center -->
+<rect height="42" opacity="0.75" rx="2" width="4" x="156" y="65"></rect>
+<path d="M 160 78 H 167 V 71 H 164 V 76 H 160 Z" opacity="0.75"></path>
+<path d="M 156 84 H 150 V 78 H 152 V 82 H 156 Z" opacity="0.75"></path>
+<!-- Saguaro cluster near right (standing behind beer glass base) -->
+<rect height="48" opacity="0.5" rx="2" width="4.5" x="255" y="60"></rect>
+<path d="M 255 76 H 248 V 68 H 251 V 73 H 255 Z" opacity="0.5"></path>
+<rect height="50" opacity="0.4" rx="2" width="4.5" x="325" y="58"></rect>
+</g>
+<!-- Near-Black Foreground Rocks & Desert Terrain Grounding the Glass -->
+<!-- Low terrain undulation -->
+<path d="M-10 112 Q 60 98, 140 106 T 280 98 T 410 102 L 410 160 L -10 160 Z" fill="#241e19"></path>
+<!-- Foremost dark rocky crag anchoring the right side under the pint -->
+<path d="M 160 160 L 180 128 L 220 120 L 265 132 L 310 115 L 360 125 L 400 118 L 410 160 Z" fill="#15120f"></path>
+<!-- Engraving line hatchings on foreground rocks for tactile woodcut aesthetic -->
+<g stroke="#3a322b" stroke-width="0.8">
+<line x1="200" x2="185" y1="126" y2="150"></line>
+<line x1="208" x2="195" y1="124" y2="152"></line>
+<line x1="216" x2="205" y1="122" y2="150"></line>
+<line x1="240" x2="225" y1="128" y2="156"></line>
+<line x1="250" x2="238" y1="130" y2="156"></line>
+<line x1="285" x2="270" y1="120" y2="154"></line>
+<line x1="295" x2="282" y1="118" y2="155"></line>
+<line x1="305" x2="295" y1="117" y2="152"></line>
+<line x1="330" x2="315" y1="124" y2="156"></line>
+<line x1="340" x2="328" y1="123" y2="156"></line>
+<line x1="375" x2="360" y1="120" y2="158"></line>
+</g>
+<!-- Left foreground boulders -->
+<path d="M -10 160 L -10 135 L 25 124 L 60 130 L 95 120 L 130 138 L 150 160 Z" fill="#181512"></path>
+<g stroke="#362f27" stroke-width="0.75">
+<line x1="15" x2="5" y1="130" y2="150"></line>
+<line x1="25" x2="15" y1="128" y2="152"></line>
+<line x1="75" x2="62" y1="128" y2="152"></line>
+<line x1="85" x2="72" y1="125" y2="154"></line>
+</g>
+</svg>
+</div>
+</main>
+
+
+<footer class="concept-note">Stitch layout study · Kitsune artwork restored · <a href="/">Return to current website</a></footer><script src="./preview.js"></script></body></html>

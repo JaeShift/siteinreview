@@ -77,25 +77,25 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <section id="magic" className={styles.shopSection} aria-labelledby="shop-title">
+        <Reveal><header className={styles.sectionHead}><div><p className={styles.eyebrow}>For your next game</p><h2 id="shop-title">Featured in the shop.</h2></div><Link href="/card-shop" className={styles.textLink}>Shop all cards <ArrowUpRight size={18} aria-hidden="true" /></Link></header></Reveal>
+        <Reveal>{products.length ? <FeaturedInventory products={products} /> : <div className={styles.emptyShop}><p>Check the card shop for the latest available inventory.</p><Link href="/card-shop" className={styles.primaryButton}>Browse Magic <ArrowUpRight size={18} aria-hidden="true" /></Link></div>}</Reveal>
+        <div className={styles.shopFootnote}><p>Find your next card. Make yourself at home.</p><Link href="/shop">Looking for Kitsune merchandise? <ArrowUpRight size={17} aria-hidden="true" /></Link></div>
+      </section>
+
       <section id="tap-list" className={`${original.home} ${original.menuSection} ${styles.tapSection}`} aria-labelledby="tap-title">
         <div className={styles.tapIntro}>
-          <header className={`${original.sectionHead} ${styles.tapHead}`}><div><p className={`${original.eyebrow} ${styles.tapEyebrow}`}><span>A little adventure<br className={styles.mobileBreak} /> in every pour</span></p><h2 id="tap-title">Find your pour.<br /><span>Your kind of good.</span></h2></div><p>Hazy, crisp, tart, or a little unexpected. <span>Find your next favorite pour.</span></p></header>
+          <a className={styles.lineupLink} href="#taproom-lineup"><span>Fresh from the taps</span><h2 id="tap-title">The taproom lineup</h2><i aria-hidden="true"><span /><ArrowDown size={24} /><span /></i></a>
           <figure className={styles.tapFigure}>
-            <div className={`${original.tapFeature} ${styles.tapPhoto}`}><Image src="/images/uploads/fox-tails-tap-panorama.png" alt="Handcrafted fox-tail tap handles at Kitsune" fill sizes="100vw" /><div><span>From our taps.</span><strong>To your table.</strong></div><span className={original.photoIndex}>KITSUNE / NORTH PHOENIX</span></div>
+            <div className={`${original.tapFeature} ${styles.tapPhoto}`}><Image src="/images/uploads/fox-tails-tap-panorama.png" alt="Handcrafted fox-tail tap handles at Kitsune" fill sizes="100vw" /><span className={original.photoIndex}>KITSUNE / NORTH PHOENIX</span></div>
             <figcaption className={styles.tapCaption}>Kitsune / North Phoenix<span aria-hidden="true" /></figcaption>
           </figure>
         </div>
-        <a className={styles.lineupLink} href="#taproom-lineup"><span>Fresh from the taps</span><strong>The taproom lineup</strong><i aria-hidden="true"><span /><ArrowDown size={24} /><span /></i></a>
         <div id="taproom-lineup" className={styles.tapMenu}><MenuEmbed /></div>
       </section>
 
       <section id="calendar" className={styles.eventsSection} aria-label="Events and taproom calendar">
         <UpcomingEvents events={events} />
-      </section>
-      <section id="magic" className={styles.shopSection} aria-labelledby="shop-title">
-        <Reveal><header className={styles.sectionHead}><div><p className={styles.eyebrow}>For your next game</p><h2 id="shop-title">Featured in the shop.</h2></div><Link href="/card-shop" className={styles.textLink}>Shop all cards <ArrowUpRight size={18} aria-hidden="true" /></Link></header></Reveal>
-        <Reveal>{products.length ? <FeaturedInventory products={products} /> : <div className={styles.emptyShop}><p>Check the card shop for the latest available inventory.</p><Link href="/card-shop" className={styles.primaryButton}>Browse Magic <ArrowUpRight size={18} aria-hidden="true" /></Link></div>}</Reveal>
-        <div className={styles.shopFootnote}><p>Find your next card. Make yourself at home.</p><Link href="/shop">Looking for Kitsune merchandise? <ArrowUpRight size={17} aria-hidden="true" /></Link></div>
       </section>
 
       <section id="discover" className={styles.communitySection} aria-labelledby="community-title">
