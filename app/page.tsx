@@ -37,6 +37,15 @@ function KitsuneStory() {
   );
 }
 
+// Combine consecutive days only while their hours match the shared schedule.
+const visitHours = TAPROOM_HOURS.reduce<Array<{ firstDay: string; lastDay: string; hours: string }>>((rows, day) => {
+  const hours = formatDayHours(day);
+  const previous = rows[rows.length - 1];
+  if (previous?.hours === hours) previous.lastDay = day.day;
+  else rows.push({ firstDay: day.day, lastDay: day.day, hours });
+  return rows;
+}, []);
+
 export default async function HomePage() {
   const events = selectUpcomingEvents(getEventsStore(), await getPrereleaseEventStore());
   const products = selectFeaturedProducts(getSinglesStore());
@@ -136,7 +145,27 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      <section id="visit" className={styles.visitSection} aria-labelledby="visit-title"><div className={styles.visitCopy}><p className={styles.eyebrow}>Your neighborhood brewery</p><h2 id="visit-title">Find the fox.<br /><em>Stay a while.</em></h2><address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address><div className={styles.visitActions}><a href={DIRECTIONS_URL} className={styles.primaryButton}>Get directions <ArrowUpRight size={18} aria-hidden="true" /></a><Link href="/contact" className={styles.textLink}>Get in touch <ArrowUpRight size={18} aria-hidden="true" /></Link></div><div className={styles.hours}><h3>Taproom hours</h3><ul>{TAPROOM_HOURS.map(day => <li key={day.day}><span>{day.day}</span><span>{formatDayHours(day)}</span></li>)}</ul><p>All times local to Phoenix.</p></div></div><div className={styles.map}><MapEmbed /></div></section>
+      <section id="visit" className={styles.visitSection} aria-labelledby="visit-title">
+        <div className={styles.visitHours}>
+          <p className={styles.visitEyebrow}>Your neighborhood brewery</p>
+          <h2 id="visit-title">Taproom<br />hours</h2>
+          <dl className={styles.hoursList}>
+            {visitHours.map(row => <div key={row.firstDay}>
+              <dt>{row.firstDay === row.lastDay ? row.firstDay : `${row.firstDay.slice(0, 3)}–${row.lastDay.slice(0, 3)}`}</dt>
+              <dd>{row.hours}</dd>
+            </div>)}
+          </dl>
+          <p className={styles.hoursTimezone}>Phoenix local time</p>
+        </div>
+        <div className={styles.visitDirections}>
+          <div className={styles.map}><MapEmbed /></div>
+          <a href={DIRECTIONS_URL} className={styles.directionsLink}>Get directions <ArrowUpRight size={48} strokeWidth={2.25} aria-hidden="true" /></a>
+          <div className={styles.visitDetails}>
+            <address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address>
+            <Link href="/contact">Get in touch <ArrowUpRight size={18} aria-hidden="true" /></Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
