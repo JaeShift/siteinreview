@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Anton, Bodoni_Moda } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, MapPin, Phone } from "lucide-react";
 import MenuEmbed from "@/components/MenuEmbed";
 import UpcomingEvents from "@/components/home/UpcomingEvents";
 import MapEmbed from "@/components/MapEmbed";
@@ -147,18 +147,29 @@ export default async function HomePage() {
 
       <section id="visit" className={styles.visitSection} aria-labelledby="visit-title">
         <div className={styles.visitHours}>
-          <h2 id="visit-title">Taproom<br />hours</h2>
-          <dl className={styles.hoursList}>
-            {visitHours.map(row => <div key={row.firstDay}>
-              <dt>{row.firstDay === row.lastDay ? row.firstDay : `${row.firstDay.slice(0, 3)}–${row.lastDay.slice(0, 3)}`}</dt>
-              <dd>{row.hours}</dd>
-            </div>)}
-          </dl>
-          <p className={styles.hoursTimezone}>Phoenix local time</p>
+          <div className={styles.visitHeading}>
+            <h2 id="visit-title">Taproom<br />hours</h2>
+            <p className={styles.visitTagline}>Good beer.<br />Better company.</p>
+            <div className={styles.visitDesert} aria-hidden="true">
+              <Image src="/images/home/taproom-desert-sun-v1.png" alt="" fill sizes="(max-width: 760px) 60vw, 30vw" />
+            </div>
+          </div>
+          <div className={styles.hoursCard}>
+            <dl className={styles.hoursList}>
+              {visitHours.map(row => <div key={row.firstDay}>
+                <dt>{row.firstDay === row.lastDay ? row.firstDay : `${row.firstDay.slice(0, 3)}–${row.lastDay.slice(0, 3)}`}</dt>
+                <dd>{row.hours}</dd>
+              </div>)}
+            </dl>
+            <p className={styles.hoursTimezone}>Phoenix local time</p>
+          </div>
         </div>
         <div className={styles.visitDirections}>
+          <div className={styles.visitActions}>
+            <a href="tel:+16022458593" className={styles.callLink}><Phone size={20} aria-hidden="true" /><span>Call to confirm</span><ArrowRight size={18} aria-hidden="true" /></a>
+            <a href={DIRECTIONS_URL} className={styles.directionsLink}><MapPin size={20} aria-hidden="true" /><span>Get directions</span><ArrowRight size={18} aria-hidden="true" /></a>
+          </div>
           <div className={styles.map}><MapEmbed /></div>
-          <a href={DIRECTIONS_URL} className={styles.directionsLink}>Get directions <ArrowUpRight size={48} strokeWidth={2.25} aria-hidden="true" /></a>
           <div className={styles.visitDetails}>
             <address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address>
           </div>
