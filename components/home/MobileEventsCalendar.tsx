@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { GOOGLE_CALENDAR_URL } from "@/lib/calendar-embed";
@@ -129,7 +130,12 @@ export default function MobileEventsCalendar({ featuredEvents }: { featuredEvent
   return <div className={styles.mobile}>
     <header className={styles.heading}>
       <p className={styles.eyebrow}><span>Beer. Cards. Good company.</span></p>
-      <h2 id="mobile-events-title">{isCurrentWeek ? "This week" : "Coming up"} <span>at Kitsune.</span></h2>
+      <div className={styles.titleRow}>
+        <h2 id="mobile-events-title">{isCurrentWeek ? "This week" : "Coming up"} <span>at Kitsune.</span></h2>
+        <div className={styles.headingArtwork} aria-hidden="true">
+          <Image src="/images/home/events-cards-and-beer-v1.png" alt="" fill sizes="(max-width: 520px) 42vw, 210px" />
+        </div>
+      </div>
       <p className={styles.intro}>Your next night out starts here.</p>
     </header>
 

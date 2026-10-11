@@ -16,8 +16,11 @@
   .heading { padding-bottom: 28px; position: relative; }
   .heading > .eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: .625rem; letter-spacing: .12em; }
   .heading > .eyebrow::before { content: ""; width: 26px; height: 1px; background: var(--event-red); }
-  .heading h2 { font: 400 clamp(2.25rem, 11vw, 3.25rem)/1.08 var(--font-mobile-display), Impact, sans-serif; text-transform: uppercase; letter-spacing: -.025em; }
+  .titleRow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .78fr); align-items: center; gap: 8px; }
+  .heading h2 { font: 400 clamp(2rem, 10.5vw, 3.25rem)/1.08 var(--font-mobile-display), Impact, sans-serif; text-transform: uppercase; letter-spacing: -.025em; }
   .heading h2 > span { display: block; color: inherit; }
+  .headingArtwork { position: relative; width: 100%; max-width: 210px; aspect-ratio: 1.18; justify-self: end; pointer-events: none; }
+  .headingArtwork img { object-fit: cover; }
   .intro { margin-top: 14px; color: #494238; font: 400 1rem/1.5 var(--font-body); }
   .schedule { --schedule-line: var(--calendar-line); --schedule-text: var(--calendar-text); --schedule-muted: var(--calendar-muted); background: var(--calendar-surface); border: 1px solid var(--schedule-line); border-top: 3px solid var(--event-red); color: var(--schedule-text); }
   .weekNav { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 8px; padding: 16px 12px; text-align: center; border-bottom: 1px solid var(--schedule-line); background: var(--calendar-surface); }
