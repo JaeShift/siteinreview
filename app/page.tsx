@@ -24,6 +24,19 @@ export const metadata: Metadata = {
   description: "Independent beer. A place to play. Find upcoming Kitsune events, shop Magic cards, explore the live tap list, and visit our North Phoenix brewery.",
 };
 
+function KitsuneStory() {
+  return (
+    <div className={styles.communityStory}>
+      <p>Independent beer, Japanese inspiration, and a love for the neighborhood. Kitsune brings people together in North Phoenix—around a pint, a table, or a favorite game.</p>
+      <div className={styles.communityLinks}>
+        <Link href="/mtg-and-more">Magic & more <ArrowUpRight size={18} aria-hidden="true" /></Link>
+        <Link href="/commander-nights">Find your Commander pod <ArrowUpRight size={18} aria-hidden="true" /></Link>
+        <Link href="/private-events">Host a private event <ArrowUpRight size={18} aria-hidden="true" /></Link>
+      </div>
+    </div>
+  );
+}
+
 export default async function HomePage() {
   const events = selectUpcomingEvents(getEventsStore(), await getPrereleaseEventStore());
   const products = selectFeaturedProducts(getSinglesStore());
@@ -99,7 +112,28 @@ export default async function HomePage() {
       </section>
 
       <section id="discover" className={styles.communitySection} aria-labelledby="community-title">
-        <Reveal className={styles.communityGrid}><div className={styles.communityPhoto}><Image src="/images/updated.png" alt="Cards and conversation beneath the Kitsune fox mural in the taproom" fill sizes="(max-width: 760px) 100vw, 50vw" /><span>Good company comes with the territory.</span></div><div className={styles.communityCopy}><p className={styles.eyebrow}>The spirit of Kitsune</p><h2 id="community-title">A brewery.<br /><em>A gathering place.</em></h2><p>Independent beer, Japanese inspiration, and a love for the neighborhood. Kitsune brings people together in North Phoenix—around a pint, a table, or a favorite game.</p><div className={styles.communityLinks}><Link href="/mtg-and-more">Magic & more <ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/commander-nights">Find your Commander pod <ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/private-events">Host a private event <ArrowUpRight size={18} aria-hidden="true" /></Link></div></div></Reveal>
+        <Reveal className={styles.communityGrid}>
+          <div className={styles.communityPhoto}>
+            <Image src="/images/updated.png" alt="Cards and conversation beneath the Kitsune fox mural in the taproom" fill sizes="(max-width: 760px) 100vw, 50vw" />
+            <span>Good company comes with the territory.</span>
+          </div>
+          <div className={styles.communityCopy}>
+            <p className={styles.eyebrow}>
+              <span className={styles.communityDesktop}>The spirit of Kitsune</span>
+              <span className={styles.communityMobile}>About Kitsune</span>
+            </p>
+            <h2 id="community-title">
+              <span className={styles.communityDesktop}>A brewery.<br /><em>A gathering place.</em></span>
+              <span className={styles.communityMobile}>A closer look<br />at Kitsune.</span>
+            </h2>
+            <p className={`${styles.communityMobile} ${styles.communityTagline}`}>Beer, cards, and a place to belong.</p>
+            <details className={`${styles.communityMobile} ${styles.communityDetails}`}>
+              <summary>Get to know us <ArrowUpRight size={22} aria-hidden="true" /></summary>
+              <KitsuneStory />
+            </details>
+            <div className={styles.communityDesktop}><KitsuneStory /></div>
+          </div>
+        </Reveal>
       </section>
 
       <section id="visit" className={styles.visitSection} aria-labelledby="visit-title"><div className={styles.visitCopy}><p className={styles.eyebrow}>Your neighborhood brewery</p><h2 id="visit-title">Find the fox.<br /><em>Stay a while.</em></h2><address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address><div className={styles.visitActions}><a href={DIRECTIONS_URL} className={styles.primaryButton}>Get directions <ArrowUpRight size={18} aria-hidden="true" /></a><Link href="/contact" className={styles.textLink}>Get in touch <ArrowUpRight size={18} aria-hidden="true" /></Link></div><div className={styles.hours}><h3>Taproom hours</h3><ul>{TAPROOM_HOURS.map(day => <li key={day.day}><span>{day.day}</span><span>{formatDayHours(day)}</span></li>)}</ul><p>All times local to Phoenix.</p></div></div><div className={styles.map}><MapEmbed /></div></section>
