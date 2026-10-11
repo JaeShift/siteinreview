@@ -161,7 +161,6 @@ export default async function HomePage() {
           <a href={DIRECTIONS_URL} className={styles.directionsLink}>Get directions <ArrowUpRight size={48} strokeWidth={2.25} aria-hidden="true" /></a>
           <div className={styles.visitDetails}>
             <address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address>
-            <Link href="/contact">Get in touch <ArrowUpRight size={18} aria-hidden="true" /></Link>
           </div>
         </div>
       </section>
