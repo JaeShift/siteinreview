@@ -147,7 +147,6 @@ export default async function HomePage() {
 
       <section id="visit" className={styles.visitSection} aria-labelledby="visit-title">
         <div className={styles.visitHours}>
-          <p className={styles.visitEyebrow}>Your neighborhood brewery</p>
           <h2 id="visit-title">Taproom<br />hours</h2>
           <dl className={styles.hoursList}>
             {visitHours.map(row => <div key={row.firstDay}>
