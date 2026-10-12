@@ -1,9 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Mail, Phone } from "lucide-react";
 import SocialLinks from "./SocialLinks";
 import styles from "./Footer.module.css";
 import KitsuneWordmark from "./KitsuneWordmark";
 import { TAPROOM_HOURS, formatDayHours } from "@/lib/taproom-hours";
+
+const footerNavigation = [
+  { href: "/", label: "Home" },
+  { href: "/shop", label: "Merch Shop" },
+  { href: "/card-shop", label: "Card Shop" },
+  { href: "/pre-release", label: "Pre-Release" },
+  { href: "/events", label: "Events" },
+  { href: "/private-events", label: "Private Events" },
+  { href: "/calendar", label: "Calendar" },
+  { href: "/contact", label: "Contact Us" },
+];
 
 export default function Footer({
   showHours = true,
@@ -13,7 +25,29 @@ export default function Footer({
   editorial?: boolean;
 }) {
   return (
-    <footer className={`${styles.footer} ${editorial ? styles.footerHome : ""}`}>
+    <footer id="site-footer" className={`${styles.footer} ${editorial ? styles.footerHome : ""}`}>
+      <div className={styles.mobileFooter}>
+        <div className={`${styles.mobileInner} ${styles.mobileUtility}`}>
+          <div className={styles.mobileBrandRow}>
+            <Link href="/" className={styles.mobileBrand} aria-label="Kitsune Brewing Co — Home"><KitsuneWordmark decorative /><span>Brewing Company</span></Link>
+            <SocialLinks className={styles.mobileSocial} iconSize={19} />
+          </div>
+          <div className={styles.mobileVisit}>
+            <address className={styles.mobileAddress}>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address>
+            <div className={styles.mobileContact}>
+              <a href="tel:+16022458593"><Phone size={17} aria-hidden="true" />(602) 245-8593</a>
+              <a href="mailto:Tyler@KitsuneBeerCo.com"><Mail size={17} aria-hidden="true" />Tyler@KitsuneBeerCo.com</a>
+            </div>
+          </div>
+          <nav className={styles.mobileNav} aria-label="Mobile footer navigation">
+            {footerNavigation.map(link => <Link key={link.href} href={link.href}>{link.label}</Link>)}
+          </nav>
+          <div className={styles.mobileLegal}>
+            <p>© {new Date().getFullYear()} Kitsune Brewing Co.<br />All rights reserved.</p>
+            <Link href="/admin">Admin</Link>
+          </div>
+        </div>
+      </div>
       <div className={`${styles.brandClosing} container`} aria-hidden="true"><span>Good beer.<br /><em>Better company.</em></span><div className={styles.closingSeal}><Image src="/images/logo.png" alt="" width={84} height={84} /><span>North Phoenix<br />Independent spirit</span></div></div>
       <div className={`${styles.footerInner} ${!showHours ? styles.footerInnerCompact : ""} container`}>
         <div className={styles.footerLogoCol}>
@@ -71,14 +105,7 @@ export default function Footer({
         <div className={styles.footerCol}>
           <h3 className={styles.footerHeading}>Navigate</h3>
           <nav className={styles.footerNav} aria-label="Footer navigation">
-            <Link href="/" className={styles.footerNavLink}>Home</Link>
-            <Link href="/shop" className={styles.footerNavLink}>Merch Shop</Link>
-            <Link href="/card-shop" className={styles.footerNavLink}>Card Shop</Link>
-            <Link href="/pre-release" className={styles.footerNavLink}>Pre-Release</Link>
-            <Link href="/events" className={styles.footerNavLink}>Events</Link>
-            <Link href="/private-events" className={styles.footerNavLink}>Private Events</Link>
-            <Link href="/calendar" className={styles.footerNavLink}>Calendar</Link>
-            <Link href="/contact" className={styles.footerNavLink}>Contact Us</Link>
+            {footerNavigation.map(link => <Link key={link.href} href={link.href} className={styles.footerNavLink}>{link.label}</Link>)}
           </nav>
         </div>
       </div>

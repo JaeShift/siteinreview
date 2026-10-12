@@ -39,8 +39,7 @@
 .sectionTitle h3 { font-size: 1.7rem; font-weight: 500; line-height: 1.3; color: var(--color-roasted-brown); }
 .sectionTitle small { margin-left: auto; font-size: 0.875rem; color: var(--color-text-light); white-space: nowrap; }
 .itemList { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 44px; }
-.menuItem { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; padding: 24px 0; border-bottom: 1px solid var(--color-border-subtle); min-width: 0; }
-.itemNumber { padding-top: 3px; font-size: 0.875rem; color: var(--color-action); }
+.menuItem { padding: 24px 0; border-bottom: 1px solid var(--color-border-subtle); min-width: 0; }
 .itemDetails { min-width: 0; }
 .itemHeading { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; }
 .itemHeading h4 { font-family: var(--font-heading); font-size: 1.375rem; line-height: 1.3; letter-spacing: -0.01em; font-weight: 500; color: var(--color-roasted-brown); }
@@ -59,12 +58,11 @@
 .menuUnavailable > p:not(.statusLabel) { margin-top: 18px; max-width: 520px; }
 .liveMenuLink, .liveMenuLink:link, .liveMenuLink:visited { display: inline-flex; align-items: center; min-height: 48px; margin-top: 24px; padding: 12px 20px; background: var(--color-action); color: var(--color-cream-paper); font-size: 0.875rem; }
 .menuEmbedWrapper a:focus-visible, .menuUnavailable a:focus-visible { outline: 3px solid var(--color-soft-gold); outline-offset: 4px; }
-.mobileHeading, .mobileCategory, .mobileName, .itemFlavor, .mobileServings, .expandButton { display: none; }
+.mobileHeading, .mobileCategory, .mobileName, .itemFlavor, .mobileServings { display: none; }
 
 .sectionTitle { border-bottom-color: var(--color-muted-gold); }
 .sectionTitle > span { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--color-muted-gold); }
 .menuItem { border-bottom-style: solid; }
-.itemNumber { color: var(--color-soft-gold); font-family: var(--font-body); }
 
 /* The homepage menu is one quiet surface within the larger brand composition. */
 :global([data-route="/"]) .menuEmbedWrapper {
@@ -88,7 +86,7 @@
   .sectionTitle { gap: 12px; }
   .sectionTitle h3 { font-size: 1.45rem; }
   .sectionTitle small { max-width: 70px; white-space: normal; text-align: right; }
-  .menuItem { padding: 22px 0; gap: 8px; grid-template-columns: 20px minmax(0, 1fr); }
+  .menuItem { padding: 22px 0; }
   .itemHeading { gap: 10px; }
   .itemHeading h4 { font-size: 1.25rem; }
   :global([data-route="/"]) .itemHeading h4 { font-size: 1.375rem; overflow-wrap: break-word; }
@@ -156,10 +154,8 @@
   .liveMenu .sectionTitle h3 { color: #f5efdf; font: 400 clamp(26px, 7vw, 38px)/1.15 var(--font-mobile-display, var(--font-heading)); letter-spacing: -.01em; }
   .liveMenu .sectionTitle small { max-width: none; color: #d3d0c5; font-size: clamp(12px, 3.4vw, 17px); line-height: 1.4; white-space: nowrap; }
   .liveMenu .itemList { grid-template-columns: minmax(0, 1fr); column-gap: 0; }
-  .liveMenu .itemList[data-expanded="false"] .additionalItem { display: none; }
-  .liveMenu .menuItem { position: relative; grid-template-columns: 28px minmax(0, 1fr); gap: 15px; padding: 22px 0 21px; border-color: rgba(186,165,116,.46); }
+  .liveMenu .menuItem { position: relative; padding: 22px 0 21px; border-color: rgba(186,165,116,.46); }
   .liveMenu .menuItem::after { content: ""; position: absolute; bottom: -4px; left: 50%; width: 6px; height: 6px; border: 1px solid var(--lineup-gold); background: #171712; transform: rotate(45deg); }
-  .liveMenu .itemNumber { padding-top: 3px; color: var(--lineup-gold); font: 400 clamp(16px, 4.4vw, 23px)/1.4 var(--font-body); }
   .liveMenu .itemHeading,
   :global([data-route="/"]) .liveMenu .itemHeading { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 10px; }
   .liveMenu .itemHeading h4,
@@ -181,10 +177,6 @@
   .liveMenu .mobileServings li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 14px; color: var(--lineup-muted); font-size: clamp(13px, 3.6vw, 18px); line-height: 1.5; }
   .liveMenu .mobileServings strong { color: #f5efdf; font-weight: 500; }
 
-  .liveMenu .expandButton { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; margin: 16px 0 0; padding: 3px 0; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: var(--lineup-red); font: italic 400 clamp(18px, 4.9vw, 27px)/1.4 var(--font-mobile-italic, Georgia, serif); letter-spacing: -.03em; text-align: left; cursor: pointer; }
-  .liveMenu .expandButton span { font-family: var(--font-body); font-style: normal; font-size: .85em; }
-  .liveMenu .expandButton:hover { color: #f6b294; }
-  .liveMenu .expandButton:focus-visible { outline: 2px solid var(--lineup-gold); outline-offset: 5px; }
   .liveMenu .menuNote,
   :global([data-route="/"]) .liveMenu .menuNote { position: relative; max-width: 31ch; margin: 0; padding-top: 26px; color: var(--lineup-muted); font-size: 12px; line-height: 1.65; }
   .liveMenu .menuNote a { display: block; width: fit-content; margin-top: 4px; color: #e7dfca; }

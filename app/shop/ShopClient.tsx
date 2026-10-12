@@ -41,7 +41,7 @@ export default function ShopClient({ products }: { products: MerchandiseProduct[
       ) : (
         <div className={styles.grid}>
           {visible.map((product) => (
-            <article className={styles.card} key={product.id}>
+            <article id={product.id} className={styles.card} key={product.id}>
               <div className={styles.imageWrap}>
                 {product.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element

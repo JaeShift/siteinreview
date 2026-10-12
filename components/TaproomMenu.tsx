@@ -15,7 +15,6 @@ function separateFlavor(name: string) {
 
 export default function TaproomMenu({ menu, sourceUrl }: { menu: TaplistMenu; sourceUrl: string }) {
   const [activeId, setActiveId] = useState(menu.sections[0]?.id);
-  const [expanded, setExpanded] = useState(false);
   const menuId = useId();
   const section = menu.sections.find((entry) => entry.id === activeId) ?? menu.sections[0];
 
@@ -34,7 +33,7 @@ export default function TaproomMenu({ menu, sourceUrl }: { menu: TaplistMenu; so
               type="button"
               aria-pressed={entry.id === section?.id}
               aria-controls={menuId}
-              onClick={() => { setActiveId(entry.id); setExpanded(false); }}
+              onClick={() => setActiveId(entry.id)}
             >
               <span className={styles.desktopCategory}>{entry.title}</span>
               <span className={styles.mobileCategory}>{mobileCategoryLabel(entry.title)}</span>
@@ -49,14 +48,13 @@ export default function TaproomMenu({ menu, sourceUrl }: { menu: TaplistMenu; so
               <h3>{section.title}</h3>
               <small>{section.items.length} selections</small>
             </div>
-            <ol id={`${menuId}-items`} className={styles.itemList} data-expanded={expanded}>
-              {section.items.map((item, index) => {
+            <ul id={`${menuId}-items`} className={styles.itemList}>
+              {section.items.map((item) => {
                 const displayName = separateFlavor(item.name);
                 const houseProducer = /^kitsune(?: brewing(?: co\.?| company)?)?$/i.test(item.producer.trim());
 
                 return (
-                  <li key={item.id} className={`${styles.menuItem}${index >= 3 ? ` ${styles.additionalItem}` : ""}`}>
-                    <span className={styles.itemNumber} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                  <li key={item.id} className={styles.menuItem}>
                     <div className={styles.itemDetails}>
                       <div className={styles.itemHeading}>
                         <div>
@@ -89,16 +87,7 @@ export default function TaproomMenu({ menu, sourceUrl }: { menu: TaplistMenu; so
                   </li>
                 );
               })}
-            </ol>
-            {section.items.length > 3 && (
-              <button className={styles.expandButton} type="button" aria-expanded={expanded} aria-controls={`${menuId}-items`} onClick={(event) => {
-                const button = event.currentTarget;
-                setExpanded(!expanded);
-                if (expanded) requestAnimationFrame(() => button.scrollIntoView({ block: "nearest" }));
-              }}>
-                {expanded ? "Show fewer selections" : `View all ${section.items.length} selections`}<span aria-hidden="true">{expanded ? "↑" : "↓"}</span>
-              </button>
-            )}
+            </ul>
           </>
         )}
       </div>

@@ -57,6 +57,7 @@
 .footerHome .footerLink { margin-block: -6px; }
 .footerHome .footerBottomInner { font-size: .875rem; padding-block: 16px; }
 .footerHome a:focus-visible { outline: 2px solid var(--color-soft-gold); outline-offset: 4px; }
+.mobileFooter { display: none; }
 @media (max-width: 1150px) {
  .footerHome .footerInner { grid-template-columns: 1fr 1fr; }
 }
@@ -79,4 +80,39 @@
  .footerCol:nth-child(2) { grid-column: 1 / -1; }
  .footerBottomInner { flex-wrap: wrap; gap: 12px; }
  .footerBottomInner > p:first-child { width: 100%; }
+}
+
+/* Mobile contact details and navigation stay visible without repeating hours. */
+@media (max-width: 760px) {
+ .footer { background-color: var(--color-ink); background-image: var(--texture-grain); color: #e1ddd5; border-top: 1px solid rgba(184,154,98,.35); }
+ .footer::before, .footer .brandClosing, .footer .footerInner, .footer .footerBottom { display: none; }
+ .mobileFooter { display: block; }
+ .mobileInner { width: min(calc(100% - 48px), 560px); margin-inline: auto; }
+ .mobileUtility { padding-block: 28px 12px; }
+ .mobileVisit { padding-block: 16px 12px; border-bottom: 1px solid rgba(242,232,213,.18); }
+ .footer .mobileAddress { color: inherit; font-size: .875rem; font-style: normal; line-height: 1.6; }
+ .mobileContact { margin-top: 4px; }
+ .footer .mobileContact a { display: flex; align-items: center; gap: 10px; min-height: 44px; color: inherit; font-size: .8125rem; overflow-wrap: anywhere; }
+ .mobileContact svg { flex-shrink: 0; }
+ .mobileNav { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 24px; padding-block: 12px; border-bottom: 1px solid rgba(242,232,213,.18); }
+ .footer .mobileNav a { display: flex; align-items: center; min-height: 44px; color: inherit; font-size: .8125rem; line-height: 1.5; }
+ .mobileVisit a:hover, .mobileNav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+ .mobileBrandRow { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(242,232,213,.18); }
+ .footer .mobileBrand { display: flex; flex-direction: column; justify-content: center; min-height: 44px; color: #fff; }
+ .mobileBrand svg { display: block; width: 112px; height: auto; }
+ .mobileBrand span { margin-top: 4px; font-size: .5625rem; font-weight: 700; line-height: 1.4; letter-spacing: .15em; text-transform: uppercase; }
+ .mobileSocial { display: flex; gap: 8px; }
+ .footer .mobileSocial a { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; color: #fff; transition: filter .15s; }
+ .footer .mobileSocial a[href*="instagram.com"] { background: radial-gradient(circle at 30% 100%, #d06a32 0%, #c13584 48%, #6f43b8 100%); }
+ .footer .mobileSocial a[href*="facebook.com"] { background: #1877f2; }
+ .footer .mobileSocial a:hover { filter: brightness(1.12); }
+ .footer .mobileSocial a:active { filter: brightness(.9); }
+ .mobileLegal { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 12px; color: #bdb8ae; }
+ .footer .mobileLegal p { margin: 0; font-size: .6875rem; line-height: 1.6; }
+ .footer .mobileLegal a { display: flex; align-items: center; justify-content: flex-end; min-width: 44px; min-height: 44px; color: inherit; font-size: .6875rem; }
+ .footer .mobileFooter a:focus-visible { outline: 2px solid var(--color-soft-gold); outline-offset: 4px; }
+}
+@media (max-width: 359px) {
+ .mobileInner { width: calc(100% - 40px); }
+ .mobileNav { column-gap: 16px; }
 }

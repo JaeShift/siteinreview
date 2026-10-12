@@ -127,8 +127,6 @@
 .map { flex:none; height:var(--visit-map-height); min-height:0; }
 .map>div { height:100%; min-height:inherit; max-width:none; border:1px solid #b9b2a5; border-radius:12px; overflow:hidden; }
 .map iframe { height:100%; min-height:inherit; }
-.visitDetails { margin-top:18px; color:#d6ccba; font-size:.8125rem; line-height:1.6; }
-.visitDetails address { font-style:normal; }
 @media(max-width:1100px) { .hero { --hero-height:610px; }.heroKicker { font-size:.625rem; letter-spacing:.13em; gap:10px; }.heroTagline { font-size:3.8vw; }.heroPromise { max-width:37ch; }.page .heroActions>a { min-width:0; padding-inline:18px; letter-spacing:.05em; gap:13px; }.heroVisual { width:38vw; margin-right:-20px; }.communityGrid { gap:36px; } }
 @media(max-width:850px) { .hero { --hero-height:560px; }.heroCopy { padding-block:40px; }.heroKicker { font-size:.5625rem; letter-spacing:.11em; gap:8px; }.heroActions { gap:10px; }.page .heroActions>a { padding-inline:13px; font-size:.75rem; letter-spacing:.025em; gap:8px; }.heroActions svg { width:15px; }.heroVisual { width:40vw; margin-right:-18px; }.communityPhoto { min-height:380px; } }
 @media(max-width:760px) {
@@ -173,7 +171,6 @@
   .visitActions svg { width:16px; height:16px; }
   .visitActions svg:last-child { width:14px; height:14px; }
   .map { flex:none; height:clamp(260px,60vw,420px); min-height:0; }
-  .visitDetails { margin-top:14px; color:#5f5b55; }
 }
 @media(max-width:359px) { .page { --home-page-gutter:20px; }.sectionHead h2 { font-size:2.4rem; }.visitActions { grid-template-columns:1fr; }.page .visitActions a { font-size:1rem; }.hoursList>div { gap:8px; font-size:.875rem; } }
 @media(prefers-reduced-motion:reduce) { .page *,.page *::before,.page *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }

@@ -8,8 +8,9 @@ import UpcomingEvents from "@/components/home/UpcomingEvents";
 import MapEmbed from "@/components/MapEmbed";
 import HeroWordmark from "@/components/HeroWordmark";
 import FeaturedInventory from "@/components/home/FeaturedInventory";
+import FeaturedMerchandise from "@/components/home/FeaturedMerchandise";
 import Reveal from "@/components/home/Reveal";
-import { getEventsStore, getPrereleaseEventStore, getSinglesStore } from "@/lib/store";
+import { getEventsStore, getMerchandiseStore, getPrereleaseEventStore, getSinglesStore } from "@/lib/store";
 import { selectFeaturedProducts, selectUpcomingEvents } from "@/lib/home-content";
 import { DIRECTIONS_URL, TAPROOM_HOURS, formatDayHours } from "@/lib/taproom-hours";
 import original from "./home.module.css";
@@ -49,6 +50,10 @@ const visitHours = TAPROOM_HOURS.reduce<Array<{ firstDay: string; lastDay: strin
 export default async function HomePage() {
   const events = selectUpcomingEvents(getEventsStore(), await getPrereleaseEventStore());
   const products = selectFeaturedProducts(getSinglesStore());
+  const merch = getMerchandiseStore().filter(product =>
+    product.active && product.quantity > 0 && product.id?.trim() && product.name?.trim()
+    && Number.isFinite(product.price) && product.price >= 0
+  ).slice(0, 4);
 
   return (
     <div className={`${styles.page} ${mobileDisplay.variable} ${mobileItalic.variable}`}>
@@ -120,6 +125,8 @@ export default async function HomePage() {
         <UpcomingEvents events={events} />
       </section>
 
+      <FeaturedMerchandise products={merch} />
+
       <section id="discover" className={styles.communitySection} aria-labelledby="community-title">
         <Reveal className={styles.communityGrid}>
           <div className={styles.communityPhoto}>
@@ -170,9 +177,6 @@ export default async function HomePage() {
             <a href={DIRECTIONS_URL} className={styles.directionsLink}><MapPin size={20} aria-hidden="true" /><span>Get directions</span><ArrowRight size={18} aria-hidden="true" /></a>
           </div>
           <div className={styles.map}><MapEmbed /></div>
-          <div className={styles.visitDetails}>
-            <address>3321 E Bell Rd, Suite B-5<br />Phoenix, AZ 85032</address>
-          </div>
         </div>
       </section>
     </div>
