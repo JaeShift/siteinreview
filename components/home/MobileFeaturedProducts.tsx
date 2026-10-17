@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import styles from "./FeaturedInventory.module.css";
 
@@ -50,7 +50,7 @@ export default function MobileFeaturedProducts<T extends FeaturedProduct>({ prod
     let settleTimer: ReturnType<typeof setTimeout>;
     let resizing = false, pointerDown = false;
     const measure = () => {
-      if (resizing || !element.clientWidth) return;
+      if (resizing || !element.clientWidth || element.clientWidth !== width) return;
       const center = element.getBoundingClientRect().left + element.clientWidth / 2;
       let closest = 0, distance = Infinity;
       Array.from(element.children).forEach((card, slot) => {
@@ -131,18 +131,20 @@ export default function MobileFeaturedProducts<T extends FeaturedProduct>({ prod
           <button className={styles.mobileArtwork} type="button" aria-label={selected ? `${openLabel} ${card.name}${openLabel === "View" ? " details" : ""}` : `Select ${card.name}`} tabIndex={selected ? 0 : -1} onClick={event => {
             if (!selected) centerSlot(slot, true);
             else onOpen(card, event.currentTarget);
-          }}>{renderArtwork ? renderArtwork(card) : <Image unoptimized src={card.imageUrl} alt={card.name} fill sizes="(max-width: 390px) 74vw, 290px" draggable={false} />}</button>
+          }}>{renderArtwork ? renderArtwork(card) : <Image unoptimized src={card.imageUrl} alt={card.name} fill sizes="(max-width: 700px) 54vw, 380px" loading="eager" draggable={false} />}</button>
         </div>;
       })}
     </div>
-    {loop && <div className={styles.mobileArrows}>
-      <button type="button" aria-label={`Previous featured ${itemLabel}`} aria-controls={id} onClick={() => centerSlot(currentSlot.current - 1, true)}><ArrowLeft size={20} aria-hidden="true" /></button>
-      <button type="button" aria-label={`Next featured ${itemLabel}`} aria-controls={id} onClick={() => centerSlot(currentSlot.current + 1, true)}><ArrowRight size={20} aria-hidden="true" /></button>
-    </div>}
     </div>
+    <div className={styles.mobileControls}>
     {loop && <div className={styles.mobileDots} role="group" aria-label={`Choose a featured ${itemLabel}`}>
       {products.map((card, index) => <button key={card.id} type="button" aria-label={`Show ${card.name}`} aria-current={index === activeIndex ? "true" : undefined} aria-controls={id} onClick={() => selectCard(index)}><span /></button>)}
     </div>}
+    {loop && <div className={styles.mobileArrows}>
+      <button type="button" aria-label={`Previous featured ${itemLabel}`} aria-controls={id} onClick={() => centerSlot(currentSlot.current - 1, true)}><ChevronLeft size={26} strokeWidth={2.5} aria-hidden="true" /></button>
+      <button type="button" aria-label={`Next featured ${itemLabel}`} aria-controls={id} onClick={() => centerSlot(currentSlot.current + 1, true)}><ChevronRight size={26} strokeWidth={2.5} aria-hidden="true" /></button>
+    </div>}
+    </div>
     <div className={styles.mobileDetails}>
       {products.map((card, index) => <div key={card.id} className={styles.mobileDetailsPanel} aria-hidden={index !== activeIndex} style={{ visibility: index === activeIndex ? "visible" : "hidden" }}>{renderDetails(card)}</div>)}
     </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Expand, Plus, RotateCw } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, ArrowUpRight, Check, Expand, RotateCw } from "lucide-react";
 import Modal from "@/components/ui/Modal";
 import MobileFeaturedCards from "./MobileFeaturedCards";
 import { useCart } from "@/lib/cart-context";
@@ -21,10 +21,6 @@ export default function FeaturedInventory({ products }: { products: SingleCard[]
   const [enlarged, setEnlarged] = useState(false);
   const [addedId, setAddedId] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState("");
-  const [browseAnnouncement, setBrowseAnnouncement] = useState("");
-  const [browsePosition, setBrowsePosition] = useState({ first: 0, last: 0, atStart: true, atEnd: products.length < 2 });
-  const rail = useRef<HTMLDivElement | null>(null);
-  const railId = useId();
   const trigger = useRef<HTMLButtonElement | null>(null);
   const enlargeButton = useRef<HTMLButtonElement | null>(null);
   const backButton = useRef<HTMLButtonElement | null>(null);
@@ -34,48 +30,6 @@ export default function FeaturedInventory({ products }: { products: SingleCard[]
   const timer = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => () => clearTimeout(timer.current), []);
-  useEffect(() => {
-    const element = rail.current;
-    if (!element) return;
-    let frame = 0;
-    let settleTimer: ReturnType<typeof setTimeout>;
-
-    function measure(announce = false) {
-      if (!element) return;
-      const bounds = element.getBoundingClientRect();
-      const cards = Array.from(element.children) as HTMLElement[];
-      const visible = cards.map((card, index) => {
-        const cardBounds = card.getBoundingClientRect();
-        const visibleWidth = Math.min(cardBounds.right, bounds.right) - Math.max(cardBounds.left, bounds.left);
-        return visibleWidth >= cardBounds.width * .6 ? index : -1;
-      }).filter(index => index !== -1);
-      const nearest = cards.reduce((best, card, index) => Math.abs(card.getBoundingClientRect().left - bounds.left) < Math.abs(cards[best].getBoundingClientRect().left - bounds.left) ? index : best, 0);
-      const first = visible[0] ?? nearest;
-      const last = visible[visible.length - 1] ?? first;
-      const atStart = element.scrollLeft <= 2;
-      const atEnd = element.scrollWidth - element.clientWidth - element.scrollLeft <= 2;
-      setBrowsePosition(previous => previous.first === first && previous.last === last && previous.atStart === atStart && previous.atEnd === atEnd ? previous : { first, last, atStart, atEnd });
-      if (announce && cards.length) setBrowseAnnouncement(first === last ? `Showing card ${first + 1} of ${cards.length}.` : `Showing cards ${first + 1} to ${last + 1} of ${cards.length}.`);
-    }
-
-    function onScroll() {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => measure());
-      clearTimeout(settleTimer);
-      settleTimer = setTimeout(() => measure(true), 180);
-    }
-
-    const resizeObserver = new ResizeObserver(() => measure());
-    resizeObserver.observe(element);
-    element.addEventListener("scroll", onScroll, { passive: true });
-    frame = requestAnimationFrame(() => measure());
-    return () => {
-      cancelAnimationFrame(frame);
-      clearTimeout(settleTimer);
-      resizeObserver.disconnect();
-      element.removeEventListener("scroll", onScroll);
-    };
-  }, [products]);
   useEffect(() => {
     if (enlarged) backButton.current?.focus();
   }, [enlarged]);
@@ -99,14 +53,6 @@ export default function FeaturedInventory({ products }: { products: SingleCard[]
 
   const inCart = (card: SingleCard) => items.find(item => item.card.id === card.id)?.quantity ?? 0;
   const atLimit = (card: SingleCard) => inCart(card) >= card.quantity;
-
-  function browseTo(index: number) {
-    const element = rail.current;
-    const card = element?.children[Math.max(0, Math.min(index, products.length - 1))] as HTMLElement | undefined;
-    if (!element || !card) return;
-    const left = card.getBoundingClientRect().left - element.getBoundingClientRect().left + element.scrollLeft - 5;
-    element.scrollTo({ left: Math.max(0, Math.min(left, element.scrollWidth - element.clientWidth)), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-  }
 
   function quickView(card: SingleCard, control: HTMLButtonElement) {
     trigger.current = control;
@@ -149,7 +95,7 @@ export default function FeaturedInventory({ products }: { products: SingleCard[]
 
   const addButton = (card: SingleCard) => (
     <button type="button" className={styles.addButton} disabled={atLimit(card)} onClick={() => add(card)} aria-label={`Add ${card.name} to cart`}>
-      {card.quantity <= 0 ? "Sold out" : addedId === card.id ? <><Check size={16} aria-hidden="true" /> Added to cart</> : atLimit(card) ? "All available in cart" : <>Add to cart <Plus size={16} aria-hidden="true" /></>}
+      {card.quantity <= 0 ? "Sold out" : addedId === card.id ? <><Check size={22} aria-hidden="true" /> Added to cart</> : atLimit(card) ? "All available in cart" : <><svg width="22" height="24" viewBox="0 0 24 26" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8h14l1 16H4L5 8Z" /><path d="M8 11V6a4 4 0 0 1 8 0v5" /></svg> Add to cart</>}
     </button>
   );
   const cartAction = (card: SingleCard) => inCart(card) > 0 && (
@@ -176,45 +122,6 @@ export default function FeaturedInventory({ products }: { products: SingleCard[]
         <div className={styles.mobileBuyRow}><strong>${card.price.toFixed(2)}</strong>{addButton(card)}</div>
         <div className={styles.mobileCartRow}>{inCart(card) > 0 && <span>{inCart(card)} in your cart</span>}{cartAction(card)}</div>
       </>} />
-      <div className={styles.desktopShowcase}>
-      <p id={`${railId}-instructions`} className={styles.announcement}>Use the left and right arrow keys to browse cards. Home and End move to the first and last cards.</p>
-      <div ref={rail} id={railId} className={styles.grid} role="region" aria-label="Featured Magic cards" aria-roledescription="carousel" aria-describedby={`${railId}-instructions`} tabIndex={0} onKeyDown={event => {
-        if (event.target !== event.currentTarget) return;
-        if (event.key === "ArrowLeft") { event.preventDefault(); browseTo(browsePosition.first - 1); }
-        else if (event.key === "ArrowRight") { event.preventDefault(); browseTo(browsePosition.first + 1); }
-        else if (event.key === "Home") { event.preventDefault(); browseTo(0); }
-        else if (event.key === "End") { event.preventDefault(); browseTo(products.length - 1); }
-      }}>
-        {products.map((card, index) => (
-          <article className={styles.product} key={card.id} aria-label={`${index + 1} of ${products.length}: ${card.name}`} aria-roledescription="slide">
-            <button className={styles.viewButton} type="button" aria-label={`Quick view ${card.name}`} onClick={event => quickView(card, event.currentTarget)}>
-              <span className={styles.artwork}>
-                <Image unoptimized src={card.imageUrl} alt={card.name} fill sizes="(max-width: 380px) 55vw, (max-width: 760px) 38vw, (max-width: 960px) 40vw, 24vw" />
-                <span className={styles.quickView}>Quick view <ArrowUpRight size={15} aria-hidden="true" /></span>
-              </span>
-            </button>
-            <div className={styles.productCopy}>
-              <h3 className={styles.productTitle}><button type="button" className={styles.titleButton} onClick={event => quickView(card, event.currentTarget)}><ProductName name={card.name} /></button></h3>
-              <p className={styles.set}>{formatSetDisplay(card.set, card.setCode, card.collectorNumber)}</p>
-              <div className={styles.meta}>
-                <span>{formatCondition(card.condition)}<span className={styles.finish}>{card.foil ? "Foil" : "Non-foil"}</span></span>
-                <strong>${card.price.toFixed(2)}</strong>
-              </div>
-              {addButton(card)}
-              <div className={styles.stockRow}><span>{card.quantity} available</span>{cartAction(card)}</div>
-            </div>
-          </article>
-        ))}
-      </div>
-      {products.length > 0 && <div className={styles.browseControls}>
-        <p className={styles.browseCount}><span>{String(browsePosition.first + 1).padStart(2, "0")}{browsePosition.last > browsePosition.first && `–${String(browsePosition.last + 1).padStart(2, "0")}`}</span><span className={styles.countDivider}>/</span>{String(products.length).padStart(2, "0")}<span className={styles.browseHint}>Featured singles</span></p>
-        {(!browsePosition.atStart || !browsePosition.atEnd) && <div className={styles.browseButtons}>
-          <button type="button" aria-label="Previous featured cards" aria-controls={railId} disabled={browsePosition.atStart} onClick={() => browseTo(browsePosition.first - 1)}><ArrowLeft size={20} aria-hidden="true" /></button>
-          <button type="button" aria-label="Next featured cards" aria-controls={railId} disabled={browsePosition.atEnd} onClick={() => browseTo(browsePosition.first + 1)}><ArrowRight size={20} aria-hidden="true" /></button>
-        </div>}
-      </div>}
-      <p className={styles.announcement} role="status" aria-live="polite">{browseAnnouncement}</p>
-      </div>
       <p className={styles.announcement} role="status" aria-live="polite">{announcement}</p>
       <Modal isOpen={selected !== null} onClose={close} title={enlarged ? "Card artwork" : "A closer look"} size="lg">
         <p className={styles.announcement} role="status" aria-live="polite">{announcement}</p>

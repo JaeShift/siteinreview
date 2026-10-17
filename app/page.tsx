@@ -105,7 +105,7 @@ export default async function HomePage() {
       </section>
 
       <section id="magic" className={styles.shopSection} aria-labelledby="shop-title">
-        <Reveal><header className={styles.sectionHead}><div><p className={styles.eyebrow}>For your next game</p><h2 id="shop-title">Featured in the shop.</h2></div><Link href="/card-shop" className={styles.textLink}>Shop all cards <ArrowUpRight size={18} aria-hidden="true" /></Link></header></Reveal>
+        <Reveal><header className={styles.shopHeader}><h2 id="shop-title" className={styles.shopHeading}>Featured<br />in the shop.</h2><Link href="/card-shop" className={styles.shopLink}><span>Shop all cards</span><ArrowUpRight size={24} aria-hidden="true" /></Link></header></Reveal>
         <Reveal>{products.length ? <FeaturedInventory products={products} /> : <div className={styles.emptyShop}><p>Check the card shop for the latest available inventory.</p><Link href="/card-shop" className={styles.primaryButton}>Browse Magic <ArrowUpRight size={18} aria-hidden="true" /></Link></div>}</Reveal>
         <div className={styles.shopFootnote}><p>Find your next card. Make yourself at home.</p><Link href="/shop">Looking for Kitsune merchandise? <ArrowUpRight size={17} aria-hidden="true" /></Link></div>
       </section>

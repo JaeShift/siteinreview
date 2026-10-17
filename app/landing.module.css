@@ -81,16 +81,19 @@
 
 
 
-.shopSection { padding:56px var(--gutter) 40px; border-block:1px solid var(--color-muted-gold); background:var(--color-cream-paper); background-image:var(--texture-grain); color:var(--color-ink); }.shopSection .sectionHead { margin-bottom:28px; }
+.shopSection { background:#f8f5eb; color:#080909; }
+.shopHeader { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; padding:40px var(--gutter) 30px; }
+.shopHeader .shopHeading { margin:0; padding-left:20px; border-left:8px solid #b53121; color:#080909; font:400 clamp(3.5rem,6.5vw,5.5rem)/1.02 var(--font-mobile-display),Impact,sans-serif; letter-spacing:-.025em; text-transform:uppercase; }
+.page .shopLink { display:inline-flex; align-items:center; gap:18px; flex-shrink:0; min-height:44px; margin-bottom:2px; color:#080909; font:600 clamp(1rem,1.8vw,1.5rem)/1.35 var(--font-body); letter-spacing:-.035em; }
+.shopLink span { padding-block:6px; border-bottom:2px solid #b53121; }
+.shopLink svg { flex-shrink:0; width:1.2em; height:1.2em; transition:transform .2s; }
+.shopLink:hover svg { transform:translate(2px,-2px); }
+.page .shopLink:hover { color:#a52b1d; }
 .shopFootnote { display:flex; justify-content:space-between; align-items:center; gap:24px; margin-top:30px; padding-top:18px; border-top:1px solid var(--line); font-size:.8125rem; line-height:1.6; color:var(--color-text-light); }.shopFootnote>a { display:flex; align-items:center; gap:14px; min-height:44px; }.shopFootnote>a:hover { color:var(--color-action); }
-.shopSection .eyebrow { color:#806235; }
-.shopSection .sectionHead h2 { color:var(--color-ink); font:400 clamp(2.8rem,4.9vw,4.8rem)/1.06 var(--font-mobile-display), Impact, sans-serif; letter-spacing:-.025em; text-transform:uppercase; text-wrap:balance; }
-.shopSection .textLink { flex-shrink:0; font-size:.9375rem; }
-.shopSection .textLink:hover { color:var(--color-action); }
-.shopSection .shopFootnote { color:#655b4c; border-color:var(--line); }
+.shopSection .shopFootnote { margin:0 var(--gutter); padding-block:14px 24px; color:#655b4c; border-color:#d5d0c5; }
 .shopSection .shopFootnote>a:hover { color:var(--color-action); }
 .shopSection :is(a,button):focus-visible { outline-color:var(--color-action); }
-.shopSection .emptyShop { border-color:#c3b18e; }
+.shopSection .emptyShop { margin:0 var(--gutter) 32px; border-color:#c3b18e; }
 .emptyShop { padding:38px; border:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:24px; }
 .page .tapSection { border-top:4px double var(--color-muted-gold); border-bottom:1px solid var(--line); background:var(--color-ink); background-image:var(--texture-grain); color:var(--color-cream-paper); }
 .communitySection { border-top:4px double var(--line); padding:64px var(--gutter); background:var(--color-paper); background-image:var(--texture-grain); }
@@ -134,7 +137,12 @@
   .eventsSection { padding-block:40px; }.sectionHead { align-items:flex-start; flex-direction:column; gap:14px; margin-bottom:24px; }.sectionHead h2,.communityCopy h2 { font-size:2.65rem; }.eyebrow { margin-bottom:14px; font-size:.6875rem; }
 
 
-  .shopSection { padding-block:40px; }.shopSection .sectionHead { margin-bottom:24px; gap:12px; }.shopSection .textLink { min-height:44px; padding:0; border:0; font-size:.875rem; }.shopSection .sectionHead h2 { font-size:clamp(1.625rem,8.5vw,2.5rem); white-space:normal; text-wrap:initial; }.shopFootnote { align-items:flex-start; flex-direction:column; gap:4px; margin-top:24px; }.emptyShop { flex-direction:column; align-items:flex-start; padding:24px; }
+  .shopSection { --gutter:5.4%; }
+  .shopHeader { gap:16px; padding-block:24px 18px; }
+  .shopHeader .shopHeading { padding-left:10px; border-left-width:6px; font-size:clamp(1.875rem,9.5vw,4.5rem); }
+  .page .shopLink { gap:8px; margin-bottom:-2px; font-size:clamp(.8125rem,3.6vw,1.5rem); }
+  .shopLink span { padding-block:4px; }
+  .shopFootnote { align-items:flex-start; flex-direction:column; gap:4px; margin-top:24px; }.emptyShop { flex-direction:column; align-items:flex-start; padding:24px; }
   .communitySection { border-top:0; padding:20px 0 24px; background-color:#f7edde; }
   .communityGrid { grid-template-columns:minmax(0,1fr); gap:0; }
   .communityPhoto { min-height:0; height:clamp(260px,82vw,500px); }
@@ -252,7 +260,7 @@
   .page .lineupLink h2 { font-size: max(1.84rem, calc(9.2 * var(--home-mobile-unit))); }
   .lineupLink > i { display: flex; align-items: center; gap: calc(3 * var(--home-mobile-unit)); width: 100%; margin-top: calc(1 * var(--home-mobile-unit)); color: #b99b64; }
   .lineupLink svg { width: calc(4.6 * var(--home-mobile-unit)); height: calc(4.6 * var(--home-mobile-unit)); min-height: 20px; animation: lineupArrowDown 2s ease-in-out infinite; }
-  .shopSection .sectionHead .eyebrow, .shopFootnote, .communityPhoto > span { display: none; }
+  .shopFootnote, .communityPhoto > span { display: none; }
 }
 
 @keyframes lineupArrowDown {
@@ -270,10 +278,7 @@
 /* Finishing details: paper edges, quiet accents, and clear content hierarchy. */
 .eventsSection, .shopSection { position: relative; isolation: isolate; }
 .shopSection { background-image: var(--texture-grain); }
-.shopSection::before { content: ''; position: absolute; z-index: -1; pointer-events: none; right: 0; top: 0; width: min(42%, 350px); height: 180px; background: var(--texture-wave) right top / 160px auto; opacity: .12; mask-image: linear-gradient(225deg, #000, transparent 75%); }
-.shopSection .sectionHead { position: relative; }
 @media (max-width: 760px) {
-  .shopSection .sectionHead::before { content: ''; position: absolute; top: -14px; left: 0; width: 32px; height: 2px; background: #c5472b; }
   .page .tapPhoto { box-shadow: inset 0 0 0 1px #f7edde60; }
   .page .tapPhoto::after { box-shadow: inset 0 0 0 1px #f7edde60; }
   .page .tapPhoto strong::before { content: ''; display: inline-block; width: .55em; height: 2px; margin: 0 .2em .35em 0; background: #db5b38; }
@@ -311,7 +316,7 @@
     position: relative;
     z-index: 1;
     margin-top: calc(-1 * var(--terrain-edge-height));
-    padding-top: calc(40px + var(--terrain-edge-height));
+    padding-top: var(--terrain-edge-height);
     border-top: 0;
     mask-image: url('/images/home/mobile-rock-section-edge.svg'), linear-gradient(#000, #000);
     mask-size: 100% var(--terrain-edge-height), 100% calc(100% - var(--terrain-edge-height) + 1px);
